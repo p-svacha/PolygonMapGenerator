@@ -35,7 +35,7 @@ public class PolygonMapGenerator : MonoBehaviour
     private List<GraphPolygon> LastSegmentPolygons = new List<GraphPolygon>(); // Used for knowing which polygons were newly created in the last search period
     
     public const int MAP_WIDTH = 30;
-    public const int MAP_HEIGHT = 20;
+    public const int MAP_HEIGHT = 30;
     public const float LINE_DENSITY = 0.12f; // Active lines at the beginning per m^2
     public const float SPLIT_CHANCE = 0.09f; // Chance that a line splits into 2 lines at a vertex
     public const float MAX_TURN_ANGLE = 55; // °
@@ -438,7 +438,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         Map = new Map(SatelliteWaterMaterial, PoliticalWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial);
 
-        
+        /*
         // Add border points
         foreach (GraphNode n in Nodes)
         {
@@ -464,26 +464,43 @@ public class PolygonMapGenerator : MonoBehaviour
             c.Border = border;
             Map.EdgeBorders.Add(border);
         }
-        
+        */
 
         // Add regions
         foreach (GraphPolygon p in Polygons)
         {
+            // Mesh
             GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes.Select(x => x.Vertex).ToList());
+
+            // Collider
+            polygon.AddComponent<MeshCollider>();
+            /*
+            Vector3[] meshVertices = polygon.GetComponent<MeshFilter>().mesh.vertices;
+            int[] meshTriangles = polygon.GetComponent<MeshFilter>().mesh.triangles;
+            Vector2[] colliderPoints = new Vector2[meshTriangles.Length];
+            for (int n = 0; n < meshTriangles.Length; n++)
+                colliderPoints[n] = new Vector2(meshVertices[meshTriangles[n]].x, meshVertices[meshTriangles[n]].z);
+            */
+
+            // Region
             Region region = polygon.AddComponent<Region>();
             p.Region = region;
             Map.Regions.Add(region);
         }
 
+        /*
         foreach (GraphNode n in Nodes) n.BorderPoint.Init(n.Vertex);
         foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
+        */
         foreach (GraphPolygon p in Polygons) p.Region.Init(p, PoliticalWaterMaterial, SatelliteWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial);
 
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
         SatelliteTextureGenerator.GenerateTexture(this);
+
+        Map.InitializeMap();
     }
 
     /// <summary>

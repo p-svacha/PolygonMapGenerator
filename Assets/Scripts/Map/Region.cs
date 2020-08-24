@@ -16,6 +16,7 @@ public class Region : MonoBehaviour
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> Borders = new List<Border>();
     public List<Region> NeighbouringRegions = new List<Region>();
+    public Landmass Landmass;
 
     public Material SatelliteWaterMaterial;
     public Material PoliticalWaterMaterial;
