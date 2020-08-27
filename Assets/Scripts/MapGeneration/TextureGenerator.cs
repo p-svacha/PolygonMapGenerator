@@ -56,7 +56,7 @@ public static class TextureGenerator
             for (int x = 0; x < shoreTexSize; x++)
                 shoreTexture.SetPixel(x, y, Color.black);
 
-        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type == GraphConnectionType.Shore))
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type == BorderType.Shore))
         {
             int steps = 10;
             int fadeRange = 10;
@@ -86,7 +86,7 @@ public static class TextureGenerator
 
     }
 
-    public static Texture2D CreateRegionBorderTexture(PolygonMapGenerator PMG)
+    public static Texture2D CreateRegionBorderMaskTexture(PolygonMapGenerator PMG)
     {
         int texWidth = PMG.Width * 200;
         int texHeight = PMG.Height * 200;
@@ -95,11 +95,11 @@ public static class TextureGenerator
             for (int x = 0; x < texWidth; x++)
                 regionBorderTexture.SetPixel(x, y, Color.black);
 
-        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type != GraphConnectionType.Water))
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type != BorderType.Water))
         {
             int steps = 5;
             int range = 1;
-            if (c.Type == GraphConnectionType.Shore) range *= 2;
+            if (c.Type == BorderType.Shore) range *= 2;
             for (int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
@@ -114,8 +114,42 @@ public static class TextureGenerator
                 }
             }
         }
+
         regionBorderTexture.Apply();
 
         return regionBorderTexture;
+    }
+
+    public static Texture2D CreateRiverMaskTexture(PolygonMapGenerator PMG)
+    {
+        int texWidth = PMG.Width * 400;
+        int texHeight = PMG.Height * 400;
+        Texture2D riverMaskTexture = new Texture2D(texWidth, texHeight);
+        for (int y = 0; y < texHeight; y++)
+            for (int x = 0; x < texWidth; x++)
+                riverMaskTexture.SetPixel(x, y, Color.black);
+
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.River != null))
+        {
+            int steps = 10;
+            int range = (int)c.RiverWidth;
+            for (int i = 0; i < steps + 1; i++)
+            {
+                Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
+                int texX = (int)((worldPosition.x / PMG.Width) * texWidth);
+                int texY = (int)((worldPosition.y / PMG.Height) * texHeight);
+                for (int x = texX - range; x < texX + range + 1; x++)
+                {
+                    for (int y = texY - range; y < texY + range + 1; y++)
+                    {
+                        riverMaskTexture.SetPixel(x, y, Color.white);
+                    }
+                }
+            }
+        }
+
+        riverMaskTexture.Apply();
+
+        return riverMaskTexture;
     }
 }

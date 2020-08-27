@@ -29,6 +29,8 @@ public class GameModel : MonoBehaviour
             if (mouseRegion != null)
             {
                 GameUI.LandmassInfo.SetLandmassInfo(mouseRegion.Landmass);
+                GameUI.RegionInfo.SetRegionInfo(mouseRegion);
+                GameUI.SetRiverInfo(mouseRegion.Rivers);
             }
         }
 

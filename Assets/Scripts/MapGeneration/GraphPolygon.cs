@@ -8,6 +8,7 @@ public class GraphPolygon
     public List<GraphNode> Nodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Neighbours = new List<GraphPolygon>();
+    public List<GraphPath> Rivers = new List<GraphPath>();
 
     public bool IsEdgePolygon;
 
@@ -18,8 +19,7 @@ public class GraphPolygon
 
     public bool IsWater;
     public bool IsNextToWater;
-
-    public bool Highlight;
+    public bool HasRiver;
 
     public Region Region;
 
@@ -29,7 +29,7 @@ public class GraphPolygon
         Connections = connections;
         Area = GeometryFunctions.GetPolygonArea(nodes.Select(x => x.Vertex).ToList());
 
-        IsEdgePolygon = nodes.Any(x => x.IsEdgeNode);
+        IsEdgePolygon = nodes.Any(x => x.Type == BorderPointType.Edge);
 
         Width = nodes.Max(x => x.Vertex.x) - nodes.Min(x => x.Vertex.x);
         Height = nodes.Max(x => x.Vertex.y) - nodes.Min(x => x.Vertex.y);
@@ -47,6 +47,11 @@ public class GraphPolygon
                 if (p != this && !Neighbours.Contains(p)) Neighbours.Add(p);
             }
         }
+    }
+
+    public void FindRivers()
+    {
+        HasRiver = Connections.Any(x => x.River != null);
     }
 
     public bool IsNextToLand()

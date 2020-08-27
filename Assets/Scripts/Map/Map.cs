@@ -20,6 +20,7 @@ public class Map
     public List<Border> EdgeBorders = new List<Border>();
     public List<Region> Regions = new List<Region>();
     public List<Landmass> Landmasses = new List<Landmass>();
+    public List<River> Rivers = new List<River>();
 
     // Display Mode
     public MapDisplayMode DisplayMode;
@@ -41,12 +42,24 @@ public class Map
 
         NameGenerator = new MarkovChainWordGenerator();
 
-        RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderTexture(PMG);
+        PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
+        RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap()
+    public void InitializeMap(List<GraphPath> riverPaths)
     {
+        InitRivers(riverPaths);
         IdentifyLandmasses();
+    }
+
+    private void InitRivers(List<GraphPath> riverPaths)
+    {
+        foreach (GraphPath r in riverPaths)
+        {
+            string name = GetRandomProvinceName() + " River";
+            River river = new River(name, r.Nodes.Select(x => x.BorderPoint).ToList(), r.Connections.Select(x => x.Border).ToList(), r.Polygons.Select(x => x.Region).ToList());
+            Rivers.Add(river);
+        }
     }
 
     private void IdentifyLandmasses()
@@ -126,12 +139,12 @@ public class Map
         if(IsShowingRegionBorders)
         {
             IsShowingRegionBorders = false;
-            PoliticalLandMaterial.SetTexture("_Mask", Texture2D.blackTexture);
+            PoliticalLandMaterial.SetTexture("_BorderMask", Texture2D.blackTexture);
         }
         else
         {
             IsShowingRegionBorders = true;
-            PoliticalLandMaterial.SetTexture("_Mask", RegionBorderMaskTexture);
+            PoliticalLandMaterial.SetTexture("_BorderMask", RegionBorderMaskTexture);
         }
     }
 

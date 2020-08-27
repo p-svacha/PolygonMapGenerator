@@ -7,8 +7,11 @@
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
-        _Mask("Mask (Greyscale)", 2D) = "black" {}
-        _MaskCol("Mask Color", Color) = (0,0,0,1)
+        _BorderMask("Border Mask (Greyscale)", 2D) = "black" {}
+        _BorderCol("Border Color", Color) = (0,0,0,1)
+
+        _RiverMask("River Mask (Greyscale)", 2D) = "black" {}
+        _RiverCol("River Color", Color) = (0,0,0,1)
     }
     SubShader
     {
@@ -23,18 +26,21 @@
         #pragma target 3.0
 
         sampler2D _MainTex;
-        sampler2D _Mask;
+        sampler2D _BorderMask;
+        sampler2D _RiverMask;
 
         struct Input
         {
             float2 uv_MainTex;
-            float2 uv_Mask;
+            float2 uv_BorderMask;
+            float2 uv_RiverMask;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        fixed4 _MaskCol;
+        fixed4 _BorderCol;
+        fixed4 _RiverCol;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -48,9 +54,13 @@
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 
-            // Blend with mask
-            fixed4 mask = tex2D(_Mask, IN.uv_Mask);
-            c = (mask * _MaskCol) + ((1 - mask) * c);
+            // Blend with river mask
+            fixed4 riverMask = tex2D(_RiverMask, IN.uv_RiverMask);
+            c = (riverMask * _RiverCol) + ((1 - riverMask) * c);
+
+            // Blend with border mask
+            fixed4 borderMask = tex2D(_BorderMask, IN.uv_BorderMask);
+            c = (borderMask * _BorderCol) + ((1 - borderMask) * c);
 
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables

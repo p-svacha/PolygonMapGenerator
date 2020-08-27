@@ -10,6 +10,7 @@ public class Border : MonoBehaviour
     public BorderPoint EndPoint;
 
     public List<Region> Regions = new List<Region>();
+    public River River;
 
     public Vector2 Center;
     public float Angle;

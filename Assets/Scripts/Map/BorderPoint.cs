@@ -7,6 +7,8 @@ public class BorderPoint : MonoBehaviour
     public const float Scale = 0.08f;
     public Vector2 Position;
 
+    public River River;
+
     public void Init(Vector2 pos)
     {
         Position = pos;

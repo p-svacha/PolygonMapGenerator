@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public static class WaterCreator
 {
@@ -26,6 +27,14 @@ public static class WaterCreator
 
     private static float MIN_TOTAL_LAND_COVERAGE = 0.52f;
 
+    private static float START_RIVER_SIZE = 2f;
+    private static int SIZE_PER_RIVER = 23;
+    private static int SIZE_PER_RIVER_RANGE = 6;
+    private static float MIN_RIVER_EXPANSION_RATE = 0.15f;
+    private static float MAX_RIVER_EXPANSION_RATE = 0.45f;
+    private static float MIN_RIVER_MAX_WIDTH = 7f;
+    private static float MAX_RIVER_MAX_WIDTH = 13f;
+
     public static void CreateWaters(PolygonMapGenerator PMG)
     {
         CreateOuterOcean(PMG);
@@ -35,6 +44,7 @@ public static class WaterCreator
         ExpandOceans(PMG);
         CreateBallOceans(PMG);
         ExpandLand(PMG);
+        CreateRivers(PMG);
     }
 
     public static void HandleInput(PolygonMapGenerator PMG)
@@ -43,48 +53,54 @@ public static class WaterCreator
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.W))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoTurnRandomPolygonToWater(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
 
         // E - Expand ocean
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.E))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoExpandOcean(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
 
         // C - Create continent cut
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.C))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoCreateContinentCut(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
 
         // O - Create ocean
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.O))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoCreateBallOcean(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
 
         // L - Expand land
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.L))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoExpandLand(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
 
         // V - Create River
         if (PMG.Map != null && Input.GetKeyDown(KeyCode.V))
         {
             PMG.Map.DestroyAllGameObjects();
+            PMG.Map = null;
             DoCreateRiver(PMG);
-            PMG.DrawMap();
+            PMG.GenerationState = MapGenerationState.DrawMap;
         }
     }
 
@@ -270,11 +286,88 @@ public static class WaterCreator
 
     public static void CreateRivers(PolygonMapGenerator PMG)
     {
-
+        int sizePerRiver = UnityEngine.Random.Range(SIZE_PER_RIVER - SIZE_PER_RIVER_RANGE, SIZE_PER_RIVER + SIZE_PER_RIVER_RANGE);
+        int numRivers = PMG.MapSize / sizePerRiver;
+        Debug.Log("Creating " + numRivers + " rivers.");
+        for (int i = 0; i < numRivers; i++) DoCreateRiver(PMG);
     }
     public static void DoCreateRiver(PolygonMapGenerator PMG)
     {
+        List<GraphConnection> inlandConnections = PMG.InGraphConnections.Where(x => x.River == null && x.Type == BorderType.Inland && x.StartNode.River == null && x.EndNode.River == null).ToList();
+        if (inlandConnections.Count == 0) return;
 
+        GraphPath river = new GraphPath();
+
+        List<GraphConnection> forbiddenConnections = new List<GraphConnection>();
+
+        GraphConnection lastSegment = inlandConnections[UnityEngine.Random.Range(0, inlandConnections.Count)];
+        GraphNode currentEndPoint;
+        GraphNode lastEndPoint;
+        if (UnityEngine.Random.Range(0, 2) == 0)
+        {
+            currentEndPoint = lastSegment.StartNode;
+            lastEndPoint = lastSegment.EndNode;
+        }
+        else
+        {
+            currentEndPoint = lastSegment.EndNode;
+            lastEndPoint = lastSegment.StartNode;
+        }
+        forbiddenConnections.AddRange(lastEndPoint.Connections);
+        river.Nodes.Add(lastEndPoint);
+        river.Nodes.Add(currentEndPoint);
+        river.Connections.Add(lastSegment);
+
+        bool endRiver = (currentEndPoint.Type == BorderPointType.Shore || currentEndPoint.River != null);
+        float expansionRate = UnityEngine.Random.Range(MIN_RIVER_EXPANSION_RATE, MAX_RIVER_EXPANSION_RATE);
+        float riverWidth = START_RIVER_SIZE;
+        float maxWidth = UnityEngine.Random.Range(MIN_RIVER_MAX_WIDTH, MAX_RIVER_MAX_WIDTH);
+        TurnConnectionToRiver(lastSegment, river, riverWidth);
+
+        while (!endRiver)
+        {
+            riverWidth += expansionRate;
+            if (riverWidth > maxWidth) riverWidth = maxWidth;
+            List<GraphConnection> candidates = currentEndPoint.Connections.Where(x => x.River == null && x.Type != BorderType.Shore && !forbiddenConnections.Contains(x) && (x.StartNode.River == null || x.EndNode.River == null)).ToList();
+            if (candidates.Count == 0)
+            {
+                
+                TurnRiverToLand(lastSegment);
+                river.Connections.Remove(lastSegment);
+                river.Nodes.Remove(currentEndPoint);
+
+                currentEndPoint = lastSegment.EndNode == currentEndPoint ? lastSegment.StartNode : lastSegment.EndNode;
+                foreach (GraphConnection c in currentEndPoint.Connections) if(forbiddenConnections.Contains(c)) forbiddenConnections.Remove(c);
+                forbiddenConnections.Add(lastSegment);
+                lastSegment = currentEndPoint.Connections.FirstOrDefault(x => x.River != null);
+                if (lastSegment == null) return;
+            }
+            else
+            {
+                lastSegment = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+                river.Connections.Add(lastSegment);
+
+                lastEndPoint = currentEndPoint;
+                forbiddenConnections.AddRange(lastEndPoint.Connections);
+
+                currentEndPoint = lastSegment.StartNode == currentEndPoint ? lastSegment.EndNode : lastSegment.StartNode;
+                river.Nodes.Add(currentEndPoint);
+
+                endRiver = (currentEndPoint.Type == BorderPointType.Shore || (currentEndPoint.River != null && currentEndPoint.Connections.Where(x => x.River != null).Min(x => x.RiverWidth) > riverWidth));
+                TurnConnectionToRiver(lastSegment, river, riverWidth);
+            }
+        }
+
+        // Add polygons to river
+        foreach(GraphConnection c in river.Connections)
+        {
+            foreach (GraphPolygon p in c.Polygons)
+            {
+                if (!river.Polygons.Contains(p)) river.Polygons.Add(p);
+                p.Rivers.Add(river);
+            }
+        }
+        PMG.RiverPaths.Add(river);
     }
 
 
@@ -283,6 +376,8 @@ public static class WaterCreator
         if (!p.IsWater)
         {
             p.IsWater = true;
+            foreach (GraphNode n in p.Nodes) n.SetType();
+            foreach (GraphConnection c in p.Connections) c.SetType();
             foreach (GraphPolygon pn in p.Neighbours) pn.IsNextToWater = true;
         }
     }
@@ -291,9 +386,26 @@ public static class WaterCreator
         if (p.IsWater)
         {
             p.IsWater = false;
-            foreach (GraphPolygon pn in p.Neighbours)
-                pn.IsNextToWater = pn.Neighbours.Any(x => x.IsWater);
+            foreach (GraphNode n in p.Nodes) n.SetType();
+            foreach (GraphConnection c in p.Connections) c.SetType();
+            foreach (GraphPolygon pn in p.Neighbours) pn.IsNextToWater = pn.Neighbours.Any(x => x.IsWater);
         }
+    }
+    private static void TurnConnectionToRiver(GraphConnection c, GraphPath river, float width)
+    {
+        c.River = river;
+        c.StartNode.River = river;
+        c.EndNode.River = river;
+        c.RiverWidth = width;
+        foreach (GraphPolygon p in c.Polygons) p.FindRivers();
+    }
+    private static void TurnRiverToLand(GraphConnection c)
+    {
+        c.River = null;
+        c.StartNode.River = null;
+        c.EndNode.River = null;
+        c.RiverWidth = 0;
+        foreach (GraphPolygon p in c.Polygons) p.FindRivers();
     }
 
 }

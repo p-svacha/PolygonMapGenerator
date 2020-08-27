@@ -15,6 +15,7 @@ public class PolygonMapGenerator : MonoBehaviour
 {
     public MapGenerationState GenerationState;
 
+    public int Seed;
     public Map Map;
     public Material SatelliteLandMaterial;
     public Material PoliticalLandMaterial;
@@ -27,6 +28,8 @@ public class PolygonMapGenerator : MonoBehaviour
     public List<GraphConnection> InGraphConnections = new List<GraphConnection>(); // All ingraph connections (WITHOUT edgeConnections)
     public List<GraphConnection> EdgeConnections = new List<GraphConnection>(); // Edge connections (both nodes of the connection are on the graph edge)
     public List<GraphPolygon> Polygons = new List<GraphPolygon>();
+
+    public List<GraphPath> RiverPaths = new List<GraphPath>();
 
     private List<GraphNode> InvalidNodes = new List<GraphNode>(); // Nodes that have less polygons than borders (and or not edge nodes)
 
@@ -76,9 +79,9 @@ public class PolygonMapGenerator : MonoBehaviour
     {
         StartCreation = DateTime.Now;
 
-        int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         //seed = -663403863;
-        UnityEngine.Random.InitState(seed);
+        UnityEngine.Random.InitState(Seed);
 
         Width = width;
         Height = height;
@@ -106,7 +109,7 @@ public class PolygonMapGenerator : MonoBehaviour
         int numStartLines = (int)(Width * Height * LINE_DENSITY);
         if (numStartLines == 0) numStartLines = 1;
 
-        Debug.Log("Starting with map creation with " + numStartLines + " random walkers. SEED: " + seed);
+        Debug.Log("Starting with map creation with " + numStartLines + " random walkers. SEED: " + Seed);
 
         for (int i = 0; i < numStartLines; i++)
         {
@@ -139,7 +142,7 @@ public class PolygonMapGenerator : MonoBehaviour
                     FindAllPolygons();
                     SetNeighbours(ignoreErrors: true);
                     GenerationState = MapGenerationState.RemoveInvalidNodes;
-                    Debug.Log(">----------- Found " + Polygons.Count + " Polygons. Removing isolated nodes...");
+                    Debug.Log(">----------- Found " + Polygons.Count + " Polygons. Removing isolated nodes... SEED: " + Seed);
                     break;
 
                 case MapGenerationState.RemoveInvalidNodes:
@@ -414,8 +417,8 @@ public class PolygonMapGenerator : MonoBehaviour
                 if (c.Polygons.Count != 1) Debug.Log("Edge connection " + c.ToString() + " does not have 1 polygon as expected! It has " + c.Polygons.Count);
         }
 
-        foreach (GraphConnection c in InGraphConnections) c.SetNeighboursAndType();
-        foreach (GraphConnection c in EdgeConnections) c.SetNeighboursAndType();
+        foreach (GraphConnection c in InGraphConnections) c.SetNeighbours();
+        foreach (GraphConnection c in EdgeConnections) c.SetNeighbours();
         foreach (GraphPolygon p in Polygons) p.SetNeighbours();
     }
 
@@ -448,7 +451,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         Map = new Map(this);
 
-        /*
+        
         // Add border points
         foreach (GraphNode n in Nodes)
         {
@@ -474,7 +477,6 @@ public class PolygonMapGenerator : MonoBehaviour
             c.Border = border;
             Map.EdgeBorders.Add(border);
         }
-        */
 
         // Add regions
         foreach (GraphPolygon p in Polygons)
@@ -484,13 +486,6 @@ public class PolygonMapGenerator : MonoBehaviour
 
             // Collider
             polygon.AddComponent<MeshCollider>();
-            /*
-            Vector3[] meshVertices = polygon.GetComponent<MeshFilter>().mesh.vertices;
-            int[] meshTriangles = polygon.GetComponent<MeshFilter>().mesh.triangles;
-            Vector2[] colliderPoints = new Vector2[meshTriangles.Length];
-            for (int n = 0; n < meshTriangles.Length; n++)
-                colliderPoints[n] = new Vector2(meshVertices[meshTriangles[n]].x, meshVertices[meshTriangles[n]].z);
-            */
 
             // Region
             Region region = polygon.AddComponent<Region>();
@@ -498,11 +493,9 @@ public class PolygonMapGenerator : MonoBehaviour
             Map.Regions.Add(region);
         }
 
-        /*
         foreach (GraphNode n in Nodes) n.BorderPoint.Init(n.Vertex);
         foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
-        */
         foreach (GraphPolygon p in Polygons) p.Region.Init(p, PoliticalWaterMaterial, SatelliteWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial);
 
         Map.ToggleHideBorderPoints();
@@ -510,7 +503,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         TextureGenerator.GenerateSatelliteTexture(this);
 
-        Map.InitializeMap();
+        Map.InitializeMap(RiverPaths);
     }
 
     /// <summary>
@@ -726,7 +719,7 @@ public class PolygonMapGenerator : MonoBehaviour
         if (InvalidNodes.Count == 0) return; // Nothing to do
 
         // 1. Identify balloon node polygons (nodes that have a polygon and more connections than polygons)
-        List<GraphNode> balloonNodes = Nodes.Where(x => !x.IsEdgeNode && x.Connections.Count - x.Polygons.Count >= 2 && x.Polygons.Count > 0).ToList();
+        List<GraphNode> balloonNodes = Nodes.Where(x => x.Type != BorderPointType.Edge && x.Connections.Count - x.Polygons.Count >= 2 && x.Polygons.Count > 0).ToList();
         List<GraphPolygon> balloonNodePolygons = new List<GraphPolygon>();
         foreach(GraphNode b in balloonNodes)
         {
@@ -734,7 +727,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         // 2. Remove all nodes that have no polygon, + their connections
-        List<GraphNode> isolatedNodes = Nodes.Where(x => !x.IsEdgeNode && x.Polygons.Count == 0).ToList();
+        List<GraphNode> isolatedNodes = Nodes.Where(x => x.Type != BorderPointType.Edge && x.Polygons.Count == 0).ToList();
         foreach(GraphNode n in isolatedNodes)
         {
             List<GraphConnection> connectionsToRemove = new List<GraphConnection>();
@@ -799,7 +792,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         // Create relevant lists
         List<GraphConnection> consBetweenPolygons = p1.Connections.Where(x => x.Polygons.Contains(p2)).ToList();
-        List<GraphNode> nodesBetweenPolygons = p1.Nodes.Where(x => x.Polygons.Count == 2 && x.Polygons.Contains(p2) && !x.IsEdgeNode).ToList();
+        List<GraphNode> nodesBetweenPolygons = p1.Nodes.Where(x => x.Polygons.Count == 2 && x.Polygons.Contains(p2) && x.Type != BorderPointType.Edge).ToList();
 
         //Debug.Log("Merging polygon with area " + p1.Area + " with polygon with area " + p2.Area + ". Removing " + nodesBetweenPolygons.Count + " nodes and " + consBetweenPolygons.Count + " connections.");
         //if (p1.IsEdgePolygon) Debug.Log("######################################################################################################### P1 is edge");

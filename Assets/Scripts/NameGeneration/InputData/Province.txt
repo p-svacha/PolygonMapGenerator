@@ -92,11 +92,9 @@ Tipaza
 Tissemsilt
 Tizi Ouzou
 Tlemcen
-Eastern
 Manu'a
-Rose Island
-Swains Island
-Western
+Rose
+Swains
 Andorra la Vella
 Canillo
 Encamp
@@ -124,30 +122,22 @@ Uige
 Zaire
 Barbuda
 Redonda
-Saint George
-Saint John
 Saint Mary
-Saint Paul
-Saint Peter
-Saint Philip
 Buenos Aires
 Catamarca
 Chaco
 Chubut
 Ciudad Autonoma de Buenos Aires
-Cordoba
 Corrientes
 Entre Rios
 Formosa
 Jujuy
 La Pampa
-La Rioja
+Rioja
 Mendoza
-Misiones
 Neuquen
 Rio Negro
 Salta
-San Juan
 San Luis
 Santa Cruz
 Santa Fe
@@ -236,60 +226,54 @@ Xizi
 Xocali
 Xocavand
 Yardimli
-Yevlax
 Zangilan
 Zaqatala
 Zardab
 Baku
 Ganca
-Lankaran
 Mingacevir
 Naftalan
 Naxcivan
 Nakhichevan
-Saki
 Sirvan
 Sumqayit
 Xankandi
 Yevlax
-Acklins Islands
-Berry Islands
+Acklins
+Berry
 Bimini
 Black Point
-Cat Island
+Cat
 Central Abaco
 Central Andros
 Central Eleuthera
-City of Freeport
-Crooked Island and Long Cay
+Freeport
+Crooked
+Long Cay
 East Grand Bahama
 Exuma
 Grand Cay
-Harbour Island
+Harbour
 Hope Town
 Inagua
-Long Island
+Long
 Mangrove Cay
 Mayaguana
-Moore's Island
+Moore's
 North Abaco
 North Andros
 North Eleuthera
-Ragged Island
+Ragged
 Rum Cay
-San Salvador
-South Abaco
-South Andros
-South Eleuthera
+Abaco
+Andros
+Eleuthera
 Spanish Wells
-West Grand Bahama
+Grand Bahama
 Asimah
 Capital
 Janubiyah
-Southern
 Muharraq
-Shamaliyah
-Northern
 Barishal
 Chattogram
 Dhaka
@@ -303,23 +287,20 @@ Christ Church
 Saint Andrew
 Saint George
 Saint James
-Saint John
 Saint Joseph
 Saint Lucy
 Saint Michael
-Saint Peter
 Saint Philip
 Saint Thomas
 Brest
 Homyel'
 Gomel'
 Horad Minsk
-Minsk City
+Minsk
 Hrodna
 Grodno
 Mahilyow
 Mogilev
-Minsk
 Vitsyebsk
 Vitebsk
 Brussels-Capital Region
@@ -333,7 +314,6 @@ Region Flamande
 Flandre
 Walloon Region
 Wallonia
-Wallonie
 Waals Gewest
 Wallonie
 Belize
@@ -356,11 +336,10 @@ Plateau
 Zou
 Devonshire
 Hamilton
-Hamilton
 Paget
 Pembroke
-Saint George
-Saint George's
+Saint
+George
 Sandys
 Smith's
 Southampton
@@ -388,19 +367,17 @@ Zhemgang
 Beni
 Chuquisaca
 Cochabamba
-La Paz
 Oruro
 Pando
 Potosi
-Santa Cruz
 Tarija
 Brcko District
 Brcko Distrikt
-Federation of Bosnia and Herzegovina
+Bosnia
+Herzegovina
 Federacija Bosne i Hercegovine
 Republika Srpska
 predominantly Serb
-Central
 Chobe
 Francistown
 Gaborone
@@ -410,11 +387,7 @@ Kgalagadi
 Kgatleng
 Kweneng
 Lobatse
-North East
-North West
 Selebi-Phikwe
-South East
-Southern
 Sowa Town
 Acre
 Alagoas
@@ -439,7 +412,7 @@ Rio Grande do Norte
 Rio Grande do Sul
 Rondonia
 Roraima
-Santa Catarina
+Catarina
 Sao Paulo
 Sergipe
 Tocantins
@@ -461,14 +434,12 @@ Pernik
 Pleven
 Plovdiv
 Razgrad
-Ruse
 Shumen
 Silistra
 Sliven
 Smolyan
 Sofia
 Sofia-Grad
-Sofia City
 Stara Zagora
 Targovishte
 Varna
@@ -479,16 +450,9 @@ Yambol
 Boucle du Mouhoun
 Cascades
 Centre
-Centre-Est
-Centre-Nord
-Centre-Ouest
-Centre-Sud
-Est
 Hauts-Bassins
-Nord
 Plateau-Central
 Sahel
-Sud-Ouest
 Nay Pyi Taw
 Chin
 Kachin
@@ -537,7 +501,8 @@ Ribeira Grande de Santiago
 Sal
 Santa Catarina
 Santa Catarina do Fogo
-Santa Cruz
+Santa
+Cruz
 Sao Domingos
 Sao Filipe
 Sao Lourenco dos Orgaos
@@ -572,41 +537,32 @@ Takeo
 Tbong Khmum
 Phnom Penh
 Adamaoua
-Centre
-East
 Est
-Far North
-Extreme-Nord
-Littoral
-North
-Nord
-North-West
-Nord-Ouest
-West
+Far
+Extreme
 Ouest
-South
 Sud
-South-West
 Sud-Ouest
 Alberta
 British Columbia
 Manitoba
 New Brunswick
-Newfoundland and Labrador
-Northwest Territories
+Newfoundland
+Labrador
+Territories
 Nova Scotia
 Nunavut
 Ontario
-Prince Edward Island
+Prince Edward
 Quebec
 Saskatchewan
 Yukon
 Bodden Town
-Cayman Brac and Little Cayman
+Cayman Brac
+Little Cayman
 East End
 George Town
 North Side
-West Bay
 Bamingui-Bangoran
 Bangui
 Basse-Kotto
@@ -656,13 +612,14 @@ Biobio
 Coquimbo
 Libertador General Bernardo O'Higgins
 Los Lagos
-Los Rios
+Los
+Rios
 Magallanes y de la Antartica Chilena
-Magallanes and Chilean Antarctica
+Magallanes
+Chilean Antarctica
 Maule
 Nuble
 Region Metropolitana
-Santiago
 Tarapaca
 Valparaiso
 Anhui
@@ -701,7 +658,6 @@ Tianjin
 Hong Kong
 Macau
 Taiwan
-Amazonas
 Antioquia
 Arauca
 Atlantico
@@ -718,7 +674,6 @@ Cordoba
 Cundinamarca
 Guainia
 Guaviare
-Huila
 La Guajira
 Magdalena
 Meta
@@ -764,15 +719,11 @@ Lualaba
 Mai-Ndombe
 Maniema
 Mongala
-Nord-Kivu
-North Kivu
-Nord-Ubangi
-North Ubangi
+Kivu
+Ubangi
 Sankuru
 Sud-Kivu
-South Kivu
 Sud-Ubangi
-South Ubangi
 Tanganyika
 Tshopo
 Tshuapa
@@ -790,7 +741,6 @@ Kouilou
 Lekoumou
 Likouala
 Niari
-Plateaux
 Pointe-Noire
 Pool
 Sangha
@@ -800,7 +750,7 @@ Guanacaste
 Heredia
 Limon
 Puntarenas
-San Jose
+Jose
 Abidjan
 Bas-Sassandra
 Comoe
@@ -885,17 +835,15 @@ Pafos
 Paphos
 Famagusta
 Girne
-Kyrenia
 Guzelyurt
 Morphou
 Iskele
 Trikomo
 Lefkosa
-Nicosia
 Jihocesky
-South Bohemia
+Bohemia
 Jihomoravsky
-South Moravia
+Moravia
 Karlovarsky
 Karlovy Vary
 Kralovehradecky
@@ -921,7 +869,6 @@ Highlands
 Zlinsky
 Zlin
 Hovedstaden
-Capital
 Midtjylland
 Central Jutland
 Nordjylland
@@ -936,16 +883,13 @@ Dikhil
 Djibouti
 Obock
 Tadjourah
-Saint Andrew
-Saint David
-Saint George
-Saint John
-Saint Joseph
+Andrew
+David
+Joseph
 Saint Luke
-Saint Mark
-Saint Patrick
+Mark
+Patrick
 Saint Paul
-Saint Peter
 Cibao Nordeste
 Cibao Noroeste
 Cibao Norte
@@ -957,7 +901,6 @@ Ozama
 Valdesia
 Yuma
 Azuay
-Bolivar
 Canar
 Carchi
 Chimborazo
@@ -982,7 +925,6 @@ Tungurahua
 Zamora-Chinchipe
 Ad Daqahliyah
 Al Bahr al Ahmar
-Red Sea
 Al Buhayrah
 Al Fayyum
 Al Gharbiyah
@@ -1003,7 +945,6 @@ Al Wadi al Jadid
 New Valley
 As Suways
 Suez
-Ash Sharqiyah
 Aswan
 Asyut
 Bani Suwayf
@@ -1012,20 +953,19 @@ Port Said
 Dumyat
 Damietta
 Janub Sina'
-South Sinai
+Sinai
 Kafr ash Shaykh
 Matruh
 Qina
 Shamal Sina'
-North Sinai
 Suhaj
 Ahuachapan
 Cabanas
 Chalatenango
 Cuscatlan
-La Libertad
+Libertad
 La Paz
-La Union
+Union
 Morazan
 San Miguel
 San Salvador
@@ -1042,14 +982,11 @@ Litoral
 Wele-Nzas
 Anseba
 Debub
-South
 Debubawi K'eyih Bahri
-Southern Red Sea
 Gash Barka
 Ma'akel
 Central
 Semenawi K'eyih Bahri
-Northern Red Sea
 Haapsalu
 Keila
 Kohtla-Jarve
@@ -1105,8 +1042,7 @@ Poltsamaa
 Polva
 Raasiku
 Rae
-Rakvere
-RÃÂ¤pina
+Rapina
 Rapla
 Rouge
 Ruhnu
@@ -1116,7 +1052,6 @@ Saku
 Saue
 Setomaa
 Tapa
-Tartu
 Toila
 Tori
 Torva
@@ -1124,11 +1059,9 @@ Turi
 Vaike-Maarja
 Valga
 Viimsi
-Viljandi
 Vinni
 Viru-Nigula
 Vormsi
-Voru
 Hhohho
 Lubombo
 Manzini
@@ -1150,8 +1083,7 @@ Sumale
 Somali
 Tigray
 Ye Debub Biheroch Bihereseboch na Hizboch
-Southern Nations
-Nationalities and Peoples
+Nations
 Eidhis
 Eystur
 Famjins
@@ -1188,7 +1120,8 @@ Kadavu
 Lau
 Lomaiviti
 Macuata
-Nadroga and Navosa
+Nadroga
+Navosa
 Naitasiri
 Namosi
 Ra
@@ -1197,91 +1130,53 @@ Rotuma
 Serua
 Tailevu
 Aland
-Swedish
 Ahvenanmaa
-Finnish
 Etela-Karjala
-Finnish
 Sodra Karelen
-Swedish
-South Karelia
+Karelia
 Etela-Pohjanmaa
-Finnish
 Sodra Osterbotten
-Swedish
-South Ostrobothnia
 Etela-Savo
-Finnish
 Sodra Savolax
-Swedish
-South Savo
+Savo
 Kanta-Hame
-Finnish
 Egentliga Tavastland
-Swedish
 Kainuu
-Finnish
 Kajanaland
-Swedish
 Keski-Pohjanmaa
-Finnish
 Mellersta Osterbotten
-Swedish
 Central Ostrobothnia
 Keski-Suomi
-Finnish
 Mellersta Finland
-Swedish
 Central Finland
 Kymenlaakso
-Finnish
 Kymmenedalen
-Swedish
 Lappi
-Finnish
 Lappland
-Swedish
 Paijat-Hame
-Finnish
 Paijanne-Tavastland
-Swedish
 Pirkanmaa
-Finnish
 Birkaland
-Swedish
 Tampere
 Pohjanmaa
-Finnish
 Osterbotten
-Swedish
 Ostrobothnia
 Pohjois-Karjala
-Finnish
 Norra Karelen
-Swedish
 North Karelia
 Pohjois-Pohjanmaa
-Finnish
 Norra Osterbotten
-Swedish
 North Ostrobothnia
 Pohjois-Savo
-Finnish
 Norra Savolax
-Swedish
 North Savo
 Satakunta
-Finnish and Swedish
 Uusimaa
-Finnish
 Nyland
-Swedish
 Newland
 Varsinais-Suomi
-Finnish
 Egentliga Finland
-Swedish
-Southwest Finland
+Finland
 Auvergne-Rhone-Alpes
 Bourgogne-Franche-Comte
 Burgundy-Free County
@@ -1312,13 +1207,13 @@ Lands of the Loire
 Provence-Alpes-Cote d'Azur
 Reunion
 Iles Australes
-Austral Islands
+Austral
 Iles du Vent
-Windward Islands
+Windward
 Iles Marquises
-Marquesas Islands
+Marquesas
 Iles Sous-le-Vent
-Leeward Islands
+Leeward
 Iles Tuamotu-Gambier
 Iles de la Societe
 Estuaire
@@ -1335,8 +1230,10 @@ Imereti
 Kakheti
 Kvemo Kartli
 Mtskheta Mtianeti
-Racha-Lechkhumi and Kvemo Svaneti
-Samegrelo and Zemo Svaneti
+Racha-Lechkhumi
+Kvemo Svaneti
+Samegrelo
+Zemo Svaneti
 Samtskhe-Javakheti
 Shida Kartli
 Tbilisi
@@ -1371,37 +1268,30 @@ Saxony-Anhalt
 Schleswig-Holstein
 Thueringen
 Thuringia
-note - Bayern
-Sachsen
 Freistaaten
 Ahafo
 Ashanti
 Bono
 Bono East
-Central
-Eastern
 Greater Accra
-North East
-Northern
 Oti
 Savannah
 Upper East
 Upper West
 Volta
-Western
-Western North
 Agion Oros
 Mount Athos
 Anatoliki Makedonia kai Thraki
-East Macedonia and Thrace
+East Macedonia
+Thrace
 Attiki
 Attica
 Dytiki Ellada
-West Greece
+Greece
 Dytiki Makedonia
-West Macedonia
+Macedonia
 Ionia Nisia
-Ionian Islands
+Ionian
 Ipeiros
 Epirus
 Kentriki Makedonia
@@ -1409,7 +1299,7 @@ Central Macedonia
 Kriti
 Crete
 Notio Aigaio
-South Aegean
+Aegean
 Peloponnisos
 Peloponnese
 Sterea Ellada
@@ -1423,11 +1313,9 @@ Kujalleq
 Qeqertalik
 Qeqqata
 Sermersooq
-Carriacou and Petite Martinique
-Saint Andrew
+Carriacou
+Petite Martinique
 Saint David
-Saint George
-Saint John
 Saint Mark
 Saint Patrick
 Alta Verapaz
@@ -1454,7 +1342,6 @@ Totonicapan
 Zacapa
 Castel
 Forest
-Saint Andrew
 Saint Martin
 Saint Peter Port
 Saint Pierre du Bois
@@ -1484,22 +1371,16 @@ Barima-Waini
 Cuyuni-Mazaruni
 Demerara-Mahaica
 East Berbice-Corentyne
-Essequibo Islands-West Demerara
+Essequibo
+Demerara
 Mahaica-Berbice
 Pomeroon-Supenaam
 Potaro-Siparuni
 Upper Demerara-Berbice
 Upper Takutu-Upper Essequibo
 Artibonite
-Centre
 Grand'Anse
 Nippes
-Nord
-Nord-Est
-Nord-Ouest
-Ouest
-Sud
-Sud-Est
 Atlantida
 Choluteca
 Colon
@@ -1511,7 +1392,7 @@ Francisco Morazan
 Gracias a Dios
 Intibuca
 Islas de la Bahia
-La Paz
+Paz
 Lempira
 Ocotepeque
 Olancho
@@ -1558,7 +1439,6 @@ Szekszard
 Szolnok
 Szombathely
 Tatabanya
-Veszprem
 Zalaegerszeg
 Budapest
 Akrahreppur
@@ -1635,20 +1515,25 @@ Tjorneshreppur
 Vestmannaeyjabaer
 Vesturbyggdh
 Vopnafjardharhreppur
-Andaman and Nicobar Islands
+Andaman
+Nicobar
 Andhra Pradesh
 Arunachal Pradesh
 Assam
 Bihar
 Chandigarh
 Chhattisgarh
-Dadra and Nagar Haveli and Daman and Diu
+Dadra
+Nagar Haveli
+Daman
+Diu
 Delhi
 Goa
 Gujarat
 Haryana
 Himachal Pradesh
-Jammu and Kashmir
+Jammu
+Kashmir
 Jharkhand
 Karnataka
 Kerala
@@ -1662,7 +1547,6 @@ Mizoram
 Nagaland
 Odisha
 Puducherry
-Punjab
 Rajasthan
 Sikkim
 Tamil Nadu
@@ -1670,7 +1554,7 @@ Telangana
 Tripura
 Uttar Pradesh
 Uttarakhand
-West Bengal
+Bengal
 Aceh
 Bali
 Banten
@@ -1679,15 +1563,14 @@ Gorontalo
 Jakarta
 Jambi
 Jawa Barat
-West Java
+Java
 Jawa Tengah
 Central Java
 Jawa Timur
 East Java
 Kalimantan Barat
-West Kalimantan
+Kalimantan
 Kalimantan Selatan
-South Kalimantan
 Kalimantan Tengah
 Central Kalimantan
 Kalimantan Timur
@@ -1695,42 +1578,37 @@ East Kalimantan
 Kalimantan Utara
 North Kalimantan
 Kepulauan Bangka Belitung
-Bangka Belitung Islands
+Bangka Belitung
 Kepulauan Riau
-Riau Islands
+Riau
 Lampung
 Maluku
 Maluku Utara
 North Maluku
 Nusa Tenggara Barat
-West Nusa Tenggara
+Nusa Tenggara
 Nusa Tenggara Timur
 East Nusa Tenggara
-Papua
 Papua Barat
-West Papua
-Riau
+Papua
 Sulawesi Barat
-West Sulawesi
+Sulawesi
 Sulawesi Selatan
-South Sulawesi
 Sulawesi Tengah
 Central Sulawesi
 Sulawesi Tenggara
-Southeast Sulawesi
 Sulawesi Utara
 North Sulawesi
 Sumatera Barat
-West Sumatra
+Sumatra
 Sumatera Selatan
-South Sumatra
 Sumatera Utara
 North Sumatra
 Yogyakarta
 Alborz
 Ardabil
 Azarbayjan-e Gharbi
-West Azerbaijan
+Azerbaijan
 Azarbayjan-e Sharqi
 East Azerbaijan
 Bushehr
@@ -1745,7 +1623,7 @@ Ilam
 Kerman
 Kermanshah
 Khorasan-e Jonubi
-South Khorasan
+Khorasan
 Khorasan-e Razavi
 Razavi Khorasan
 Khorasan-e Shomali
@@ -1771,24 +1649,19 @@ Ad Diwaniyah
 An Najaf
 Arbil
 Erbil
-Arabic
 Hewler
-Kurdish
 As Sulaymaniyah
-Arabic
 Slemani
-Kurdish
 Babil
 Baghdad
 Dahuk
-Arabic
 Dihok
 Kurdish
 Dhi Qar
 Diyala
 Karbala'
 Kirkuk
-Kurdistan Regional Government
+Kurdistan
 Maysan
 Ninawa
 Salah ad Din
@@ -1797,12 +1670,10 @@ Carlow
 Cavan
 Clare
 Cork
-Cork
 Donegal
 Dublin
 Dun Laoghaire-Rathdown
 Fingal
-Galway
 Galway
 Kerry
 Kildare
@@ -1818,17 +1689,13 @@ Monaghan
 Offaly
 Roscommon
 Sligo
-South Dublin
 Tipperary
 Waterford
 Westmeath
 Wexford
 Wicklow
-Central
 Haifa
 Jerusalem
-Northern
-Southern
 Tel Aviv
 Abruzzo
 Basilicata
@@ -1867,13 +1734,11 @@ Hanover
 Kingston
 Manchester
 Portland
-Saint Andrew
 Saint Ann
 Saint Catherine
 Saint Elizabeth
-Saint James
-Saint Mary
-Saint Thomas
+James
+Mary
 Trelawny
 Westmoreland
 Aichi
@@ -1938,7 +1803,6 @@ Ma'an
 Madaba
 Almaty
 Taldyqorghan
-Almaty
 Aqmola
 Kokshetau
 Aqtobe
@@ -1967,7 +1831,6 @@ Taraz
 Baringo
 Bomet
 Bungoma
-Busia
 Elgeyo
 Marakwet
 Embu
@@ -1994,7 +1857,7 @@ Meru
 Migori
 Mombasa
 Murang'a
-Nairobi City
+Nairobi
 Nakuru
 Nandi
 Narok
@@ -2012,21 +1875,17 @@ Turkana
 Uasin Gishu
 Vihiga
 Wajir
-West Pokot
-Gilbert Islands
-Line Islands
-Phoenix Islands
+Pokot
+Gilbert
+Line
+Phoenix
 Banaba
-Central Gilberts
-Line Islands
-Northern Gilberts
-Southern Gilberts
+Gilberts
 Tarawa
 Abaiang
 Abemama
 Aranuka
 Arorae
-Banaba
 Beru
 Butaritari
 Kanton
@@ -2041,7 +1900,6 @@ Onotoa
 Tabiteuea
 Tabuaeran
 Tamana
-Tarawa
 Teraina
 District de Bamako
 Gao
@@ -2094,19 +1952,16 @@ Munxar
 Nadur
 Naxxar
 Paola
-Pembroke
 Pieta
 Qala
 Qormi
 Qrendi
-Rabat
 Rabat
 Ghawdex
 Safi
 San Giljan
 Saint Julian
 San Gwann
-Saint John
 San Lawrenz
 Saint Lawrence
 Sannat
@@ -2127,8 +1982,6 @@ Xewkija
 Xghajra
 Zabbar
 Zebbug
-Zebbug
-Ghawdex
 Zejtun
 Zurrieq
 Ailinglaplap
@@ -2155,7 +2008,7 @@ Ujae
 Utrik
 Wotho
 Wotje
-Agalega Islands
+Agalega
 Black River
 Cargados Carajos Shoals
 Flacq
@@ -2211,7 +2064,6 @@ Basarabeasca
 Briceni
 Cahul
 Cantemir
-Calarasi
 Causeni
 Cimislia
 Criuleni
@@ -2324,8 +2176,7 @@ Zambezia
 Erongo
 Hardap
 Karas
-Kavango East
-Kavango West
+Kavango
 Khomas
 Kunene
 Ohangwena
@@ -2373,19 +2224,16 @@ Saba
 Sint Eustatius
 Utrecht
 Zeeland
-Zealand
 Zuid-Holland
-South Holland
+Holland
 Province Iles
-Islands Province
-Province Nord
+Province
 North Province
 and Province Sud
-South Province
 Auckland
 Bay of Plenty
 Canterbury
-Chatham Islands
+Chatham
 Gisborne
 Hawke's Bay
 Manawatu-Wanganui
@@ -2398,7 +2246,7 @@ Taranaki
 Tasman
 Waikato
 Wellington
-West Coast
+Coast
 Boaco
 Carazo
 Chinandega
@@ -2455,7 +2303,6 @@ Ogun
 Ondo
 Osun
 Oyo
-Plateau
 Rivers
 Sokoto
 Taraba
@@ -2532,7 +2379,6 @@ Vrapciste
 Zelenikovo
 Zelino
 Zrnovci
-Northern Islands
 Rota
 Saipan
 Tinian
@@ -2560,15 +2406,15 @@ Al Wusta
 Az Zahirah
 Janub al Batinah
 Al Batinah South
-Janub ash Sharqiyah
-Ash Sharqiyah South
+Janub
+Sharqiyah
 Masqat
 Muscat
 Musandam
 Shamal al Batinah
 Al Batinah North
-Shamal ash Sharqiyah
-Ash Sharqiyah North
+Shamal
+Ash Sharqiyah
 Zufar
 Dhofar
 Azad Kashmir
@@ -2597,7 +2443,6 @@ Sonsorol
 Bocas del Toro
 Chiriqui
 Cocle
-Colon
 Darien
 Embera-Wounaan
 Herrera
@@ -2608,9 +2453,7 @@ Panama
 Panama Oeste
 Veraguas
 Bougainville
-Central
 Chimbu
-Eastern Highlands
 East New Britain
 East Sepik
 Enga
@@ -2623,12 +2466,8 @@ Milne Bay
 Morobe
 National Capital
 New Ireland
-Northern
-Southern Highlands
-Western
-Western Highlands
-West New Britain
-West Sepik
+New Britain
+Sepik
 Alto Paraguay
 Alto Parana
 Amambay
@@ -2637,7 +2476,6 @@ Boqueron
 Caaguazu
 Caazapa
 Canindeyu
-Central
 Concepcion
 Cordillera
 Guaira
@@ -2647,7 +2485,6 @@ Neembucu
 Paraguari
 Presidente Hayes
 San Pedro
-Amazonas
 Ancash
 Apurimac
 Arequipa
@@ -2661,7 +2498,6 @@ Ica
 Junin
 La Libertad
 Lambayeque
-Lima
 Lima
 Loreto
 Madre de Dios
@@ -2699,13 +2535,12 @@ Catanduanes
 Cavite
 Cebu
 Compostela
-Cotabato
 Davao del Norte
 Davao del Sur
 Davao Occidental
 Davao Oriental
-Dinagat Islands
-Eastern Samar
+Dinagat
+Samar
 Guimaras
 Ifugao
 Ilocos Norte
@@ -2728,7 +2563,6 @@ Misamis Oriental
 Mountain
 Negros Occidental
 Negros Oriental
-Northern Samar
 Nueva Ecija
 Nueva Vizcaya
 Palawan
@@ -2738,12 +2572,10 @@ Quezon
 Quirino
 Rizal
 Romblon
-Samar
 Sarangani
 Siquijor
 Sorsogon
-South Cotabato
-Southern Leyte
+Cotabato
 Sultan Kudarat
 Sulu
 Surigao del Norte
@@ -2760,13 +2592,10 @@ Baguio
 Butuan
 Cagayan de Oro
 Caloocan
-Cebu
-Cotabato
 Dagupan
 Davao
 General Santos
 Iligan
-Iloilo
 Lapu-Lapu
 Las Pinas
 Lucena
@@ -2785,7 +2614,6 @@ Paranaque
 Pasay
 Pasig
 Puerto Princesa
-Quezon
 San Juan
 Santiago
 Tacloban
@@ -2823,7 +2651,6 @@ Wielkopolskie
 Greater Poland
 Zachodniopomorskie
 West Pomerania
-Beja
 Braga
 Braganca
 Castelo Branco
@@ -2857,7 +2684,6 @@ Cabo Rojo
 Caguas
 Camuy
 Canovanas
-Carolina
 Catano
 Cayey
 Ceiba
@@ -2865,7 +2691,6 @@ Ciales
 Cidra
 Coamo
 Comerio
-Corozal
 Culebra
 Dorado
 Fajardo
@@ -2878,7 +2703,6 @@ Gurabo
 Hatillo
 Hormigueros
 Humacao
-Isabela
 Jayuya
 Juana Diaz
 Juncos
@@ -2906,7 +2730,6 @@ Rio Grande
 Sabana Grande
 Salinas
 San German
-San Juan
 San Lorenzo
 San Sebastian
 Santa Isabel
@@ -2921,7 +2744,8 @@ Villalba
 Yabucoa
 Yauco
 Ad Dawhah
-Al Khawr wa adh Dhakhirah
+Al Khawr
+Dhakhirah
 Al Wakrah
 Ar Rayyan
 Ash Shamal
@@ -2990,7 +2814,6 @@ Kursk
 Leningrad
 Lipetsk
 Magadan
-Moscow
 Murmansk
 Nizhniy Novgorod
 Novgorod
@@ -3071,7 +2894,6 @@ Nenets
 Nar'yan-Mar
 Yamalo-Nenets
 Salekhard
-Altay
 Barnaul
 Kamchatka
 Petropavlovsk-Kamchatskiy
@@ -3109,7 +2931,7 @@ Saint Paul Capesterre
 Saint Paul Charlestown
 Saint Peter Basseterre
 Saint Thomas Lowland
-Saint Thomas Middle Island
+Saint Thomas Middle
 Trinity Palmetto Point
 Anse-la-Raye
 Canaries
@@ -3125,10 +2947,6 @@ Saint Pierre
 Miquelon
 Charlotte
 Grenadines
-Saint Andrew
-Saint David
-Saint George
-Saint Patrick
 A'ana
 Aiga-i-le-Tai
 Atua
@@ -3157,16 +2975,15 @@ Lobata
 Me-Zochi
 Principe
 Al Bahah
-Al Hudud ash Shamaliyah
-Northern Border
+Al Hudud
+Shamaliyah
+Border
 Al Jawf
 Al Madinah al Munawwarah
 Medina
 Al Qasim
 Ar Riyad
 Riyadh
-Ash Sharqiyah
-Eastern
 'Asir
 Ha'il
 Jazan
@@ -3347,7 +3164,7 @@ Cascade
 Glacis
 Grand Anse Mahe
 Grand Anse Praslin
-Inner Islands
+Inner
 La Riviere Anglaise
 Les Mamalles
 Mont Buxton
@@ -3582,16 +3399,15 @@ Novo Mesto
 Ptuj
 Slovenj Gradec
 Velenje
-Central
-Choiseul
 Guadalcanal
 Honiara
 Isabel
-Makira and Ulawa
+Makira
+Ulawa
 Malaita
-Rennell and Bellona
+Rennell
+Bellona
 Temotu
-Western
 Awdal
 Bakool
 Banaadir
@@ -3614,32 +3430,27 @@ Lower Shabeelle
 Sool
 Togdheer
 Woqooyi Galbeed
-Eastern Cape
 Free State
 Gauteng
 KwaZulu-Natal
 Limpopo
 Mpumalanga
-Northern Cape
-North West
-Western Cape
-Central Equatoria
-Eastern Equatoria
+Cape
+Equatoria
 Jonglei
 Lakes
-Northern Bahr el Ghazal
+Bahr el Ghazal
 Unity
 Upper Nile
 Warrap
-Western Bahr el Ghazal
-Western Equatoria
-Pibor and Ruweng
+Pibor
+Ruweng
 Abyei
 Andalucia
 Aragon
 Asturias
 Canarias
-Canary Islands
+Canary
 Cantabria
 Castilla-La Mancha
 Castilla-Leon
@@ -3652,61 +3463,42 @@ Aranese
 Catalonia
 Ceuta
 Comunidad Valenciana
-Castilian
 Comunitat Valenciana
 Valencian
 Valencian Community
 Extremadura
 Galicia
 Illes Baleares
-Balearic Islands
+Balearic
 La Rioja
 Madrid
 Melilla
 Murcia
 Navarra
-Castilian
 Nafarroa
 Basque
 Navarre
 Pais Vasco
-Castilian
 Euskadi
-Basque
 Basque Country
-Central
-Eastern
-North Central
-Northern
-North Western
 Sabaragamuwa
-Southern
 Uva
-Western
 Blue Nile
-Central Darfur
-East Darfur
 Gedaref
 Gezira
 Kassala
 Khartoum
-North Darfur
-North Kordofan
-Northern
+Darfur
+Kordofan
 Red Sea
 River Nile
 Sennar
-South Darfur
-South Kordofan
-West Darfur
-West Kordofan
 White Nile
 Brokopondo
 Commewijne
 Coronie
 Marowijne
 Nickerie
-Para
 Paramaribo
 Saramacca
 Sipaliwini
@@ -3796,21 +3588,13 @@ Pingtung
 Taitung
 Yilan
 Yunlin
-Chiayi
-Hsinchu
 Keelung
 Kaohsiung
-city
 New Taipei
-city
 Taichung
-city
 Tainan
-city
 Taipei
-city
 Taoyuan
-city
 Dushanbe
 Khatlon
 Bokhtar
@@ -3834,23 +3618,20 @@ Katavi
 Kigoma
 Kilimanjaro
 Kusini Pemba
-Pemba South
+Pemba
 Kusini Unguja
 Zanzibar Central
-South
 Lindi
 Manyara
 Mara
 Mbeya
 Mjini Magharibi
 Zanzibar Urban
-West
 Morogoro
 Mtwara
 Mwanza
 Njombe
 Pwani
-Coast
 Rukwa
 Ruvuma
 Shinyanga
@@ -3958,9 +3739,7 @@ Pante Macassar
 Viqueque
 Centrale
 Kara
-Maritime
 Plateaux
-Savanes
 'Eua
 Ha'apai
 Ongo Niua
@@ -3982,7 +3761,7 @@ Penal
 Debe
 Princes Town
 Sangre Grande
-San Juan
+Juan
 Laventille
 Siparia
 Tunapuna
@@ -4285,7 +4064,6 @@ Khmelnytskyi
 Kirovohrad
 Kropyvnytskyi
 Kyiv
-Kyiv
 Luhansk
 Lviv
 Mykolaiv
@@ -4337,9 +4115,10 @@ Staffordshire
 Suffolk
 Surrey
 Warwickshire
-West Sussex
+Sussex
 Worcestershire
-Barking and Dagenham
+Barking
+Dagenham
 Barnet
 Bexley
 Brent
@@ -4350,18 +4129,20 @@ Ealing
 Enfield
 Greenwich
 Hackney
-Hammersmith and Fulham
+Hammersmith
+Fulham
 Haringey
 Harrow
 Havering
 Hillingdon
 Hounslow
 Islington
-Kensington and Chelsea
+Kensington
+Chelsea
 Kingston upon Thames
 Lambeth
 Lewisham
-City of London
+London
 Merton
 Newham
 Redbridge
@@ -4386,7 +4167,6 @@ Kirklees
 Knowlsey
 Leeds
 Liverpool
-Manchester
 Newcastle upon Tyne
 North Tyneside
 Oldham
@@ -4397,7 +4177,7 @@ Sandwell
 Sefton
 Sheffield
 Solihull
-South Tyneside
+Tyneside
 St. Helens
 Stockport
 Sunderland
@@ -4408,22 +4188,23 @@ Walsall
 Wigan
 Wirral
 Wolverhampton
-Bath and North East Somerset
+Bath
 Bedford
 Blackburn with Darwen
 Blackpool
 Bournemouth
-Christchurch and Poole
+Christchurch
+Poole
 Bracknell Forest
-Brighton and Hove
-City of Bristol
+Brighton
+Hove
+Bristol
 Central Bedfordshire
-Cheshire East
-Cheshire West and Chester
+Cheshire
+Chester
 Cornwall
 Darlington
 Derby
-Dorset
 Durham County
 East Riding of Yorkshire
 Halton
@@ -4431,7 +4212,7 @@ Hartlepool
 Herefordshire
 Isle of Wight
 Isles of Scilly
-City of Kingston upon Hull
+Kingston upon Hull
 Leicester
 Luton
 Medway
@@ -4446,73 +4227,80 @@ Peterborough
 Plymouth
 Portsmouth
 Reading
-Redcar and Cleveland
+Redcar
+Cleveland
 Rutland
 Shropshire
 Slough
-South Gloucestershire
-Southampton
 Southend-on-Sea
 Stockton-on-Tees
 Stoke-on-Trent
 Swindon
-Telford and Wrekin
+Telford
+Wrekin
 Thurrock
 Torbay
 Warrington
-West Berkshire
+Berkshire
 Wiltshire
-Windsor and Maidenhead
+Windsor
+Maidenhead
 Wokingham
 York
-Antrim and Newtownabbey
-Ards and North Down
-Armagh City
+Antrim
+Newtownabbey
+Ards
+North Down
+Armagh
 Banbridge
 and Craigavon
-Causeway Coast and Glens
-Mid and East Antrim
-Derry City and Strabane
-Fermanagh and Omagh
+Causeway Coast
+Glens
+Mid
+Derry
+Strabane
+Fermanagh
+Omagh
 Mid Ulster
 Newry
 Murne
 and Down
 Belfast
-Lisburn and Castlereagh
-Aberdeen City
+Lisburn
+Castlereagh
+Aberdeen
 Aberdeenshire
 Angus
-Argyll and Bute
+Argyll
+Bute
 Clackmannanshire
-Dumfries and Galloway
-Dundee City
+Dumfries
+Galloway
+Dundee
 East Ayrshire
 East Dunbartonshire
 East Lothian
 East Renfrewshire
-City of Edinburgh
+Edinburgh
 Eilean Siar
-Western Isles
 Falkirk
 Fife
-Glasgow City
+Glasgow
 Highland
 Inverclyde
 Midlothian
 Moray
-North Ayrshire
-North Lanarkshire
-Orkney Islands
-Perth and Kinross
+Ayrshire
+Lanarkshire
+Orkney
+Perth
+Kinross
 Renfrewshire
-Shetland Islands
-South Ayrshire
-South Lanarkshire
+Shetland
 Stirling
 The Scottish Borders
-West Dunbartonshire
-West Lothian
+Dunbartonshire
+Lothian
 Blaenau Gwent
 Bridgend
 Caerphilly
@@ -4544,7 +4332,6 @@ Colorado
 Connecticut
 Delaware
 District of Columbia
-Florida
 Georgia
 Hawaii
 Idaho
@@ -4561,29 +4348,25 @@ Michigan
 Minnesota
 Mississippi
 Missouri
-Montana
 Nebraska
 Nevada
 New Hampshire
 New Jersey
 New Mexico
 New York
-North Carolina
-North Dakota
+Carolina
+Dakota
 Ohio
 Oklahoma
 Oregon
 Pennsylvania
-Rhode Island
-South Carolina
-South Dakota
+Rhode
 Tennessee
 Texas
 Utah
 Vermont
 Virginia
 Washington
-West Virginia
 Wisconsin
 Wyoming
 Artigas
@@ -4592,12 +4375,12 @@ Cerro Largo
 Colonia
 Durazno
 Flores
-Florida
 Lavalleja
 Maldonado
 Montevideo
 Paysandu
-Rio Negro
+Rio
+Negro
 Rivera
 Rocha
 Salto
@@ -4625,7 +4408,7 @@ Guliston
 Surxondaryo Viloyati
 Termiz
 Toshkent Shahri
-Tashkent City
+Tashkent
 Toshkent Viloyati
 Tashkent Province
 Xorazm Viloyati
@@ -4636,12 +4419,10 @@ Sanma
 Shefa
 Tafea
 Torba
-Amazonas
 Anzoategui
 Apure
 Aragua
 Barinas
-Bolivar
 Carabobo
 Cojedes
 Delta Amacuro
@@ -4657,7 +4438,6 @@ Miranda
 Monagas
 Nueva Esparta
 Portuguesa
-Sucre
 Tachira
 Trujillo
 Vargas
@@ -4726,11 +4506,10 @@ Da Nang
 Ha Noi
 Hanoi
 Hai Phong
-Ho Chi Minh City
+Ho Chi Minh
 Saigon
 Saint Croix
 Saint John
-Saint Thomas
 Alo
 Sigave
 Uvea
@@ -4740,11 +4519,10 @@ Aden
 Ad Dali'
 Al Bayda'
 Al Hudaydah
-Al Jawf
 Al Mahrah
 Al Mahwit
 Amanat al 'Asimah
-Sanaa City
+Sanaa
 'Amran
 Arkhabil Suqutra
 Socotra Archipelago
@@ -4757,26 +4535,16 @@ Ma'rib
 Raymah
 Sa'dah
 San'a'
-Sanaa
 Shabwah
 Ta'izz
-Central
 Copperbelt
-Eastern
 Luapula
 Lusaka
 Muchinga
-Northern
-North-Western
-Southern
-Western
 Bulawayo
 Harare
 Manicaland
-Mashonaland Central
-Mashonaland East
-Mashonaland West
+Mashonaland
 Masvingo
-Matabeleland North
-Matabeleland South
+Matabeleland
 Midlands

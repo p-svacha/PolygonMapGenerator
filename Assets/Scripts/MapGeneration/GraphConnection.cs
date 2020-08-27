@@ -10,8 +10,10 @@ public class GraphConnection
 
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Polygons = new List<GraphPolygon>();
+    public GraphPath River;
 
-    public GraphConnectionType Type;
+    public BorderType Type;
+    public float RiverWidth;
 
     public Border Border;
 
@@ -20,10 +22,10 @@ public class GraphConnection
         StartNode = start;
         EndNode = end;
 
-        Type = (start.IsEdgeNode || end.IsEdgeNode) ? GraphConnectionType.Edge : GraphConnectionType.Inland;
+        Type = (start.Type == BorderPointType.Edge || end.Type == BorderPointType.Edge) ? BorderType.Edge : BorderType.Inland;
     }
 
-    public void SetNeighboursAndType()
+    public void SetNeighbours()
     {
         Connections.Clear();
 
@@ -36,13 +38,14 @@ public class GraphConnection
         {
             if (c != this && !Connections.Contains(c)) Connections.Add(c);
         }
+    }
 
-        // Set type
-        if (StartNode.IsEdgeNode || EndNode.IsEdgeNode) Type = GraphConnectionType.Edge;
-        else if (Polygons.All(x => x.IsWater)) Type = GraphConnectionType.Water;
-        else if (Polygons.All(x => !x.IsWater)) Type = GraphConnectionType.Inland;
-        else Type = GraphConnectionType.Shore;
-
+    public void SetType()
+    {
+        if (Type == BorderType.Edge) return;
+        else if (Polygons.All(x => x.IsWater)) Type = BorderType.Water;
+        else if (Polygons.All(x => !x.IsWater)) Type = BorderType.Inland;
+        else Type = BorderType.Shore;
     }
 
     public override string ToString()

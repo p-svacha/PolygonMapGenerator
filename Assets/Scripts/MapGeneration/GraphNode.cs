@@ -12,13 +12,14 @@ public class GraphNode
     public int Id;
     public Vector2 Vertex;
 
-    public bool IsEdgeNode;
-
     public List<GraphNode> ConnectedNodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Polygons = new List<GraphPolygon>();
+    public GraphPath River;
 
     public List<GraphNode> VisitedNeighbours = new List<GraphNode>(); // Used for performant polygon finding
+
+    public BorderPointType Type;
 
     public BorderPoint BorderPoint; // corresponding visual border point on the map
 
@@ -27,7 +28,15 @@ public class GraphNode
         Id = idCounter++;
         Vertex = v;
 
-        IsEdgeNode = (v.x == 0 || v.x == PMG.Width || v.y == 0 || v.y == PMG.Height);
+        Type = (v.x == 0 || v.x == PMG.Width || v.y == 0 || v.y == PMG.Height) ? BorderPointType.Edge : BorderPointType.Inland;
+    }
+
+    public void SetType()
+    {
+        if (Type == BorderPointType.Edge) return;
+        else if (Polygons.All(x => x.IsWater)) Type = BorderPointType.Water;
+        else if (Polygons.Any(x => x.IsWater)) Type = BorderPointType.Shore;
+        else Type = BorderPointType.Inland;
     }
 
     /// <summary>

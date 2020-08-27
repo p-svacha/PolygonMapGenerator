@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Region : MonoBehaviour
 {
+    public string Name;
+
     public float Width;
     public float Height;
     public float Area;
@@ -17,6 +19,7 @@ public class Region : MonoBehaviour
     public List<Border> Borders = new List<Border>();
     public List<Region> NeighbouringRegions = new List<Region>();
     public Landmass Landmass;
+    public List<River> Rivers = new List<River>();
 
     public Material SatelliteWaterMaterial;
     public Material PoliticalWaterMaterial;
