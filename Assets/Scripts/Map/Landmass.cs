@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Landmass
@@ -18,6 +19,14 @@ public class Landmass
         get
         {
             return Regions.Count;
+        }
+    }
+
+    public float Area
+    {
+        get
+        {
+            return Regions.Sum(x => x.Area);
         }
     }
 }

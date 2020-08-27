@@ -10,12 +10,12 @@ public static class WaterCreator
     private static float OUTER_OCEAN_SIZE = 10f;
 
     private static int MIN_BALL_OCEANS = 1;
-    private static int SIZE_PER_BALL_OCEAN = 200;
+    private static int SIZE_PER_BALL_OCEAN = 190;
     private static int SIZE_PER_BALL_OCEAN_RANGE = 60;
     private static float OCEAN_ISLAND_CHANCE = 0.15f; // Chance that a region within an ocean doesn't get transformed
 
     private static int MIN_CONTINENT_CUTS = 1;
-    private static int SIZE_PER_CONTINENT_CUT = 200;
+    private static int SIZE_PER_CONTINENT_CUT = 190;
     private static int SIZE_PER_CONTINENT_CUT_RANGE = 60;
     private static float MIN_CONTINENT_CUT_WIDTH = 0f;
     private static float MAX_CONTINENT_CUT_WIDTH = 1.5f;
@@ -83,10 +83,10 @@ public static class WaterCreator
     private static void CreateOuterOcean(PolygonMapGenerator PMG)
     {
         // Create outer edge nodes
-        GraphNode oc1 = new GraphNode(new Vector2(-OUTER_OCEAN_SIZE, -OUTER_OCEAN_SIZE));
-        GraphNode oc2 = new GraphNode(new Vector2(PolygonMapGenerator.MAP_WIDTH + OUTER_OCEAN_SIZE, -OUTER_OCEAN_SIZE));
-        GraphNode oc3 = new GraphNode(new Vector2(PolygonMapGenerator.MAP_WIDTH + OUTER_OCEAN_SIZE, PolygonMapGenerator.MAP_HEIGHT + OUTER_OCEAN_SIZE));
-        GraphNode oc4 = new GraphNode(new Vector2(-OUTER_OCEAN_SIZE, PolygonMapGenerator.MAP_HEIGHT + OUTER_OCEAN_SIZE));
+        GraphNode oc1 = new GraphNode(new Vector2(-OUTER_OCEAN_SIZE, -OUTER_OCEAN_SIZE), PMG);
+        GraphNode oc2 = new GraphNode(new Vector2(PMG.Width + OUTER_OCEAN_SIZE, -OUTER_OCEAN_SIZE), PMG);
+        GraphNode oc3 = new GraphNode(new Vector2(PMG.Width + OUTER_OCEAN_SIZE, PMG.Height + OUTER_OCEAN_SIZE), PMG);
+        GraphNode oc4 = new GraphNode(new Vector2(-OUTER_OCEAN_SIZE, PMG.Height + OUTER_OCEAN_SIZE), PMG);
 
         // Adding new water polygons
         PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[0], oc1, oc2, PMG.CornerNodes[1] }, new List<GraphConnection>());
@@ -124,20 +124,20 @@ public static class WaterCreator
         switch (UnityEngine.Random.Range(0, 4))
         {
             case 0: // Bottom side
-                circleCenterX = UnityEngine.Random.Range(-maxOuterDistance, PolygonMapGenerator.MAP_WIDTH + maxOuterDistance);
+                circleCenterX = UnityEngine.Random.Range(-maxOuterDistance, PMG.Width + maxOuterDistance);
                 circleCenterY = UnityEngine.Random.Range(-maxOuterDistance, maxInnerDistance);
                 break;
             case 1: // Right side
-                circleCenterX = UnityEngine.Random.Range(PolygonMapGenerator.MAP_WIDTH - maxInnerDistance, PolygonMapGenerator.MAP_WIDTH + maxOuterDistance);
-                circleCenterY = UnityEngine.Random.Range(-maxOuterDistance, PolygonMapGenerator.MAP_HEIGHT + maxOuterDistance);
+                circleCenterX = UnityEngine.Random.Range(PMG.Width - maxInnerDistance, PMG.Width + maxOuterDistance);
+                circleCenterY = UnityEngine.Random.Range(-maxOuterDistance, PMG.Height + maxOuterDistance);
                 break;
             case 2: // Top side
-                circleCenterX = UnityEngine.Random.Range(-maxOuterDistance, PolygonMapGenerator.MAP_WIDTH + maxOuterDistance);
-                circleCenterY = UnityEngine.Random.Range(PolygonMapGenerator.MAP_HEIGHT - maxInnerDistance, PolygonMapGenerator.MAP_HEIGHT + maxOuterDistance);
+                circleCenterX = UnityEngine.Random.Range(-maxOuterDistance, PMG.Width + maxOuterDistance);
+                circleCenterY = UnityEngine.Random.Range(PMG.Height - maxInnerDistance, PMG.Height + maxOuterDistance);
                 break;
             case 3: // Left side
                 circleCenterX = UnityEngine.Random.Range(-maxOuterDistance, maxInnerDistance);
-                circleCenterY = UnityEngine.Random.Range(-maxOuterDistance, PolygonMapGenerator.MAP_HEIGHT + maxOuterDistance);
+                circleCenterY = UnityEngine.Random.Range(-maxOuterDistance, PMG.Height + maxOuterDistance);
                 break;
         }
         Vector2 circleCenter = new Vector2(circleCenterX, circleCenterY);
@@ -178,20 +178,20 @@ public static class WaterCreator
         switch(UnityEngine.Random.Range(0,4))
         {
             case 0: // Bottom side
-                cutCircleCenterX = UnityEngine.Random.Range(-maxDistanceFromMap, PolygonMapGenerator.MAP_WIDTH + maxDistanceFromMap);
+                cutCircleCenterX = UnityEngine.Random.Range(-maxDistanceFromMap, PMG.Width + maxDistanceFromMap);
                 cutCircleCenterY = UnityEngine.Random.Range(-maxDistanceFromMap, -minDistanceFromMap);
                 break;
             case 1: // Right side
-                cutCircleCenterX = UnityEngine.Random.Range(PolygonMapGenerator.MAP_WIDTH + minDistanceFromMap, PolygonMapGenerator.MAP_WIDTH + maxDistanceFromMap);
-                cutCircleCenterY = UnityEngine.Random.Range(-minDistanceFromMap, PolygonMapGenerator.MAP_HEIGHT + maxDistanceFromMap);
+                cutCircleCenterX = UnityEngine.Random.Range(PMG.Width + minDistanceFromMap, PMG.Width + maxDistanceFromMap);
+                cutCircleCenterY = UnityEngine.Random.Range(-minDistanceFromMap, PMG.Height + maxDistanceFromMap);
                 break;
             case 2: // Top side
-                cutCircleCenterX = UnityEngine.Random.Range(-maxDistanceFromMap, PolygonMapGenerator.MAP_WIDTH + maxDistanceFromMap);
-                cutCircleCenterY = UnityEngine.Random.Range(PolygonMapGenerator.MAP_HEIGHT + minDistanceFromMap, PolygonMapGenerator.MAP_HEIGHT + maxDistanceFromMap);
+                cutCircleCenterX = UnityEngine.Random.Range(-maxDistanceFromMap, PMG.Width + maxDistanceFromMap);
+                cutCircleCenterY = UnityEngine.Random.Range(PMG.Height + minDistanceFromMap, PMG.Height + maxDistanceFromMap);
                 break;
             case 3: // Left side
                 cutCircleCenterX = UnityEngine.Random.Range(-maxDistanceFromMap, -minDistanceFromMap);
-                cutCircleCenterY = UnityEngine.Random.Range(-minDistanceFromMap, PolygonMapGenerator.MAP_HEIGHT + maxDistanceFromMap);
+                cutCircleCenterY = UnityEngine.Random.Range(-minDistanceFromMap, PMG.Height + maxDistanceFromMap);
                 break;
         }
         Vector2 cutCircleCenter = new Vector2(cutCircleCenterX, cutCircleCenterY);

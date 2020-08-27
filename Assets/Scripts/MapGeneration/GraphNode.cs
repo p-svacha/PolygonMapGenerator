@@ -22,12 +22,12 @@ public class GraphNode
 
     public BorderPoint BorderPoint; // corresponding visual border point on the map
 
-    public GraphNode(Vector2 v)
+    public GraphNode(Vector2 v, PolygonMapGenerator PMG)
     {
         Id = idCounter++;
         Vertex = v;
 
-        IsEdgeNode = (v.x == 0 || v.x == PolygonMapGenerator.MAP_WIDTH || v.y == 0 || v.y == PolygonMapGenerator.MAP_HEIGHT);
+        IsEdgeNode = (v.x == 0 || v.x == PMG.Width || v.y == 0 || v.y == PMG.Height);
     }
 
     /// <summary>

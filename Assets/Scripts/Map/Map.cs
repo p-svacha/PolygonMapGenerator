@@ -11,6 +11,7 @@ public class Map
     public Material PoliticalWaterMaterial;
     public Material SatelliteLandMaterial;
     public Material PoliticalLandMaterial;
+    public Texture RegionBorderMaskTexture;
 
     public MarkovChainWordGenerator NameGenerator;
 
@@ -20,24 +21,27 @@ public class Map
     public List<Region> Regions = new List<Region>();
     public List<Landmass> Landmasses = new List<Landmass>();
 
+    // Display Mode
     public MapDisplayMode DisplayMode;
+    public bool IsShowingRegionBorders;
 
     public int Width;
     public int Height;
 
-    public Map(Material waterSat, Material waterPol, Material landSat, Material landPol)
+    public Map(PolygonMapGenerator PMG)
     {
-        Width = PolygonMapGenerator.MAP_WIDTH;
-        Height = PolygonMapGenerator.MAP_HEIGHT;
+        Width = PMG.Width;
+        Height = PMG.Height;
 
+        SatelliteLandMaterial = PMG.SatelliteLandMaterial;
+        PoliticalLandMaterial = PMG.PoliticalLandMaterial;
 
-        SatelliteLandMaterial = landSat;
-        PoliticalLandMaterial = landPol;
-
-        SatelliteWaterMaterial = waterSat;
-        PoliticalWaterMaterial = waterPol;
+        SatelliteWaterMaterial = PMG.SatelliteWaterMaterial;
+        PoliticalWaterMaterial = PMG.PoliticalWaterMaterial;
 
         NameGenerator = new MarkovChainWordGenerator();
+
+        RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderTexture(PMG);
     }
 
     public void InitializeMap()
@@ -86,6 +90,10 @@ public class Map
         // P - Political display
         if (Input.GetKeyDown(KeyCode.P))
             SetDisplayMode(MapDisplayMode.Political);
+
+        // R - Show region borders
+        if (Input.GetKeyDown(KeyCode.R) && DisplayMode == MapDisplayMode.Political)
+            ToggleRegionBorders();
     }
 
     public void DestroyAllGameObjects()
@@ -113,8 +121,24 @@ public class Map
         foreach (Region r in Regions) r.SetDisplayMode(mode);
     }
 
-    private string GetRandomProvinceName()
+    public void ToggleRegionBorders()
     {
-        return NameGenerator.GenerateWord("Province", 4);
+        if(IsShowingRegionBorders)
+        {
+            IsShowingRegionBorders = false;
+            PoliticalLandMaterial.SetTexture("_Mask", Texture2D.blackTexture);
+        }
+        else
+        {
+            IsShowingRegionBorders = true;
+            PoliticalLandMaterial.SetTexture("_Mask", RegionBorderMaskTexture);
+        }
+    }
+
+    private string GetRandomProvinceName(int maxLength = 16)
+    {
+        string name = NameGenerator.GenerateWord("Province", 4);
+        while(name.Length > maxLength) name = NameGenerator.GenerateWord("Province", 4);
+        return name;
     }
 }

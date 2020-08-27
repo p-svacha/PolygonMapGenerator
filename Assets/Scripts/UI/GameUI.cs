@@ -5,5 +5,5 @@ using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
-    public Text LandmassText;
+    public UI_LandmassInfo LandmassInfo;
 }

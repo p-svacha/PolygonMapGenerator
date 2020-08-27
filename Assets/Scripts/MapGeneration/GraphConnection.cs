@@ -37,6 +37,11 @@ public class GraphConnection
         }
     }
 
+    public bool IsWater()
+    {
+        return Polygons.All(x => x.IsWater);
+    }
+
     public bool IsShore()
     {
         return (!IsEdgeConnection && Polygons.Where(x => x.IsWater).Count() == 1);

@@ -14,7 +14,7 @@ public class GameModel : MonoBehaviour
         Camera.main.transform.position = new Vector3(Map.Width / 2f, Map.Height * 0.9f, Map.Height / 2f);
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
         Map.SetDisplayMode(MapDisplayMode.Political);
-        GameUI = GameObject.Find("Canvas").GetComponent<GameUI>();
+        GameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class GameModel : MonoBehaviour
             Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
             if (mouseRegion != null)
             {
-                GameUI.LandmassText.text = mouseRegion.Landmass == null ? "" : mouseRegion.Landmass.Name;
+                GameUI.LandmassInfo.SetLandmassInfo(mouseRegion.Landmass);
             }
         }
 

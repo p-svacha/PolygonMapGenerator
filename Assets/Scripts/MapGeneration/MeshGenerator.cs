@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MeshGenerator
 {
-    public static GameObject GeneratePolygon(List<Vector2> vertices2D)
+    public static GameObject GeneratePolygon(List<Vector2> vertices2D, PolygonMapGenerator PMG)
     {
         // Use the triangulator to get indices for creating triangles
         Triangulator tr = new Triangulator(vertices2D.ToArray());
@@ -17,7 +17,7 @@ public class MeshGenerator
         for (int i = 0; i < vertices.Length; i++)
         {
             vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
-            uvs[i] = new Vector2(vertices2D[i].x / PolygonMapGenerator.MAP_WIDTH, vertices2D[i].y / PolygonMapGenerator.MAP_HEIGHT);
+            uvs[i] = new Vector2(vertices2D[i].x / PMG.Width, vertices2D[i].y / PMG.Height);
         }
 
         // Create the mesh

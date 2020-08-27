@@ -5,14 +5,14 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public static class SatelliteTextureGenerator
+public static class TextureGenerator
 {
-    public static void GenerateTexture(PolygonMapGenerator PMG)
+    public static void GenerateSatelliteTexture(PolygonMapGenerator PMG)
     {
         // Land texture
         int perlinRange = 10000;
         Vector2 offset = new Vector2(UnityEngine.Random.Range(-perlinRange, perlinRange), UnityEngine.Random.Range(-perlinRange, perlinRange));
-        float perlinScale = PolygonMapGenerator.MAP_WIDTH * 0.000365f;
+        float perlinScale =PMG.Width * 0.000365f;
 
         int texSize = 2048;
         Texture2D splatMap = new Texture2D(texSize, texSize);
@@ -52,8 +52,8 @@ public static class SatelliteTextureGenerator
         // Shore texture
         int shoreTexSize = 2048;
         Texture2D shoreTexture = new Texture2D(shoreTexSize, shoreTexSize);
-        for (int y = 0; y < texSize; y++)
-            for (int x = 0; x < texSize; x++)
+        for (int y = 0; y < shoreTexSize; y++)
+            for (int x = 0; x < shoreTexSize; x++)
                 shoreTexture.SetPixel(x, y, Color.black);
 
         foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.IsShore()))
@@ -64,8 +64,8 @@ public static class SatelliteTextureGenerator
             for(int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
-                int texX = (int)((worldPosition.x / PolygonMapGenerator.MAP_WIDTH) * shoreTexSize);
-                int texY = (int)((worldPosition.y / PolygonMapGenerator.MAP_HEIGHT) * shoreTexSize);
+                int texX = (int)((worldPosition.x / PMG.Width) * shoreTexSize);
+                int texY = (int)((worldPosition.y / PMG.Height) * shoreTexSize);
                 for(int x = texX - fadeRange; x < texX + fadeRange + 1; x++)
                 {
                     for(int y = texY -fadeRange; y < texY + fadeRange + 1; y++)
@@ -84,5 +84,38 @@ public static class SatelliteTextureGenerator
         shoreTexture.Apply();
         PMG.SatelliteLandMaterial.SetTexture("_OverlayMask", shoreTexture);
 
+    }
+
+    public static Texture2D CreateRegionBorderTexture(PolygonMapGenerator PMG)
+    {
+        int texWidth = PMG.Width * 200;
+        int texHeight = PMG.Height * 200;
+        Texture2D regionBorderTexture = new Texture2D(texWidth, texHeight);
+        for (int y = 0; y < texHeight; y++)
+            for (int x = 0; x < texWidth; x++)
+                regionBorderTexture.SetPixel(x, y, Color.black);
+
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => !x.IsWater()))
+        {
+            int steps = 5;
+            int range = 1;
+            if (c.IsShore()) range *= 2;
+            for (int i = 0; i < steps + 1; i++)
+            {
+                Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
+                int texX = (int)((worldPosition.x / PMG.Width) * texWidth);
+                int texY = (int)((worldPosition.y / PMG.Height) * texHeight);
+                for (int x = texX - range; x < texX + range + 1; x++)
+                {
+                    for (int y = texY - range; y < texY + range + 1; y++)
+                    {
+                        regionBorderTexture.SetPixel(x, y, Color.white);
+                    }
+                }
+            }
+        }
+        regionBorderTexture.Apply();
+
+        return regionBorderTexture;
     }
 }
