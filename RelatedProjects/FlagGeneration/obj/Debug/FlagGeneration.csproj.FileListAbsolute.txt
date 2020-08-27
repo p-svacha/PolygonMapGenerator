@@ -1,0 +1,10 @@
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\FlagGeneration.exe.config
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\FlagGeneration.exe
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\FlagGeneration.pdb
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\Fizzler.dll
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\Svg.dll
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\bin\Debug\Svg.xml
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.csproj.CoreCompileInputs.cache
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.csproj.CopyComplete
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.exe
+D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.pdb

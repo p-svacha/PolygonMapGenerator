@@ -414,8 +414,8 @@ public class PolygonMapGenerator : MonoBehaviour
                 if (c.Polygons.Count != 1) Debug.Log("Edge connection " + c.ToString() + " does not have 1 polygon as expected! It has " + c.Polygons.Count);
         }
 
-        foreach (GraphConnection c in InGraphConnections) c.SetNeighbours();
-        foreach (GraphConnection c in EdgeConnections) c.SetNeighbours();
+        foreach (GraphConnection c in InGraphConnections) c.SetNeighboursAndType();
+        foreach (GraphConnection c in EdgeConnections) c.SetNeighboursAndType();
         foreach (GraphPolygon p in Polygons) p.SetNeighbours();
     }
 

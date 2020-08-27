@@ -56,7 +56,7 @@ public static class TextureGenerator
             for (int x = 0; x < shoreTexSize; x++)
                 shoreTexture.SetPixel(x, y, Color.black);
 
-        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.IsShore()))
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type == GraphConnectionType.Shore))
         {
             int steps = 10;
             int fadeRange = 10;
@@ -95,11 +95,11 @@ public static class TextureGenerator
             for (int x = 0; x < texWidth; x++)
                 regionBorderTexture.SetPixel(x, y, Color.black);
 
-        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => !x.IsWater()))
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type != GraphConnectionType.Water))
         {
             int steps = 5;
             int range = 1;
-            if (c.IsShore()) range *= 2;
+            if (c.Type == GraphConnectionType.Shore) range *= 2;
             for (int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);

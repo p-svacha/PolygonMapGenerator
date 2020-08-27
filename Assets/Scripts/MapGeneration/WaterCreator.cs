@@ -10,12 +10,12 @@ public static class WaterCreator
     private static float OUTER_OCEAN_SIZE = 10f;
 
     private static int MIN_BALL_OCEANS = 1;
-    private static int SIZE_PER_BALL_OCEAN = 190;
+    private static int SIZE_PER_BALL_OCEAN = 180;
     private static int SIZE_PER_BALL_OCEAN_RANGE = 60;
     private static float OCEAN_ISLAND_CHANCE = 0.15f; // Chance that a region within an ocean doesn't get transformed
 
     private static int MIN_CONTINENT_CUTS = 1;
-    private static int SIZE_PER_CONTINENT_CUT = 190;
+    private static int SIZE_PER_CONTINENT_CUT = 180;
     private static int SIZE_PER_CONTINENT_CUT_RANGE = 60;
     private static float MIN_CONTINENT_CUT_WIDTH = 0f;
     private static float MAX_CONTINENT_CUT_WIDTH = 1.5f;
@@ -39,8 +39,8 @@ public static class WaterCreator
 
     public static void HandleInput(PolygonMapGenerator PMG)
     {
-        // R - Create random water
-        if (PMG.Map != null && Input.GetKeyDown(KeyCode.R))
+        // W - Create random water
+        if (PMG.Map != null && Input.GetKeyDown(KeyCode.W))
         {
             PMG.Map.DestroyAllGameObjects();
             DoTurnRandomPolygonToWater(PMG);
@@ -76,6 +76,14 @@ public static class WaterCreator
         {
             PMG.Map.DestroyAllGameObjects();
             DoExpandLand(PMG);
+            PMG.DrawMap();
+        }
+
+        // V - Create River
+        if (PMG.Map != null && Input.GetKeyDown(KeyCode.V))
+        {
+            PMG.Map.DestroyAllGameObjects();
+            DoCreateRiver(PMG);
             PMG.DrawMap();
         }
     }
@@ -258,6 +266,15 @@ public static class WaterCreator
         if (waterShorePolygons.Count == 0) return;
         GraphPolygon newLand = waterShorePolygons[UnityEngine.Random.Range(0, waterShorePolygons.Count)];
         TurnPolygonToLand(newLand);
+    }
+
+    public static void CreateRivers(PolygonMapGenerator PMG)
+    {
+
+    }
+    public static void DoCreateRiver(PolygonMapGenerator PMG)
+    {
+
     }
 
 

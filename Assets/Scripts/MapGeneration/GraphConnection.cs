@@ -11,7 +11,7 @@ public class GraphConnection
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Polygons = new List<GraphPolygon>();
 
-    public bool IsEdgeConnection;
+    public GraphConnectionType Type;
 
     public Border Border;
 
@@ -20,13 +20,14 @@ public class GraphConnection
         StartNode = start;
         EndNode = end;
 
-        IsEdgeConnection = start.IsEdgeNode || end.IsEdgeNode;
+        Type = (start.IsEdgeNode || end.IsEdgeNode) ? GraphConnectionType.Edge : GraphConnectionType.Inland;
     }
 
-    public void SetNeighbours()
+    public void SetNeighboursAndType()
     {
         Connections.Clear();
 
+        // Set connected connections
         foreach(GraphConnection c in StartNode.Connections)
         {
             if (c != this && !Connections.Contains(c)) Connections.Add(c);
@@ -35,16 +36,13 @@ public class GraphConnection
         {
             if (c != this && !Connections.Contains(c)) Connections.Add(c);
         }
-    }
 
-    public bool IsWater()
-    {
-        return Polygons.All(x => x.IsWater);
-    }
+        // Set type
+        if (StartNode.IsEdgeNode || EndNode.IsEdgeNode) Type = GraphConnectionType.Edge;
+        else if (Polygons.All(x => x.IsWater)) Type = GraphConnectionType.Water;
+        else if (Polygons.All(x => !x.IsWater)) Type = GraphConnectionType.Inland;
+        else Type = GraphConnectionType.Shore;
 
-    public bool IsShore()
-    {
-        return (!IsEdgeConnection && Polygons.Where(x => x.IsWater).Count() == 1);
     }
 
     public override string ToString()

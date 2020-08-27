@@ -423,10 +423,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011359c1a06c4bb696dc6f569300af05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UvRotateSpeed: 0.2
+  UvRotateSpeed: 0.4
   UvRotateDistance: 2
   UvBumpRotateSpeed: 0.4
-  UvBumpRotateDistance: 4
+  UvBumpRotateDistance: 2
   depthTextureModeOn: 1
   waterSyncWind: 0
   windZone: {fileID: 0}
@@ -1052,8 +1052,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.28835887, g: 0.52588207, b: 0.754717, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
