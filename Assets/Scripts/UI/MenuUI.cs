@@ -15,6 +15,7 @@ public class MenuUI : MonoBehaviour
     };
 
     public GameObject ContentPanel;
+    public GameObject LoadingScreen;
     public Button MenuButton;
     public PolygonMapGenerator PMG;
 
@@ -36,6 +37,7 @@ public class MenuUI : MonoBehaviour
     {
         PMG.GenerateMap(size, size);
 
+        LoadingScreen.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 }

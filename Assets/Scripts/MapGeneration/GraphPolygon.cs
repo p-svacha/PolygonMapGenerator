@@ -10,6 +10,7 @@ public class GraphPolygon
     public List<GraphPolygon> Neighbours = new List<GraphPolygon>();
     public List<GraphPath> Rivers = new List<GraphPath>();
 
+    public bool IsOuterPolygon;
     public bool IsEdgePolygon;
 
     public float Width;

@@ -13,13 +13,12 @@ public class Map
     public Material PoliticalLandMaterial;
     public Texture RegionBorderMaskTexture;
 
-    public MarkovChainWordGenerator NameGenerator;
-
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> EdgeBorders = new List<Border>();
     public List<Region> Regions = new List<Region>();
     public List<Landmass> Landmasses = new List<Landmass>();
+    public List<WaterBody> WaterBodies = new List<WaterBody>();
     public List<River> Rivers = new List<River>();
 
     // Display Mode
@@ -40,8 +39,6 @@ public class Map
         SatelliteWaterMaterial = PMG.SatelliteWaterMaterial;
         PoliticalWaterMaterial = PMG.PoliticalWaterMaterial;
 
-        NameGenerator = new MarkovChainWordGenerator();
-
         PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
         RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
@@ -50,13 +47,14 @@ public class Map
     {
         InitRivers(riverPaths);
         IdentifyLandmasses();
+        IdentifyWaterBodies();
     }
 
     private void InitRivers(List<GraphPath> riverPaths)
     {
         foreach (GraphPath r in riverPaths)
         {
-            string name = GetRandomProvinceName() + " River";
+            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16) + " River";
             River river = new River(name, r.Nodes.Select(x => x.BorderPoint).ToList(), r.Connections.Select(x => x.Border).ToList(), r.Polygons.Select(x => x.Region).ToList());
             Rivers.Add(river);
         }
@@ -82,7 +80,7 @@ public class Map
                     if (!landmassRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
                         regionsToAdd.Enqueue(neighbourRegion);
             }
-            string name = GetRandomProvinceName();
+            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
             if (landmassRegions.Count < 5) name += " Island";
             Landmass newLandmass = new Landmass(landmassRegions, name);
             Landmasses.Add(newLandmass);
@@ -90,6 +88,55 @@ public class Map
             {
                 r.Landmass = newLandmass;
                 regionsWithoutLandmass.Remove(r);
+            }
+        }
+    }
+
+    private void IdentifyWaterBodies()
+    {
+        WaterBodies.Clear();
+
+        List<Region> regionsWithoutWaterBody = new List<Region>();
+        regionsWithoutWaterBody.AddRange(Regions.Where(x => x.IsWater && !x.IsOuterOcean));
+
+        while (regionsWithoutWaterBody.Count > 0)
+        {
+            List<Region> waterBodyRegions = new List<Region>();
+            Queue<Region> regionsToAdd = new Queue<Region>();
+            regionsToAdd.Enqueue(regionsWithoutWaterBody[0]);
+            while (regionsToAdd.Count > 0)
+            {
+                Region regionToAdd = regionsToAdd.Dequeue();
+                waterBodyRegions.Add(regionToAdd);
+                foreach (Region neighbourRegion in regionToAdd.NeighbouringRegions.Where(x => x.IsWater && !x.IsOuterOcean))
+                    if (!waterBodyRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
+                        regionsToAdd.Enqueue(neighbourRegion);
+            }
+            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
+            bool saltWater = false;
+            if(waterBodyRegions.Any(x => x.IsEdgeRegion))
+            {
+                name += " Ocean";
+                saltWater = true;
+            }
+            else name = "Lake " + name;
+            WaterBody newWaterBody = new WaterBody(name, waterBodyRegions, saltWater);
+
+            // Add outer ocean to ocean
+            if(saltWater)
+            {
+                foreach (Region r in Regions.Where(x => x.IsOuterOcean))
+                {
+                    newWaterBody.Regions.Add(r);
+                    r.WaterBody = newWaterBody;
+                }
+            }
+
+            WaterBodies.Add(newWaterBody);
+            foreach (Region r in waterBodyRegions)
+            {
+                r.WaterBody = newWaterBody;
+                regionsWithoutWaterBody.Remove(r);
             }
         }
     }
@@ -146,12 +193,5 @@ public class Map
             IsShowingRegionBorders = true;
             PoliticalLandMaterial.SetTexture("_BorderMask", RegionBorderMaskTexture);
         }
-    }
-
-    private string GetRandomProvinceName(int maxLength = 16)
-    {
-        string name = NameGenerator.GenerateWord("Province", 4);
-        while(name.Length > maxLength) name = NameGenerator.GenerateWord("Province", 4);
-        return name;
     }
 }

@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class MarkovChainWordGenerator
+public static class MarkovChainWordGenerator
 {
     public static Dictionary<string, MarkovInputDataType> WordCategories = new Dictionary<string, MarkovInputDataType>{
         { "Province", MarkovInputDataType.SingleLine},
@@ -14,23 +15,27 @@ public class MarkovChainWordGenerator
     private const char WordEndChar = '<';
     private const string MultiLineEndInput = "---ENDINPUT---";
 
-    public int MinNGramLength = 2;
-    public int MaxNGramLength = 6;
+    public static int MinNGramLength = 2;
+    public static int MaxNGramLength = 6;
 
     /// <summary>
     /// The initial key represents the word type (i.e. "Planet" or "Country")
     /// The key of the first dictionary is the nGram length.
     /// The final dictionary: key is the ngram string and the int the amount of occurences in the input data set
     /// </summary>
-    private Dictionary<string, Dictionary<int, Dictionary<string, int>>> NGrams;
+    private static Dictionary<string, Dictionary<int, Dictionary<string, int>>> NGrams;
 
     /// <summary>
     /// Key is the word type  (i.e. "Planet" or "Country")
     /// Value is a list with all input words
     /// </summary>
-    public Dictionary<string, List<string>> InputWords;
+    public static Dictionary<string, List<string>> InputWords;
 
-    public MarkovChainWordGenerator()
+    private static System.Random Random;
+    public static int TargetNumWords = int.MaxValue;
+    public static List<string> GeneratedWords = new List<string>();
+
+    public static void Init()
     {
         NGrams = new Dictionary<string, Dictionary<int, Dictionary<string, int>>>();
         InputWords = new Dictionary<string, List<string>>();
@@ -52,9 +57,11 @@ public class MarkovChainWordGenerator
                     break;
             }
         }
+
+        Random = new System.Random();
     }
 
-    public string GenerateWord(string wordType, int nGramLength)
+    public static string GenerateWord(string wordType, int nGramLength)
     {
         string word = WordStartChar + "";
 
@@ -80,7 +87,16 @@ public class MarkovChainWordGenerator
         return word.Substring(1, word.Length - 2); // Remove word start and end char
     }
 
-    private void ReadSingleLineInputs(string category)
+    public static void GenerateWords(string wordType, int nGramLength)
+    {
+        while(GeneratedWords.Count < TargetNumWords)
+        {
+            GeneratedWords.Add(GenerateWord(wordType, nGramLength));
+        }
+        Debug.Log(GeneratedWords.Count + " Words generated");
+    }
+
+    private static void ReadSingleLineInputs(string category)
     {
         List<string> duplicates = new List<string>();
         InputWords.Add(category, new List<string>());
@@ -110,7 +126,7 @@ public class MarkovChainWordGenerator
         }
     }
 
-    private void ReadMultiLineInputs(string category)
+    private static void ReadMultiLineInputs(string category)
     {
         InputWords.Add(category, new List<string>());
         string line;
@@ -136,7 +152,7 @@ public class MarkovChainWordGenerator
         file.Close();
     }
 
-    private string PickRandomNGramStartingWith(string wordType, string nGramStart, int nGramLength)
+    private static string PickRandomNGramStartingWith(string wordType, string nGramStart, int nGramLength)
     {
         Dictionary<string, int> candidateNGrams = NGrams[wordType][nGramLength].Where(x => x.Key.StartsWith(nGramStart)).ToDictionary(x => x.Key, x => x.Value);
         int totalProbability = candidateNGrams.Sum(x => x.Value);
@@ -149,12 +165,12 @@ public class MarkovChainWordGenerator
 
         // Chose one random entry in the weighted array
         if (weightedArray.Length == 0) throw new Exception("No nGram found that starts with " + nGramStart);
-        string chosenNgram = weightedArray[UnityEngine.Random.Range(0, weightedArray.Length)];
+        string chosenNgram = weightedArray[Random.Next(weightedArray.Length)];
         //Debug.Log("Chosen nGram: " + chosenNgram + " (out of " + candidateNGrams.Count + " options)");
         return chosenNgram;
     }
 
-    private void CreateNGramsFor(string wordType, string word, int nGramLength)
+    private static void CreateNGramsFor(string wordType, string word, int nGramLength)
     {
         if (word.Length < (nGramLength - 1)) return; // Skip word if shorter than nGramLength - 1
         AddNGram(wordType, WordStartChar + word.Substring(0, nGramLength - 1), nGramLength);
@@ -165,10 +181,19 @@ public class MarkovChainWordGenerator
         }
     }
 
-    private void AddNGram(string wordType, string ngram, int nGramLength)
+    private static void AddNGram(string wordType, string ngram, int nGramLength)
     {
         if (!NGrams[wordType].ContainsKey(nGramLength)) NGrams[wordType].Add(nGramLength, new Dictionary<string, int>());
         if (NGrams[wordType][nGramLength].ContainsKey(ngram)) NGrams[wordType][nGramLength][ngram]++;
         else NGrams[wordType][nGramLength].Add(ngram, 1);
+    }
+
+    public static string GetRandomName(int maxLength)
+    {
+        if (GeneratedWords.All(x => x.Length > maxLength)) return "OUT OF NAMES";
+        string name = GeneratedWords[UnityEngine.Random.Range(0, GeneratedWords.Count)];
+        while (name.Length > maxLength) name = GeneratedWords[UnityEngine.Random.Range(0, GeneratedWords.Count)];
+        GeneratedWords.Remove(name);
+        return name;
     }
 }

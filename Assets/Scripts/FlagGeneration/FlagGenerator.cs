@@ -11,7 +11,7 @@ public class FlagGenerator : MonoBehaviour
 
     public Image Flag;
 
-    public void GenerateFlag()
+    public Sprite GenerateFlag()
     {
         string newFilePath = Application.dataPath + "/Resources/Flags/flag.png";
         Process process = new Process();
@@ -27,7 +27,8 @@ public class FlagGenerator : MonoBehaviour
         process.Start();
 
         Sprite flagSprite = LoadNewSprite(newFilePath);
-        Flag.sprite = flagSprite;
+        if(Flag != null) Flag.sprite = flagSprite;
+        return flagSprite;
     }
 
     public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f)
@@ -36,6 +37,7 @@ public class FlagGenerator : MonoBehaviour
         // Load a PNG or JPG image from disk to a Texture2D, assign this texture to a new sprite and return its reference
 
         Texture2D SpriteTexture = LoadTexture(FilePath);
+        SpriteTexture.wrapMode = TextureWrapMode.Clamp;
         return Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), PixelsPerUnit);
     }
 

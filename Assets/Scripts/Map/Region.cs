@@ -12,14 +12,22 @@ public class Region : MonoBehaviour
     public float Area;
     public float Jaggedness;
 
+    public bool IsEdgeRegion;
+    public bool IsOuterOcean;
     public bool IsWater;
     public bool IsNextToWater;
+    public RegionType Type;
 
+    // Topography
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> Borders = new List<Border>();
     public List<Region> NeighbouringRegions = new List<Region>();
     public Landmass Landmass;
+    public WaterBody WaterBody;
     public List<River> Rivers = new List<River>();
+
+    // Game
+    public Nation Nation { get; private set; }
 
     public Material SatelliteWaterMaterial;
     public Material PoliticalWaterMaterial;
@@ -37,11 +45,19 @@ public class Region : MonoBehaviour
         Jaggedness = p.Jaggedness;
         IsWater = p.IsWater;
         IsNextToWater = p.IsNextToWater;
+        IsEdgeRegion = p.IsEdgePolygon;
+        IsOuterOcean = p.IsOuterPolygon;
 
         SatelliteLandMaterial = landMaterial;
         SatelliteWaterMaterial = satelliteWater;
         PoliticalLandMaterial = politicalMaterial;
         PoliticalWaterMaterial = politicalWater;
+    }
+
+    public void SetNation(Nation n)
+    {
+        Nation = n;
+        GetComponent<MeshRenderer>().material.color = n.PrimaryColor;
     }
 
     public void TurnToWater()

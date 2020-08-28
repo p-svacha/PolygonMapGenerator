@@ -30,10 +30,10 @@ public static class WaterCreator
     private static float START_RIVER_SIZE = 2f;
     private static int SIZE_PER_RIVER = 23;
     private static int SIZE_PER_RIVER_RANGE = 6;
-    private static float MIN_RIVER_EXPANSION_RATE = 0.15f;
-    private static float MAX_RIVER_EXPANSION_RATE = 0.45f;
-    private static float MIN_RIVER_MAX_WIDTH = 7f;
-    private static float MAX_RIVER_MAX_WIDTH = 13f;
+    private static float MIN_RIVER_EXPANSION_RATE = 0.1f;
+    private static float MAX_RIVER_EXPANSION_RATE = 0.4f;
+    private static float MIN_RIVER_MAX_WIDTH = 6.5f;
+    private static float MAX_RIVER_MAX_WIDTH = 11f;
 
     public static void CreateWaters(PolygonMapGenerator PMG)
     {
@@ -113,10 +113,10 @@ public static class WaterCreator
         GraphNode oc4 = new GraphNode(new Vector2(-OUTER_OCEAN_SIZE, PMG.Height + OUTER_OCEAN_SIZE), PMG);
 
         // Adding new water polygons
-        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[0], oc1, oc2, PMG.CornerNodes[1] }, new List<GraphConnection>());
-        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[1], oc2, oc3, PMG.CornerNodes[2] }, new List<GraphConnection>());
-        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[2], oc3, oc4, PMG.CornerNodes[3] }, new List<GraphConnection>());
-        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[3], oc4, oc1, PMG.CornerNodes[0] }, new List<GraphConnection>());
+        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[0], oc1, oc2, PMG.CornerNodes[1] }, new List<GraphConnection>(), outerPolygon: true);
+        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[1], oc2, oc3, PMG.CornerNodes[2] }, new List<GraphConnection>(), outerPolygon: true);
+        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[2], oc3, oc4, PMG.CornerNodes[3] }, new List<GraphConnection>(), outerPolygon: true);
+        PMG.AddPolygon(new List<GraphNode>() { PMG.CornerNodes[3], oc4, oc1, PMG.CornerNodes[0] }, new List<GraphConnection>(), outerPolygon: true);
     }
 
     private static void TurnEdgePolygonsToWater(PolygonMapGenerator PMG)

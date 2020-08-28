@@ -8,6 +8,7 @@ using UnityEditor.MemoryProfiler;
 using UnityEditor.PackageManager;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using System.Threading;
 
 using static GeometryFunctions;
 
@@ -55,6 +56,8 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private Queue<Action> Actions = new Queue<Action>();
 
+    private Thread NameGeneratorThread;
+
     // Performance analysis
     public DateTime StartCreation;
     public float Time_CreateSegment = 0;
@@ -73,6 +76,9 @@ public class PolygonMapGenerator : MonoBehaviour
     void Start()
     {
         GenerationState = MapGenerationState.Waiting;
+        MarkovChainWordGenerator.Init();
+        NameGeneratorThread = new Thread(() => MarkovChainWordGenerator.GenerateWords("Province", 4));
+        NameGeneratorThread.Start();
     }
 
     public void GenerateMap(int width, int height)
@@ -612,7 +618,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
     }
 
-    public void AddPolygon(List<GraphNode> nodes, List<GraphConnection> connections)
+    public void AddPolygon(List<GraphNode> nodes, List<GraphConnection> connections, bool outerPolygon = false)
     {
         // Check if polygon is empty
         if (nodes.Count == 0) return;
@@ -630,6 +636,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         GraphPolygon newPolygon = new GraphPolygon(nodes, connections);
+        if (outerPolygon) newPolygon.IsOuterPolygon = true;
 
         //Debug.Log("Adding new polygon with area " + newPolygon.Area);
 
