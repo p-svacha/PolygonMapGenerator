@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using UnityEngine;
 
 public class GameModel : MonoBehaviour
@@ -8,6 +9,8 @@ public class GameModel : MonoBehaviour
     public Map Map;
     public GameUI GameUI;
     public FlagGenerator FlagGenerator;
+
+    public Vector3 DefaultCameraPosition;
 
     public int Year = 1800;
 
@@ -21,12 +24,15 @@ public class GameModel : MonoBehaviour
         FlagGenerator = GameObject.Find("FlagGenerator").GetComponent<FlagGenerator>();
         FlagGenerator.GenerateFlag();
         Map = map;
-        Camera.main.transform.position = new Vector3(Map.Width / 2f, Map.Height, Map.Height / 2f);
-        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
         Map.SetDisplayMode(MapDisplayMode.Political);
         GameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
         MarkovChainWordGenerator.TargetNumWords = Map.Regions.Count * 2;
         GameObject.Find("LoadingScreen").SetActive(false);
+
+        // Camera
+        DefaultCameraPosition = new Vector3(Map.Width / 2f, Map.Height, Map.Height / 2f);
+        Camera.main.transform.position = DefaultCameraPosition;
+        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
 
         GameUI.AddLog("Welcome to this new empty world.");
     }
@@ -46,13 +52,15 @@ public class GameModel : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && !EventHandler.IsExecuting)
+        // Active game event
+        if (EventHandler.ActiveEvent != null) EventHandler.Update();
+
+        // Handle inputs
+        if (Input.GetKeyDown(KeyCode.Space) && EventHandler.ActiveEvent == null)
         {
             EventHandler.ExecuteRandomEvent();
             Year++;
         }
-
-        // Handle inputs
         Map.HandleInputs();
     }
 
@@ -63,6 +71,12 @@ public class GameModel : MonoBehaviour
 
     #region Game Events
 
+    public void CaptureRegion(Nation nation, Region region)
+    {
+        if(region.Name == null) region.Name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
+        nation.AddProvince(region);
+    }
+
     public Nation CreateNation(Region region)
     {
         region.Name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
@@ -71,7 +85,7 @@ public class GameModel : MonoBehaviour
         newNation.Capital = region;
         newNation.Flag = FlagGenerator.GenerateFlag();
         newNation.PrimaryColor = ColorManager.GetRandomColor(Nations.Select(x => x.PrimaryColor).ToList());
-        newNation.AddRegion(region);
+        newNation.AddProvince(region);
         Nations.Add(newNation);
         return newNation;
     }

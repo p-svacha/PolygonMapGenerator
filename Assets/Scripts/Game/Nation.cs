@@ -10,20 +10,26 @@ public class Nation
     public Color PrimaryColor;
     public Region Capital;
 
-    public List<Region> Regions = new List<Region>();
+    public List<Region> Provinces = new List<Region>();
     public float Area;
 
-    public void AddRegion(Region region)
+    public void AddProvince(Region region)
     {
-        if (Regions.Contains(region)) return;
-
-        Regions.Add(region);
+        if (region.Nation != null) region.Nation.RemoveProvince(region);
+        Provinces.Add(region);
         region.SetNation(this);
+        CalculateArea();
+    }
+
+    public void RemoveProvince(Region region)
+    {
+        Provinces.Remove(region);
+        region.SetNation(null);
         CalculateArea();
     }
 
     private void CalculateArea()
     {
-        Area = Regions.Sum(x => x.Area);
+        Area = Provinces.Sum(x => x.Area);
     }
 }

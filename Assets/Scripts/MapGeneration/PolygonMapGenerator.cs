@@ -22,6 +22,7 @@ public class PolygonMapGenerator : MonoBehaviour
     public Material PoliticalLandMaterial;
     public Material PoliticalWaterMaterial;
     public Material SatelliteWaterMaterial;
+    public Color UnownedLandColor;
 
     public List<GraphNode> CornerNodes = new List<GraphNode>();
     public List<GraphNode> EdgeNodes = new List<GraphNode>(); // Edge nodes (are on the graph edge)
@@ -502,7 +503,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphNode n in Nodes) n.BorderPoint.Init(n.Vertex);
         foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
-        foreach (GraphPolygon p in Polygons) p.Region.Init(p, PoliticalWaterMaterial, SatelliteWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial);
+        foreach (GraphPolygon p in Polygons) p.Region.Init(p, PoliticalWaterMaterial, SatelliteWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial, UnownedLandColor);
 
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();

@@ -9,10 +9,11 @@ public class GameEventHandler
     private List<GameEvent> Events = new List<GameEvent>()
     {
         new E01_NewNationEmerge(),
+        new E02_NationExpand(),
     };
 
     private GameModel Model;
-    public bool IsExecuting;
+    public GameEvent ActiveEvent;
 
     public GameEventHandler(GameModel model)
     {
@@ -22,14 +23,19 @@ public class GameEventHandler
     public void ExecuteRandomEvent()
     {
         GameEvent gameEvent = GetRandomEvent();
-        IsExecuting = true;
-        gameEvent.Execute(Model, this);
+        ActiveEvent = gameEvent;
+        gameEvent.InitExection(Model);
+    }
+
+    public void Update()
+    {
+        if (ActiveEvent != null) ActiveEvent.Update(Model, this);
     }
 
     // Called by events
     public void ExecutionDone()
     {
-        IsExecuting = false;
+        ActiveEvent = null;
     }
 
     private GameEvent GetRandomEvent()

@@ -761,6 +761,7 @@ MonoBehaviour:
     type: 2}
   SatelliteWaterMaterial: {fileID: 2100000, guid: e04b40bf0be048be81d0021195b74e5c,
     type: 2}
+  UnownedLandColor: {r: 0.73915094, g: 0.9339623, b: 0.7004717, a: 1}
   Width: 0
   Height: 0
   MapSize: 0

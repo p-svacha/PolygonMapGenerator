@@ -12,6 +12,7 @@ public class Map
     public Material SatelliteLandMaterial;
     public Material PoliticalLandMaterial;
     public Texture RegionBorderMaskTexture;
+    public Color UnownedLandColor;
 
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
@@ -38,6 +39,8 @@ public class Map
 
         SatelliteWaterMaterial = PMG.SatelliteWaterMaterial;
         PoliticalWaterMaterial = PMG.PoliticalWaterMaterial;
+
+        UnownedLandColor = PMG.UnownedLandColor;
 
         PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
         RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
@@ -186,12 +189,13 @@ public class Map
         if(IsShowingRegionBorders)
         {
             IsShowingRegionBorders = false;
-            PoliticalLandMaterial.SetTexture("_BorderMask", Texture2D.blackTexture);
+            foreach(Region r in Regions.Where(x => !x.IsWater)) r.GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", Texture2D.blackTexture);
+
         }
         else
         {
             IsShowingRegionBorders = true;
-            PoliticalLandMaterial.SetTexture("_BorderMask", RegionBorderMaskTexture);
+            foreach (Region r in Regions.Where(x => !x.IsWater)) r.GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", RegionBorderMaskTexture);
         }
     }
 }

@@ -5,20 +5,26 @@ using UnityEngine;
 
 public class E01_NewNationEmerge : GameEvent
 {
+    private Region Capital;
+
     public override int GetProbability(GameModel Model)
     {
-        return Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).Count();
+        return (int)(Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).Count() * 0.3f);
     }
 
-    public override void Execute(GameModel Model, GameEventHandler Handler)
+    public override void InitExection(GameModel Model)
     {
         List<Region> candidates = Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).ToList();
-        Region emergeRegion = candidates[Random.Range(0, candidates.Count)];
-        Nation newNation = Model.CreateNation(emergeRegion);
+        Capital = candidates[Random.Range(0, candidates.Count)];
+        CameraTargetPosition = Capital.GetCameraPosition();
 
+        base.InitExection(Model);
+    }
+
+    protected override void Execute(GameModel Model, GameEventHandler Hanlder)
+    {
+        Nation newNation = Model.CreateNation(Capital);
         Model.AddLog("A new nation " + newNation.Name + " has emerged. It has called its capital " + newNation.Capital.Name + ".");
-
-        Handler.ExecutionDone();
     }
 
     

@@ -27,8 +27,13 @@ public class FlagGenerator : MonoBehaviour
         process.Start();
 
         Sprite flagSprite = LoadNewSprite(newFilePath);
-        if(Flag != null) Flag.sprite = flagSprite;
         return flagSprite;
+    }
+
+    public void TestSceneGenerate()
+    {
+        Sprite flag = GenerateFlag();
+        Flag.sprite = flag;
     }
 
     public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f)

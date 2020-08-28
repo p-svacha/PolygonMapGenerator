@@ -12,25 +12,39 @@ namespace FlagGeneration
         public const int FLAG_WIDTH = 1200;
         public const int FLAG_HEIGHT = 800;
 
-        private List<FlagMainPattern> MainPatterns = new List<FlagMainPattern>()
+        static Random R = new Random();
+
+        private Dictionary<FlagMainPattern, int> MainPatterns = new Dictionary<FlagMainPattern, int>()
         {
-            new HorizontalStripes()
+            { new Stripes(R), 100 },
+            { new CoaOnly(R), 50 }
         };
 
         public SvgDocument GenerateFlag()
         {
-            Random r = new Random();
-
             SvgDocument SvgDoc = new SvgDocument()
             {
                 Width = FLAG_WIDTH,
                 Height = FLAG_HEIGHT
             };
 
-            FlagMainPattern mainPattern = MainPatterns[r.Next(MainPatterns.Count)];
+            FlagMainPattern mainPattern = GetRandomMainPattern();
             mainPattern.Apply(SvgDoc);
 
             return SvgDoc;
+        }
+
+        public FlagMainPattern GetRandomMainPattern()
+        {
+            int probabilitySum = MainPatterns.Sum(x => x.Value);
+            int rng = R.Next(probabilitySum);
+            int tmpSum = 0;
+            foreach (KeyValuePair<FlagMainPattern, int> kvp in MainPatterns)
+            {
+                tmpSum += kvp.Value;
+                if (rng < tmpSum) return kvp.Key;
+            }
+            return null;
         }
     }
 }
