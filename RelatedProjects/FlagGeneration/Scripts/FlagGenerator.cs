@@ -17,7 +17,8 @@ namespace FlagGeneration
         private Dictionary<FlagMainPattern, int> MainPatterns = new Dictionary<FlagMainPattern, int>()
         {
             { new Stripes(R), 100 },
-            { new CoaOnly(R), 50 }
+            { new CoaOnly(R), 60 },
+            { new Diagonal(R), 50 }
         };
 
         public SvgDocument GenerateFlag()

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace FlagGeneration
 {
-    public abstract class CoatOfArms
+    public abstract class Symbol
     {
-        public abstract void Draw(SvgDocument Svg, PointF pos, float size, Color c, Random R);
+        public abstract void Draw(SvgDocument Svg, FlagMainPattern flag, PointF pos, float size, float angle, Color c, Random R);
     }
 }

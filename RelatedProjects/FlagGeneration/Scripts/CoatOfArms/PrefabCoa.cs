@@ -11,7 +11,7 @@ namespace FlagGeneration
 {
     class PrefabCoa : CoatOfArms
     {
-        public override void Draw(SvgDocument Svg, PointF pos, float size, Color c, Random R)
+        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF pos, float size, Color c, Random R)
         {
             string[] files = Directory.GetFiles(Path.GetDirectoryName(Program.SavePath) + "/../../../RelatedProjects/FlagGeneration/Resources/CoatOfArms");
             string chosenPath = files[R.Next(files.Length)];
@@ -31,7 +31,7 @@ namespace FlagGeneration
 
         private void FillElement(SvgElement elem, SvgColourServer c)
         {
-            elem.Fill = c;
+            if(!elem.Fill.Equals(new SvgColourServer(Color.Transparent))) elem.Fill = c;
             elem.Stroke = c;
             foreach (SvgElement elem2 in elem.Children) FillElement(elem2, c);
         }

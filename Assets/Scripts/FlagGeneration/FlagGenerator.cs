@@ -36,6 +36,14 @@ public class FlagGenerator : MonoBehaviour
         Flag.sprite = flag;
     }
 
+    public void SaveCurrent()
+    {
+        Sprite itemBGSprite = Flag.sprite;
+        Texture2D itemBGTex = itemBGSprite.texture;
+        byte[] itemBGBytes = itemBGTex.EncodeToPNG();
+        File.WriteAllBytes(Application.dataPath + "/Resources/Flags/saved_flag.png", itemBGBytes);
+    }
+
     public Sprite LoadNewSprite(string FilePath, float PixelsPerUnit = 100.0f)
     {
 
