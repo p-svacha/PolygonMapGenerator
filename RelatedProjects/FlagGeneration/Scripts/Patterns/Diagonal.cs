@@ -40,20 +40,19 @@ namespace FlagGeneration
 
         public override void Apply(SvgDocument SvgDocument)
         {
-            Color coaColor = Color.Transparent;
             float minCoaSize = 0.5f;
             float maxCoaSize = 0.95f;
-            float coaSize = RandomRange(minCoaSize * FlagHeight, maxCoaSize * FlagHeight);
-            PointF CoaPosition = FlagCenter;
+            CoatOfArmsSize = RandomRange(minCoaSize * FlagHeight, maxCoaSize * FlagHeight);
+            CoatOfArmsPosition = FlagCenter;
 
-            float coaChance = SPLIT_COA_CHANCE;
+            CoatOfArmsChance = SPLIT_COA_CHANCE;
 
             switch (GetRandomStyle())
             {
                 case Style.Split:
                     Color c1 = ColorManager.GetRandomColor();
                     Color c2 = ColorManager.GetRandomColor(new List<Color>() { c1 });
-                    coaColor = ColorManager.GetRandomColor(new List<Color>() { c1, c2 });
+                    CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { c1, c2 });
 
                     PointF[] triangle1 = new PointF[] { new PointF(0, 0), new PointF(FlagWidth, 0), new PointF(0, FlagHeight) };
                     PointF[] triangle2 = new PointF[] { new PointF(0, FlagHeight), new PointF(FlagWidth, 0), new PointF(FlagWidth, FlagHeight) };
@@ -70,21 +69,21 @@ namespace FlagGeneration
                         PointF[] triangle3 = new PointF[] { new PointF(FlagWidth * split2Start, FlagHeight), new PointF(FlagWidth, FlagHeight * split2Start), new PointF(FlagWidth, FlagHeight) };
                         DrawPolygon(SvgDocument, triangle3, c3);
 
-                        coaColor = ColorManager.GetRandomColor(new List<Color>() { c1 });
+                        CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { c1 });
                         minCoaSize = 0.2f;
                         maxCoaSize = 0.5f;
-                        coaSize = RandomRange(FlagHeight * minCoaSize, FlagHeight * maxCoaSize);
-                        CoaPosition = new PointF(50 + coaSize/2, 50 + coaSize/2);
+                        CoatOfArmsSize = RandomRange(FlagHeight * minCoaSize, FlagHeight * maxCoaSize);
+                        CoatOfArmsPosition = new PointF(50 + CoatOfArmsSize / 2, 50 + CoatOfArmsSize / 2);
                     }
 
                     // Top right coa
                     if(R.NextDouble() < TOP_RIGHT_COA_CHANCE)
                     {
-                        coaColor = ColorManager.GetRandomColor(new List<Color>() { c1 });
+                        CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { c1 });
                         minCoaSize = 0.2f;
                         maxCoaSize = 0.5f;
-                        coaSize = RandomRange(FlagHeight * minCoaSize, FlagHeight * maxCoaSize);
-                        CoaPosition = new PointF(50 + coaSize / 2, 50 + coaSize / 2);
+                        CoatOfArmsSize = RandomRange(FlagHeight * minCoaSize, FlagHeight * maxCoaSize);
+                        CoatOfArmsPosition = new PointF(50 + CoatOfArmsSize / 2, 50 + CoatOfArmsSize / 2);
                     }
 
                     break;
@@ -122,21 +121,11 @@ namespace FlagGeneration
                         DrawPolygon(SvgDocument, innerCross1Vertices, innerCrossColor);
                         DrawPolygon(SvgDocument, innerCross2Vertices, innerCrossColor);
                     }
-                    coaChance = 0;
+                    CoatOfArmsChance = 0f;
                     break;
             }
 
-            if(R.NextDouble() < coaChance)
-            {
-                CoatOfArms coa = GetRandomCoa();
-
-                coa.Draw(SvgDocument, this, CoaPosition, coaSize, coaColor, R);
-            }
-        }
-
-        private void SetTopRightCornerCoaParams()
-        {
-
+            ApplyCoatOfArms(SvgDocument);
         }
 
         public Style GetRandomStyle()

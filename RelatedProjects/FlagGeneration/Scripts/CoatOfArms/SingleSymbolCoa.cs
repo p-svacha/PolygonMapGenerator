@@ -15,7 +15,7 @@ namespace FlagGeneration
         public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF pos, float size, Color c, Random R)
         {
             Symbol symbol = flag.GetRandomSymbol();
-            symbol.Draw(Svg, flag, pos, size, 0, c, R);
+            symbol.Draw(Svg, flag, pos, size, 0, c);
         }
     }
 }

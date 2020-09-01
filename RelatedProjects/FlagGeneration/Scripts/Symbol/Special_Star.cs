@@ -11,7 +11,7 @@ namespace FlagGeneration
 {
     class Special_Star : Symbol
     {
-        private readonly Dictionary<int, int> NumSpikes = new Dictionary<int, int>()
+        private readonly Dictionary<int, int> NumSpikesDictionary = new Dictionary<int, int>()
         {
             {3, 100 },
             {4, 100 },
@@ -30,21 +30,33 @@ namespace FlagGeneration
         private const float MIN_RADIUS_RATIO = 0.05f;
         private const float MAX_RADIUS_RATIO = 0.8f;
 
-        private const float HALF_CHANCE = 0.1f;
+        private const float HALF_STAR_CHANCE = 0.1f;
 
-        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c, Random R)
+        // Instance values
+        private int NumSpikes;
+        private float RadiusRatio;
+        private bool HalfStar;
+        private bool HalfStarMoved;
+
+        public Special_Star(Random R) : base(R)
         {
-            int numCorners = GetNumSpikes(R);
+            NumSpikes = GetNumSpikes(R);
+            RadiusRatio = RandomRange(MIN_RADIUS_RATIO, MAX_RADIUS_RATIO);
+            HalfStar = R.NextDouble() < HALF_STAR_CHANCE;
+            HalfStarMoved = R.NextDouble() < 0.5f;
+        }
+
+        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c)
+        {
             float startAngle = angle + 180;
             float outerRadius = size * 0.5f;
-            float radiusRatio = flag.RandomRange(MIN_RADIUS_RATIO, MAX_RADIUS_RATIO);
-            float innerRadius = outerRadius * radiusRatio;
+            float innerRadius = outerRadius * RadiusRatio;
 
-            int numVertices = numCorners * 2;
+            int numVertices = NumSpikes * 2;
             PointF[] vertices = new PointF[numVertices];
 
             // Create vertices
-            if (R.NextDouble() > HALF_CHANCE) // Full star
+            if (!HalfStar) // Full star
             {
                 float angleStep = 360f / numVertices;
                 for (int i = 0; i < numVertices; i++)
@@ -60,7 +72,7 @@ namespace FlagGeneration
             else // Half star
             {
                 startAngle -= 90;
-                if(R.NextDouble() < 0.5f) // 50% chance to move center of half star so its the actual center
+                if(HalfStarMoved) // 50% chance to move center of half star so its the actual center
                     center = new PointF(center.X + (float)(size / 4 * Math.Sin(DegreeToRadian(startAngle-90))), center.Y + (float)(size / 4 * Math.Cos(DegreeToRadian(startAngle-90))));
                 float angleStep = 180f / (numVertices - 2);
                 for (int i = 0; i < numVertices; i++)
@@ -79,10 +91,10 @@ namespace FlagGeneration
 
         public int GetNumSpikes(Random R)
         {
-            int probabilitySum = NumSpikes.Sum(x => x.Value);
+            int probabilitySum = NumSpikesDictionary.Sum(x => x.Value);
             int rng = R.Next(probabilitySum);
             int tmpSum = 0;
-            foreach (KeyValuePair<int, int> kvp in NumSpikes)
+            foreach (KeyValuePair<int, int> kvp in NumSpikesDictionary)
             {
                 tmpSum += kvp.Value;
                 if (rng < tmpSum) return kvp.Key;

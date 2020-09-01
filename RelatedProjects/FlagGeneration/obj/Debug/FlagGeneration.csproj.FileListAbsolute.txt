@@ -8,4 +8,3 @@ D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGen
 D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.csproj.CopyComplete
 D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.exe
 D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.pdb
-D:\Workspace\Unity\TheWorldGame\RelatedProjects\FlagGeneration\obj\Debug\FlagGeneration.csprojAssemblyReference.cache

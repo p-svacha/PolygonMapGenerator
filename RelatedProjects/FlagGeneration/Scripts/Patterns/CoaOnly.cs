@@ -39,13 +39,16 @@ namespace FlagGeneration
         {
             Style style = GetRandomStyle();
 
-            Color bgColor, secColor, coaColor = Color.Transparent;
+            CoatOfArmsChance = 1f;
+            CoatOfArmsPosition = FlagCenter;
+
+            Color bgColor, secColor;
             float minCoaSizeRel = 0, maxCoaSizeRel = 0;
             switch(style)
             {
                 case Style.Plain:
                     bgColor = ColorManager.GetRandomColor();
-                    coaColor = ColorManager.GetRandomColor(new List<Color>() { bgColor });
+                    CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { bgColor });
                     minCoaSizeRel = 0.6f;
                     maxCoaSizeRel = 0.95f;
                     DrawRectangle(SvgDocument, 0, 0, FlagWidth, FlagHeight, bgColor);
@@ -54,7 +57,7 @@ namespace FlagGeneration
                 case Style.Frame:
                     bgColor = ColorManager.GetRandomColor();
                     secColor = ColorManager.GetRandomColor(new List<Color>() { bgColor });
-                    coaColor = ColorManager.GetRandomColor(new List<Color>() { secColor });
+                    CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { secColor });
                     float frameHeightRel = RandomRange(MIN_FRAME_SIZE, MAX_FRAME_SIZE);
                     float frameSize = frameHeightRel * FlagHeight;
                     DrawRectangle(SvgDocument, 0, 0, FlagWidth, FlagHeight, bgColor);
@@ -68,7 +71,7 @@ namespace FlagGeneration
                 case Style.Diamond:
                     bgColor = ColorManager.GetRandomColor();
                     secColor = ColorManager.GetRandomColor(new List<Color>() { bgColor });
-                    coaColor = ColorManager.GetRandomColor(new List<Color>() { secColor });
+                    CoatOfArmsColor = ColorManager.GetRandomColor(new List<Color>() { secColor });
                     float frameSizeXRel = RandomRange(0f, MAX_DIAMOND_FRAME_SIZE);
                     float frameSizeYRel = RandomRange(0f, MAX_DIAMOND_FRAME_SIZE);
                     float frameSizeX = frameSizeXRel * FlagWidth;
@@ -93,10 +96,9 @@ namespace FlagGeneration
 
             float minCoaSize = FlagHeight * minCoaSizeRel;
             float maxCoaSize = FlagHeight * maxCoaSizeRel;
-            float coaSize = RandomRange(minCoaSize, maxCoaSize);
+            CoatOfArmsSize = RandomRange(minCoaSize, maxCoaSize);
 
-            CoatOfArms coa = GetRandomCoa();
-            coa.Draw(SvgDocument, this, FlagCenter, coaSize, coaColor, R);
+            ApplyCoatOfArms(SvgDocument);
         }
 
         public Style GetRandomStyle()

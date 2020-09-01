@@ -11,7 +11,9 @@ namespace FlagGeneration
 {
     class Default_Star : Symbol
     {
-        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c, Random R)
+        public Default_Star(Random R) : base(R) { }
+
+        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c)
         {
             int numCorners = 5;
             float startAngle = angle + 180;

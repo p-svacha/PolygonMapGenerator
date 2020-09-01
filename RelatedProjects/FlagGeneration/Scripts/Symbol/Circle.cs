@@ -11,7 +11,9 @@ namespace FlagGeneration
 {
     class Circle : Symbol
     {
-        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c, Random R)
+        public Circle(Random R) : base(R) { }
+
+        public override void Draw(SvgDocument Svg, FlagMainPattern flag, PointF center, float size, float angle, Color c)
         {
             flag.DrawCircle(Svg, center, size / 2, c);
         }
