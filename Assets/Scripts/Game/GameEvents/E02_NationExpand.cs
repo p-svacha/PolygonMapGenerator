@@ -15,8 +15,10 @@ public class E02_NationExpand : GameEvent
         return Candidates.Count;
     }
 
-    public override void InitExection(GameModel Model)
+    public override void InitExecution(GameModel Model)
     {
+        base.InitExecution(Model);
+
         NewProvince = Candidates[Random.Range(0, Candidates.Count)];
         List<Nation> nationCandidates = new List<Nation>();
         foreach(Region r in NewProvince.NeighbouringRegions)
@@ -24,9 +26,8 @@ public class E02_NationExpand : GameEvent
             if (r.Nation != null && !nationCandidates.Contains(r.Nation)) nationCandidates.Add(r.Nation);
         }
         CapturingNation = nationCandidates[Random.Range(0, nationCandidates.Count)];
-        CameraTargetPosition = NewProvince.GetCameraPosition();
 
-        base.InitExection(Model);
+        CameraHandler.MoveToFocusRegion(NewProvince);
     }
 
     protected override void Execute(GameModel Model, GameEventHandler Hanlder)

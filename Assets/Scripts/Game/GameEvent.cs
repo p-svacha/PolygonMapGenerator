@@ -4,23 +4,25 @@ using UnityEngine;
 
 public abstract class GameEvent
 {
+    // Zoom
     protected enum ExecutionState
     {
         ZoomIn,
         Zoomed,
         ZoomOut
     }
-    protected float CameraZoomTime = 1f; // s
-    protected float CameraStayTime = 1f; // s
-    protected float CurrentZoomTime;
-    protected Vector3 CameraTargetPosition;
     protected ExecutionState State;
+    protected float CameraFocusTime = 1f; // s
+    protected float CameraCurrentFocusTime;
+
+    protected CameraHandler CameraHandler;
 
     public abstract int GetProbability(GameModel Model);
 
-    public virtual void InitExection(GameModel Model)
+    public virtual void InitExecution(GameModel Model)
     {
-        CurrentZoomTime = 0f;
+        CameraCurrentFocusTime = 0f;
+        if(CameraHandler == null) CameraHandler = Camera.main.GetComponent<CameraHandler>();
         State = ExecutionState.ZoomIn;
     }
 
@@ -29,43 +31,27 @@ public abstract class GameEvent
         switch (State)
         {
             case ExecutionState.ZoomIn:
-                if (CurrentZoomTime < CameraZoomTime)
+                if (!CameraHandler.IsMoving)
                 {
-                    Camera.main.transform.position = Vector3.Lerp(Model.DefaultCameraPosition, CameraTargetPosition, CurrentZoomTime / CameraZoomTime);
-                    CurrentZoomTime += Time.deltaTime;
-                }
-                else
-                {
-                    Camera.main.transform.position = CameraTargetPosition;
                     Execute(Model, Handler);
                     State = ExecutionState.Zoomed;
-                    CurrentZoomTime = 0;
                 }
                 break;
 
             case ExecutionState.Zoomed:
-                if (CurrentZoomTime < CameraStayTime)
+                if (CameraCurrentFocusTime < CameraFocusTime)
                 {
-                    CurrentZoomTime += Time.deltaTime;
+                    CameraCurrentFocusTime += Time.deltaTime;
                 }
                 else
                 {
                     State = ExecutionState.ZoomOut;
-                    CurrentZoomTime = 0;
+                    CameraHandler.ReturnToDefaultView();
                 }
                 break;
 
             case ExecutionState.ZoomOut:
-                if (CurrentZoomTime < CameraZoomTime)
-                {
-                    Camera.main.transform.position = Vector3.Lerp(CameraTargetPosition, Model.DefaultCameraPosition, CurrentZoomTime / CameraZoomTime);
-                    CurrentZoomTime += Time.deltaTime;
-                }
-                else
-                {
-                    Camera.main.transform.position = Model.DefaultCameraPosition;
-                    ExecutionDone(Handler);
-                }
+                if(!CameraHandler.IsMoving) ExecutionDone(Handler);
                 break;
         }
     }

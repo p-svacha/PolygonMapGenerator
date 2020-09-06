@@ -17,6 +17,7 @@ public class GameModel : MonoBehaviour
     public List<Nation> Nations = new List<Nation>();
 
     public GameEventHandler EventHandler;
+    public CameraHandler CameraHandler;
 
     public void Init(Map map)
     {
@@ -30,9 +31,9 @@ public class GameModel : MonoBehaviour
         GameObject.Find("LoadingScreen").SetActive(false);
 
         // Camera
-        DefaultCameraPosition = new Vector3(Map.Width / 2f, Map.Height, Map.Height / 2f);
-        Camera.main.transform.position = DefaultCameraPosition;
-        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
+        CameraHandler = Camera.main.GetComponent<CameraHandler>();
+        CameraHandler.SetMap(map);
+        CameraHandler.JumpToFocusMap(map);
 
         GameUI.AddLog("Welcome to this new empty world.");
     }

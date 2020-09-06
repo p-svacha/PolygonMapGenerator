@@ -90,10 +90,4 @@ public class Region : MonoBehaviour
                 break;
         }
     }
-
-    // Returns the camera position that it is zoomed to this region
-    public Vector3 GetCameraPosition()
-    {
-        return new Vector3(XPos + Width / 2f, Math.Max(Width, Height) * 1.5f, YPos + Height / 2f);
-    }
 }

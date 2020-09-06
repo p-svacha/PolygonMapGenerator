@@ -12,13 +12,13 @@ public class E01_NewNationEmerge : GameEvent
         return (int)(Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).Count() * 0.3f);
     }
 
-    public override void InitExection(GameModel Model)
+    public override void InitExecution(GameModel Model)
     {
+        base.InitExecution(Model);
+
         List<Region> candidates = Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).ToList();
         Capital = candidates[Random.Range(0, candidates.Count)];
-        CameraTargetPosition = Capital.GetCameraPosition();
-
-        base.InitExection(Model);
+        CameraHandler.MoveToFocusRegion(Capital);
     }
 
     protected override void Execute(GameModel Model, GameEventHandler Hanlder)

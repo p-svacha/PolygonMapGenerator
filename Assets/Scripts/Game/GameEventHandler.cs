@@ -24,7 +24,7 @@ public class GameEventHandler
     {
         GameEvent gameEvent = GetRandomEvent();
         ActiveEvent = gameEvent;
-        gameEvent.InitExection(Model);
+        gameEvent.InitExecution(Model);
     }
 
     public void Update()
