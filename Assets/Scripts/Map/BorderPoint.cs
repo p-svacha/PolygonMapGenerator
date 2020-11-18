@@ -8,11 +8,20 @@ public class BorderPoint : MonoBehaviour
     public Vector2 Position;
 
     public River River;
+    public float RiverWidth;
 
-    public void Init(Vector2 pos)
+    public BorderPointType Type;
+    public int DistanceFromNearestOcean;
+
+    public void Init(GraphNode n)
     {
-        Position = pos;
-        this.transform.position = new Vector3(pos.x, 0, pos.y);
-        this.transform.localScale = new Vector3(Scale, Scale, Scale);
+        Position = n.Vertex;
+        transform.position = new Vector3(n.Vertex.x, 0, n.Vertex.y);
+        transform.localScale = new Vector3(Scale, Scale, Scale);
+
+        Type = n.Type;
+        DistanceFromNearestOcean = n.DistanceFromNearestOcean;
+
+        RiverWidth = n.RiverWidth;
     }
 }

@@ -7,8 +7,6 @@ using UnityEngine;
 public class Region : MonoBehaviour
 {
     public string Name;
-
-   
     public float Area;
     public float Jaggedness;
 
@@ -31,18 +29,19 @@ public class Region : MonoBehaviour
     public Landmass Landmass;
     public WaterBody WaterBody;
     public List<River> Rivers = new List<River>();
+    public int DistanceFromNearestWater;
 
     // Game
     public Nation Nation { get; private set; }
 
-    public Material SatelliteWaterMaterial;
-    public Material PoliticalWaterMaterial;
-    public Material SatelliteLandMaterial;
-    public Material PoliticalLandMaterial;
-    public Color UnownedLandColor;
+    // Display mode
+    private MapDisplayMode DisplayMode;
+    private MaterialHandler MaterialHandler;
 
-    public void Init(GraphPolygon p, Material politicalWater, Material satelliteWater, Material landMaterial, Material politicalMaterial, Color unownedColor)
+    public void Init(GraphPolygon p)
     {
+        MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
+
         BorderPoints = p.Nodes.Select(x => x.BorderPoint).ToList();
         Borders = p.Connections.Select(x => x.Border).ToList();
         NeighbouringRegions = p.Neighbours.Select(x => x.Region).ToList();
@@ -56,18 +55,13 @@ public class Region : MonoBehaviour
         IsNextToWater = p.IsNextToWater;
         IsEdgeRegion = p.IsEdgePolygon;
         IsOuterOcean = p.IsOuterPolygon;
-
-        SatelliteLandMaterial = landMaterial;
-        SatelliteWaterMaterial = satelliteWater;
-        PoliticalLandMaterial = politicalMaterial;
-        PoliticalWaterMaterial = politicalWater;
-        UnownedLandColor = unownedColor;
+        DistanceFromNearestWater = p.DistanceFromNearestWater;
     }
 
     public void SetNation(Nation n)
     {
         Nation = n;
-        GetComponent<MeshRenderer>().material.color = n == null ? UnownedLandColor : n.PrimaryColor;
+        UpdateDisplayMode();
     }
 
     public void TurnToWater()
@@ -77,16 +71,39 @@ public class Region : MonoBehaviour
 
     public void SetDisplayMode(MapDisplayMode mode)
     {
-        switch(mode)
+        DisplayMode = mode;
+        UpdateDisplayMode();
+    }
+
+    private void UpdateDisplayMode()
+    {
+        switch (DisplayMode)
         {
+            case MapDisplayMode.Topographic:
+                if (IsWater)
+                {
+                    GetComponent<Renderer>().material = MaterialHandler.TopographicWaterMaterial;
+                    GetComponent<MeshRenderer>().material.color = MaterialHandler.WaterColor;
+                }
+                else
+                {
+                    GetComponent<Renderer>().material = MaterialHandler.TopographicLandMaterial;
+                    GetComponent<MeshRenderer>().material.color = MaterialHandler.LandColor;
+                }
+                break;
+
             case MapDisplayMode.Political:
-                if(IsWater) GetComponent<Renderer>().material = PoliticalWaterMaterial;
-                else GetComponent<Renderer>().material = PoliticalLandMaterial;
+                if (IsWater) GetComponent<Renderer>().material = MaterialHandler.PoliticalWaterMaterial;
+                else
+                {
+                    GetComponent<Renderer>().material = MaterialHandler.PoliticalLandMaterial;
+                    GetComponent<MeshRenderer>().material.color = Nation == null ? MaterialHandler.LandColor : Nation.PrimaryColor;
+                }
                 break;
 
             case MapDisplayMode.Satellite:
-                if (IsWater) GetComponent<Renderer>().material = SatelliteWaterMaterial;
-                else GetComponent<Renderer>().material = SatelliteLandMaterial;
+                if (IsWater) GetComponent<Renderer>().material = MaterialHandler.SatelliteWaterMaterial;
+                else GetComponent<Renderer>().material = MaterialHandler.SatelliteLandMaterial;
                 break;
         }
     }

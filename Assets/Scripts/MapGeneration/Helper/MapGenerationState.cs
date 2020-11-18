@@ -11,6 +11,8 @@ public enum MapGenerationState
     SplitBigPolygons,
     MergeSmallPolygons,
     CreateWaters,
+    CreateTopology,
+    CreateRivers,
     DrawMap,
     GenerationDone,
     GenerationAborted

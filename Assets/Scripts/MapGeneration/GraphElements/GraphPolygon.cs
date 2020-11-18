@@ -18,9 +18,11 @@ public class GraphPolygon
     public float Area;
     public float Jaggedness; // How close the shape is to a perfect rectangle
 
+    // Topology info
     public bool IsWater;
     public bool IsNextToWater;
     public bool HasRiver;
+    public int DistanceFromNearestWater;
 
     public Region Region;
 

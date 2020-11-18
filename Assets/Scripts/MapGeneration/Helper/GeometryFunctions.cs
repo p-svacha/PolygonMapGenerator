@@ -72,6 +72,10 @@ public static class GeometryFunctions
     {
         return (x % m + m) % m;
     }
+    public static float mod(float x, float m)
+    {
+        return (x % m + m) % m;
+    }
 
     public static float GetPolygonArea(List<Vector2> points)
     {

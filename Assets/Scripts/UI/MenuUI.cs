@@ -18,9 +18,12 @@ public class MenuUI : MonoBehaviour
     public GameObject LoadingScreen;
     public Button MenuButton;
     public PolygonMapGenerator PMG;
+    public CanvasGroup CanvasGroup;
 
     void Start()
     {
+        CanvasGroup = GetComponent<CanvasGroup>();
+        Show();
         float y = 300;
         foreach(KeyValuePair<string, int> kvp in MapSizes)
         {
@@ -38,6 +41,18 @@ public class MenuUI : MonoBehaviour
         PMG.GenerateMap(size, size);
 
         LoadingScreen.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        Hide();
+    }
+
+    public void Hide()
+    {
+        CanvasGroup.alpha = 0f;
+        CanvasGroup.blocksRaycasts = false;
+    }
+
+    public void Show()
+    {
+        CanvasGroup.alpha = 1f;
+        CanvasGroup.blocksRaycasts = true;
     }
 }

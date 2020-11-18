@@ -31,7 +31,7 @@ public class MeshGenerator
         // Set up game object with mesh;
         GameObject polygon = new GameObject("Polygon (" + vertices2D.Count + ")");
         MeshRenderer renderer = polygon.AddComponent<MeshRenderer>();
-        Color ranCol = new Color(Random.Range(0f, 0.3f), Random.Range(0.4f, 1f), Random.Range(0.1f, 0.6f));
+        Color ranCol = Color.red; // new Color(Random.Range(0f, 0.3f), Random.Range(0.4f, 1f), Random.Range(0.1f, 0.6f));
         renderer.material.color = ranCol;
         MeshFilter filter = polygon.AddComponent(typeof(MeshFilter)) as MeshFilter;
         filter.mesh = msh;

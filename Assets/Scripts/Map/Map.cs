@@ -7,12 +7,8 @@ using UnityEngine;
 
 public class Map
 {
-    public Material SatelliteWaterMaterial;
-    public Material PoliticalWaterMaterial;
-    public Material SatelliteLandMaterial;
-    public Material PoliticalLandMaterial;
-    public Texture RegionBorderMaskTexture;
-    public Color UnownedLandColor;
+    public MaterialHandler MaterialHandler;
+    public Texture2D RegionBorderMaskTexture;
 
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
@@ -31,35 +27,28 @@ public class Map
 
     public Map(PolygonMapGenerator PMG)
     {
+        MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
+
         Width = PMG.Width;
         Height = PMG.Height;
 
-        SatelliteLandMaterial = PMG.SatelliteLandMaterial;
-        PoliticalLandMaterial = PMG.PoliticalLandMaterial;
-
-        SatelliteWaterMaterial = PMG.SatelliteWaterMaterial;
-        PoliticalWaterMaterial = PMG.PoliticalWaterMaterial;
-
-        UnownedLandColor = PMG.UnownedLandColor;
-
-        PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
+        MaterialHandler.PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
+        MaterialHandler.TopographicLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
         RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap(List<GraphPath> riverPaths)
+    public void InitializeMap(PolygonMapGenerator PMG)
     {
-        InitRivers(riverPaths);
+        InitRivers(PMG);
         IdentifyLandmasses();
         IdentifyWaterBodies();
     }
 
-    private void InitRivers(List<GraphPath> riverPaths)
+    private void InitRivers(PolygonMapGenerator PMG)
     {
-        foreach (GraphPath r in riverPaths)
+        foreach (GraphPath r in PMG.RiverPaths)
         {
-            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16) + " River";
-            River river = new River(name, r.Nodes.Select(x => x.BorderPoint).ToList(), r.Connections.Select(x => x.Border).ToList(), r.Polygons.Select(x => x.Region).ToList());
-            Rivers.Add(river);
+            Rivers.Add(RiverCreator.CreateRiverObject(r, PMG));
         }
     }
 
@@ -155,7 +144,7 @@ public class Map
             SetDisplayMode(MapDisplayMode.Political);
 
         // R - Show region borders
-        if (Input.GetKeyDown(KeyCode.R) && DisplayMode == MapDisplayMode.Political)
+        if (Input.GetKeyDown(KeyCode.R) && (DisplayMode == MapDisplayMode.Political || DisplayMode == MapDisplayMode.Topographic))
             ToggleRegionBorders();
     }
 
@@ -182,6 +171,7 @@ public class Map
     {
         DisplayMode = mode;
         foreach (Region r in Regions) r.SetDisplayMode(mode);
+        foreach (River r in Rivers) r.SetDisplayMode(mode);
     }
 
     public void ToggleRegionBorders()

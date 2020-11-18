@@ -18,11 +18,6 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public int Seed;
     public Map Map;
-    public Material SatelliteLandMaterial;
-    public Material PoliticalLandMaterial;
-    public Material PoliticalWaterMaterial;
-    public Material SatelliteWaterMaterial;
-    public Color UnownedLandColor;
 
     public List<GraphNode> CornerNodes = new List<GraphNode>();
     public List<GraphNode> EdgeNodes = new List<GraphNode>(); // Edge nodes (are on the graph edge)
@@ -42,16 +37,18 @@ public class PolygonMapGenerator : MonoBehaviour
     public int Width;
     public int Height;
 
-    public const float LINE_DENSITY = 0.12f; // Active lines at the beginning per m^2
+    public const float START_LINES_PER_KM = 0.2f; // Active lines per km map side length
+    public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
+
     public const float SPLIT_CHANCE = 0.09f; // Chance that a line splits into 2 lines at a vertex
-    public const float MAX_TURN_ANGLE = 55; // °
+    public const float MAX_TURN_ANGLE = 45; // °
     public const float SNAP_DISTANCE = 0.07f; // Range, where a point snaps to a nearby point
     public const float MIN_SEGMENT_LENGTH = 0.08f;
     public const float MAX_SEGMENT_LENGTH = 0.13f;
     public const float MIN_SPLIT_ANGLE = 55; // °, the minimum angle when a split forms
 
-    public const float MAX_LAND_POLYGON_SIZE = 1.7f; // Land polygons larger than this will be split
-    public const float MIN_POLYGON_SIZE = 0.085f; // Polygons smaller than this will get merged with their smallest neighbour
+    public const float MAX_LAND_POLYGON_SIZE = 1.5f; // Land polygons larger than this will be split
+    public const float MIN_POLYGON_SIZE = 0.08f; // Polygons smaller than this will get merged with their smallest neighbour
 
     public int MapSize;
 
@@ -94,38 +91,31 @@ public class PolygonMapGenerator : MonoBehaviour
         Height = height;
         MapSize = Width * Height;
 
-        // Create corner nodes
-        GraphNode corner1 = new GraphNode(new Vector2(0, 0), this);
-        CornerNodes.Add(corner1);
-        EdgeNodes.Add(corner1);
-        Nodes.Add(corner1);
-        GraphNode corner2 = new GraphNode(new Vector2(Width, 0), this);
-        CornerNodes.Add(corner2);
-        EdgeNodes.Add(corner2);
-        Nodes.Add(corner2);
-        GraphNode corner3 = new GraphNode(new Vector2(Width, Height), this);
-        CornerNodes.Add(corner3);
-        EdgeNodes.Add(corner3);
-        Nodes.Add(corner3);
-        GraphNode corner4 = new GraphNode(new Vector2(0, Height), this);
-        CornerNodes.Add(corner4);
-        EdgeNodes.Add(corner4);
-        Nodes.Add(corner4);
+        CreateMapBounds();
 
         // Start with random lines
-        int numStartLines = (int)(Width * Height * LINE_DENSITY);
-        if (numStartLines == 0) numStartLines = 1;
+        int xStartLines = (int)(START_LINES_PER_KM * Width);
+        int yStartLines = (int)(START_LINES_PER_KM * Height);
+        float xStartLineStep = (float)(Width) / (xStartLines + 1f);
+        float yStartLineStep = (float)(Height) / (yStartLines + 1f);
+        
 
-        Debug.Log("Starting with map creation with " + numStartLines + " random walkers. SEED: " + Seed);
+        Debug.Log("Starting with map creation with " + (xStartLines * yStartLines) + " random walkers. SEED: " + Seed);
 
-        for (int i = 0; i < numStartLines; i++)
+        for(int y = 0; y < yStartLines; y++)
         {
-            GraphNode startNode = new GraphNode(RandomPoint(), this);
-            Nodes.Add(startNode);
-            float startAngle = RandomAngle();
+            for(int x = 0; x < xStartLines; x++)
+            {
+                Vector2 startPosition = RANDOM_START_LINE_POSITIONS ? RandomPoint() :
+                    new Vector2((x + 1) * xStartLineStep, (y + 1) * yStartLineStep);
+                //Debug.Log("Start Node at " + startPosition.ToString());
+                GraphNode startNode = new GraphNode(startPosition, this);
+                Nodes.Add(startNode);
+                float startAngle = RandomAngle();
 
-            Actions.Enqueue(() => CreateSegment(startNode, startAngle, changeAngle: true, canSplit: true));
-            Actions.Enqueue(() => CreateSegment(startNode, (startAngle + 180) % 360, changeAngle: true, canSplit: true));
+                Actions.Enqueue(() => CreateSegment(startNode, startAngle, changeAngle: true, canSplit: true));
+                Actions.Enqueue(() => CreateSegment(startNode, (startAngle + 180) % 360, changeAngle: true, canSplit: true));
+            }
         }
 
         GenerationState = MapGenerationState.CreateInitialGraph;
@@ -172,8 +162,20 @@ public class PolygonMapGenerator : MonoBehaviour
 
                 case MapGenerationState.CreateWaters:
                     WaterCreator.CreateWaters(this);
+                    GenerationState = MapGenerationState.CreateTopology;
+                    Debug.Log(">----------- Creating Topology...");
+                    break;
+
+                case MapGenerationState.CreateTopology:
+                    TopologyCreator.CreateTopology(this);
+                    GenerationState = MapGenerationState.CreateRivers;
+                    Debug.Log(">----------- Creating Rivers...");
+                    break;
+
+                case MapGenerationState.CreateRivers:
+                    RiverCreator.CreateRivers(this);
                     GenerationState = MapGenerationState.DrawMap;
-                    Debug.Log(">----------- Drawing map...");
+                    Debug.Log(">----------- Drawing Map...");
                     break;
 
                 case MapGenerationState.DrawMap:
@@ -218,6 +220,107 @@ public class PolygonMapGenerator : MonoBehaviour
 
     // ---------------------------------------------- GRAPH CONSTRUCTION -------------------------------------------------
 
+    // Creates graph nodes at the edge of the map
+    private void CreateMapBounds()
+    {
+        // Create corner nodes
+        GraphNode cornerBotLeft = new GraphNode(new Vector2(0, 0), this);
+        CornerNodes.Add(cornerBotLeft);
+        EdgeNodes.Add(cornerBotLeft);
+        Nodes.Add(cornerBotLeft);
+        GraphNode cornerBotRight = new GraphNode(new Vector2(Width, 0), this);
+        CornerNodes.Add(cornerBotRight);
+        EdgeNodes.Add(cornerBotRight);
+        Nodes.Add(cornerBotRight);
+        GraphNode cornerTopRight = new GraphNode(new Vector2(Width, Height), this);
+        CornerNodes.Add(cornerTopRight);
+        EdgeNodes.Add(cornerTopRight);
+        Nodes.Add(cornerTopRight);
+        GraphNode cornerTopLeft = new GraphNode(new Vector2(0, Height), this);
+        CornerNodes.Add(cornerTopLeft);
+        EdgeNodes.Add(cornerTopLeft);
+        Nodes.Add(cornerTopLeft);
+
+        // Create inner corner nodes
+        float borderMargin = 2 * MAX_SEGMENT_LENGTH;
+        GraphNode innerCornerBotLeft = new GraphNode(new Vector2(borderMargin, borderMargin), this);
+        Nodes.Add(innerCornerBotLeft);
+        GraphNode innerCornerBotRight = new GraphNode(new Vector2(Width - borderMargin, borderMargin), this);
+        Nodes.Add(innerCornerBotRight);
+        GraphNode innerCornerTopRight = new GraphNode(new Vector2(Width - borderMargin, Height - borderMargin), this);
+        Nodes.Add(innerCornerTopRight);
+        GraphNode innerCornerTopLeft = new GraphNode(new Vector2(borderMargin, Height - borderMargin), this);
+        Nodes.Add(innerCornerTopLeft);
+
+        // Create connections between outer corners
+        AddConnection(cornerBotLeft, cornerBotRight, isEdgeConnection: true);
+        AddConnection(cornerBotRight, cornerTopRight, isEdgeConnection: true);
+        AddConnection(cornerTopRight, cornerTopLeft, isEdgeConnection: true);
+        AddConnection(cornerTopLeft, cornerBotLeft, isEdgeConnection: true);
+
+        // Create connections between corners and inner corners
+        AddConnection(cornerBotLeft, innerCornerBotLeft, isEdgeConnection: false);
+        AddConnection(cornerBotRight, innerCornerBotRight, isEdgeConnection: false);
+        AddConnection(cornerTopRight, innerCornerTopRight, isEdgeConnection: false);
+        AddConnection(cornerTopLeft, innerCornerTopLeft, isEdgeConnection: false);
+
+        // Create bottom map edge between inner corners
+        float y = 0f;
+        float x = borderMargin;
+        GraphNode lastNode = innerCornerBotLeft;
+        while(x < Width - 3 * MAX_SEGMENT_LENGTH)
+        {
+            x += RandomSegmentLength();
+            y = MAX_SEGMENT_LENGTH + RandomSegmentLength()*3;
+            GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
+            Nodes.Add(nextNode);
+            AddConnection(lastNode, nextNode, isEdgeConnection: false);
+            lastNode = nextNode;
+        }
+        AddConnection(lastNode, innerCornerBotRight, isEdgeConnection: false);
+
+        // Create right map edge between inner corners
+        y = borderMargin;
+        lastNode = innerCornerBotRight;
+        while (y < Height - 3 * MAX_SEGMENT_LENGTH)
+        {
+            y += RandomSegmentLength();
+            x = Width - MAX_SEGMENT_LENGTH - RandomSegmentLength();
+            GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
+            Nodes.Add(nextNode);
+            AddConnection(lastNode, nextNode, isEdgeConnection: false);
+            lastNode = nextNode;
+        }
+        AddConnection(lastNode, innerCornerTopRight, isEdgeConnection: false);
+
+        // Create top map edge between inner corners
+        x = Width - borderMargin;
+        lastNode = innerCornerTopRight;
+        while (x > 3 * MAX_SEGMENT_LENGTH)
+        {
+            x -= RandomSegmentLength();
+            y = Height - MAX_SEGMENT_LENGTH - RandomSegmentLength();
+            GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
+            Nodes.Add(nextNode);
+            AddConnection(lastNode, nextNode, isEdgeConnection: false);
+            lastNode = nextNode;
+        }
+        AddConnection(lastNode, innerCornerTopLeft, isEdgeConnection: false);
+
+        // Create left map edge between inner corners
+        y = Height - borderMargin;
+        lastNode = innerCornerTopLeft;
+        while (y > 3 * MAX_SEGMENT_LENGTH)
+        {
+            y -= RandomSegmentLength();
+            x = MAX_SEGMENT_LENGTH + RandomSegmentLength();
+            GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
+            Nodes.Add(nextNode);
+            AddConnection(lastNode, nextNode, isEdgeConnection: false);
+            lastNode = nextNode;
+        }
+        AddConnection(lastNode, innerCornerBotLeft, isEdgeConnection: false);
+    }
 
     public void CreateSegment(GraphNode startNode, float angle, bool changeAngle, bool canSplit)
     {
@@ -500,82 +603,21 @@ public class PolygonMapGenerator : MonoBehaviour
             Map.Regions.Add(region);
         }
 
-        foreach (GraphNode n in Nodes) n.BorderPoint.Init(n.Vertex);
+        foreach (GraphNode n in Nodes) n.BorderPoint.Init(n);
         foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
-        foreach (GraphPolygon p in Polygons) p.Region.Init(p, PoliticalWaterMaterial, SatelliteWaterMaterial, SatelliteLandMaterial, PoliticalLandMaterial, UnownedLandColor);
+        foreach (GraphPolygon p in Polygons) p.Region.Init(p);
 
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
-        TextureGenerator.GenerateSatelliteTexture(this);
+        //TextureGenerator.GenerateSatelliteTexture(this);
 
-        Map.InitializeMap(RiverPaths);
-    }
-
-    /// <summary>
-    /// Removes all edge connections and polygons and makes new ones
-    /// </summary>
-    private void ReconnectEdgeNodes()
-    {
-        // Remove edge connections
-        List<GraphConnection> edgeCopy = new List<GraphConnection>();
-        edgeCopy.AddRange(EdgeConnections);
-        foreach (GraphConnection con in edgeCopy) RemoveConnection(con, isEdgeConnection: true);
-
-        // Remove edge polygons
-        List<GraphPolygon> edgePolygons = Polygons.Where(x => x.IsEdgePolygon).ToList();
-        foreach (GraphPolygon p in edgePolygons) RemovePolygon(p);
-
-        GraphNode startNode = EdgeNodes[0];
-        GraphNode currentNode = EdgeNodes[0];
-
-        // Bottom edge
-        float curX = 0;
-        while (curX != Width)
-        {
-            GraphNode nextNode = EdgeNodes.Where(x => x.Vertex.y == 0 && x.Vertex.x > curX).OrderBy(x => x.Vertex.x).First();
-            AddConnection(currentNode, nextNode, isEdgeConnection: true);
-            currentNode = nextNode;
-            curX = nextNode.Vertex.x;
-        }
-
-        // Right edge
-        float curY = 0;
-        while (curY != Height)
-        {
-            GraphNode nextNode = EdgeNodes.Where(x => x.Vertex.x == Width && x.Vertex.y > curY).OrderBy(x => x.Vertex.y).First();
-            AddConnection(currentNode, nextNode, isEdgeConnection: true);
-            currentNode = nextNode;
-            curY = nextNode.Vertex.y;
-        }
-
-        // Top edge
-        curX = Width;
-        while (curX != 0)
-        {
-            GraphNode nextNode = EdgeNodes.Where(x => x.Vertex.y == Height && x.Vertex.x < curX).OrderByDescending(x => x.Vertex.x).First();
-            AddConnection(currentNode, nextNode, isEdgeConnection: true);
-            currentNode = nextNode;
-            curX = nextNode.Vertex.x;
-        }
-
-        // Left edge
-        curY = Height;
-        while (curY != 0)
-        {
-            GraphNode nextNode = EdgeNodes.Where(x => x.Vertex.x == 0 && x.Vertex.y < curY).OrderByDescending(x => x.Vertex.y).First();
-            AddConnection(currentNode, nextNode, isEdgeConnection: true);
-            currentNode = nextNode;
-            curY = nextNode.Vertex.y;
-        }
-
+        Map.InitializeMap(this);
     }
 
     private void FindAllPolygons()
     {
-        ReconnectEdgeNodes();
-        
         // Check for isolated nodes
         foreach (GraphNode n in Nodes)
         {
@@ -590,18 +632,12 @@ public class PolygonMapGenerator : MonoBehaviour
         // Find polygons in graph
         foreach (GraphNode n in Nodes.Where(x => x.Connections.Count > 2))
         {
-            FindPolygonsFromNode(n, isEdgeNode: false, ignoreVisitedNodes: false, removePolygons: false);
+            FindPolygonsFromNode(n, ignoreVisitedNodes: false, removePolygons: false);
         }
     }
 
-    private void FindPolygonsFromNode(GraphNode n, bool isEdgeNode, bool ignoreVisitedNodes, bool removePolygons)
+    private void FindPolygonsFromNode(GraphNode n, bool ignoreVisitedNodes, bool removePolygons)
     {
-        if (isEdgeNode)
-        {
-            ReconnectEdgeNodes();
-            foreach (GraphNode edgeNode in EdgeNodes) FindPolygonsFromNode(edgeNode, false, ignoreVisitedNodes, removePolygons: false);
-        }
-
         if (removePolygons)
         {
             // Remove polygons of node
@@ -637,7 +673,11 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         GraphPolygon newPolygon = new GraphPolygon(nodes, connections);
-        if (outerPolygon) newPolygon.IsOuterPolygon = true;
+        if (outerPolygon)
+        {
+            newPolygon.IsOuterPolygon = true;
+            newPolygon.DistanceFromNearestWater = -3;
+        }
 
         //Debug.Log("Adding new polygon with area " + newPolygon.Area);
 
@@ -728,10 +768,10 @@ public class PolygonMapGenerator : MonoBehaviour
 
         // 1. Identify balloon node polygons (nodes that have a polygon and more connections than polygons)
         List<GraphNode> balloonNodes = Nodes.Where(x => x.Type != BorderPointType.Edge && x.Connections.Count - x.Polygons.Count >= 2 && x.Polygons.Count > 0).ToList();
-        List<GraphPolygon> balloonNodePolygons = new List<GraphPolygon>();
+        HashSet<GraphPolygon> balloonNodePolygons = new HashSet<GraphPolygon>();
         foreach(GraphNode b in balloonNodes)
         {
-            foreach (GraphPolygon p in b.Polygons) if (!balloonNodePolygons.Contains(p)) balloonNodePolygons.Add(p);
+            foreach (GraphPolygon p in b.Polygons) balloonNodePolygons.Add(p);
         }
 
         // 2. Remove all nodes that have no polygon, + their connections
@@ -823,7 +863,7 @@ public class PolygonMapGenerator : MonoBehaviour
             RemoveConnection(con, isEdgeConnection: false);
         }
 
-        FindPolygonsFromNode(p1.Nodes.Where(x => !nodesBetweenPolygons.Contains(x)).ToList()[0], isEdgeNode: false, ignoreVisitedNodes: true, removePolygons: true);
+        FindPolygonsFromNode(p1.Nodes.Where(x => !nodesBetweenPolygons.Contains(x)).ToList()[0], ignoreVisitedNodes: true, removePolygons: true);
         SetNeighbours();
     }
 
@@ -831,7 +871,7 @@ public class PolygonMapGenerator : MonoBehaviour
     {
         NumSplits++;
 
-        if (p.IsEdgePolygon) throw new Exception("ERROR: SPLITTING EDGE POLYGONS NOT YET IMPLEMENTED");
+        // if (p.IsEdgePolygon) throw new Exception("ERROR: SPLITTING EDGE POLYGONS NOT YET IMPLEMENTED");
 
         // Select random node where the split start
         int splitNodeId = UnityEngine.Random.Range(0, p.Nodes.Count);
@@ -883,7 +923,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         // Find new polygons that were created in the split
         LastSegmentPolygons.Clear();
-        FindPolygonsFromNode(splitNode, isEdgeNode: false, ignoreVisitedNodes: true, removePolygons: true);
+        FindPolygonsFromNode(splitNode, ignoreVisitedNodes: true, removePolygons: true);
 
         // We check if the split has generated invalid nodes. If it has, remove the last split by removing all connections from added nodes
         InvalidNodes = Nodes.Where(x => x.Connections.Count > x.Polygons.Count && !EdgeNodes.Contains(x)).ToList();
@@ -894,7 +934,7 @@ public class PolygonMapGenerator : MonoBehaviour
             foreach (GraphNode n in LastSegmentNodes) 
                 Nodes.Remove(n);
 
-            FindPolygonsFromNode(splitNode, isEdgeNode: false, ignoreVisitedNodes: true, removePolygons: true);
+            FindPolygonsFromNode(splitNode, ignoreVisitedNodes: true, removePolygons: true);
         }
 
         SetNeighbours();

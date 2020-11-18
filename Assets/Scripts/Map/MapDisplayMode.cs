@@ -5,5 +5,6 @@ using UnityEngine;
 public enum MapDisplayMode
 {
     Satellite,
+    Topographic,
     Political
 }

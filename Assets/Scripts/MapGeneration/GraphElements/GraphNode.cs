@@ -15,11 +15,14 @@ public class GraphNode
     public List<GraphNode> ConnectedNodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Polygons = new List<GraphPolygon>();
+
     public GraphPath River;
+    public float RiverWidth;
 
     public List<GraphNode> VisitedNeighbours = new List<GraphNode>(); // Used for performant polygon finding
 
     public BorderPointType Type;
+    public int DistanceFromNearestOcean;
 
     public BorderPoint BorderPoint; // corresponding visual border point on the map
 

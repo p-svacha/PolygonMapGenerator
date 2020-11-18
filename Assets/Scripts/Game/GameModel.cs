@@ -25,7 +25,7 @@ public class GameModel : MonoBehaviour
         FlagGenerator = GameObject.Find("FlagGenerator").GetComponent<FlagGenerator>();
         FlagGenerator.GenerateFlag();
         Map = map;
-        Map.SetDisplayMode(MapDisplayMode.Political);
+        Map.SetDisplayMode(MapDisplayMode.Topographic);
         GameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
         MarkovChainWordGenerator.TargetNumWords = Map.Regions.Count * 2;
         GameObject.Find("LoadingScreen").SetActive(false);

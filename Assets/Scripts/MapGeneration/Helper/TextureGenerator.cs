@@ -9,6 +9,8 @@ public static class TextureGenerator
 {
     public static void GenerateSatelliteTexture(PolygonMapGenerator PMG)
     {
+        MaterialHandler MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
+
         // Land texture
         int perlinRange = 10000;
         Vector2 offset = new Vector2(UnityEngine.Random.Range(-perlinRange, perlinRange), UnityEngine.Random.Range(-perlinRange, perlinRange));
@@ -47,7 +49,7 @@ public static class TextureGenerator
             }
         }
         splatMap.Apply();
-        PMG.SatelliteLandMaterial.SetTexture("_Control", splatMap);
+        MaterialHandler.SatelliteLandMaterial.SetTexture("_Control", splatMap);
 
         // Shore texture
         int shoreTexSize = 2048;
@@ -82,7 +84,7 @@ public static class TextureGenerator
             }
         }
         shoreTexture.Apply();
-        PMG.SatelliteLandMaterial.SetTexture("_OverlayMask", shoreTexture);
+        MaterialHandler.SatelliteLandMaterial.SetTexture("_OverlayMask", shoreTexture);
 
     }
 

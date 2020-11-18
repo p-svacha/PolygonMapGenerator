@@ -30,7 +30,7 @@ public class E02_NationExpand : GameEvent
         CameraHandler.MoveToFocusRegion(NewProvince);
     }
 
-    protected override void Execute(GameModel Model, GameEventHandler Hanlder)
+    protected override void Execute(GameModel Model, GameEventHandler Handler)
     {
         Model.CaptureRegion(CapturingNation, NewProvince);
         Model.AddLog("The nation " + CapturingNation.Name + " has expanded. It has called its new province " + NewProvince.Name);
