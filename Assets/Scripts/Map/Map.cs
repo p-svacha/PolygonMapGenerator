@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Map
 {
-    public MaterialHandler MaterialHandler;
     public Texture2D RegionBorderMaskTexture;
 
     public List<Border> Borders = new List<Border>();
@@ -24,24 +23,33 @@ public class Map
 
     public int Width;
     public int Height;
+    public int Area;
 
     public Map(PolygonMapGenerator PMG)
     {
-        MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
-
         Width = PMG.Width;
         Height = PMG.Height;
+        Area = Width * Height;
 
-        MaterialHandler.PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
-        MaterialHandler.TopographicLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
+        //MaterialHandler.PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
+        //MaterialHandler.TopographicLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
         RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap(PolygonMapGenerator PMG)
+    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders)
     {
         InitRivers(PMG);
         IdentifyLandmasses();
         IdentifyWaterBodies();
+        FocusMapInEditor();
+        InitDisplay(showRegionBorders);
+    }
+
+    private void InitDisplay(bool showRegionBorders)
+    {
+        foreach (Region r in Regions) r.RegionBorderMaskTexture = RegionBorderMaskTexture;
+        SetDisplayMode(MapDisplayMode.Topographic);
+        ShowRegionBorders(showRegionBorders);
     }
 
     private void InitRivers(PolygonMapGenerator PMG)
@@ -145,7 +153,7 @@ public class Map
 
         // R - Show region borders
         if (Input.GetKeyDown(KeyCode.R) && (DisplayMode == MapDisplayMode.Political || DisplayMode == MapDisplayMode.Topographic))
-            ToggleRegionBorders();
+            ShowRegionBorders(!IsShowingRegionBorders);
     }
 
     public void DestroyAllGameObjects()
@@ -158,13 +166,13 @@ public class Map
 
     public void ToggleHideBorders()
     {
-        foreach (Border b in Borders) b.GetComponent<Renderer>().enabled = !b.GetComponent<Renderer>().enabled;
-        foreach (Border b in EdgeBorders) b.GetComponent<Renderer>().enabled = !b.GetComponent<Renderer>().enabled;
+        foreach (Border b in Borders) b.gameObject.SetActive(!b.gameObject.activeSelf);
+        foreach (Border b in EdgeBorders) b.gameObject.SetActive(!b.gameObject.activeSelf);
     }
 
     public void ToggleHideBorderPoints()
     {
-        foreach (BorderPoint bp in BorderPoints) bp.GetComponent<Renderer>().enabled = !bp.GetComponent<Renderer>().enabled;
+        foreach (BorderPoint bp in BorderPoints) bp.gameObject.SetActive(!bp.gameObject.activeSelf);
     }
 
     public void SetDisplayMode(MapDisplayMode mode)
@@ -174,18 +182,34 @@ public class Map
         foreach (River r in Rivers) r.SetDisplayMode(mode);
     }
 
-    public void ToggleRegionBorders()
+    public void ShowRegionBorders(bool show)
     {
-        if(IsShowingRegionBorders)
-        {
-            IsShowingRegionBorders = false;
-            foreach(Region r in Regions.Where(x => !x.IsWater)) r.GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", Texture2D.blackTexture);
-
-        }
-        else
-        {
-            IsShowingRegionBorders = true;
-            foreach (Region r in Regions.Where(x => !x.IsWater)) r.GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", RegionBorderMaskTexture);
-        }
+        IsShowingRegionBorders = show;
+        foreach (Region r in Regions.Where(x => !x.IsWater)) r.SetShowRegionBorders(show);
     }
+
+    private void FocusMapCentered()
+    {
+        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
+        Camera.main.transform.position = new Vector3(Width / 2f, Height, Height / 2f);
+    }
+
+    private void FocusMapInEditor()
+    {
+        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
+        Camera.main.transform.position = new Vector3(Width * 0.7f, Height * 0.9f, Height * 0.5f);
+    }
+
+    #region Getters
+
+    public List<Region> LandRegions { get { return Regions.Where(x => !x.IsWater).ToList(); } }
+
+    public int NumLandRegions { get { return Regions.Where(x => !x.IsWater).Count(); } }
+    public int NumWaterRegions { get { return Regions.Where(x => x.IsWater).Count(); } }
+    public float LandArea { get { return Regions.Where(x => !x.IsWater).Sum(x => x.Area); } }
+    public float WaterArea { get { return Regions.Where(x => x.IsWater && !x.IsOuterOcean).Sum(x => x.Area); } }
+    public int NumLandmasses { get { return Landmasses.Count; } }
+    public int NumWaterBodies { get { return WaterBodies.Count; } }
+
+    #endregion
 }

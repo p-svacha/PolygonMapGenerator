@@ -25,21 +25,6 @@ public class GraphConnection
         Type = (start.Type == BorderPointType.Edge || end.Type == BorderPointType.Edge) ? BorderType.Edge : BorderType.Inland;
     }
 
-    public void SetNeighbours()
-    {
-        Connections.Clear();
-
-        // Set connected connections
-        foreach(GraphConnection c in StartNode.Connections)
-        {
-            if (c != this && !Connections.Contains(c)) Connections.Add(c);
-        }
-        foreach (GraphConnection c in EndNode.Connections)
-        {
-            if (c != this && !Connections.Contains(c)) Connections.Add(c);
-        }
-    }
-
     public void SetType()
     {
         if (Type == BorderType.Edge) return;

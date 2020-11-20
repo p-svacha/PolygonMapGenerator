@@ -29,8 +29,11 @@ public static class WaterCreator
 
     public static void CreateWaters(PolygonMapGenerator PMG)
     {
-        CreateOuterOcean(PMG);
-        TurnEdgePolygonsToWater(PMG);
+        if (PMG.Island)
+        {
+            CreateOuterOcean(PMG);
+            TurnEdgePolygonsToWater(PMG);
+        }
         CreateContinents(PMG);
         TurnRandomPolygonsToWater(PMG);
         ExpandOceans(PMG);

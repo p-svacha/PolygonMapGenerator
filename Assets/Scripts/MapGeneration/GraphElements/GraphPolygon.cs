@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class GraphPolygon
 {
+    public static int idCounter = 0;
+    public int Id; 
+
     public List<GraphNode> Nodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
     public List<GraphPolygon> Neighbours = new List<GraphPolygon>();
@@ -28,6 +31,7 @@ public class GraphPolygon
 
     public GraphPolygon(List<GraphNode> nodes, List<GraphConnection> connections)
     {
+        Id = idCounter++;
         Nodes = nodes;
         Connections = connections;
         Area = GeometryFunctions.GetPolygonArea(nodes.Select(x => x.Vertex).ToList());
@@ -39,19 +43,6 @@ public class GraphPolygon
         Jaggedness = 1f - (Area / (Width * Height));
     }
 
-    public void SetNeighbours()
-    {
-        Neighbours.Clear();
-
-        foreach (GraphConnection c in Connections)
-        {
-            foreach (GraphPolygon p in c.Polygons)
-            {
-                if (p != this && !Neighbours.Contains(p)) Neighbours.Add(p);
-            }
-        }
-    }
-
     public void FindRivers()
     {
         HasRiver = Connections.Any(x => x.River != null);
@@ -60,5 +51,15 @@ public class GraphPolygon
     public bool IsNextToLand()
     {
         return Neighbours.Any(x => !x.IsWater);
+    }
+
+    /// <summary>
+    /// Returns true if two polygons have the same nodes.
+    /// </summary>
+    public bool HasSameNodesAs(GraphPolygon otherPoly)
+    {
+        int[] polyNodeIds = Nodes.OrderBy(x => x.Id).Select(x => x.Id).ToArray();
+        int[] otherPolyNodeIds = otherPoly.Nodes.OrderBy(x => x.Id).Select(x => x.Id).ToArray();
+        return (Enumerable.SequenceEqual(polyNodeIds, otherPolyNodeIds));
     }
 }

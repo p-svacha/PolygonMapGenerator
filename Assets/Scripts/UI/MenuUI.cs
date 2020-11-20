@@ -38,7 +38,7 @@ public class MenuUI : MonoBehaviour
 
     private void StartMapGeneration(int size)
     {
-        PMG.GenerateMap(size, size);
+        PMG.GenerateMap(size, size, 0.08f, 1.5f, true);
 
         LoadingScreen.gameObject.SetActive(true);
         Hide();

@@ -16,15 +16,14 @@ public class MaterialHandler : MonoBehaviour
     public Color LandColor;
     public Color WaterColor;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Color HighlightColor;
+    public Color GreyedOutColor;
 
-    // Update is called once per frame
-    void Update()
+    public static MaterialHandler Materials
     {
-        
+        get
+        {
+            return GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
+        }
     }
 }

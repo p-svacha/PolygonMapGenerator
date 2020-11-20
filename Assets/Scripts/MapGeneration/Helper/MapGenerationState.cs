@@ -5,6 +5,7 @@ using UnityEngine;
 public enum MapGenerationState
 {
     Waiting,
+    CreateMapBounds,
     CreateInitialGraph,
     FindInitialPolygons,
     RemoveInvalidNodes,

@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{6F17A84E-F414-84E7-0F96-0380050C0758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlagGeneration", "RelatedProjects\FlagGeneration\FlagGeneration.csproj", "{9C8ABB5C-59FE-494A-ABB5-DF08F8631CED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +19,6 @@ Global
 		{6F17A84E-F414-84E7-0F96-0380050C0758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F17A84E-F414-84E7-0F96-0380050C0758}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F17A84E-F414-84E7-0F96-0380050C0758}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C8ABB5C-59FE-494A-ABB5-DF08F8631CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C8ABB5C-59FE-494A-ABB5-DF08F8631CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C8ABB5C-59FE-494A-ABB5-DF08F8631CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C8ABB5C-59FE-494A-ABB5-DF08F8631CED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

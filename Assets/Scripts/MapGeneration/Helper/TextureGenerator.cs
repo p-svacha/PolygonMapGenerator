@@ -90,16 +90,16 @@ public static class TextureGenerator
 
     public static Texture2D CreateRegionBorderMaskTexture(PolygonMapGenerator PMG)
     {
-        int texWidth = PMG.Width * 200;
-        int texHeight = PMG.Height * 200;
+        int texWidth = PMG.Width * 400;
+        int texHeight = PMG.Height * 400;
         Texture2D regionBorderTexture = new Texture2D(texWidth, texHeight);
         for (int y = 0; y < texHeight; y++)
             for (int x = 0; x < texWidth; x++)
                 regionBorderTexture.SetPixel(x, y, Color.black);
 
-        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type != BorderType.Water))
+        foreach (GraphConnection c in PMG.InGraphConnections.Where(x => x.Type != BorderType.Water && !(x.StartNode.Type == BorderPointType.Edge && x.EndNode.Type == BorderPointType.Edge)))
         {
-            int steps = 5;
+            int steps = 20;
             int range = 1;
             if (c.Type == BorderType.Shore) range *= 2;
             for (int i = 0; i < steps + 1; i++)
