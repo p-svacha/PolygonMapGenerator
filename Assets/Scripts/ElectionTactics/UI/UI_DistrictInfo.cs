@@ -10,10 +10,14 @@ namespace ElectionTactics
         public Text TitleText;
         public Text AttributePrefab;
 
+        public int Population;
+        public int Votes;
+
         public GameObject GeographyPanel;
         public GameObject DemographyPanel;
         public GameObject EconomyPanel;
         public GameObject CulturePanel;
+        public WindowGraph ElectionGraph;
 
         // Start is called before the first frame update
         void Start()
@@ -50,6 +54,9 @@ namespace ElectionTactics
             Text religionText = Instantiate(AttributePrefab, DemographyPanel.transform);
             religionText.text = "Religion: " +  d.Religion.ToString();
             religionText.alignment = TextAnchor.MiddleRight;
+            Text ageText = Instantiate(AttributePrefab, DemographyPanel.transform);
+            ageText.text = "Age: " + d.AgeGroup.ToString();
+            ageText.alignment = TextAnchor.MiddleRight;
 
             // Economy
             Text eco1Text = Instantiate(AttributePrefab, EconomyPanel.transform);

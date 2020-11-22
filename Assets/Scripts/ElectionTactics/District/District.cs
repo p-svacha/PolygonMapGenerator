@@ -13,6 +13,7 @@ namespace ElectionTactics
         public Language Language;
         public Religion Religion;
         public Density Density;
+        public AgeGroup AgeGroup;
         public EconomyTrait Economy1;
         public EconomyTrait Economy2;
         public EconomyTrait Economy3;
@@ -26,6 +27,7 @@ namespace ElectionTactics
             Language = ElectionTacticsGame.GetRandomLanguage();
             Religion = ElectionTacticsGame.GetRandomReligion();
             Density = ElectionTacticsGame.GetRandomDensity();
+            AgeGroup = ElectionTacticsGame.GetRandomAgeGroup();
             Economy1 = ElectionTacticsGame.GetRandomEconomyTrait();
             Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
             while(Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();

@@ -13,19 +13,53 @@ namespace ElectionTactics
         public Map Map;
         public CameraHandler CameraHandler;
         public UI_ElectionTactics UI;
-
-        public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
-
         public GameState State;
-
         public District SelectedDistrict;
 
+        public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
+        public List<Party> Parties = new List<Party>();
+        public Party PlayerParty;
+
+        public List<GeographyTrait> ActiveGeographyPolicies = new List<GeographyTrait>();
+        public List<EconomyTrait> ActiveEconomyPolicies = new List<EconomyTrait>();
+        public List<Density> ActiveDensityPolicies = new List<Density>();
+        public List<AgeGroup> ActiveAgeGroupPolicies = new List<AgeGroup>();
+        public List<Language> ActiveLanguagePolicies = new List<Language>();
+        public List<Religion> ActiveReligionPolicies = new List<Religion>();
+
+        #region Initialization
         // Start is called before the first frame update
         void Start()
         {
             StartGame();
             State = GameState.Loading;
         }
+
+        private void StartGame()
+        {
+            PMG.GenerateMap(10, 10, 0.08f, 1.5f, island: true, drawRegionBorders: true, callback: OnMapGenerated);
+        }
+
+        private void OnMapGenerated()
+        {
+            Map = PMG.Map;
+
+            PlayerParty = new Party();
+            Parties.Add(PlayerParty);
+
+            Region startRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
+            AddDistrict(startRegion);
+
+            CameraHandler.FocusDistricts(Districts.Values.ToList());
+
+            UI.SelectTab(Tab.Policies);
+            
+            State = GameState.Running;
+        }
+
+        #endregion
+
+        #region Game Flow
 
         // Update is called once per frame
         void Update()
@@ -65,29 +99,16 @@ namespace ElectionTactics
                 if (SelectedDistrict != null) SelectedDistrict.Region.SetHighlighted(false);
                 SelectedDistrict = d;
             }
-
-            UI.DistrictInfo.gameObject.SetActive(SelectedDistrict != null);
             if (SelectedDistrict != null)
             {
                 SelectedDistrict.Region.SetHighlighted(true);
-                UI.DistrictInfo.SetDistrict(SelectedDistrict);
+                UI.SelectDistrict(SelectedDistrict);
             }
         }
 
-        private void StartGame()
-        {
-            PMG.GenerateMap(10, 10, 0.08f, 1.5f, island: true, drawRegionBorders: true, callback: OnMapGenerated);
-        }
+        #endregion
 
-        private void OnMapGenerated()
-        {
-            Map = PMG.Map;
-            Region startRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
-            Districts.Add(startRegion, new District(startRegion));
-            CameraHandler.FocusDistricts(Districts.Values.ToList());
-            UpdateDistrictColors();
-            State = GameState.Running;
-        }
+        #region Update Values
 
         private void UpdateDistrictColors()
         {
@@ -97,6 +118,71 @@ namespace ElectionTactics
                 else r.SetGreyedOut(true);
             }
         }
+
+        private void UpdateActivePolicies()
+        {
+            foreach(District d in Districts.Values)
+            {
+                foreach(GeographyTrait t in d.Geography)
+                {
+                    if(!ActiveGeographyPolicies.Contains(t))
+                    {
+                        ActiveGeographyPolicies.Add(t);
+                        foreach (Party p in Parties) p.AddGeographyPolicy(t);
+                    }
+                }
+
+                if (!ActiveEconomyPolicies.Contains(d.Economy1))
+                {
+                    ActiveEconomyPolicies.Add(d.Economy1);
+                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy1);
+                }
+                if (!ActiveEconomyPolicies.Contains(d.Economy2))
+                {
+                    ActiveEconomyPolicies.Add(d.Economy2);
+                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy2);
+                }
+                if (!ActiveEconomyPolicies.Contains(d.Economy3))
+                {
+                    ActiveEconomyPolicies.Add(d.Economy3);
+                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy3);
+                }
+
+                if (!ActiveDensityPolicies.Contains(d.Density))
+                {
+                    ActiveDensityPolicies.Add(d.Density);
+                    foreach (Party p in Parties) p.AddDensityPolicy(d.Density);
+                }
+                if (!ActiveLanguagePolicies.Contains(d.Language))
+                {
+                    ActiveLanguagePolicies.Add(d.Language);
+                    foreach (Party p in Parties) p.AddLanguagePolicy(d.Language);
+                }
+                if (!ActiveReligionPolicies.Contains(d.Religion))
+                {
+                    ActiveReligionPolicies.Add(d.Religion);
+                    foreach (Party p in Parties) p.AddReligionPolicy(d.Religion);
+                }
+                if (!ActiveAgeGroupPolicies.Contains(d.AgeGroup))
+                {
+                    ActiveAgeGroupPolicies.Add(d.AgeGroup);
+                    foreach (Party p in Parties) p.AddAgeGroupPolicy(d.AgeGroup);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Game Commands
+
+        private void AddDistrict(Region r)
+        {
+            Districts.Add(r, new District(r));
+            UpdateDistrictColors();
+            UpdateActivePolicies();
+        }
+
+        #endregion
 
         #region Random Values
 
@@ -124,6 +210,11 @@ namespace ElectionTactics
         {
             Array values = Enum.GetValues(typeof(Religion));
             return (Religion)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+        }
+        public static AgeGroup GetRandomAgeGroup()
+        {
+            Array values = Enum.GetValues(typeof(AgeGroup));
+            return (AgeGroup)values.GetValue(UnityEngine.Random.Range(0, values.Length));
         }
 
         #endregion

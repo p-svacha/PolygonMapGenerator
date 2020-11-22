@@ -7,7 +7,7 @@ namespace ElectionTactics
 {
     public class CameraHandler : MonoBehaviour
     {
-        private Vector2 Offset = new Vector2(0.4f, 0.03f);
+        private Vector2 Offset = new Vector2(0.4f, 0f);
 
         private void Start()
         {
