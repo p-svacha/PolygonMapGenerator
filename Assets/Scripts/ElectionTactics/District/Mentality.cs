@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public enum CultureTrait
+    public enum Mentality
     {
         Linguist,
         Rebellious,

@@ -1,64 +1,54 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ElectionTactics {
-    public class Party : MonoBehaviour
+    public class Party
     {
         public string Name;
+        public string Acronym;
         public Color Color;
 
-        public Dictionary<GeographyTrait, int> GeographyPolicies = new Dictionary<GeographyTrait, int>();
-        public Dictionary<Density, int> DensityPolicies = new Dictionary<Density, int>();
-        public Dictionary<Language, int> LanguagePolicies = new Dictionary<Language, int>();
-        public Dictionary<Religion, int> ReligionPolicies = new Dictionary<Religion, int>();
-        public Dictionary<AgeGroup, int> AgeGroupPolicies = new Dictionary<AgeGroup, int>();
-        public Dictionary<EconomyTrait, int> EconomyPolicies = new Dictionary<EconomyTrait, int>();
+        public List<Policy> Policies = new List<Policy>();
 
-        // Start is called before the first frame update
-        void Start()
+        public Party(string name, Color c)
         {
-
+            Name = name;
+            Acronym = "";
+            string[] words = name.Split(' ');
+            foreach (string w in words) Acronym += (w[0] + "").ToUpper(); 
+            Color = c;
         }
 
-        // Update is called once per frame
-        void Update()
+        public void AddPolicy(Policy p)
         {
-
+            Policies.Add(p);
         }
 
-        #region Add Policies
-
-        public void AddGeographyPolicy(GeographyTrait t)
+        public int GetPolicyValueFor(GeographyTrait t)
         {
-            GeographyPolicies.Add(t, 0);
+            return Policies.OfType<GeographyPolicy>().First(x => x.Trait == t).Value;
         }
-        
-        public void AddDensityPolicy(Density d)
+        public int GetPolicyValueFor(EconomyTrait t)
         {
-            DensityPolicies.Add(d, 0);
+            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == t).Value;
         }
-
-        public void AddLanguagePolicy(Language l)
+        public int GetPolicyValueFor(Density d)
         {
-            LanguagePolicies.Add(l, 0);
+            return Policies.OfType<DensityPolicy>().First(x => x.Density == d).Value;
         }
-
-        public void AddReligionPolicy(Religion r)
+        public int GetPolicyValueFor(AgeGroup a)
         {
-            ReligionPolicies.Add(r, 0);
+            return Policies.OfType<AgeGroupPolicy>().First(x => x.AgeGroup == a).Value;
         }
-
-        public void AddAgeGroupPolicy(AgeGroup a)
+        public int GetPolicyValueFor(Language l)
         {
-            AgeGroupPolicies.Add(a, 0);
+            return Policies.OfType<LanguagePolicy>().First(x => x.Language == l).Value;
         }
-
-        public void AddEconomyPolicy(EconomyTrait e)
+        public int GetPolicyValueFor(Religion r)
         {
-            EconomyPolicies.Add(e, 0);
+            return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r).Value;
         }
-
-        #endregion
     }
 }

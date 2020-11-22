@@ -14,12 +14,13 @@ namespace ElectionTactics
         public GameObject AgeGroupContainer;
         public GameObject LanguageContainer;
         public GameObject ReligionContainer;
+
+        public Dictionary<PolicyType, GameObject> PolicyContainers = new Dictionary<PolicyType, GameObject>();
         
 
         // Start is called before the first frame update
         void Start()
         {
-
         }
 
         // Update is called once per frame
@@ -30,32 +31,32 @@ namespace ElectionTactics
 
         public void Init(Party p)
         {
-            for (int i = 1; i < GeographyContainer.transform.childCount; i++) Destroy(GeographyContainer.transform.GetChild(i).gameObject);
-            for (int i = 1; i < EconomyContainer.transform.childCount; i++) Destroy(EconomyContainer.transform.GetChild(i).gameObject);
-            for (int i = 1; i < DensityContainer.transform.childCount; i++) Destroy(DensityContainer.transform.GetChild(i).gameObject);
-            for (int i = 1; i < AgeGroupContainer.transform.childCount; i++) Destroy(AgeGroupContainer.transform.GetChild(i).gameObject);
-            for (int i = 1; i < LanguageContainer.transform.childCount; i++) Destroy(LanguageContainer.transform.GetChild(i).gameObject);
-            for (int i = 1; i < ReligionContainer.transform.childCount; i++) Destroy(ReligionContainer.transform.GetChild(i).gameObject);
+            if(PolicyContainers.Count == 0)
+            {
+                PolicyContainers.Add(PolicyType.Geography, GeographyContainer);
+                PolicyContainers.Add(PolicyType.Economy, EconomyContainer);
+                PolicyContainers.Add(PolicyType.Density, DensityContainer);
+                PolicyContainers.Add(PolicyType.AgeGroup, AgeGroupContainer);
+                PolicyContainers.Add(PolicyType.Language, LanguageContainer);
+                PolicyContainers.Add(PolicyType.Religion, ReligionContainer);
+            }
 
-            foreach(KeyValuePair<GeographyTrait, int> kvp in p.GeographyPolicies)
-                AddPolicyControl(GeographyContainer.transform, kvp.Key.ToString(), kvp.Value);
-            foreach (KeyValuePair<EconomyTrait, int> kvp in p.EconomyPolicies)
-                AddPolicyControl(EconomyContainer.transform, kvp.Key.ToString(), kvp.Value);
-            foreach (KeyValuePair<Density, int> kvp in p.DensityPolicies)
-                AddPolicyControl(DensityContainer.transform, kvp.Key.ToString(), kvp.Value);
-            foreach (KeyValuePair<AgeGroup, int> kvp in p.AgeGroupPolicies)
-                AddPolicyControl(AgeGroupContainer.transform, kvp.Key.ToString(), kvp.Value);
-            foreach (KeyValuePair<Language, int> kvp in p.LanguagePolicies)
-                AddPolicyControl(LanguageContainer.transform, kvp.Key.ToString(), kvp.Value);
-            foreach (KeyValuePair<Religion, int> kvp in p.ReligionPolicies)
-                AddPolicyControl(ReligionContainer.transform, kvp.Key.ToString(), kvp.Value);
+            foreach(GameObject container in PolicyContainers.Values)
+            {
+                for (int i = 1; i < container.transform.childCount; i++) Destroy(container.transform.GetChild(i).gameObject);
+            }
+
+            foreach(Policy policy in p.Policies)
+            {
+                AddPolicyControl(policy);
+            }
         }
 
-        private void AddPolicyControl(Transform parent, string label, int value)
+        private void AddPolicyControl(Policy p)
         {
-            PolicyControl pc = Instantiate(PolicyControlPrefab, parent);
+            PolicyControl pc = Instantiate(PolicyControlPrefab, PolicyContainers[p.Type].transform);
             pc.GetComponent<RectTransform>().sizeDelta = new Vector2(pc.GetComponent<RectTransform>().sizeDelta.x, 40);
-            pc.Init(label, value);
+            pc.Init(p);
         }
     }
 }

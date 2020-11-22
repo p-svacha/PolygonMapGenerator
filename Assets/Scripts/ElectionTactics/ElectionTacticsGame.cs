@@ -27,6 +27,8 @@ namespace ElectionTactics
         public List<Language> ActiveLanguagePolicies = new List<Language>();
         public List<Religion> ActiveReligionPolicies = new List<Religion>();
 
+        private const int NumOpponents = 3;
+
         #region Initialization
         // Start is called before the first frame update
         void Start()
@@ -44,8 +46,7 @@ namespace ElectionTactics
         {
             Map = PMG.Map;
 
-            PlayerParty = new Party();
-            Parties.Add(PlayerParty);
+            CreateParties();
 
             Region startRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
             AddDistrict(startRegion);
@@ -55,6 +56,21 @@ namespace ElectionTactics
             UI.SelectTab(Tab.Policies);
             
             State = GameState.Running;
+        }
+
+        private void CreateParties()
+        {
+            PlayerParty = new Party("Player Party", Color.red);
+            Parties.Add(PlayerParty);
+            List<Color> takenColors = new List<Color>();
+            for(int i = 0; i < NumOpponents; i++)
+            {
+                string name = PartyNameGenerator.GetRandomPartyName();
+                Color color = PartyNameGenerator.GetPartyColor(name, takenColors);
+                takenColors.Add(color);
+                Party p = new Party(name, color);
+                Parties.Add(p);
+            }
         }
 
         #endregion
@@ -84,6 +100,15 @@ namespace ElectionTactics
                     }
                 }
                 break;
+            }
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                if(SelectedDistrict != null)
+                {
+                    SelectedDistrict.RunElection(Parties);
+                    UI.SelectDistrict(SelectedDistrict);
+                }
             }
         }
 
@@ -128,45 +153,45 @@ namespace ElectionTactics
                     if(!ActiveGeographyPolicies.Contains(t))
                     {
                         ActiveGeographyPolicies.Add(t);
-                        foreach (Party p in Parties) p.AddGeographyPolicy(t);
+                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(t, 0));
                     }
                 }
 
                 if (!ActiveEconomyPolicies.Contains(d.Economy1))
                 {
                     ActiveEconomyPolicies.Add(d.Economy1);
-                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy1);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(d.Economy1, 0));
                 }
                 if (!ActiveEconomyPolicies.Contains(d.Economy2))
                 {
                     ActiveEconomyPolicies.Add(d.Economy2);
-                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy2);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(d.Economy2, 0));
                 }
                 if (!ActiveEconomyPolicies.Contains(d.Economy3))
                 {
                     ActiveEconomyPolicies.Add(d.Economy3);
-                    foreach (Party p in Parties) p.AddEconomyPolicy(d.Economy3);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(d.Economy3, 0));
                 }
 
                 if (!ActiveDensityPolicies.Contains(d.Density))
                 {
                     ActiveDensityPolicies.Add(d.Density);
-                    foreach (Party p in Parties) p.AddDensityPolicy(d.Density);
-                }
-                if (!ActiveLanguagePolicies.Contains(d.Language))
-                {
-                    ActiveLanguagePolicies.Add(d.Language);
-                    foreach (Party p in Parties) p.AddLanguagePolicy(d.Language);
-                }
-                if (!ActiveReligionPolicies.Contains(d.Religion))
-                {
-                    ActiveReligionPolicies.Add(d.Religion);
-                    foreach (Party p in Parties) p.AddReligionPolicy(d.Religion);
+                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(d.Density, 0));
                 }
                 if (!ActiveAgeGroupPolicies.Contains(d.AgeGroup))
                 {
                     ActiveAgeGroupPolicies.Add(d.AgeGroup);
-                    foreach (Party p in Parties) p.AddAgeGroupPolicy(d.AgeGroup);
+                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(d.AgeGroup, 0));
+                }
+                if (!ActiveLanguagePolicies.Contains(d.Language))
+                {
+                    ActiveLanguagePolicies.Add(d.Language);
+                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(d.Language, 0));
+                }
+                if (!ActiveReligionPolicies.Contains(d.Religion))
+                {
+                    ActiveReligionPolicies.Add(d.Religion);
+                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(d.Religion, 0));
                 }
             }
         }
@@ -186,10 +211,10 @@ namespace ElectionTactics
 
         #region Random Values
 
-        public static CultureTrait GetRandomCulture()
+        public static Mentality GetRandomCulture()
         {
-            Array values = Enum.GetValues(typeof(CultureTrait));
-            return (CultureTrait)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            Array values = Enum.GetValues(typeof(Mentality));
+            return (Mentality)values.GetValue(UnityEngine.Random.Range(0, values.Length));
         }
         public static Density GetRandomDensity()
         {

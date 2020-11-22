@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ElectionTactics\CameraHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_PolicySelection.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_ElectionTactics.cs" />
     <Compile Include="Assets\Scripts\Map\Landmass.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\TextureGenerator.cs" />
@@ -76,11 +77,11 @@
     <Compile Include="Assets\Scripts\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\District\CultureTrait.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPath.cs" />
     <Compile Include="Assets\Scripts\Map\Border.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
     <Compile Include="Assets\Scripts\UIControls\Graph\WindowGraph.cs" />
+    <Compile Include="Assets\Scripts\UIControls\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\GeographyTrait.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\PolygonMapGenerator.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
     <Compile Include="Assets\Scripts\Game\GameEvents\E02_NationExpand.cs" />
+    <Compile Include="Assets\Scripts\UIControls\TabButton\TabButton.cs" />
     <Compile Include="Assets\Scripts\Map\RegionType.cs" />
     <Compile Include="Assets\Scripts\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\Map\MaterialHandler.cs" />
@@ -101,10 +103,13 @@
     <Compile Include="Assets\Scripts\ElectionTactics\District\Density.cs" />
     <Compile Include="Assets\Scripts\Map\BorderType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\clipper.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Party\Party.cs" />
     <Compile Include="Assets\Scripts\Map\Region.cs" />
     <Compile Include="Assets\Scripts\Game\GameEvents\E01_NewNationEmerge.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\ElectionTacticsGame.cs" />
+    <Compile Include="Assets\Scripts\UIControls\PolicyControl\PolicyControl.cs" />
     <Compile Include="Assets\Scripts\UI\UI_RegionInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\District\AgeGroup.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\UI\ColorManager.cs" />
     <Compile Include="Assets\Scripts\Game\GameEventHandler.cs" />
@@ -115,12 +120,18 @@
     <Compile Include="Assets\Scripts\ElectionTactics\GameState.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPointType.cs" />
     <Compile Include="Assets\Scripts\Game\Nation.cs" />
-    <Compile Include="Assets\Scripts\UIControls\Graph\GraphDataPoint.cs" />
-    <Compile Include="Assets\Scripts\UIControls\PolicyControl\PolicyControl.cs" />
-    <Compile Include="Assets\Scripts\UIControls\TabButton\TabButton.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_PolicySelection.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Party\Party.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\District\AgeGroup.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\Policy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\District\Mentality.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\GeographyPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\PolicyType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\EconomyPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\DensityPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\AgeGroupPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\LanguagePolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\ReligionPolicy.cs" />
+    <Compile Include="Assets\Scripts\EnumHelper.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Party\PartyNameGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Election\ElectionResult.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Shaders\LandShader_Political.shader" />

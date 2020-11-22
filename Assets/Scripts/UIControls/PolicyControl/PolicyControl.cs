@@ -3,53 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PolicyControl : MonoBehaviour
+namespace ElectionTactics
 {
-    private int MaxValue = 8;
-
-    public Text Label;
-    public GameObject ValueContainer;
-    public Button MinusButton;
-    public Button PlusButton;
-
-    public int Value;
-
-    // Start is called before the first frame update
-    void Start()
+    public class PolicyControl : MonoBehaviour
     {
-        PlusButton.onClick.AddListener(IncreaseValue);
-        MinusButton.onClick.AddListener(DecreaseValue);
-        SetValue(0);
-    }
+        private int MaxValue = 8;
 
-    public void Init(string label, int value)
-    {
-        Label.text = label;
-        SetValue(value);
-    }
+        public Text Label;
+        public GameObject ValueContainer;
+        public Button MinusButton;
+        public Button PlusButton;
 
-    private void SetValue(int value)
-    {
-        Mathf.Clamp(value, 0, MaxValue);
-        Value = value;
-        for(int i = 0; i < MaxValue; i++)
+        public Policy Policy;
+
+        public int Value;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            ValueContainer.transform.GetChild(i).gameObject.SetActive(i < value);
+            PlusButton.onClick.AddListener(IncreaseValue);
+            MinusButton.onClick.AddListener(DecreaseValue);
         }
-    }
 
-    private void IncreaseValue()
-    {
-        SetValue(Value + 1);
-    }
-    private void DecreaseValue()
-    {
-        SetValue(Value - 1);
-    }
+        public void Init(Policy p)
+        {
+            Policy = p;
+            Label.text = p.Name;
+            SetValue(p.Value);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void SetValue(int value)
+        {
+            value = Mathf.Clamp(value, 0, MaxValue);
+            Value = value;
+            for (int i = 0; i < MaxValue; i++)
+            {
+                ValueContainer.transform.GetChild(i).gameObject.SetActive(i < value);
+            }
+            Policy.SetValue(value);
+        }
+
+        private void IncreaseValue()
+        {
+            SetValue(Value + 1);
+        }
+        private void DecreaseValue()
+        {
+            SetValue(Value - 1);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
     }
 }
