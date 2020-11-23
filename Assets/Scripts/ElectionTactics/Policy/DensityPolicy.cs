@@ -14,6 +14,18 @@ namespace ElectionTactics
             Name = EnumHelper.GetDescription(density);
             Value = value;
             Type = PolicyType.Density;
+            switch(density)
+            {
+                case Density.Rural:
+                    OrderNum = 0;
+                    break;
+                case Density.Mixed:
+                    OrderNum = 1;
+                    break;
+                case Density.Urban:
+                    OrderNum = 2;
+                    break;
+            }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace ElectionTactics {
 
         public List<Policy> Policies = new List<Policy>();
 
+        public int Seats;
+
         public Party(string name, Color c)
         {
             Name = name;

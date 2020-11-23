@@ -93,10 +93,13 @@ public class WindowGraph : MonoBehaviour
         DrawRectangle(position, dimensions, c);
     }
 
-    
-    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font)
+    public void ClearGraph()
     {
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
+    }
+    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font)
+    {
+        ClearGraph();
 
         float xStep = GraphWidth / (dataPoints.Count + 1);
         float barWidth = xStep * (1 - barSpacing);
@@ -132,7 +135,7 @@ public class WindowGraph : MonoBehaviour
             float height = (dataPoints[i].Value / yMax) * (GraphHeight - yAxisTopMargin);
             CreateBar(xPos, barWidth, height, dataPoints[i].Color); // Bars
             DrawText(dataPoints[i].Label, new Vector2(xPos, -fontSize), new Vector2(barWidth, fontSize), dataPoints[i].Color, font, fontSize); // X-axis labels
-            DrawText(dataPoints[i].Value.ToString("0.0"), new Vector2(xPos, height + fontSize), new Vector2(barWidth, 4 * fontSize), dataPoints[i].Color, font, fontSize); // Bar value labels
+            DrawText(dataPoints[i].Value.ToString("0.0") + "%", new Vector2(xPos, height + fontSize), new Vector2(barWidth, 4 * fontSize), dataPoints[i].Color, font, fontSize); // Bar value labels
         }
 
         

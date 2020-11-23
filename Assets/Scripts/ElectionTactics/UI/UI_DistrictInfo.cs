@@ -8,6 +8,8 @@ namespace ElectionTactics
 {
     public class UI_DistrictInfo : MonoBehaviour
     {
+        public UI_ElectionTactics UI;
+
         public Text AttributePrefab;
         public Font GraphFont;
 
@@ -28,7 +30,7 @@ namespace ElectionTactics
         // Start is called before the first frame update
         void Start()
         {
-
+            BackButton.onClick.AddListener(() => UI.SelectTab(Tab.DistrictList));
         }
 
         // Update is called once per frame
@@ -37,7 +39,7 @@ namespace ElectionTactics
 
         }
 
-        public void SetDistrict(District d)
+        public void Init(District d)
         {
             ClearAllPanels();
 
@@ -83,6 +85,10 @@ namespace ElectionTactics
                     dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
                 int yMax = (((int)d.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
                 ElectionGraph.ShowBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont);
+            }
+            else
+            {
+                ElectionGraph.ClearGraph();
             }
         }
 

@@ -15,9 +15,6 @@ namespace ElectionTactics
         public UI_ElectionTactics UI;
         public GameState State;
 
-        public District SelectedDistrict;
-        public Color SelectedDistrictColor = Color.red;
-
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
         public List<Party> Parties = new List<Party>();
         public Party PlayerParty;
@@ -29,7 +26,12 @@ namespace ElectionTactics
         public List<Language> ActiveLanguagePolicies = new List<Language>();
         public List<Religion> ActiveReligionPolicies = new List<Religion>();
 
-        private const int NumOpponents = 3;
+        private const int NumOpponents = 4;
+
+        // General Election
+        private List<District> ElectionOrder;
+        private int CurElectionDistrict;
+
 
         #region Initialization
         // Start is called before the first frame update
@@ -51,7 +53,7 @@ namespace ElectionTactics
             CreateParties();
             AddRandomDistrict();
 
-            UI.SelectTab(Tab.Policies);
+            UI.SelectTab(Tab.Parliament);
             
             State = GameState.Running;
         }
@@ -63,7 +65,7 @@ namespace ElectionTactics
             List<Color> takenColors = new List<Color>();
             for(int i = 0; i < NumOpponents; i++)
             {
-                string name = PartyNameGenerator.GetRandomPartyName();
+                string name = PartyNameGenerator.GetRandomPartyName(maxLength: 35);
                 Color color = PartyNameGenerator.GetPartyColor(name, takenColors);
                 takenColors.Add(color);
                 Party p = new Party(name, color);
@@ -92,8 +94,8 @@ namespace ElectionTactics
                         if (Physics.Raycast(ray, out hit, 100))
                         {
                             Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
-                            if (Districts.ContainsKey(mouseRegion)) SelectDistrict(Districts[mouseRegion]);
-                            else SelectDistrict(null);
+                            if (Districts.ContainsKey(mouseRegion)) UI.SelectDistrict(Districts[mouseRegion]);
+                            else UI.SelectDistrict(null);
                         }
                     }
                 }
@@ -103,36 +105,23 @@ namespace ElectionTactics
 
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                if(SelectedDistrict != null)
+                if(UI.SelectedDistrict != null)
                 {
-                    SelectedDistrict.RunElection(Parties);
-                    UI.SelectDistrict(SelectedDistrict);
+                    UI.SelectedDistrict.RunElection(PlayerParty, Parties);
                 }
             }
             if(Input.GetKeyDown(KeyCode.D))
             {
                 AddRandomDistrict();
             }
+            if(Input.GetKeyDown(KeyCode.S))
+            {
+                Parties[UnityEngine.Random.Range(0, Parties.Count)].Seats += UnityEngine.Random.Range(1, 11);
+                UI.Parliament.MovePositions(Parties, 1f);
+            }
         }
 
-        private void SelectDistrict(District d)
-        {
-            if (SelectedDistrict == d && SelectedDistrict != null) // Clicking on a selected district unselects it
-            {
-                SelectedDistrict.Region.Unhighlight();
-                SelectedDistrict = null;
-            }
-            else
-            {
-                if (SelectedDistrict != null) SelectedDistrict.Region.Unhighlight();
-                SelectedDistrict = d;
-            }
-            if (SelectedDistrict != null)
-            {
-                SelectedDistrict.Region.Highlight(SelectedDistrictColor);
-                UI.SelectDistrict(SelectedDistrict);
-            }
-        }
+        
 
         #endregion
 
@@ -240,6 +229,12 @@ namespace ElectionTactics
                 Region chosenRegion = candidates[UnityEngine.Random.Range(0, candidates.Count)];
                 AddDistrict(chosenRegion);
             }
+        }
+
+        public void RunGeneralElection()
+        {
+            List<District> ElectionOrder = Districts.Values.OrderBy(x => x.Population).ToList();
+            CurElectionDistrict = 0;
         }
 
         #endregion

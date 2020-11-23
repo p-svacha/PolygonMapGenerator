@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ElectionTactics
 {
     public class UI_PolicySelection : MonoBehaviour
     {
         public PolicyControl PolicyControlPrefab;
+        public VerticalLayoutGroup VLG;
 
         public GameObject GeographyContainer;
         public GameObject EconomyContainer;
@@ -16,7 +19,6 @@ namespace ElectionTactics
         public GameObject ReligionContainer;
 
         public Dictionary<PolicyType, GameObject> PolicyContainers = new Dictionary<PolicyType, GameObject>();
-        
 
         // Start is called before the first frame update
         void Start()
@@ -26,7 +28,6 @@ namespace ElectionTactics
         // Update is called once per frame
         void Update()
         {
-
         }
 
         public void Init(Party p)
@@ -46,10 +47,13 @@ namespace ElectionTactics
                 for (int i = 1; i < container.transform.childCount; i++) Destroy(container.transform.GetChild(i).gameObject);
             }
 
-            foreach(Policy policy in p.Policies)
+            foreach(Policy policy in p.Policies.OrderBy(x => x.OrderNum))
             {
                 AddPolicyControl(policy);
             }
+
+            Canvas.ForceUpdateCanvases();
+            VLG.SetLayoutVertical();
         }
 
         private void AddPolicyControl(Policy p)

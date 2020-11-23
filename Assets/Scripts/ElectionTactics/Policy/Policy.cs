@@ -8,6 +8,7 @@ namespace ElectionTactics
     {
         public string Name { get; protected set; }
         public int Value { get; protected set; }
+        public int OrderNum; // how this policy should be ordered in the policy selection
         public PolicyType Type;
 
         public void SetValue(int value)

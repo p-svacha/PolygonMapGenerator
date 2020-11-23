@@ -42,9 +42,12 @@ namespace ElectionTactics
             "Purple",
             "Brown",
             "Left",
+            "Leftist",
             "Right",
+            "Alt-Right",
             "Reformist",
-            "Anti-Capitalist"
+            "Anti-Capitalist",
+            "Holy"
         };
 
         private static List<string> PartyTypeNouns = new List<string>() // T
@@ -63,7 +66,9 @@ namespace ElectionTactics
             "Resurgence",
             "Order",
             "Law",
-            "Freedom"
+            "Freedom",
+            "Liberation",
+            "Salvation"
         };
 
         private static List<string> PartyNouns = new List<string>() // P
@@ -111,17 +116,17 @@ namespace ElectionTactics
         {
             new Color(0.80f, 0.80f, 0.80f), // 0 - White
             new Color(0.28f, 0.53f, 0.22f), // 1 - Green
-            new Color(0.20f, 0.40f, 0.60f), // 2 - Blue
+            new Color(0.00f, 0.25f, 0.50f), // 2 - Blue
             new Color(0.80f, 0.20f, 0.25f), // 3 - Red
             new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
             new Color(0.05f, 0.05f, 0.05f), // 5 - Black
             new Color(0.75f, 0.50f, 0.16f), // 6 - Orange
-            new Color(0.55f, 0.16f, 0.55f), // 7 - Purple
-            new Color(0.46f, 0.30f, 0.14f), // 8 - Brown
+            new Color(0.45f, 0.00f, 0.45f), // 7 - Purple
+            new Color(0.33f, 0.16f, 0.00f), // 8 - Brown
         };
 
 
-        public static string GetRandomPartyName()
+        public static string GetRandomPartyName(int maxLength = 0)
         {
             string name = "";
 
@@ -142,7 +147,8 @@ namespace ElectionTactics
             }
             name = name.Trim(' ');
 
-            return name;
+            if (maxLength != 0 && name.Length > maxLength) return GetRandomPartyName(maxLength);
+            else return name;
         }
 
         public static Color GetPartyColor(string partyName, List<Color> alreadyTaken)

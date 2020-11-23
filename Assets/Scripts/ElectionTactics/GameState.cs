@@ -7,6 +7,9 @@ namespace ElectionTactics
     public enum GameState
     {
         Loading,
-        Running
+        Running,
+        GE_ZoomToDistrict,
+        GE_ElectionGraphAnimation,
+        GE_SeatDistribution
     }
 }

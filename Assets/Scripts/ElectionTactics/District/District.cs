@@ -21,7 +21,12 @@ namespace ElectionTactics
         public List<Mentality> Mentality = new List<Mentality>();
 
         public ElectionResult LastElectionResult;
+        public Party CurrentWinnerParty;
+        public float PlayerPartyShare;
+        public float CurrentWinnerShare;
+        public float CurrentMargin;
 
+        public const int MinSeats = 3;
         public const int RequiredPopulationPerSeat = 48000;
         public const int RequirementIncreasePerSeat = 10000; // After each seat, the district needs this amount more population for the next seat
 
@@ -44,7 +49,7 @@ namespace ElectionTactics
         public District(Region r)
         {
             Region = r;
-            Name = MarkovChainWordGenerator.GetRandomName(10);
+            Name = MarkovChainWordGenerator.GetRandomName(11);
             SetGeographyTraits();
             Language = ElectionTacticsGame.GetRandomLanguage();
             Religion = ElectionTacticsGame.GetRandomReligion();
@@ -71,13 +76,13 @@ namespace ElectionTactics
             int tmpPop = Population;
             int tmpSeatRequirement = RequiredPopulationPerSeat;
             int tmpSeats = 0;
-            while(tmpPop > tmpSeatRequirement)
+            while(tmpPop >= tmpSeatRequirement)
             {
                 tmpSeats++;
                 tmpPop -= tmpSeatRequirement;
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
-            Seats = tmpSeats;
+            Seats = Mathf.Max(MinSeats, tmpSeats);
 
             // Voter calculation
             Voters = Random.Range(101, 200);
@@ -101,7 +106,7 @@ namespace ElectionTactics
         /// A specified amount of single voters will vote, whereas their vote will be decided by weighted random based on party points.
         /// Each party has x base points. On top of that points are added for policies that match the district traits, modifiers and mentality.
         /// </summary>
-        public ElectionResult RunElection(List<Party> parties)
+        public ElectionResult RunElection(Party playerParty, List<Party> parties)
         {
             Dictionary<Party, float> voterShares = new Dictionary<Party, float>();
             Dictionary<Party, int> partyPoints = new Dictionary<Party, int>();
@@ -129,6 +134,15 @@ namespace ElectionTactics
             };
 
             LastElectionResult = result;
+            CurrentWinnerParty = LastElectionResult.VoteShare.First(x => x.Value == LastElectionResult.VoteShare.Max(y => y.Value)).Key;
+            CurrentWinnerShare = LastElectionResult.VoteShare.First(x => x.Value == LastElectionResult.VoteShare.Max(y => y.Value)).Value;
+            PlayerPartyShare = LastElectionResult.VoteShare.First(x => x.Key == playerParty).Value;
+            if (CurrentWinnerParty == playerParty)
+            {
+                float secondHighest = LastElectionResult.VoteShare.Values.OrderByDescending(x => x).ToList()[1];
+                CurrentMargin = CurrentWinnerShare - secondHighest;
+            }
+            else CurrentMargin = PlayerPartyShare - CurrentWinnerShare;
             return result;
         }
 
