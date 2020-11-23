@@ -11,7 +11,7 @@ public class E02_NationExpand : GameEvent
 
     public override int GetProbability(GameModel Model)
     {
-        Candidates = Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null && x.NeighbouringRegions.Any(y => y.Nation != null)).ToList();
+        Candidates = Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null && x.AdjacentRegions.Any(y => y.Nation != null)).ToList();
         return Candidates.Count;
     }
 
@@ -21,7 +21,7 @@ public class E02_NationExpand : GameEvent
 
         NewProvince = Candidates[Random.Range(0, Candidates.Count)];
         List<Nation> nationCandidates = new List<Nation>();
-        foreach(Region r in NewProvince.NeighbouringRegions)
+        foreach(Region r in NewProvince.AdjacentRegions)
         {
             if (r.Nation != null && !nationCandidates.Contains(r.Nation)) nationCandidates.Add(r.Nation);
         }

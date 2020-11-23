@@ -18,7 +18,7 @@ public class WaterBody
         Regions = regions;
         foreach(Region r in regions)
         {
-            foreach (Region n in r.NeighbouringRegions.Where(x => !x.IsWater))
+            foreach (Region n in r.AdjacentRegions.Where(x => !x.IsWater))
                 if (!BorderingLandRegions.Contains(n)) BorderingLandRegions.Add(n);
         }
 

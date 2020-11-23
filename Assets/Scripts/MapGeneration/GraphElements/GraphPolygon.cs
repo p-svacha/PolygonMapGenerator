@@ -10,9 +10,11 @@ public class GraphPolygon
 
     public List<GraphNode> Nodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
-    public List<GraphPolygon> Neighbours = new List<GraphPolygon>();
+    public List<GraphPolygon> AdjacentPolygons = new List<GraphPolygon>();
+    public List<GraphPolygon> WaterNeighbours = new List<GraphPolygon>();
     public List<GraphPath> Rivers = new List<GraphPath>();
 
+    // Attributes
     public bool IsOuterPolygon;
     public bool IsEdgePolygon;
 
@@ -21,7 +23,6 @@ public class GraphPolygon
     public float Area;
     public float Jaggedness; // How close the shape is to a perfect rectangle
 
-    // Topology info
     public bool IsWater;
     public bool IsNextToWater;
     public bool HasRiver;
@@ -50,7 +51,7 @@ public class GraphPolygon
 
     public bool IsNextToLand()
     {
-        return Neighbours.Any(x => !x.IsWater);
+        return AdjacentPolygons.Any(x => !x.IsWater);
     }
 
     /// <summary>
@@ -61,5 +62,34 @@ public class GraphPolygon
         int[] polyNodeIds = Nodes.OrderBy(x => x.Id).Select(x => x.Id).ToArray();
         int[] otherPolyNodeIds = otherPoly.Nodes.OrderBy(x => x.Id).Select(x => x.Id).ToArray();
         return (Enumerable.SequenceEqual(polyNodeIds, otherPolyNodeIds));
+    }
+
+    public List<GraphPolygon> LandNeighbours
+    {
+        get
+        {
+            return AdjacentPolygons.Where(x => !x.IsWater).ToList();
+        }
+    }
+    public float TotalBorderLength
+    {
+        get
+        {
+            return Connections.Where(x => x.Type != BorderType.Edge).Sum(x => Vector2.Distance(x.StartNode.Vertex, x.EndNode.Vertex));
+        }
+    }
+    public float InlandBorderLength
+    {
+        get
+        {
+            return Connections.Where(x => x.Type == BorderType.Inland).Sum(x => Vector2.Distance(x.StartNode.Vertex, x.EndNode.Vertex));
+        }
+    }
+    public float Coastline
+    {
+        get
+        {
+            return Connections.Where(x => x.Type == BorderType.Shore).Sum(x => Vector2.Distance(x.StartNode.Vertex, x.EndNode.Vertex));
+        }
     }
 }

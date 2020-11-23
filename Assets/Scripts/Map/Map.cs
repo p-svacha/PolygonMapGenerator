@@ -76,7 +76,7 @@ public class Map
             {
                 Region regionToAdd = regionsToAdd.Dequeue();
                 landmassRegions.Add(regionToAdd);
-                foreach (Region neighbourRegion in regionToAdd.NeighbouringRegions.Where(x => !x.IsWater))
+                foreach (Region neighbourRegion in regionToAdd.AdjacentRegions.Where(x => !x.IsWater))
                     if (!landmassRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
                         regionsToAdd.Enqueue(neighbourRegion);
             }
@@ -108,7 +108,7 @@ public class Map
             {
                 Region regionToAdd = regionsToAdd.Dequeue();
                 waterBodyRegions.Add(regionToAdd);
-                foreach (Region neighbourRegion in regionToAdd.NeighbouringRegions.Where(x => x.IsWater && !x.IsOuterOcean))
+                foreach (Region neighbourRegion in regionToAdd.AdjacentRegions.Where(x => x.IsWater && !x.IsOuterOcean))
                     if (!waterBodyRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
                         regionsToAdd.Enqueue(neighbourRegion);
             }

@@ -9,7 +9,6 @@ namespace ElectionTactics
         Coastal,
         Landlocked,
         Island,
-        Vast,
         Tiny,
         Peninsula,
     }

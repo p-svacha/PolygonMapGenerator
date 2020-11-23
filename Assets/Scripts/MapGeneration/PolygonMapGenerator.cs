@@ -144,6 +144,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.CreateWaters:
                 WaterCreator.CreateWaters(this);
+                SwitchState(MapGenerationState.FindWaterNeighbours);
+                break;
+
+            case MapGenerationState.FindWaterNeighbours:
+                FindWaterNeighbours();
                 SwitchState(MapGenerationState.DrawMap);
                 break;
 
@@ -644,8 +649,8 @@ public class PolygonMapGenerator : MonoBehaviour
             if (c.Polygons.Count > 1) throw new Exception("It is not allowed to add a polygon to a connection that already has 2 polygons");
             foreach (GraphPolygon neighbour in c.Polygons)
             {
-                if (!newPolygon.Neighbours.Contains(neighbour)) newPolygon.Neighbours.Add(neighbour);
-                if (!neighbour.Neighbours.Contains(newPolygon)) neighbour.Neighbours.Add(newPolygon);
+                if (!newPolygon.AdjacentPolygons.Contains(neighbour)) newPolygon.AdjacentPolygons.Add(neighbour);
+                if (!neighbour.AdjacentPolygons.Contains(newPolygon)) neighbour.AdjacentPolygons.Add(newPolygon);
             }
             if (!c.Polygons.Contains(newPolygon)) c.Polygons.Add(newPolygon);
         }
@@ -658,8 +663,8 @@ public class PolygonMapGenerator : MonoBehaviour
     {
         foreach (GraphNode n in p.Nodes) if (n.Polygons.Contains(p)) n.Polygons.Remove(p);
         foreach (GraphConnection c in p.Connections) if (c.Polygons.Contains(p)) c.Polygons.Remove(p);
-        foreach (GraphPolygon np in p.Neighbours) if (np != p) np.Neighbours.Remove(p);
-        p.Neighbours.Clear();
+        foreach (GraphPolygon np in p.AdjacentPolygons) if (np != p) np.AdjacentPolygons.Remove(p);
+        p.AdjacentPolygons.Clear();
         Polygons.Remove(p);
     }
 
@@ -672,7 +677,7 @@ public class PolygonMapGenerator : MonoBehaviour
         GraphPolygon smallest = Polygons.OrderBy(x => x.Area).First();
         while (Polygons.OrderBy(x => x.Area).First().Area < MinPolygonArea)
         {
-            GraphPolygon smallestNeighbour = smallest.Neighbours.OrderBy(x => x.Area).First();
+            GraphPolygon smallestNeighbour = smallest.AdjacentPolygons.OrderBy(x => x.Area).First();
             MergePolygons(smallest, smallestNeighbour);
             smallest = Polygons.OrderBy(x => x.Area).First();
         }
@@ -913,6 +918,59 @@ public class PolygonMapGenerator : MonoBehaviour
         FindAllPolygons();
     }
 
+    public void FindWaterNeighbours()
+    {
+        foreach (GraphPolygon poly in Polygons) poly.WaterNeighbours.Clear();
+
+        // Direct water neighbours: If two regions are connected to the same water region, but are not adjacent, they will be assigned water neighbours.
+        foreach(GraphPolygon poly in Polygons.Where(x => !x.IsWater && x.IsNextToWater))
+        {
+            foreach (GraphPolygon adjacentWater in poly.AdjacentPolygons.Where(x => x.IsWater))
+            {
+                foreach(GraphPolygon waterNeighbour in adjacentWater.AdjacentPolygons)
+                {
+                    if(!waterNeighbour.IsWater && waterNeighbour != poly && !poly.AdjacentPolygons.Contains(waterNeighbour) && !poly.WaterNeighbours.Contains(waterNeighbour)) 
+                    {
+                        AssignWaterNeighbours(poly, waterNeighbour);
+                    }
+                }
+            }
+        }
+
+        // Look for islands (regions which have no land or water neighbours yet): Find the closest land by going through water regions and assign them water neighbours
+        List<GraphPolygon> islands = Polygons.Where(x => !x.IsWater && x.LandNeighbours.Count == 0 && x.WaterNeighbours.Count == 0).ToList();
+        foreach(GraphPolygon island in islands)
+        {
+            List<GraphPolygon> adjacentWaters = island.AdjacentPolygons.Where(x => x.IsWater).ToList();
+            List<GraphPolygon> closestLand = FindClosestLandTo(island, adjacentWaters);
+            foreach (GraphPolygon closeLand in closestLand) AssignWaterNeighbours(island, closeLand);
+        }
+    }
+    private void AssignWaterNeighbours(GraphPolygon p1, GraphPolygon p2)
+    {
+        p1.WaterNeighbours.Add(p2);
+        p2.WaterNeighbours.Add(p1);
+    }
+
+    private List<GraphPolygon> FindClosestLandTo(GraphPolygon origin, List<GraphPolygon> waterCluster)
+    {
+        List<GraphPolygon> closeLand = new List<GraphPolygon>();
+        List<GraphPolygon> nextWaterCluster = new List<GraphPolygon>();
+        foreach(GraphPolygon water in waterCluster)
+        {
+            foreach(GraphPolygon adj in water.AdjacentPolygons)
+            {
+                if(adj != origin)
+                {
+                    if (adj.IsWater) nextWaterCluster.Add(adj);
+                    else closeLand.Add(adj);
+                }
+            }
+        }
+        if (closeLand.Count > 0) return closeLand;
+        else return FindClosestLandTo(origin, nextWaterCluster);
+    }
+
     /// <summary>
     /// Checks and returns if the given polygon is connected to any edge through its neighbours (or if it is floating in the void).
     /// </summary>
@@ -928,7 +986,7 @@ public class PolygonMapGenerator : MonoBehaviour
             GraphPolygon poly = polygonsToCheck.Dequeue();
             visitedPolygons.Add(poly);
             if (poly.IsEdgePolygon) return true;
-            foreach (GraphPolygon pn in poly.Neighbours) if (!visitedPolygons.Contains(pn)) polygonsToCheck.Enqueue(pn);
+            foreach (GraphPolygon pn in poly.AdjacentPolygons) if (!visitedPolygons.Contains(pn)) polygonsToCheck.Enqueue(pn);
         }
         return false;
     }

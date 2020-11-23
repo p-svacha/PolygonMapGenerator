@@ -106,7 +106,7 @@ public static class WaterCreator
 
     private static void TurnEdgePolygonsToWater(PolygonMapGenerator PMG)
     {
-        foreach (GraphPolygon p in PMG.Polygons.Where(x => (x.IsEdgePolygon || x.Neighbours.Any(y => y.IsEdgePolygon)))) TurnPolygonToWater(p);
+        foreach (GraphPolygon p in PMG.Polygons.Where(x => (x.IsEdgePolygon || x.AdjacentPolygons.Any(y => y.IsEdgePolygon)))) TurnPolygonToWater(p);
     }
 
     private static void CreateBallOceans(PolygonMapGenerator PMG)
@@ -263,7 +263,7 @@ public static class WaterCreator
     }
     public static void DoExpandLand(PolygonMapGenerator PMG)
     {
-        List<GraphPolygon> waterShorePolygons = PMG.Polygons.Where(x => !x.IsEdgePolygon && !x.Neighbours.Any(y => y.IsEdgePolygon) && x.IsWater && x.IsNextToLand()).ToList();
+        List<GraphPolygon> waterShorePolygons = PMG.Polygons.Where(x => !x.IsEdgePolygon && !x.AdjacentPolygons.Any(y => y.IsEdgePolygon) && x.IsWater && x.IsNextToLand()).ToList();
         if (waterShorePolygons.Count == 0) return;
         GraphPolygon newLand = waterShorePolygons[UnityEngine.Random.Range(0, waterShorePolygons.Count)];
         TurnPolygonToLand(newLand);
@@ -276,7 +276,7 @@ public static class WaterCreator
             p.IsWater = true;
             foreach (GraphNode n in p.Nodes) n.SetType();
             foreach (GraphConnection c in p.Connections) c.SetType();
-            foreach (GraphPolygon pn in p.Neighbours) pn.IsNextToWater = true;
+            foreach (GraphPolygon pn in p.AdjacentPolygons) pn.IsNextToWater = true;
         }
     }
     private static void TurnPolygonToLand(GraphPolygon p)
@@ -286,7 +286,7 @@ public static class WaterCreator
             p.IsWater = false;
             foreach (GraphNode n in p.Nodes) n.SetType();
             foreach (GraphConnection c in p.Connections) c.SetType();
-            foreach (GraphPolygon pn in p.Neighbours) pn.IsNextToWater = pn.Neighbours.Any(x => x.IsWater);
+            foreach (GraphPolygon pn in p.AdjacentPolygons) pn.IsNextToWater = pn.AdjacentPolygons.Any(x => x.IsWater);
         }
     }
 }

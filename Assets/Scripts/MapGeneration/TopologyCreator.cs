@@ -26,7 +26,7 @@ public static class TopologyCreator
         foreach (GraphPolygon p in levelPolygons) p.DistanceFromNearestWater = altitude;
         foreach (GraphPolygon p in levelPolygons)
         {
-            foreach (GraphPolygon neighbour in p.Neighbours.Where(x => !x.IsWater && x.DistanceFromNearestWater == 0)) nextLevelPolygons.Add(neighbour);
+            foreach (GraphPolygon neighbour in p.AdjacentPolygons.Where(x => !x.IsWater && x.DistanceFromNearestWater == 0)) nextLevelPolygons.Add(neighbour);
         }
         if(nextLevelPolygons.Count > 0) ApplyLandTopologyLevel(nextLevelPolygons.ToList(), altitude + 1);
     }
@@ -44,7 +44,7 @@ public static class TopologyCreator
         foreach (GraphPolygon p in levelPolygons) p.DistanceFromNearestWater = altitude;
         foreach (GraphPolygon p in levelPolygons)
         {
-            foreach (GraphPolygon neighbour in p.Neighbours.Where(x => x.IsWater && x.DistanceFromNearestWater == 0)) nextLevelPolygons.Add(neighbour);
+            foreach (GraphPolygon neighbour in p.AdjacentPolygons.Where(x => x.IsWater && x.DistanceFromNearestWater == 0)) nextLevelPolygons.Add(neighbour);
         }
         if (nextLevelPolygons.Count > 0) ApplyWaterTopologyLevel(nextLevelPolygons.ToList(), altitude - 1);
     }

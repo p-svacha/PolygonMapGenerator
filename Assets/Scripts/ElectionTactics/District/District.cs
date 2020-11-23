@@ -22,7 +22,8 @@ namespace ElectionTactics
 
         public ElectionResult LastElectionResult;
 
-        public const int PopulationPerSeat = 48000;
+        public const int RequiredPopulationPerSeat = 48000;
+        public const int RequirementIncreasePerSeat = 10000; // After each seat, the district needs this amount more population for the next seat
 
         public int Population;
         public int Seats;
@@ -60,20 +61,35 @@ namespace ElectionTactics
                 if (!Mentality.Contains(c)) Mentality.Add(c);
             }
 
+            // Population calculation
             Population = (int)(Region.Area * 1000000);
             if (Density == Density.Urban) Population = (int)(Population * 1.4f);
             if (Density == Density.Rural) Population = (int)(Population * 0.6f);
             Population = (Population / 1000) * 1000;
-            Seats = Population / PopulationPerSeat;
+
+            // Seat calculation
+            int tmpPop = Population;
+            int tmpSeatRequirement = RequiredPopulationPerSeat;
+            int tmpSeats = 0;
+            while(tmpPop > tmpSeatRequirement)
+            {
+                tmpSeats++;
+                tmpPop -= tmpSeatRequirement;
+                tmpSeatRequirement += RequirementIncreasePerSeat;
+            }
+            Seats = tmpSeats;
+
+            // Voter calculation
             Voters = Random.Range(101, 200);
         }
 
         private void SetGeographyTraits()
         {
-            if (Region.IsNextToWater) Geography.Add(GeographyTrait.Coastal);
-            else Geography.Add(GeographyTrait.Landlocked);
+            if (Region.CoastRatio > 0.8f) Geography.Add(GeographyTrait.Peninsula);
+            if (Region.CoastRatio > 0.3f) Geography.Add(GeographyTrait.Coastal);
+            if (Region.CoastLength == 0f) Geography.Add(GeographyTrait.Landlocked);
             if (Region.Area < 0.18f) Geography.Add(GeographyTrait.Tiny);
-            if (Region.Area > 1f) Geography.Add(GeographyTrait.Vast);
+            if (Region.Landmass.Size < 5) Geography.Add(GeographyTrait.Island);
         }
 
         #endregion

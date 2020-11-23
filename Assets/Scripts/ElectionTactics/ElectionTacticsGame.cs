@@ -14,7 +14,9 @@ namespace ElectionTactics
         public CameraHandler CameraHandler;
         public UI_ElectionTactics UI;
         public GameState State;
+
         public District SelectedDistrict;
+        public Color SelectedDistrictColor = Color.red;
 
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
         public List<Party> Parties = new List<Party>();
@@ -47,11 +49,7 @@ namespace ElectionTactics
             Map = PMG.Map;
 
             CreateParties();
-
-            Region startRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
-            AddDistrict(startRegion);
-
-            CameraHandler.FocusDistricts(Districts.Values.ToList());
+            AddRandomDistrict();
 
             UI.SelectTab(Tab.Policies);
             
@@ -102,6 +100,7 @@ namespace ElectionTactics
                 break;
             }
 
+
             if(Input.GetKeyDown(KeyCode.Space))
             {
                 if(SelectedDistrict != null)
@@ -110,23 +109,27 @@ namespace ElectionTactics
                     UI.SelectDistrict(SelectedDistrict);
                 }
             }
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                AddRandomDistrict();
+            }
         }
 
         private void SelectDistrict(District d)
         {
             if (SelectedDistrict == d && SelectedDistrict != null) // Clicking on a selected district unselects it
             {
-                SelectedDistrict.Region.SetHighlighted(false);
+                SelectedDistrict.Region.Unhighlight();
                 SelectedDistrict = null;
             }
             else
             {
-                if (SelectedDistrict != null) SelectedDistrict.Region.SetHighlighted(false);
+                if (SelectedDistrict != null) SelectedDistrict.Region.Unhighlight();
                 SelectedDistrict = d;
             }
             if (SelectedDistrict != null)
             {
-                SelectedDistrict.Region.SetHighlighted(true);
+                SelectedDistrict.Region.Highlight(SelectedDistrictColor);
                 UI.SelectDistrict(SelectedDistrict);
             }
         }
@@ -196,15 +199,47 @@ namespace ElectionTactics
             }
         }
 
-        #endregion
-
-        #region Game Commands
-
         private void AddDistrict(Region r)
         {
             Districts.Add(r, new District(r));
             UpdateDistrictColors();
             UpdateActivePolicies();
+            CameraHandler.FocusDistricts(Districts.Values.ToList());
+        }
+
+        #endregion
+
+        #region Game Commands
+
+        public void AddRandomDistrict()
+        {
+            if (Districts.Count == 0)
+            {
+                Region randomRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
+                AddDistrict(randomRegion);
+                return;
+            }
+            else
+            {
+                // 1. Find regions which have the highest ratio of (neighbouring active districts : neighbouring inactive districts)
+                List<Region> candidates = new List<Region>();
+                float highestRatio = 0;
+                foreach(Region r in Map.LandRegions.Where(x => !Districts.Keys.Contains(x)))
+                {
+                    int activeNeighbours = r.Neighbours.Where(x => Districts.Keys.Contains(x)).Count();
+                    int totalNeighbours = r.Neighbours.Count;
+                    float ratio = 1f * activeNeighbours / totalNeighbours;
+                    if (ratio == highestRatio) candidates.Add(r);
+                    else if(ratio > highestRatio)
+                    {
+                        candidates.Clear();
+                        candidates.Add(r);
+                        highestRatio = ratio;
+                    }
+                }
+                Region chosenRegion = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+                AddDistrict(chosenRegion);
+            }
         }
 
         #endregion

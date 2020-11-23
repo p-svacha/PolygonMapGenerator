@@ -7,6 +7,11 @@ using UnityEngine.UI;
 public class UI_MapEditor : MonoBehaviour
 {
     public PolygonMapGenerator PMG;
+
+    public Color SelectedColor = Color.red;
+    public Color LandNeighbourColor = new Color(0.75f, 0.50f, 0.16f);
+    public Color WaterNeighbourColor = Color.blue;
+
     public Button GenerateButton;
 
     public Text WidthText;
@@ -31,6 +36,12 @@ public class UI_MapEditor : MonoBehaviour
     public Text RegionAreaText;
     public Text RegionIdText;
     public Button SplitRegionButton;
+    public Text TotalBorderText;
+    public Text LandBorderText;
+    public Text CoastlineText;
+    public Text AdjacentRegions;
+    public Text LandNeighboursText;
+    public Text WaterNeighboursText;
 
     // Interaction
     public Region SelectedRegion;
@@ -40,6 +51,7 @@ public class UI_MapEditor : MonoBehaviour
         GenerateButton.onClick.AddListener(Generate);
         SplitRegionButton.onClick.AddListener(SplitSelectedRegion);
         RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
+
         MapInfoPanel.SetActive(false);
         RegionInfoPanel.SetActive(false);
     }
@@ -100,26 +112,47 @@ public class UI_MapEditor : MonoBehaviour
     {
         if (SelectedRegion == region && SelectedRegion != null) // Clicking on a selected region unselects it
         {
-            SelectedRegion.SetHighlighted(false);
+            SelectedRegion.Unhighlight();
             SelectedRegion = null;
         }
         else
         {
-            if (SelectedRegion != null) SelectedRegion.SetHighlighted(false);
+            if (SelectedRegion != null) SelectedRegion.Unhighlight();
             SelectedRegion = region;
         }
 
         RegionInfoPanel.SetActive(SelectedRegion != null);
         if (SelectedRegion != null)
         {
-            SelectedRegion.SetHighlighted(true);
+            SelectedRegion.Highlight(SelectedColor);
             RegionAreaText.text = SelectedRegion.Area.ToString("0.00") + " km²";
             RegionIdText.text = SelectedRegion.Polygon.Id.ToString();
+            TotalBorderText.text = SelectedRegion.TotalBorderLength.ToString("0.00" + " km");
+            LandBorderText.text = SelectedRegion.InlandBorderLength.ToString("0.00" + " km");
+            CoastlineText.text = SelectedRegion.CoastLength.ToString("0.00" + " km");
+            AdjacentRegions.text = SelectedRegion.AdjacentRegions.Count.ToString();
+            LandNeighboursText.text = SelectedRegion.LandNeighbours.Count.ToString();
+            WaterNeighboursText.text = SelectedRegion.WaterNeighbours.Count.ToString();
         }
     }
     private void SplitSelectedRegion()
     {
         PMG.SplitPolygon(SelectedRegion.Polygon);
+        PMG.FindWaterNeighbours();
         PMG.DrawMap(RegionBorderToggle.isOn);
+    }
+
+    public void HighlightNeighbours()
+    {
+        Debug.Log("Highligh");
+        foreach (Region r in SelectedRegion.LandNeighbours) r.Highlight(LandNeighbourColor);
+        foreach (Region r in SelectedRegion.WaterNeighbours) r.Highlight(WaterNeighbourColor);
+    }
+
+    public void UnhighlightNeighbours()
+    {
+        Debug.Log("Unhghligh");
+        foreach (Region r in SelectedRegion.LandNeighbours) r.Unhighlight();
+        foreach (Region r in SelectedRegion.WaterNeighbours) r.Unhighlight();
     }
 }
