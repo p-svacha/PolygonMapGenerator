@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public EconomyTrait Trait;
 
-        public EconomyPolicy(Party p, EconomyTrait trait, int value) : base(p, value)
+        public EconomyPolicy(Party p, EconomyTrait trait, int maxValue) : base(p, maxValue)
         {
             Trait = trait;
             Name = EnumHelper.GetDescription(trait);

@@ -29,6 +29,7 @@ namespace ElectionTactics
         // Game values
         private const int PolicyPointsPerCycle = 4;
         private const int NumOpponents = 4;
+        private const int MaxPolicyValue = 8;
         public int ElectionCycle;
 
         // General Election
@@ -74,15 +75,18 @@ namespace ElectionTactics
 
         private void CreateParties()
         {
-            PlayerParty = new Party(this, "Player Party", Color.red);
-            Parties.Add(PlayerParty);
             List<Color> takenColors = new List<Color>();
+            Color color = PartyNameGenerator.GetPartyColor(name, takenColors);
+            PlayerParty = new Party(this, "Player Party", color, isAi: false);
+            takenColors.Add(color);
+            Parties.Add(PlayerParty);
+            
             for(int i = 0; i < NumOpponents; i++)
             {
                 string name = PartyNameGenerator.GetRandomPartyName(maxLength: 35);
-                Color color = PartyNameGenerator.GetPartyColor(name, takenColors);
+                color = PartyNameGenerator.GetPartyColor(name, takenColors);
                 takenColors.Add(color);
-                Party p = new Party(this, name, color);
+                Party p = new Party(this, name, color, isAi: true);
                 Parties.Add(p);
             }
         }
@@ -167,40 +171,40 @@ namespace ElectionTactics
                     if(!ActiveGeographyPolicies.Contains(t))
                     {
                         ActiveGeographyPolicies.Add(t);
-                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(p, t, 0));
+                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(p, t, MaxPolicyValue));
                     }
                 }
 
                 if (!ActiveEconomyPolicies.Contains(d.Economy1))
                 {
                     ActiveEconomyPolicies.Add(d.Economy1);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy1, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy1, MaxPolicyValue));
                 }
                 if (!ActiveEconomyPolicies.Contains(d.Economy2))
                 {
                     ActiveEconomyPolicies.Add(d.Economy2);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy2, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy2, MaxPolicyValue));
                 }
                 if (!ActiveEconomyPolicies.Contains(d.Economy3))
                 {
                     ActiveEconomyPolicies.Add(d.Economy3);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy3, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy3, MaxPolicyValue));
                 }
 
                 if (!ActiveDensityPolicies.Contains(d.Density))
                 {
                     ActiveDensityPolicies.Add(d.Density);
-                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(p, d.Density, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(p, d.Density, MaxPolicyValue));
                 }
                 if (!ActiveAgeGroupPolicies.Contains(d.AgeGroup))
                 {
                     ActiveAgeGroupPolicies.Add(d.AgeGroup);
-                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(p, d.AgeGroup, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(p, d.AgeGroup, MaxPolicyValue));
                 }
                 if (!ActiveLanguagePolicies.Contains(d.Language))
                 {
                     ActiveLanguagePolicies.Add(d.Language);
-                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(p, d.Language, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(p, d.Language, MaxPolicyValue));
                 }
                 if (!ActiveReligionPolicies.Contains(d.Religion))
                 {
@@ -260,15 +264,15 @@ namespace ElectionTactics
 
         public void IncreasePolicy(Policy p)
         {
-            if (PlayerParty.PolicyPoints == 0) return;
-            PlayerParty.PolicyPoints--;
+            if (p.Party.PolicyPoints == 0 || p.Value == p.MaxValue) return;
+            p.Party.PolicyPoints--;
             p.IncreaseValue();
             UI.UpdatePolicyPointDisplay();
         }
         public void DecreasePolicy(Policy p)
         {
             if (p.Value == 0) return;
-            PlayerParty.PolicyPoints++;
+            p.Party.PolicyPoints++;
             p.DecreaseValue();
             UI.UpdatePolicyPointDisplay();
         }
@@ -278,6 +282,10 @@ namespace ElectionTactics
         #region Election
         public void RunGeneralElection()
         {
+            // AI policies
+            foreach(Party p in Parties.Where(p => p != PlayerParty))
+                p.AI.DistributePolicyPoints();
+
             State = GameState.GeneralElection;
             UI.SelectTab(Tab.Parliament);
 
@@ -306,17 +314,28 @@ namespace ElectionTactics
                 CurElectionDistrict = ElectionOrder[CurElectionDistrictIndex];
                 CurElectionDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
 
+                UI.Parliament.CurrentElectionContainer.SetActive(true);
                 UI.Parliament.CurrentElectionTitle.text = CurElectionDistrict.Name;
                 UI.Parliament.CurrentElectionSeatsText.text = CurElectionDistrict.Seats.ToString();
                 UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
+                if(CurElectionDistrict.LastElectionResult != null)
+                {
+                    UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
+                    UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
+                    UI.Parliament.CurrentElectionMarginText.text = CurElectionDistrict.CurrentMargin.ToString("0.0") + " %";
+                    UI.Parliament.LastElectionWinnerKnob.color = CurElectionDistrict.CurrentWinnerParty.Color;
+                }
+                else
+                {
+                    UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(false);
+                    UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(false);
+                }
                 CameraHandler.MoveToFocusDistricts(new List<District>() { CurElectionDistrict }, DistrictPanTime);
                 Invoke(nameof(RunCurrentDistrictElection), DistrictPanTime + PostDistrictPanTime);
             }
             else
             {
-                UI.Parliament.CurrentElectionTitle.text = "";
-                UI.Parliament.CurrentElectionSeatsText.text = "";
-                UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(false);
+                UI.Parliament.CurrentElectionContainer.SetActive(false);
                 Invoke(nameof(EndElection), PostDistrictPanTime);
             }
         }
@@ -351,7 +370,6 @@ namespace ElectionTactics
 
         private void EndElection()
         {
-            UI.Parliament.CurrentElectionContainer.SetActive(false);
             StartElectionCycle();
             CameraHandler.MoveToFocusDistricts(Districts.Values.ToList(), DistrictPanTime);
             UI.SlideInHeader(DistrictPanTime);

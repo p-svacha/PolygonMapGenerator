@@ -8,22 +8,24 @@ namespace ElectionTactics
     {
         public Party Party;
         public string Name { get; protected set; }
+        public int MaxValue { get; protected set; }
         public int Value { get; protected set; }
         public int OrderNum; // how this policy should be ordered in the policy selection
         public PolicyType Type;
 
         public PolicyControl UIControl;
 
-        public Policy(Party p, int value)
+        public Policy(Party p, int maxValue)
         {
             Party = p;
-            Value = value;
+            MaxValue = maxValue;
+            Value = 0;
         }
 
         public void SetValue(int value)
         {
             Value = value;
-            UIControl.SetValue(value);
+            if(UIControl != null) UIControl.SetValue(value);
         }
         public void IncreaseValue()
         {

@@ -6,8 +6,8 @@ namespace ElectionTactics
 {
     public enum Mentality
     {
-        Linguist,
-        Rebellious,
-        Stable
+        Predictable,
+        Unpredictable,
+        Linguist
     }
 }

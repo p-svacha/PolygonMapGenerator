@@ -70,7 +70,7 @@ namespace ElectionTactics
             eco3Text.text = "3. " + EnumHelper.GetDescription(d.Economy3);
 
             // Culture
-            foreach (Mentality ct in d.Mentality)
+            foreach (Mentality ct in d.Mentalities)
             {
                 Text text = Instantiate(AttributePrefab, CulturePanel.transform);
                 text.text = ct.ToString();

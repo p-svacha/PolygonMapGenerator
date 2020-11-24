@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace ElectionTactics
@@ -15,7 +16,10 @@ namespace ElectionTactics
         Health,
         Aerospace,
         Electronics,
-        Apparel,
-        Energy
+        Textiles,
+        [Description("Fossil Fuels")]
+        FossilFuels,
+        Renewables,
+        Manufacturing
     }
 }

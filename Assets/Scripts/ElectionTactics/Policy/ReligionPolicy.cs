@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public Religion Religion;
 
-        public ReligionPolicy(Party p, Religion religion, int value) : base(p, value)
+        public ReligionPolicy(Party p, Religion religion, int maxValue) : base(p, maxValue)
         {
             Religion = religion;
             Name = EnumHelper.GetDescription(religion);

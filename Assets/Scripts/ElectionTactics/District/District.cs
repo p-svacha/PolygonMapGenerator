@@ -18,7 +18,7 @@ namespace ElectionTactics
         public EconomyTrait Economy1;
         public EconomyTrait Economy2;
         public EconomyTrait Economy3;
-        public List<Mentality> Mentality = new List<Mentality>();
+        public List<Mentality> Mentalities = new List<Mentality>();
 
         public ElectionResult LastElectionResult;
         public Party CurrentWinnerParty;
@@ -60,10 +60,10 @@ namespace ElectionTactics
             while(Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
             Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
             while(Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
-            while(Mentality.Count < 3)
+            while(Mentalities.Count < 3)
             {
                 Mentality c = ElectionTacticsGame.GetRandomCulture();
-                if (!Mentality.Contains(c)) Mentality.Add(c);
+                if (!Mentalities.Contains(c)) Mentalities.Add(c);
             }
 
             // Population calculation
@@ -85,7 +85,9 @@ namespace ElectionTactics
             Seats = Mathf.Max(MinSeats, tmpSeats);
 
             // Voter calculation
-            Voters = Random.Range(101, 200);
+            if (Mentalities.Contains(Mentality.Predictable)) Voters = Random.Range(400, 500);
+            else if (Mentalities.Contains(Mentality.Unpredictable)) Voters = Random.Range(100, 150);
+            else Voters = Random.Range(200, 300);
         }
 
         private void SetGeographyTraits()

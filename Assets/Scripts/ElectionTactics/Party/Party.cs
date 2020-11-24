@@ -11,13 +11,14 @@ namespace ElectionTactics {
         public string Name;
         public string Acronym;
         public Color Color;
+        public PartyAI AI;
 
         public List<Policy> Policies = new List<Policy>();
 
         public int PolicyPoints;
         public int Seats;
 
-        public Party(ElectionTacticsGame game, string name, Color c)
+        public Party(ElectionTacticsGame game, string name, Color c, bool isAi)
         {
             Game = game;
             Name = name;
@@ -25,6 +26,7 @@ namespace ElectionTactics {
             string[] words = name.Split(' ');
             foreach (string w in words) Acronym += (w[0] + "").ToUpper(); 
             Color = c;
+            if (isAi) AI = new PartyAI(this);
         }
 
         public void AddPolicy(Policy p)

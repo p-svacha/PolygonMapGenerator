@@ -12,6 +12,8 @@ namespace ElectionTactics
 
         public GameObject CurrentElectionContainer;
         public Text CurrentElectionTitle;
+        public Text CurrentElectionMarginText;
+        public Image LastElectionWinnerKnob;
         public Text CurrentElectionSeatsText;
         public Image CurrentElectionSeatsIcon;
         public WindowGraph CurrentElectionGraph;
