@@ -51,7 +51,10 @@ namespace ElectionTactics
             "Centrist",
             "Populist",
             "Federalist",
-            "Conservationist"
+            "Conservationist",
+            "Internationalist",
+            "Marxist",
+            "Neofascist"
         };
 
         private static List<string> PartyTypeNouns = new List<string>() // T
@@ -77,7 +80,11 @@ namespace ElectionTactics
             "Elite",
             "Mass",
             "Niche",
-            "Civilian"
+            "Civilian",
+            "Youth",
+            "Womens",
+            "Mens",
+            "Corporate",
         };
 
         private static List<string> PartyNouns = new List<string>() // P

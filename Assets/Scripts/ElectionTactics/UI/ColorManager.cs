@@ -12,6 +12,12 @@ namespace ElectionTactics
         public Color InactiveDistrictColor;
         public Color SelectedDistrictColor;
 
+        // Map Overlays
+        public Color HighImpactColor;
+        public Color MediumImpactColor;
+        public Color LowImpactColor;
+        public Color NoImpactColor;
+
         // UI
         public Color HeaderColor;
         public Color PanelColor;

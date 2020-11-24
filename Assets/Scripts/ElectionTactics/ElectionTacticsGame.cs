@@ -13,6 +13,7 @@ namespace ElectionTactics
         public Map Map;
         public CameraHandler CameraHandler;
         public UI_ElectionTactics UI;
+
         public GameState State;
 
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
@@ -63,6 +64,7 @@ namespace ElectionTactics
         private void OnMapGenerated()
         {
             Map = PMG.Map;
+            UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             CreateParties();
 
@@ -153,15 +155,6 @@ namespace ElectionTactics
 
         #region Update Values
 
-        private void UpdateDistrictColors()
-        {
-            foreach(Region r in Map.LandRegions)
-            {
-                if (Districts.ContainsKey(r)) r.SetColor(ColorManager.Colors.ActiveDistrictColor);
-                else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
-            }
-        }
-
         private void UpdateActivePolicies()
         {
             foreach(District d in Districts.Values)
@@ -209,7 +202,7 @@ namespace ElectionTactics
                 if (!ActiveReligionPolicies.Contains(d.Religion))
                 {
                     ActiveReligionPolicies.Add(d.Religion);
-                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(p, d.Religion, 0));
+                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(p, d.Religion, MaxPolicyValue));
                 }
             }
         }
@@ -217,7 +210,7 @@ namespace ElectionTactics
         private void AddDistrict(Region r)
         {
             Districts.Add(r, new District(r));
-            UpdateDistrictColors();
+            UI.MapControls.UpdateMapDisplay();
             UpdateActivePolicies();
         }
 
@@ -288,6 +281,7 @@ namespace ElectionTactics
 
             State = GameState.GeneralElection;
             UI.SelectTab(Tab.Parliament);
+            UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
 
             // Reset seats
             foreach(Party p in Parties)
@@ -322,7 +316,7 @@ namespace ElectionTactics
                 {
                     UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
-                    UI.Parliament.CurrentElectionMarginText.text = CurElectionDistrict.CurrentMargin.ToString("0.0") + " %";
+                    UI.Parliament.CurrentElectionMarginText.text = (CurElectionDistrict.CurrentMargin > 0 ? "+" : "") + CurElectionDistrict.CurrentMargin.ToString("0.0") + " %";
                     UI.Parliament.LastElectionWinnerKnob.color = CurElectionDistrict.CurrentWinnerParty.Color;
                 }
                 else
