@@ -8,8 +8,6 @@ namespace ElectionTactics
     {
         Loading,
         Running,
-        GE_ZoomToDistrict,
-        GE_ElectionGraphAnimation,
-        GE_SeatDistribution
+        GeneralElection
     }
 }

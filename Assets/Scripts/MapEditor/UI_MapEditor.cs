@@ -80,7 +80,7 @@ public class UI_MapEditor : MonoBehaviour
         SelectRegion(null);
         float minRegionArea = float.Parse(MinAreaText.text);
         float maxRegionArea = float.Parse(MaxAreaText.text);
-        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, RegionBorderToggle.isOn, callback: OnMapGenerationDone);
+        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, PolygonMapGenerator.DefaultLandColor, PolygonMapGenerator.DefaultWaterColor, RegionBorderToggle.isOn, callback: OnMapGenerationDone);
     }
 
     private void OnMapGenerationDone()

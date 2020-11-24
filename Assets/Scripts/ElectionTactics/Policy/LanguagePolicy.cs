@@ -8,11 +8,10 @@ namespace ElectionTactics
     {
         public Language Language;
 
-        public LanguagePolicy(Language language, int value)
+        public LanguagePolicy(Party p, Language language, int value): base(p, value)
         {
             Language = language;
             Name = EnumHelper.GetDescription(language);
-            Value = value;
             Type = PolicyType.Language;
         }
     }

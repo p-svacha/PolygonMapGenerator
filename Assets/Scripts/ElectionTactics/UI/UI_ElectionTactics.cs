@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ElectionTactics
 {
     public class UI_ElectionTactics : MonoBehaviour
     {
         public ElectionTacticsGame Game;
+        public Font Font;
 
-        public Color HeaderColor;
-        public Color PanelColor;
+        public GameObject Header;
+
+        public Button ElectionButton;
+        public Text PPText;
 
         public TabButton ParliamentTabButton;
         public TabButton PolicyTabButton;
@@ -26,10 +30,18 @@ namespace ElectionTactics
         public UI_PolicySelection PolicySelection;
 
         public District SelectedDistrict;
-        public Color SelectedDistrictColor = Color.red;
+
+        // Header Animation
+        private bool IsHeaderMoving;
+        private Vector2 HeaderSourcePos;
+        private Vector2 HeaderTargetPos;
+        private float HeaderSlideTime;
+        private float HeaderSlideDelay;
 
         void Start()
         {
+            ElectionButton.onClick.AddListener(() => Game.RunGeneralElection());
+
             TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
             TabButtons.Add(Tab.Policies, PolicyTabButton);
             PolicyTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies));
@@ -46,14 +58,32 @@ namespace ElectionTactics
             ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament));
         }
 
+        private void Update()
+        {
+            if(IsHeaderMoving)
+            {
+                if(HeaderSlideDelay >= HeaderSlideTime)
+                {
+                    IsHeaderMoving = false;
+                    Header.GetComponent<RectTransform>().anchoredPosition = HeaderTargetPos;
+                }
+                else
+                {
+                    float r = HeaderSlideDelay / HeaderSlideTime;
+                    Header.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(HeaderSourcePos, HeaderTargetPos, r);
+                    HeaderSlideDelay += Time.deltaTime;
+                }
+            }
+        }
+
         public void SelectTab(Tab tab)
         {
-            TabButtons[ActiveTab].Background.color = HeaderColor;
+            TabButtons[ActiveTab].Background.color = ColorManager.Colors.HeaderColor;
             TabPanels[ActiveTab].SetActive(false);
 
             ActiveTab = tab;
 
-            TabButtons[ActiveTab].Background.color = PanelColor;
+            TabButtons[ActiveTab].Background.color = ColorManager.Colors.PanelColor;
             TabPanels[ActiveTab].SetActive(true);
 
             switch(tab)
@@ -85,7 +115,7 @@ namespace ElectionTactics
             {
                 if (SelectedDistrict != null) SelectedDistrict.Region.Unhighlight();
                 SelectedDistrict = d;
-                SelectedDistrict.Region.Highlight(SelectedDistrictColor);
+                SelectedDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
                 SelectTab(Tab.DistrictInfo);
                 DistrictInfo.Init(d);
             }
@@ -106,6 +136,28 @@ namespace ElectionTactics
                 SelectedDistrict.Region.Unhighlight();
                 SelectedDistrict = null;
             }
+        }
+
+        public void SlideOutHeader(float time)
+        {
+            HeaderSlideTime = time;
+            HeaderSlideDelay = 0f;
+            IsHeaderMoving = true;
+            HeaderSourcePos = Header.GetComponent<RectTransform>().anchoredPosition;
+            HeaderTargetPos = new Vector2(0, 60);
+        }
+        public void SlideInHeader(float time)
+        {
+            HeaderSlideTime = time;
+            HeaderSlideDelay = 0f;
+            IsHeaderMoving = true;
+            HeaderSourcePos = Header.GetComponent<RectTransform>().anchoredPosition;
+            HeaderTargetPos = new Vector2(0, 0);
+        }
+
+        public void UpdatePolicyPointDisplay()
+        {
+            PPText.text = Game.PlayerParty.PolicyPoints.ToString();
         }
     }
 

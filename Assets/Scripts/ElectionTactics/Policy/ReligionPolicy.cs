@@ -8,11 +8,10 @@ namespace ElectionTactics
     {
         public Religion Religion;
 
-        public ReligionPolicy(Religion religion, int value)
+        public ReligionPolicy(Party p, Religion religion, int value) : base(p, value)
         {
             Religion = religion;
             Name = EnumHelper.GetDescription(religion);
-            Value = value;
             Type = PolicyType.Religion;
         }
     }

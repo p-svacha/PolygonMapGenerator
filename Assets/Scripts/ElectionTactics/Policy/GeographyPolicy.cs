@@ -8,11 +8,10 @@ namespace ElectionTactics
     {
         public GeographyTrait Trait;
 
-        public GeographyPolicy(GeographyTrait trait, int value)
+        public GeographyPolicy(Party p, GeographyTrait trait, int value) : base(p, value)
         {
             Trait = trait;
             Name = EnumHelper.GetDescription(trait);
-            Value = value;
             Type = PolicyType.Geography;
         }
     }

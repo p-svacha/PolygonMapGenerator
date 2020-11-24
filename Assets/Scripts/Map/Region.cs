@@ -46,10 +46,10 @@ public class Region : MonoBehaviour
 
     // Display mode
     private MapDisplayMode DisplayMode;
+    private Color Color;
     private bool Highlighted;
     private Color HighlightColor;
     private bool ShowRegionBorders;
-    private bool IsGreyedOut;
     public Texture2D RegionBorderMaskTexture;
 
     public void Init(GraphPolygon p)
@@ -128,8 +128,10 @@ public class Region : MonoBehaviour
                 else GetComponent<Renderer>().material = MaterialHandler.Materials.SatelliteLandMaterial;
                 break;
         }
-        if (IsGreyedOut) GetComponent<Renderer>().material.color = MaterialHandler.Materials.GreyedOutColor;
+
         if (Highlighted) GetComponent<Renderer>().material.color = HighlightColor;
+        else GetComponent<Renderer>().material.color = Color;
+
         if (ShowRegionBorders) GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", RegionBorderMaskTexture);
         else GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", Texture2D.blackTexture);
     }
@@ -147,9 +149,9 @@ public class Region : MonoBehaviour
         UpdateDisplayMode();
     }
 
-    public void SetGreyedOut(bool b)
+    public void SetColor(Color c)
     {
-        IsGreyedOut = b;
+        Color = c;
         UpdateDisplayMode();
     }
 

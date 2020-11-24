@@ -7,6 +7,7 @@ namespace ElectionTactics
 {
     public class UI_PartyListElement : MonoBehaviour
     {
+        public Image Background;
         public Text NameText;
         public Text SeatsText;
         public Party Party;

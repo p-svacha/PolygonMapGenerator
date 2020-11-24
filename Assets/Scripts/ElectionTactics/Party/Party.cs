@@ -6,16 +6,20 @@ using UnityEngine;
 namespace ElectionTactics {
     public class Party
     {
+        public ElectionTacticsGame Game;
+
         public string Name;
         public string Acronym;
         public Color Color;
 
         public List<Policy> Policies = new List<Policy>();
 
+        public int PolicyPoints;
         public int Seats;
 
-        public Party(string name, Color c)
+        public Party(ElectionTacticsGame game, string name, Color c)
         {
+            Game = game;
             Name = name;
             Acronym = "";
             string[] words = name.Split(' ');

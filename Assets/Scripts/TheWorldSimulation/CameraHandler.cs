@@ -10,7 +10,7 @@ public class CameraHandler : MonoBehaviour
     private Vector3 MoveStartPosition;
     private Vector3 MoveTargetPosition;
     private float MoveTime;
-    private float CurrentMoveTime;
+    private float MoveDelay;
 
     // Const
     private const float DefaultZoomTime = 1f; // s
@@ -30,15 +30,15 @@ public class CameraHandler : MonoBehaviour
         // Camera Lerp
         if(IsMoving)
         {
-            if(CurrentMoveTime >= MoveTime)
+            if(MoveDelay >= MoveTime)
             {
                 transform.position = MoveTargetPosition;
                 IsMoving = false;
             }
             else
             {
-                transform.position = Vector3.Lerp(MoveStartPosition, MoveTargetPosition, CurrentMoveTime / MoveTime);
-                CurrentMoveTime += Time.deltaTime;
+                transform.position = Vector3.Lerp(MoveStartPosition, MoveTargetPosition, MoveDelay / MoveTime);
+                MoveDelay += Time.deltaTime;
             }
         }
     }
@@ -50,7 +50,7 @@ public class CameraHandler : MonoBehaviour
         MoveStartPosition = transform.position;
         MoveTargetPosition = targetPosition;
         MoveTime = time;
-        CurrentMoveTime = 0f;
+        MoveDelay = 0f;
     }
 
     public void ReturnToDefaultView()

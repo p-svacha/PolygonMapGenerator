@@ -38,7 +38,7 @@ namespace ElectionTactics
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            District.Region.Highlight(Color.blue);
+            District.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
         }
 
         public void OnPointerExit(PointerEventData eventData)

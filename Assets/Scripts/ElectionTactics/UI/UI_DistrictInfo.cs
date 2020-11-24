@@ -84,7 +84,7 @@ namespace ElectionTactics
                 foreach (KeyValuePair<Party, float> kvp in d.LastElectionResult.VoteShare)
                     dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
                 int yMax = (((int)d.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-                ElectionGraph.ShowBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont);
+                ElectionGraph.ShowAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont, 0.25f);
             }
             else
             {

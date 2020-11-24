@@ -36,18 +36,23 @@ public class Map
         RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders)
+    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, Color landColor, Color waterColor)
     {
         InitRivers(PMG);
         IdentifyLandmasses();
         IdentifyWaterBodies();
         FocusMapInEditor();
-        InitDisplay(showRegionBorders);
+        InitDisplay(showRegionBorders, landColor, waterColor);
     }
 
-    private void InitDisplay(bool showRegionBorders)
+    private void InitDisplay(bool showRegionBorders, Color landColor, Color waterColor)
     {
-        foreach (Region r in Regions) r.RegionBorderMaskTexture = RegionBorderMaskTexture;
+        foreach (Region r in Regions)
+        {
+            r.RegionBorderMaskTexture = RegionBorderMaskTexture;
+            if (!r.IsWater) r.SetColor(landColor);
+            else r.SetColor(waterColor);
+        }
         SetDisplayMode(MapDisplayMode.Topographic);
         ShowRegionBorders(showRegionBorders);
     }

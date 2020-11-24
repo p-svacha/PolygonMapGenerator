@@ -41,7 +41,12 @@ public class PolygonMapGenerator : MonoBehaviour
     public float MinPolygonArea;
     public float MaxPolygonArea;
     public bool Island;
+
     public bool ShowRegionBorders;
+    public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
+    public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
+    public Color LandColor;
+    public Color WaterColor;
 
     public const float START_LINES_PER_KM = 0.2f; // Active lines per km map side length
     public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
@@ -79,7 +84,7 @@ public class PolygonMapGenerator : MonoBehaviour
         NameGeneratorThread.Start();
     }
 
-    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, bool drawRegionBorders = false, Action callback = null)
+    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, Color landColor, Color waterColor, bool drawRegionBorders = false, Action callback = null)
     {
         Callback = callback;
 
@@ -100,6 +105,9 @@ public class PolygonMapGenerator : MonoBehaviour
         MaxPolygonArea = maxPolygonArea;
         Island = island;
         ShowRegionBorders = drawRegionBorders;
+        LandColor = landColor;
+        WaterColor = waterColor;
+
         MapSize = Width * Height;
 
         SwitchState(MapGenerationState.CreateMapBounds);
@@ -748,7 +756,7 @@ public class PolygonMapGenerator : MonoBehaviour
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
-        Map.InitializeMap(this, showRegionBorders);
+        Map.InitializeMap(this, showRegionBorders, LandColor, WaterColor);
 
         Callback?.Invoke();
     }
