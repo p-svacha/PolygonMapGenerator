@@ -13,6 +13,8 @@ namespace ElectionTactics {
         public Color Color;
         public PartyAI AI;
 
+        public int GamePoints;
+
         public List<Policy> Policies = new List<Policy>();
 
         public int PolicyPoints;

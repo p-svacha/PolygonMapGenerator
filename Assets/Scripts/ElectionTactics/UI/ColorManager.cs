@@ -19,6 +19,7 @@ namespace ElectionTactics
         public Color NoImpactColor;
 
         // UI
+        public Color TextColor;
         public Color HeaderColor;
         public Color PanelColor;
         public Color ListElementColor;

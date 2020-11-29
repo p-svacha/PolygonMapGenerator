@@ -46,20 +46,24 @@ namespace ElectionTactics
 
         #region Initialization
 
-        public District(Region r)
+        public District(Region r, Density density, AgeGroup ageGroup, Language language, Religion religion)
         {
             Region = r;
             Name = MarkovChainWordGenerator.GetRandomName(11);
+
             SetGeographyTraits();
-            Language = ElectionTacticsGame.GetRandomLanguage();
-            Religion = ElectionTacticsGame.GetRandomReligion();
-            Density = ElectionTacticsGame.GetRandomDensity();
-            AgeGroup = ElectionTacticsGame.GetRandomAgeGroup();
+
+            Density = density;
+            AgeGroup = ageGroup;
+            Language = language;
+            Religion = religion;
+            
             Economy1 = ElectionTacticsGame.GetRandomEconomyTrait();
             Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
             while(Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
             Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
             while(Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
+
             while(Mentalities.Count < 3)
             {
                 Mentality c = ElectionTacticsGame.GetRandomCulture();
@@ -107,6 +111,7 @@ namespace ElectionTactics
         /// This function calculates the election results of an election between the given parties.
         /// A specified amount of single voters will vote, whereas their vote will be decided by weighted random based on party points.
         /// Each party has x base points. On top of that points are added for policies that match the district traits, modifiers and mentality.
+        /// There will always be a single winner party.
         /// </summary>
         public ElectionResult RunElection(Party playerParty, List<Party> parties)
         {
@@ -127,6 +132,14 @@ namespace ElectionTactics
             {
                 //Debug.Log(p.Name + " got " + partyVotes[p] + " votes.");
                 voterShares.Add(p, 100f * partyVotes[p] / Voters);
+            }
+
+            // Guarantee that there is only one winner
+            List<Party> winnerParties = voterShares.Where(x => x.Value == voterShares.Values.Max(v => v)).Select(x => x.Key).ToList();
+            if (winnerParties.Count > 1)
+            {
+                Party singleWinnerParty = winnerParties[Random.Range(0, winnerParties.Count)];
+                voterShares[singleWinnerParty] += 0.1f;
             }
 
             ElectionResult result = new ElectionResult()

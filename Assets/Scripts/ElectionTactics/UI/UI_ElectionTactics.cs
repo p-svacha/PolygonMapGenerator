@@ -11,9 +11,11 @@ namespace ElectionTactics
         public ElectionTacticsGame Game;
         public Font Font;
 
-        public MapControls MapControls;
+        public PostGameScreen PostGameScreen;
 
+        public MapControls MapControls;
         public GameObject Header;
+        public UI_Standings Standings;
 
         public Button ElectionButton;
         public Text PPText;

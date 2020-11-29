@@ -16,10 +16,14 @@ namespace ElectionTactics
 
         public GameState State;
 
+        // Parties
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
         public List<Party> Parties = new List<Party>();
         public Party PlayerParty;
+        public List<Party> OpponentParties = new List<Party>();
+        public Party WinnerParty;
 
+        // Policies
         public List<GeographyTrait> ActiveGeographyPolicies = new List<GeographyTrait>();
         public List<EconomyTrait> ActiveEconomyPolicies = new List<EconomyTrait>();
         public List<Density> ActiveDensityPolicies = new List<Density>();
@@ -27,13 +31,15 @@ namespace ElectionTactics
         public List<Language> ActiveLanguagePolicies = new List<Language>();
         public List<Religion> ActiveReligionPolicies = new List<Religion>();
 
-        // Game values
-        private const int PolicyPointsPerCycle = 4;
-        private const int NumOpponents = 4;
+        // Rules
+        private const int PlayerPolicyPointsPerCycle = 2;
+        private const int AIPolicyPointsPerCycle = 4;
+        private const int NumOpponents = 3;
         private const int MaxPolicyValue = 8;
-        public int ElectionCycle;
+        private const int ElectionsToWin = 1;
 
         // General Election
+        public int ElectionCycle;
         private float HeaderSlideTime = 1f;
         private float DistrictPanTime = 2f;
         private float PostDistrictPanTime = 1f;
@@ -90,7 +96,10 @@ namespace ElectionTactics
                 takenColors.Add(color);
                 Party p = new Party(this, name, color, isAi: true);
                 Parties.Add(p);
+                OpponentParties.Add(p);
             }
+
+            UI.Standings.Init(Parties);
         }
 
         #endregion
@@ -146,9 +155,27 @@ namespace ElectionTactics
 
         private void StartElectionCycle()
         {
+            // Start next cycle
             ElectionCycle++;
             AddRandomDistrict();
-            foreach (Party p in Parties) AddPolicyPoints(p, PolicyPointsPerCycle);
+            AddPolicyPoints(PlayerParty, PlayerPolicyPointsPerCycle);
+            foreach (Party p in OpponentParties) AddPolicyPoints(p, AIPolicyPointsPerCycle);
+
+            State = GameState.Running;
+        }
+
+        /// <summary>
+        /// Checks if any party reached a win condition and returns true if one has.
+        /// </summary>
+        private bool HandleWinConditions()
+        {
+            if(Parties.Where(x => x.GamePoints >= ElectionsToWin).Count() > 0 && Parties.Where(x => x.GamePoints == Parties.Max(p => p.GamePoints)).Count() == 1)
+            {
+                WinnerParty = Parties.First(x => x.GamePoints == Parties.Max(p => p.GamePoints));
+                UI.PostGameScreen.Init(this);
+                return true;
+            }
+            return false;
         }
 
         #endregion
@@ -207,16 +234,23 @@ namespace ElectionTactics
             }
         }
 
-        private void AddDistrict(Region r)
+        private District AddDistrict(Region r)
         {
-            Districts.Add(r, new District(r));
+            Density density = GetDensityForRegion(r);
+            AgeGroup ageGroup = GetAgeGroupForRegion(r);
+            Language language = GetLanguageForRegion(r);
+            Religion religion = GetReligionForRegion(r);
+            District newDistrict = new District(r, density, ageGroup, language, religion);
+            
+            Districts.Add(r, newDistrict);
             UI.MapControls.UpdateMapDisplay();
             UpdateActivePolicies();
+            return newDistrict;
         }
 
         #endregion
 
-        #region Game Commands
+        #region Map Evolution
 
         public void AddRandomDistrict()
         {
@@ -244,10 +278,56 @@ namespace ElectionTactics
                         highestRatio = ratio;
                     }
                 }
+
+                // 2. Chose random candidate and calculate attributes
                 Region chosenRegion = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-                AddDistrict(chosenRegion);
+                District addedDistrict = AddDistrict(chosenRegion);
             }
         }
+
+        private Density GetDensityForRegion(Region region) // Denisty is weighted random rural > mixed > urban
+        {
+            float rng = UnityEngine.Random.value;
+            if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
+            else if (rng < 0.25f + 0.33f) return Density.Mixed; // Mixed - 33% chance
+            else return Density.Rural; // Rural  - 42 % chance
+        }
+        private AgeGroup GetAgeGroupForRegion(Region region) // Age group is fully random
+        {
+            return GetRandomAgeGroup();
+        }
+        private Language GetLanguageForRegion(Region region) // Languages can spread over land borders
+        {
+            if (region.LandNeighbours.Count == 0) return GetRandomLanguage();
+
+            List<Language> languageChances = new List<Language>();
+            foreach(Region r in region.LandNeighbours)
+            {
+                Language l;
+                if (Districts.ContainsKey(r)) l = Districts[r].Language;
+                else l = GetRandomLanguage();
+
+                languageChances.Add(l);
+            }
+            return languageChances[UnityEngine.Random.Range(0, languageChances.Count)];
+        }
+        private Religion GetReligionForRegion(Region region) // Religion can spread over land and water
+        {
+            List<Religion> religionChances = new List<Religion>();
+            foreach (Region r in region.Neighbours)
+            {
+                Religion religion;
+                if (Districts.ContainsKey(r)) religion = Districts[r].Religion;
+                else religion = GetRandomReligion();
+
+                religionChances.Add(religion);
+            }
+            return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
+        }
+
+        #endregion
+
+        #region Game Commands
 
         public void AddPolicyPoints(Party p, int amount)
         {
@@ -264,24 +344,37 @@ namespace ElectionTactics
         }
         public void DecreasePolicy(Policy p)
         {
-            if (p.Value == 0) return;
+            if (p.Value == p.LockedValue) return;
             p.Party.PolicyPoints++;
             p.DecreaseValue();
             UI.UpdatePolicyPointDisplay();
         }
 
+        public void AddGamePoint(Party party)
+        {
+            party.GamePoints++;
+            UI.Standings.Init(Parties);
+        }
+
         #endregion
 
         #region Election
+
         public void RunGeneralElection()
         {
+            if (State == GameState.GeneralElection) return;
+            State = GameState.GeneralElection;
+
             // AI policies
-            foreach(Party p in Parties.Where(p => p != PlayerParty))
+            foreach (Party p in Parties.Where(p => p != PlayerParty))
                 p.AI.DistributePolicyPoints();
 
-            State = GameState.GeneralElection;
             UI.SelectTab(Tab.Parliament);
             UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
+
+            // Lock policies
+            foreach(Party party in Parties)
+                foreach (Policy policy in party.Policies) policy.LockValue();
 
             // Reset seats
             foreach(Party p in Parties)
@@ -364,11 +457,16 @@ namespace ElectionTactics
 
         private void EndElection()
         {
+            // Distribute Game points
+            List<Party> winnerParties = Parties.Where(x => x.Seats == Parties.Max(y => y.Seats)).ToList();
+            foreach (Party p in winnerParties) AddGamePoint(p);
+
+            // Check win condition
+            if (HandleWinConditions()) return;
+
             StartElectionCycle();
             CameraHandler.MoveToFocusDistricts(Districts.Values.ToList(), DistrictPanTime);
             UI.SlideInHeader(DistrictPanTime);
-
-            State = GameState.Running;
         }
 
         #endregion

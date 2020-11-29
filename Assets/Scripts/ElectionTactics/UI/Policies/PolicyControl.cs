@@ -17,8 +17,6 @@ namespace ElectionTactics
 
         public Policy Policy;
 
-        public int Value;
-
         // Start is called before the first frame update
         void Start()
         {
@@ -30,22 +28,25 @@ namespace ElectionTactics
         {
             Policy = p;
             Label.text = p.Name;
-            SetValue(p.Value);
+            UpdateValue();
             p.UIControl = this;
         }
 
-        public void SetValue(int value)
+        public void UpdateValue()
         {
-            value = Mathf.Clamp(value, 0, MaxValue);
-            Value = value;
             for (int i = 0; i < MaxValue; i++)
-                ValueContainer.transform.GetChild(i).gameObject.SetActive(i < value);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            {
+                if(i < Policy.Value)
+                {
+                    ValueContainer.transform.GetChild(i).gameObject.SetActive(true);
+                    if (i < Policy.LockedValue) ValueContainer.transform.GetChild(i).GetComponent<Image>().color = ColorManager.Colors.HighlightedListElementColor;
+                    else ValueContainer.transform.GetChild(i).GetComponent<Image>().color = ColorManager.Colors.TextColor;
+                }
+                else
+                {
+                    ValueContainer.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)

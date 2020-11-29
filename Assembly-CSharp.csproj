@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\District\Religion.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_Parliament.cs" />
     <Compile Include="Assets\Scripts\Map\MapDisplayMode.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\LegendEntry.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPolygon.cs" />
     <Compile Include="Assets\Scripts\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_DistrictInfo.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
     <Compile Include="Assets\Scripts\EnumHelper.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\Mentality.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\MapControls.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\MapGenerationState.cs" />
@@ -139,8 +141,9 @@
     <Compile Include="Assets\Scripts\ElectionTactics\GameState.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPointType.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\MapControls.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\LegendEntry.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_StandingsElement.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_Standings.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\PostGame\PostGameScreen.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Shaders\LandShader_Political.shader" />
