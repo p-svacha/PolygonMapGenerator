@@ -184,14 +184,17 @@ namespace ElectionTactics
 
         #region Overlays
 
-        public void ShowGeographyOverlay(GeographyTrait t)
+        public void ShowGeographyOverlay(GeographyTraitType t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
             foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
             {
                 District d = Game.Districts[r];
-                if (d.Geography.Contains(t)) r.SetColor(ColorManager.Colors.MediumImpactColor);
-                else r.SetColor(ColorManager.Colors.NoImpactColor);
+                GeographyTrait trait = d.Geography.FirstOrDefault(x => x.Type == t);
+                if(trait == null) r.SetColor(ColorManager.Colors.NoImpactColor);
+                else if(trait.Category == 3) r.SetColor(ColorManager.Colors.HighImpactColor);
+                else if(trait.Category == 2) r.SetColor(ColorManager.Colors.MediumImpactColor);
+                else if(trait.Category == 1) r.SetColor(ColorManager.Colors.LowImpactColor);
             }
         }
         public void ShowEconomyOverlay(EconomyTrait t)

@@ -144,6 +144,8 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_StandingsElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_Standings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\PostGame\PostGameScreen.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Policy\Impact.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\District\GeographyTraitType.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Shaders\LandShader_Political.shader" />

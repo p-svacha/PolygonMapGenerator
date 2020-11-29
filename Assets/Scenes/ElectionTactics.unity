@@ -2857,12 +2857,12 @@ MonoBehaviour:
   CameraHandler: {fileID: 664389566}
   UI: {fileID: 1387644463}
   State: 0
-  ActiveGeographyPolicies: 
-  ActiveEconomyPolicies: 
-  ActiveDensityPolicies: 
-  ActiveAgeGroupPolicies: 
-  ActiveLanguagePolicies: 
-  ActiveReligionPolicies: 
+  ActiveGeographyTraits: 
+  ActiveEconomyTraits: 
+  ActiveDensityTraits: 
+  ActiveAgeGroupTraits: 
+  ActiveLanguageTraits: 
+  ActiveReligionTraits: 
   ElectionCycle: 0
 --- !u!4 &631248566
 Transform:

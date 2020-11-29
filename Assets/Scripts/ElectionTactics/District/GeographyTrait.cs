@@ -4,12 +4,18 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public enum GeographyTrait
+    public class GeographyTrait
     {
-        Coastal,
-        Landlocked,
-        Island,
-        Tiny,
-        Peninsula,
+        public GeographyTraitType Type;
+        public int Category;
+        public string Name;
+
+        public GeographyTrait(GeographyTraitType type, int category)
+        {
+            Type = type;
+            Category = category;
+            string romanianNumber = category == 1 ? "I" : category == 2 ? "II" : "III";
+            Name = EnumHelper.GetDescription(type) + " " + romanianNumber;
+        }
     }
 }

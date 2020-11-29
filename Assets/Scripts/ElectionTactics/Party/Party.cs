@@ -36,7 +36,10 @@ namespace ElectionTactics {
             Policies.Add(p);
         }
 
-        public int GetPolicyValueFor(GeographyTrait t)
+
+        #region Getters
+
+        public int GetPolicyValueFor(GeographyTraitType t)
         {
             return Policies.OfType<GeographyPolicy>().First(x => x.Trait == t).Value;
         }
@@ -60,5 +63,7 @@ namespace ElectionTactics {
         {
             return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r).Value;
         }
+
+        #endregion
     }
 }

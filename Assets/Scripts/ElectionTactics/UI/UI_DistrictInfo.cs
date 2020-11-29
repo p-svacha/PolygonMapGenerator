@@ -52,7 +52,7 @@ namespace ElectionTactics
             foreach (GeographyTrait gt in d.Geography)
             {
                 Text text = Instantiate(AttributePrefab, GeographyPanel.transform);
-                text.text = EnumHelper.GetDescription(gt);
+                text.text = gt.Name;
             }
 
             // Demography

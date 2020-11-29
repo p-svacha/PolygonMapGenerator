@@ -7,9 +7,11 @@ namespace ElectionTactics
 {
     public class District
     {
+        public ElectionTacticsGame Game;
         public string Name;
         public Region Region;
 
+        // Traits
         public List<GeographyTrait> Geography = new List<GeographyTrait>();
         public Language Language;
         public Religion Religion;
@@ -20,34 +22,31 @@ namespace ElectionTactics
         public EconomyTrait Economy3;
         public List<Mentality> Mentalities = new List<Mentality>();
 
+        // Election
         public ElectionResult LastElectionResult;
         public Party CurrentWinnerParty;
         public float PlayerPartyShare;
         public float CurrentWinnerShare;
         public float CurrentMargin;
 
-        public const int MinSeats = 3;
-        public const int RequiredPopulationPerSeat = 48000;
-        public const int RequirementIncreasePerSeat = 10000; // After each seat, the district needs this amount more population for the next seat
+        public const int MinSeats = 1;
+        public const int RequiredPopulationPerSeat = 40000;
+        public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
         public int Population;
         public int Seats;
         public int Voters;
 
         public int BasePoints = 20;
-        public int PointsPerGeographyPolicy = 5;
-        public int PointsPerEconomy1Policy = 7;
-        public int PointsPerEconomy2Policy = 5;
-        public int PointsPerEconomy3Policy = 3;
-        public int PointsPerDensityPolicy = 5;
-        public int PointsPerAgeGroupPolicy = 5;
-        public int PointsPerLanguagePolicy = 5;
-        public int PointsPerReligionPolicy = 5;
+        public int LowImpactPoints = 3;
+        public int MediumImpactPoints = 5;
+        public int HighImpactPoints = 7;
 
         #region Initialization
 
-        public District(Region r, Density density, AgeGroup ageGroup, Language language, Religion religion)
+        public District(ElectionTacticsGame game, Region r, Density density, AgeGroup ageGroup, Language language, Religion religion)
         {
+            Game = game;
             Region = r;
             Name = MarkovChainWordGenerator.GetRandomName(11);
 
@@ -96,11 +95,85 @@ namespace ElectionTactics
 
         private void SetGeographyTraits()
         {
-            if (Region.CoastRatio > 0.8f) Geography.Add(GeographyTrait.Peninsula);
-            if (Region.CoastRatio > 0.3f) Geography.Add(GeographyTrait.Coastal);
-            if (Region.CoastLength == 0f) Geography.Add(GeographyTrait.Landlocked);
-            if (Region.Area < 0.18f) Geography.Add(GeographyTrait.Tiny);
-            if (Region.Landmass.Size < 5) Geography.Add(GeographyTrait.Island);
+            // Coastal
+            if (Region.OceanCoastRatio > 0.7f) 
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 3));
+            else if (Region.OceanCoastRatio > 0.4f) 
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 2));
+            else if (Region.OceanCoastRatio > 0.1f) 
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 1));
+
+            // Landlocked
+            if(Region.CoastLength == 0 && Region.LandNeighbours.All(x => x.CoastLength == 0))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 3));
+            else if (Region.CoastLength == 0 && Region.LandNeighbours.Where(x => x.CoastLength == 0).Count() >= 2)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 2));
+            else if (Region.CoastLength == 0)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 1));
+
+            // Island
+            if(Region.Landmass.Size == 1)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 3));
+            else if(Region.Landmass.Size <= 4)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 2));
+            else if(Region.Landmass.Size <= 7)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 1));
+
+            // Tiny
+            if(Region.Area <= 0.12f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 3));
+            else if(Region.Area <= 0.18f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 2));
+            else if(Region.Area <= 0.24f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 1));
+
+            // Large
+            if(Region.Area >= 1.4f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 3));
+            else if (Region.Area >= 1.3f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 2));
+            else if (Region.Area >= 1.2f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 1));
+
+            // Northern
+            if(Region.Center.y > Game.Map.Height - (Game.Map.Height * 0.1f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 3));
+            else if (Region.Center.y > Game.Map.Height - (Game.Map.Height * 0.2f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 2));
+            else if (Region.Center.y > Game.Map.Height - (Game.Map.Height * 0.3f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 1));
+
+            // Southern
+            if (Region.Center.y < Game.Map.Height * 0.1f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 3));
+            else if (Region.Center.y < Game.Map.Height * 0.2f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 2));
+            else if (Region.Center.y < Game.Map.Height * 0.3f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 1));
+
+            // Eastern
+            if (Region.Center.x > Game.Map.Width - (Game.Map.Width * 0.1f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 3));
+            else if (Region.Center.x > Game.Map.Width - (Game.Map.Width * 0.2f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 2));
+            else if (Region.Center.x > Game.Map.Width - (Game.Map.Width * 0.3f))
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 1));
+
+            // Western
+            if (Region.Center.x < Game.Map.Width * 0.1f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 3));
+            else if (Region.Center.x < Game.Map.Width * 0.2f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 2));
+            else if (Region.Center.x < Game.Map.Width * 0.3f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 1));
+
+            // Lakeside
+            if (Region.LakeCoastRatio > 0.3f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 3));
+            else if (Region.LakeCoastRatio > 0.2f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 2));
+            else if (Region.LakeCoastRatio > 0.1f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 1));
         }
 
         #endregion
@@ -167,15 +240,15 @@ namespace ElectionTactics
 
             foreach(GeographyTrait t in Geography)
             {
-                points += p.GetPolicyValueFor(t) * PointsPerGeographyPolicy;
+                points += p.GetPolicyValueFor(t.Type) * GetImpactPointsFor(t);
             }
-            points += p.GetPolicyValueFor(Economy1) * PointsPerEconomy1Policy;
-            points += p.GetPolicyValueFor(Economy2) * PointsPerEconomy2Policy;
-            points += p.GetPolicyValueFor(Economy3) * PointsPerEconomy3Policy;
-            points += p.GetPolicyValueFor(Density) * PointsPerDensityPolicy;
-            points += p.GetPolicyValueFor(AgeGroup) * PointsPerAgeGroupPolicy;
-            points += p.GetPolicyValueFor(Language) * PointsPerLanguagePolicy;
-            points += p.GetPolicyValueFor(Religion) * PointsPerReligionPolicy;
+            points += p.GetPolicyValueFor(Economy1) * HighImpactPoints;
+            points += p.GetPolicyValueFor(Economy2) * MediumImpactPoints;
+            points += p.GetPolicyValueFor(Economy3) * LowImpactPoints;
+            points += p.GetPolicyValueFor(Density) * MediumImpactPoints;
+            points += p.GetPolicyValueFor(AgeGroup) * MediumImpactPoints;
+            points += p.GetPolicyValueFor(Language) * MediumImpactPoints;
+            points += p.GetPolicyValueFor(Religion) * MediumImpactPoints;
 
             return points;
         }
@@ -191,6 +264,14 @@ namespace ElectionTactics
                 if (rng < tmpSum) return kvp.Key;
             }
             return null;
+        }
+
+        private int GetImpactPointsFor(GeographyTrait t)
+        {
+            if (t.Category == 3) return HighImpactPoints;
+            if (t.Category == 2) return MediumImpactPoints;
+            if (t.Category == 1) return LowImpactPoints;
+            throw new System.Exception("Geography traits with a category outside 1,2,3 is not allowed.");
         }
 
         #endregion

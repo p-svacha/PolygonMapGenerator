@@ -14,8 +14,13 @@ public class Region : MonoBehaviour
     public float Jaggedness;
     public float TotalBorderLength;
     public float InlandBorderLength;
+    public float InlandBorderRatio; // The ratio is defined as [border type] / total border length
     public float CoastLength;
-    public float CoastRatio; // Ration coast to non-coast
+    public float CoastRatio;
+    public float OceanCoastLength;
+    public float OceanCoastRatio;
+    public float LakeCoastLength;
+    public float LakeCoastRatio;
 
     public bool IsEdgeRegion;
     public bool IsOuterOcean;
@@ -28,6 +33,7 @@ public class Region : MonoBehaviour
     public float YPos;
     public float Width;
     public float Height;
+    public Vector2 Center;
 
     // Topography
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
@@ -36,6 +42,7 @@ public class Region : MonoBehaviour
     public List<Region> Neighbours = new List<Region>(); // Neighbours are land regions that have a connection to this region
     public List<Region> LandNeighbours = new List<Region>(); // Land neighbours are land regions that are adjacent to this region
     public List<Region> WaterNeighbours = new List<Region>(); // Water neighbours are land regions that share an adjacent water to this region
+    public Dictionary<Region, List<Border>> RegionBorders = new Dictionary<Region, List<Border>>(); // This dictionary contains all borders to a specific region
     public Landmass Landmass;
     public WaterBody WaterBody;
     public List<River> Rivers = new List<River>();
@@ -61,15 +68,19 @@ public class Region : MonoBehaviour
         LandNeighbours = p.LandNeighbours.Select(x => x.Region).ToList();
         WaterNeighbours = p.WaterNeighbours.Select(x => x.Region).ToList();
         Neighbours = LandNeighbours.Concat(WaterNeighbours).ToList();
+        SetRegionBorders();
 
         Width = p.Width;
         Height = p.Height;
         XPos = p.Nodes.Min(x => x.Vertex.x);
         YPos = p.Nodes.Min(x => x.Vertex.y);
+        Center = new Vector2(p.Nodes.Average(x => x.Vertex.x), p.Nodes.Average(x => x.Vertex.y));
+
         Area = p.Area;
         Jaggedness = p.Jaggedness;
         TotalBorderLength = p.TotalBorderLength;
         InlandBorderLength = p.InlandBorderLength;
+        InlandBorderRatio = InlandBorderLength / TotalBorderLength;
         CoastLength = p.Coastline;
         CoastRatio = CoastLength / TotalBorderLength;
 
@@ -78,6 +89,34 @@ public class Region : MonoBehaviour
         IsEdgeRegion = p.IsEdgePolygon;
         IsOuterOcean = p.IsOuterPolygon;
         DistanceFromNearestWater = p.DistanceFromNearestWater;
+    }
+
+    /// <summary>
+    /// In here everything can be initialized that relies on additional info from map initialization, such as landmass and waterbody info
+    /// </summary>
+    public void InitAdditionalInfo()
+    {
+        OceanCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && !x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
+        OceanCoastRatio = OceanCoastLength / TotalBorderLength;
+        LakeCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
+        LakeCoastRatio = LakeCoastLength / TotalBorderLength;
+    }
+
+    private void SetRegionBorders()
+    {
+        RegionBorders.Clear();
+        foreach (Region r in AdjacentRegions) RegionBorders.Add(r, new List<Border>());
+        foreach(Border b in Borders)
+        {
+            foreach (Region r in AdjacentRegions)
+            {
+                if (b.Regions.Contains(r))
+                {
+                    RegionBorders[r].Add(b);
+                    break;
+                }
+            }
+        }
     }
 
     public void SetNation(Nation n)

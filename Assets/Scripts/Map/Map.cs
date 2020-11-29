@@ -41,6 +41,7 @@ public class Map
         InitRivers(PMG);
         IdentifyLandmasses();
         IdentifyWaterBodies();
+        InitAdditionalRegionInfo();
         FocusMapInEditor();
         InitDisplay(showRegionBorders, landColor, waterColor);
     }
@@ -118,17 +119,21 @@ public class Map
                         regionsToAdd.Enqueue(neighbourRegion);
             }
             string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
-            bool saltWater = false;
-            if(waterBodyRegions.Any(x => x.IsEdgeRegion))
+            bool isLake;
+            if (waterBodyRegions.Count < 5)
+            {
+                name = "Lake " + name;
+                isLake = true;
+            }
+            else
             {
                 name += " Ocean";
-                saltWater = true;
+                isLake = false;
             }
-            else name = "Lake " + name;
-            WaterBody newWaterBody = new WaterBody(name, waterBodyRegions, saltWater);
+            WaterBody newWaterBody = new WaterBody(name, waterBodyRegions, isLake);
 
             // Add outer ocean to ocean
-            if(saltWater)
+            if(!isLake)
             {
                 foreach (Region r in Regions.Where(x => x.IsOuterOcean))
                 {
@@ -144,6 +149,11 @@ public class Map
                 regionsWithoutWaterBody.Remove(r);
             }
         }
+    }
+
+    private void InitAdditionalRegionInfo()
+    {
+        foreach (Region r in Regions) r.InitAdditionalInfo();
     }
 
     public void HandleInputs()

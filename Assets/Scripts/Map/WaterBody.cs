@@ -10,12 +10,13 @@ public class WaterBody
     public List<Region> BorderingLandRegions = new List<Region>();
 
     public float Area;
-    public bool SaltWater;
+    public bool IsLake;
 
-    public WaterBody(string name, List<Region> regions, bool saltWater)
+    public WaterBody(string name, List<Region> regions, bool lake)
     {
         Name = name;
         Regions = regions;
+        IsLake = lake;
         foreach(Region r in regions)
         {
             foreach (Region n in r.AdjacentRegions.Where(x => !x.IsWater))
