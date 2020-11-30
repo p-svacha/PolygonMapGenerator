@@ -10,7 +10,7 @@ namespace ElectionTactics
     {
         public UI_ElectionTactics UI;
 
-        public Text AttributePrefab;
+        public UI_DistrictAttribute AttributePrefab;
         public Font GraphFont;
 
         public Button BackButton;
@@ -51,8 +51,8 @@ namespace ElectionTactics
             // Geography
             foreach (GeographyTrait gt in d.Geography)
             {
-                Text text = Instantiate(AttributePrefab, GeographyPanel.transform);
-                text.text = gt.Name;
+                UI_DistrictAttribute geoAtt = Instantiate(AttributePrefab, GeographyPanel.transform);
+                geoAtt.Init(gt.Name);
             }
 
             // Demography
@@ -62,19 +62,19 @@ namespace ElectionTactics
             ReligionText.text = EnumHelper.GetDescription(d.Religion);
 
             // Economy
-            Text eco1Text = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco1Text.text = "1. " + EnumHelper.GetDescription(d.Economy1);
-            Text eco2Text = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco2Text.text = "2. " + EnumHelper.GetDescription(d.Economy2);
-            Text eco3Text = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco3Text.text = "3. " + EnumHelper.GetDescription(d.Economy3);
+            UI_DistrictAttribute eco1Att = Instantiate(AttributePrefab, EconomyPanel.transform);
+            eco1Att.Init("1. " + EnumHelper.GetDescription(d.Economy1));
+            UI_DistrictAttribute eco2Att = Instantiate(AttributePrefab, EconomyPanel.transform);
+            eco2Att.Init("2. " + EnumHelper.GetDescription(d.Economy2));
+            UI_DistrictAttribute eco3Att = Instantiate(AttributePrefab, EconomyPanel.transform);
+            eco3Att.Init("3. " + EnumHelper.GetDescription(d.Economy3));
 
             // Culture
-            foreach (Mentality ct in d.Mentalities)
+            foreach (Mentality m in d.Mentalities)
             {
-                Text text = Instantiate(AttributePrefab, CulturePanel.transform);
-                text.text = ct.ToString();
-                text.alignment = TextAnchor.MiddleRight;
+                UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, CulturePanel.transform);
+                mentalityAtt.Init(m.Type.ToString(), hasTooltip: true, m.Description);
+                mentalityAtt.MainText.alignment = TextAnchor.MiddleRight;
             }
 
             // Election Result

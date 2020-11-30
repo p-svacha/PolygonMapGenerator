@@ -15,6 +15,8 @@ namespace ElectionTactics
         Western,
         Northern,
         Southern,
-        Lakeside
+        Lakeside,
+        Core,
+        New
     }
 }

@@ -17,6 +17,7 @@ namespace ElectionTactics
         public Color MediumImpactColor;
         public Color LowImpactColor;
         public Color NoImpactColor;
+        public List<Color> LegendColors;
 
         // UI
         public Color TextColor;

@@ -29,17 +29,6 @@ namespace ElectionTactics
 
         private Dictionary<MapDisplayMode, TabButton> ModeButtons = new Dictionary<MapDisplayMode, TabButton>();
 
-        private List<Color> LegendColors = new List<Color>()
-        {
-            Color.red,
-            Color.blue,
-            Color.green,
-            Color.yellow,
-            Color.gray,
-            Color.cyan,
-            Color.magenta
-        };
-
         private Dictionary<Color, string> NoOverlayLegend = new Dictionary<Color, string>();
         private Dictionary<Color, string> ImpactLegend = new Dictionary<Color, string>();
 
@@ -164,7 +153,7 @@ namespace ElectionTactics
         {
             if (!Legend.ContainsValue(label))
             {
-                Color c = LegendColors[Legend.Count];
+                Color c = ColorManager.Colors.LegendColors[Legend.Count];
                 Legend.Add(c, label);
                 r.SetColor(c);
             }

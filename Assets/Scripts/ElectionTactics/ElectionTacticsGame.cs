@@ -16,8 +16,9 @@ namespace ElectionTactics
 
         public GameState State;
 
-        // Parties
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
+
+        // Parties
         public List<Party> Parties = new List<Party>();
         public Party PlayerParty;
         public List<Party> OpponentParties = new List<Party>();
@@ -33,10 +34,12 @@ namespace ElectionTactics
         public List<Language> ActiveLanguageTraits = new List<Language>();
         public List<Religion> ActiveReligionTraits = new List<Religion>();
 
+        public List<Mentality> Mentalities = new List<Mentality>();
+
         // Rules
-        private const int PlayerPolicyPointsPerCycle = 2;
-        private const int MinAIPolicyPointsPerCycle = 3;
-        private const int MaxAIPolicyPointsPerCycle = 4;
+        private const int PlayerPolicyPointsPerCycle = 3;
+        private const int MinAIPolicyPointsPerCycle = 5;
+        private const int MaxAIPolicyPointsPerCycle = 6;
         private const int NumOpponents = 3;
         private const int MaxPolicyValue = 8;
         private const int ElectionsToWin = 8;
@@ -85,6 +88,8 @@ namespace ElectionTactics
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             InitGeograhyTraits();
+            InitMentalities();
+
             CreateParties();
 
             UI.SelectTab(Tab.Parliament);
@@ -102,6 +107,15 @@ namespace ElectionTactics
                 GeographyTraits.Add(new GeographyTrait(t, 1));
                 GeographyTraits.Add(new GeographyTrait(t, 2));
                 GeographyTraits.Add(new GeographyTrait(t, 3));
+            }
+        }
+
+        private void InitMentalities()
+        {
+            Mentalities.Clear();
+            foreach(MentalityType mt in Enum.GetValues(typeof(MentalityType)))
+            {
+                Mentalities.Add(new Mentality(mt));
             }
         }
 
@@ -208,59 +222,7 @@ namespace ElectionTactics
 
         #endregion
 
-        #region Update Policies
-
-        private void UpdateActivePolicies()
-        {
-            foreach(District d in Districts.Values)
-            {
-                foreach(GeographyTraitType t in d.Geography.Select(x => x.Type))
-                {
-                    if(!ActiveGeographyTraits.Contains(t))
-                    {
-                        ActiveGeographyTraits.Add(t);
-                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(p, t, MaxPolicyValue));
-                    }
-                }
-
-                if (!ActiveEconomyTraits.Contains(d.Economy1))
-                {
-                    ActiveEconomyTraits.Add(d.Economy1);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy1, MaxPolicyValue));
-                }
-                if (!ActiveEconomyTraits.Contains(d.Economy2))
-                {
-                    ActiveEconomyTraits.Add(d.Economy2);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy2, MaxPolicyValue));
-                }
-                if (!ActiveEconomyTraits.Contains(d.Economy3))
-                {
-                    ActiveEconomyTraits.Add(d.Economy3);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy3, MaxPolicyValue));
-                }
-
-                if (!ActiveDensityTraits.Contains(d.Density))
-                {
-                    ActiveDensityTraits.Add(d.Density);
-                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(p, d.Density, MaxPolicyValue));
-                }
-                if (!ActiveAgeGroupTraits.Contains(d.AgeGroup))
-                {
-                    ActiveAgeGroupTraits.Add(d.AgeGroup);
-                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(p, d.AgeGroup, MaxPolicyValue));
-                }
-                if (!ActiveLanguageTraits.Contains(d.Language))
-                {
-                    ActiveLanguageTraits.Add(d.Language);
-                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(p, d.Language, MaxPolicyValue));
-                }
-                if (!ActiveReligionTraits.Contains(d.Religion) && d.Religion != Religion.None)
-                {
-                    ActiveReligionTraits.Add(d.Religion);
-                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(p, d.Religion, MaxPolicyValue));
-                }
-            }
-        }
+        #region Map Evolution
 
         private District AddDistrict(Region r)
         {
@@ -269,16 +231,19 @@ namespace ElectionTactics
             Language language = GetLanguageForRegion(r);
             Religion religion = GetReligionForRegion(r);
             District newDistrict = new District(this, r, density, ageGroup, language, religion);
-            
+            UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
+            label.Init(newDistrict);
+            newDistrict.MapLabel = label;
+            newDistrict.OrderId = Districts.Count;
+
             Districts.Add(r, newDistrict);
             UI.MapControls.UpdateMapDisplay();
+
+            UpdateDistrictAges();
             UpdateActivePolicies();
+            
             return newDistrict;
         }
-
-        #endregion
-
-        #region Map Evolution
 
         public void AddRandomDistrict()
         {
@@ -326,16 +291,11 @@ namespace ElectionTactics
         }
         private Language GetLanguageForRegion(Region region) // Languages can spread over land borders
         {
-            if (region.LandNeighbours.Count == 0) return GetRandomLanguage();
-
             List<Language> languageChances = new List<Language>();
+            languageChances.Add(GetRandomLanguage());
             foreach(Region r in region.LandNeighbours)
             {
-                Language l;
-                if (Districts.ContainsKey(r)) l = Districts[r].Language;
-                else l = GetRandomLanguage();
-
-                languageChances.Add(l);
+                if (Districts.ContainsKey(r)) languageChances.Add(Districts[r].Language);
             }
             return languageChances[UnityEngine.Random.Range(0, languageChances.Count)];
         }
@@ -353,11 +313,93 @@ namespace ElectionTactics
             return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
         }
 
-        #endregion
+        public Mentality GetMentalityFor(District d)
+        {
+            List<Mentality> candidates = new List<Mentality>();
+            foreach (Mentality m in Mentalities)
+            {
+                if (m.CanAdoptMentality(d)) candidates.Add(m);
+            }
+            return candidates[UnityEngine.Random.Range(0, candidates.Count)];
+        }
+
+        private void UpdateActivePolicies()
+        {
+            foreach (District d in Districts.Values)
+            {
+                foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
+                {
+                    if (!ActiveGeographyTraits.Contains(t))
+                    {
+                        ActiveGeographyTraits.Add(t);
+                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(p, t, MaxPolicyValue));
+                    }
+                }
+
+                if (!ActiveEconomyTraits.Contains(d.Economy1))
+                {
+                    ActiveEconomyTraits.Add(d.Economy1);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy1, MaxPolicyValue));
+                }
+                if (!ActiveEconomyTraits.Contains(d.Economy2))
+                {
+                    ActiveEconomyTraits.Add(d.Economy2);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy2, MaxPolicyValue));
+                }
+                if (!ActiveEconomyTraits.Contains(d.Economy3))
+                {
+                    ActiveEconomyTraits.Add(d.Economy3);
+                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy3, MaxPolicyValue));
+                }
+
+                if (!ActiveDensityTraits.Contains(d.Density))
+                {
+                    ActiveDensityTraits.Add(d.Density);
+                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(p, d.Density, MaxPolicyValue));
+                }
+                if (!ActiveAgeGroupTraits.Contains(d.AgeGroup))
+                {
+                    ActiveAgeGroupTraits.Add(d.AgeGroup);
+                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(p, d.AgeGroup, MaxPolicyValue));
+                }
+                if (!ActiveLanguageTraits.Contains(d.Language))
+                {
+                    ActiveLanguageTraits.Add(d.Language);
+                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(p, d.Language, MaxPolicyValue));
+                }
+                if (!ActiveReligionTraits.Contains(d.Religion) && d.Religion != Religion.None)
+                {
+                    ActiveReligionTraits.Add(d.Religion);
+                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(p, d.Religion, MaxPolicyValue));
+                }
+            }
+        }
+
+        private void UpdateDistrictAges()
+        {
+            foreach(District d in Districts.Values)
+            {
+                GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.Core);
+                if (coreTrait != null) d.Geography.Remove(coreTrait);
+                GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.New);
+                if (newTrait != null) d.Geography.Remove(newTrait);
+
+                if (d.OrderId < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3));
+                else if (d.OrderId < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
+                else if (d.OrderId < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
+
+                int numDistricts = Districts.Count;
+                if(numDistricts - d.OrderId - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
+                else if(numDistricts - d.OrderId - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
+                else if(numDistricts - d.OrderId - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
+            }
+        }
+
+    #endregion
 
         #region Game Commands
 
-        public void AddPolicyPoints(Party p, int amount)
+    public void AddPolicyPoints(Party p, int amount)
         {
             p.PolicyPoints += amount;
             UI.UpdatePolicyPointDisplay();
@@ -501,11 +543,6 @@ namespace ElectionTactics
 
         #region Random Values
 
-        public static Mentality GetRandomCulture()
-        {
-            Array values = Enum.GetValues(typeof(Mentality));
-            return (Mentality)values.GetValue(UnityEngine.Random.Range(0, values.Length));
-        }
         public static Density GetRandomDensity()
         {
             Array values = Enum.GetValues(typeof(Density));

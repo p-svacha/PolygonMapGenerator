@@ -12,27 +12,30 @@ namespace ElectionTactics
         public Font Font;
 
         public PostGameScreen PostGameScreen;
-
+        
+        // Map Controls
         public MapControls MapControls;
-        public GameObject Header;
+        public UI_DistrictLabel DistrictLabelPrefab;
+
+        // Standings
         public UI_Standings Standings;
 
+        // Header
+        public GameObject Header;
         public Button ElectionButton;
         public Text PPText;
-
         public TabButton ParliamentTabButton;
         public TabButton PolicyTabButton;
         public TabButton DistrictTabButton;
-
         public Tab ActiveTab;
         public Dictionary<Tab, GameObject> TabPanels = new Dictionary<Tab, GameObject>(); // Which tab is connected to which object
         public Dictionary<Tab, TabButton> TabButtons = new Dictionary<Tab, TabButton>(); // Which tab is part of which button
 
+        // Side Content
         public UI_Parliament Parliament;
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
         public UI_PolicySelection PolicySelection;
-
         public District SelectedDistrict;
 
         // Header Animation
@@ -62,6 +65,8 @@ namespace ElectionTactics
             ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament));
         }
 
+        #region Update
+
         private void Update()
         {
             if(IsHeaderMoving)
@@ -79,6 +84,8 @@ namespace ElectionTactics
                 }
             }
         }
+
+        #endregion
 
         public void SelectTab(Tab tab)
         {

@@ -61,6 +61,7 @@ namespace ElectionTactics {
         }
         public int GetPolicyValueFor(Religion r)
         {
+            if (r == Religion.None) return 0;
             return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r).Value;
         }
 

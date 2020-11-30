@@ -9,6 +9,7 @@ namespace ElectionTactics
     {
         public ElectionTacticsGame Game;
         public string Name;
+        public int OrderId;
         public Region Region;
 
         // Traits
@@ -21,6 +22,7 @@ namespace ElectionTactics
         public EconomyTrait Economy2;
         public EconomyTrait Economy3;
         public List<Mentality> Mentalities = new List<Mentality>();
+        public List<MentalityType> MentalityTypes = new List<MentalityType>();
 
         // Election
         public ElectionResult LastElectionResult;
@@ -38,9 +40,15 @@ namespace ElectionTactics
         public int Voters;
 
         public int BasePoints = 20;
+        public int UndecidedBasePoints = 40;
+        public int DecidedBasePoints = 0;
+
         public int LowImpactPoints = 3;
         public int MediumImpactPoints = 5;
         public int HighImpactPoints = 7;
+
+        // Visual
+        public UI_DistrictLabel MapLabel;
 
         #region Initialization
 
@@ -65,8 +73,9 @@ namespace ElectionTactics
 
             while(Mentalities.Count < 3)
             {
-                Mentality c = ElectionTacticsGame.GetRandomCulture();
-                if (!Mentalities.Contains(c)) Mentalities.Add(c);
+                Mentality m = Game.GetMentalityFor(this);
+                Mentalities.Add(m);
+                MentalityTypes.Add(m.Type);
             }
 
             // Population calculation
@@ -88,8 +97,8 @@ namespace ElectionTactics
             Seats = Mathf.Max(MinSeats, tmpSeats);
 
             // Voter calculation
-            if (Mentalities.Contains(Mentality.Predictable)) Voters = Random.Range(400, 500);
-            else if (Mentalities.Contains(Mentality.Unpredictable)) Voters = Random.Range(100, 150);
+            if (MentalityTypes.Contains(MentalityType.Predictable)) Voters = Random.Range(400, 500);
+            else if (MentalityTypes.Contains(MentalityType.Unpredictable)) Voters = Random.Range(100, 150);
             else Voters = Random.Range(200, 300);
         }
 
@@ -237,18 +246,31 @@ namespace ElectionTactics
         private int GetPartyPointsFor(Party p)
         {
             int points = BasePoints;
+            if (MentalityTypes.Contains(MentalityType.Decided)) points = DecidedBasePoints;
+            if (MentalityTypes.Contains(MentalityType.Undecided)) points = UndecidedBasePoints;
 
-            foreach(GeographyTrait t in Geography)
+            foreach (GeographyTrait t in Geography)
             {
                 points += p.GetPolicyValueFor(t.Type) * GetImpactPointsFor(t);
             }
+
             points += p.GetPolicyValueFor(Economy1) * HighImpactPoints;
             points += p.GetPolicyValueFor(Economy2) * MediumImpactPoints;
             points += p.GetPolicyValueFor(Economy3) * LowImpactPoints;
+
             points += p.GetPolicyValueFor(Density) * MediumImpactPoints;
+
             points += p.GetPolicyValueFor(AgeGroup) * MediumImpactPoints;
-            points += p.GetPolicyValueFor(Language) * MediumImpactPoints;
-            points += p.GetPolicyValueFor(Religion) * MediumImpactPoints;
+
+            int languagePoints = p.GetPolicyValueFor(Language) * MediumImpactPoints;
+            if (MentalityTypes.Contains(MentalityType.Linguistic)) languagePoints *= 2;
+            if (MentalityTypes.Contains(MentalityType.Nonlinguistic)) languagePoints /= 2;
+            points += languagePoints;
+
+            int religionPoints = p.GetPolicyValueFor(Religion) * MediumImpactPoints;
+            if (MentalityTypes.Contains(MentalityType.Religious)) religionPoints *= 2;
+            if (MentalityTypes.Contains(MentalityType.Secular)) religionPoints /= 2;
+            points += religionPoints;
 
             return points;
         }
