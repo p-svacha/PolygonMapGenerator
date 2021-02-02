@@ -8,14 +8,16 @@ namespace ElectionTactics
     {
         public GeographyTraitType Type;
         public int Category;
-        public string Name;
+        public string BaseName;
+        public string FullName;
 
         public GeographyTrait(GeographyTraitType type, int category)
         {
             Type = type;
             Category = category;
+            BaseName = EnumHelper.GetDescription(type);
             string romanianNumber = category == 1 ? "I" : category == 2 ? "II" : "III";
-            Name = EnumHelper.GetDescription(type) + " " + romanianNumber;
+            FullName = BaseName + " " + romanianNumber;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace ElectionTactics
             foreach (GeographyTrait gt in d.Geography)
             {
                 UI_DistrictAttribute geoAtt = Instantiate(AttributePrefab, GeographyPanel.transform);
-                geoAtt.Init(gt.Name);
+                geoAtt.Init(gt.FullName, gt.BaseName, "");
             }
 
             // Demography
@@ -66,17 +66,17 @@ namespace ElectionTactics
 
             // Economy
             UI_DistrictAttribute eco1Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco1Att.Init("1. " + EnumHelper.GetDescription(d.Economy1));
+            eco1Att.Init("1. " + EnumHelper.GetDescription(d.Economy1), EnumHelper.GetDescription(d.Economy1), "");
             UI_DistrictAttribute eco2Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco2Att.Init("2. " + EnumHelper.GetDescription(d.Economy2));
+            eco2Att.Init("2. " + EnumHelper.GetDescription(d.Economy2), EnumHelper.GetDescription(d.Economy2), "");
             UI_DistrictAttribute eco3Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco3Att.Init("3. " + EnumHelper.GetDescription(d.Economy3));
+            eco3Att.Init("3. " + EnumHelper.GetDescription(d.Economy3), EnumHelper.GetDescription(d.Economy3), "");
 
             // Mentality
             foreach (Mentality m in d.Mentalities)
             {
                 UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, CulturePanel.transform);
-                mentalityAtt.Init(m.Name, hasTooltip: true, m.Description);
+                mentalityAtt.Init(m.Name, m.Name, m.Description);
                 mentalityAtt.MainText.alignment = TextAnchor.MiddleRight;
             }
 

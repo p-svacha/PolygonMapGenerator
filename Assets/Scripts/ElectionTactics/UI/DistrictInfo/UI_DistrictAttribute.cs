@@ -6,36 +6,18 @@ using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class UI_DistrictAttribute : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UI_DistrictAttribute : MonoBehaviour
     {
         public Text MainText;
-        public GameObject Tooltip;
-        public Text TooltipText;
         public HorizontalLayoutGroup HLG;
+        public TooltipTarget TooltipTarget;
 
-        public bool HasTooltip;
-
-        public void Init(string text, bool hasTooltip = false, string tooltipText = "")
+        public void Init(string displayText, string tooltipTitle, string tooltipDescription)
         {
-            MainText.text = text;
-            HasTooltip = hasTooltip;
-            TooltipText.text = tooltipText;
-
-            // This is sad but necessary so the width of the tooltip is displayed correctly
-            Tooltip.SetActive(true);
-            Canvas.ForceUpdateCanvases();
-            HLG.SetLayoutHorizontal();
-            Tooltip.SetActive(false);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (HasTooltip) Tooltip.SetActive(true);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (HasTooltip) Tooltip.SetActive(false);
+            MainText.text = displayText;
+            TooltipTarget = GetComponent<TooltipTarget>();
+            TooltipTarget.Title = tooltipTitle;
+            TooltipTarget.Text = tooltipDescription;
         }
     }
 }

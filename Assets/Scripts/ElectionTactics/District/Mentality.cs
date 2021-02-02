@@ -28,22 +28,22 @@ namespace ElectionTactics
 
                 case MentalityType.Religious:
                     Name = "Religious";
-                    Description = "Religion policy effect is doubled.";
+                    Description = "Religion policy effectiveness in this district is doubled.";
                     break;
 
                 case MentalityType.Secular:
                     Name = "Secular";
-                    Description = "Religion policy effect is halved.";
+                    Description = "Religion policy effectiveness in this district is halved.";
                     break;
 
                 case MentalityType.Linguistic:
                     Name = "Linguistic";
-                    Description = "Language policy effect is doubled.";
+                    Description = "Language policy effectiveness in this district is doubled.";
                     break;
 
                 case MentalityType.Nonlinguistic:
                     Name = "Non-Linguistic";
-                    Description = "Language policy effect is halved.";
+                    Description = "Language policy effectiveness in this district is halved.";
                     break;
 
                 case MentalityType.Predictable:

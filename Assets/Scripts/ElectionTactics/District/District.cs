@@ -76,7 +76,8 @@ namespace ElectionTactics
             Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
             while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
 
-            while (Mentalities.Count < 3)
+            int numMentalities = Random.Range(1, 4);
+            while (Mentalities.Count < numMentalities)
             {
                 Mentality m = Game.GetMentalityFor(this);
                 Mentalities.Add(m);
