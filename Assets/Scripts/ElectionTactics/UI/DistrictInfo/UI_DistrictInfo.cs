@@ -11,6 +11,7 @@ namespace ElectionTactics
         public UI_ElectionTactics UI;
 
         public UI_DistrictAttribute AttributePrefab;
+        public UI_ModifierListElement ModifierListElementPrefab;
         public Font GraphFont;
 
         public Button BackButton;
@@ -26,6 +27,8 @@ namespace ElectionTactics
         public GameObject EconomyPanel;
         public GameObject CulturePanel;
         public WindowGraph ElectionGraph;
+
+        public GameObject ModifierContent;
 
         // Start is called before the first frame update
         void Start()
@@ -69,12 +72,19 @@ namespace ElectionTactics
             UI_DistrictAttribute eco3Att = Instantiate(AttributePrefab, EconomyPanel.transform);
             eco3Att.Init("3. " + EnumHelper.GetDescription(d.Economy3));
 
-            // Culture
+            // Mentality
             foreach (Mentality m in d.Mentalities)
             {
                 UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, CulturePanel.transform);
-                mentalityAtt.Init(m.Type.ToString(), hasTooltip: true, m.Description);
+                mentalityAtt.Init(m.Name, hasTooltip: true, m.Description);
                 mentalityAtt.MainText.alignment = TextAnchor.MiddleRight;
+            }
+
+            // Modifiers
+            foreach(Modifier m in d.Modifiers)
+            {
+                UI_ModifierListElement modElem = Instantiate(ModifierListElementPrefab, ModifierContent.transform);
+                modElem.Init(m);
             }
 
             // Election Result
@@ -84,7 +94,7 @@ namespace ElectionTactics
                 foreach (KeyValuePair<Party, float> kvp in d.LastElectionResult.VoteShare)
                     dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
                 int yMax = (((int)d.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-                ElectionGraph.ShowAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont, 0.25f);
+                ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont, 0.25f, startAnimation: true);
             }
             else
             {
@@ -97,6 +107,7 @@ namespace ElectionTactics
             for (int i = 1; i < GeographyPanel.transform.childCount; i++) Destroy(GeographyPanel.transform.GetChild(i).gameObject);
             for (int i = 1; i < EconomyPanel.transform.childCount; i++) Destroy(EconomyPanel.transform.GetChild(i).gameObject);
             for (int i = 1; i < CulturePanel.transform.childCount; i++) Destroy(CulturePanel.transform.GetChild(i).gameObject);
+            for (int i = 0; i < ModifierContent.transform.childCount; i++) Destroy(ModifierContent.transform.GetChild(i).gameObject);
         }
     }
 }

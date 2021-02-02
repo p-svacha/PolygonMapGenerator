@@ -28,6 +28,8 @@ public class GraphPolygon
     public bool HasRiver;
     public int DistanceFromNearestWater;
 
+    public Vector2 CenterPoi; // Point of inaccessability - this is the point with the biggest distance to any edge
+
     public Region Region;
 
     public GraphPolygon(List<GraphNode> nodes, List<GraphConnection> connections)
@@ -42,6 +44,9 @@ public class GraphPolygon
         Width = nodes.Max(x => x.Vertex.x) - nodes.Min(x => x.Vertex.x);
         Height = nodes.Max(x => x.Vertex.y) - nodes.Min(x => x.Vertex.y);
         Jaggedness = 1f - (Area / (Width * Height));
+
+        float[] poi = PolygonCenterFinder.GetPolyLabel(ConvertPolygonToFloatArray(), precision: 0.05f);
+        CenterPoi = new Vector2(poi[0], poi[1]);
     }
 
     public void FindRivers()
@@ -91,5 +96,24 @@ public class GraphPolygon
         {
             return Connections.Where(x => x.Type == BorderType.Shore).Sum(x => Vector2.Distance(x.StartNode.Vertex, x.EndNode.Vertex));
         }
+    }
+
+    private float[][][] ConvertPolygonToFloatArray()
+    {
+        // this is a float[][]
+
+        var polygon = new float[1][][];
+        polygon[0] = new float[Nodes.Count][];
+
+        var pointCount = 0;
+        foreach (Vector2 point in Nodes.Select(x => x.Vertex))
+        {
+            polygon[0][pointCount] = new float[2];
+            polygon[0][pointCount][0] = point.x;
+            polygon[0][pointCount][1] = point.y;
+            pointCount++;
+        }
+
+        return polygon;
     }
 }

@@ -11,6 +11,7 @@ namespace ElectionTactics
         public Text MainText;
         public GameObject Tooltip;
         public Text TooltipText;
+        public HorizontalLayoutGroup HLG;
 
         public bool HasTooltip;
 
@@ -19,6 +20,12 @@ namespace ElectionTactics
             MainText.text = text;
             HasTooltip = hasTooltip;
             TooltipText.text = tooltipText;
+
+            // This is sad but necessary so the width of the tooltip is displayed correctly
+            Tooltip.SetActive(true);
+            Canvas.ForceUpdateCanvases();
+            HLG.SetLayoutHorizontal();
+            Tooltip.SetActive(false);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

@@ -66,12 +66,12 @@ namespace ElectionTactics
         public void HighlightParty(Party p)
         {
             UI_PartyListElement elem = ListElements.First(x => x.Party == p);
-            elem.Background.color = ColorManager.Colors.HighlightedListElementColor;
+            elem.Background.color = ColorManager.Colors.UiMainColorLighter2;
             elem.transform.SetAsLastSibling();
         }
         public void UnhighlightParty(Party p)
         {
-            ListElements.First(x => x.Party == p).Background.color = ColorManager.Colors.ListElementColor;
+            ListElements.First(x => x.Party == p).Background.color = ColorManager.Colors.UiMainColorLighter1;
         }
 
 

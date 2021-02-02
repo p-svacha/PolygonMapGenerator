@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TabButton : MonoBehaviour
+namespace ElectionTactics
 {
-    public Image Background;
-    public Button Button;
+    public class TabButton : MonoBehaviour
+    {
+        public Image Background;
+        public Button Button;
+
+        public void SetSelected(bool active)
+        {
+            Background.color = active ? ColorManager.Colors.UiMainColor : ColorManager.Colors.UiHeaderColor;
+        }
+    }
 }

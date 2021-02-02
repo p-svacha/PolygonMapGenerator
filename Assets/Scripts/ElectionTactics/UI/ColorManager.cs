@@ -6,25 +6,26 @@ namespace ElectionTactics
 {
     public class ColorManager : MonoBehaviour
     {
-        // Map
+        [Header("Map Colors")]
         public Color WaterColor;
         public Color ActiveDistrictColor;
         public Color InactiveDistrictColor;
         public Color SelectedDistrictColor;
 
-        // Map Overlays
+        [Header("Map Overlays")]
         public Color HighImpactColor;
         public Color MediumImpactColor;
         public Color LowImpactColor;
         public Color NoImpactColor;
         public List<Color> LegendColors;
 
-        // UI
+        [Header("UI")]
+        public Color UiHeaderColor;
+        public Color UiMainColor;
+        public Color UiMainColorLighter1;
+        public Color UiMainColorLighter2;
+        public Color UiSpecialColor;
         public Color TextColor;
-        public Color HeaderColor;
-        public Color PanelColor;
-        public Color ListElementColor;
-        public Color HighlightedListElementColor;
 
         public static ColorManager Colors
         {

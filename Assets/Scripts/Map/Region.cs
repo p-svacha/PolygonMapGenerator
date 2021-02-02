@@ -33,7 +33,8 @@ public class Region : MonoBehaviour
     public float YPos;
     public float Width;
     public float Height;
-    public Vector2 Center;
+    public Vector2 Centroid; // Mathematical average center of polygon
+    public Vector2 CenterPoi; // Point of inaccessability - this is the point with the biggest distance to any edge
 
     // Topography
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
@@ -74,7 +75,8 @@ public class Region : MonoBehaviour
         Height = p.Height;
         XPos = p.Nodes.Min(x => x.Vertex.x);
         YPos = p.Nodes.Min(x => x.Vertex.y);
-        Center = new Vector2(p.Nodes.Average(x => x.Vertex.x), p.Nodes.Average(x => x.Vertex.y));
+        Centroid = new Vector2(p.Nodes.Average(x => x.Vertex.x), p.Nodes.Average(x => x.Vertex.y));
+        CenterPoi = p.CenterPoi;
 
         Area = p.Area;
         Jaggedness = p.Jaggedness;

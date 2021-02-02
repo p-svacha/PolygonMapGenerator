@@ -18,6 +18,7 @@ namespace ElectionTactics
             NameText.text = p.Name;
             NameText.color = p.Color;
             SeatsText.text = p.Seats.ToString();
+            Background.color = ColorManager.Colors.UiMainColorLighter1;
         }
 
         public void UpdateValues()

@@ -62,9 +62,9 @@ namespace ElectionTactics
         public void SetMapDisplayMode(MapDisplayMode mode)
         {
             // Change tab button color
-            if (ActiveTabButton != null) ActiveTabButton.Background.color = ColorManager.Colors.PanelColor;
+            if (ActiveTabButton != null) ActiveTabButton.Background.color = ColorManager.Colors.UiMainColor;
             ActiveTabButton = ModeButtons[mode];
-            ActiveTabButton.Background.color = ColorManager.Colors.HeaderColor;
+            ActiveTabButton.Background.color = ColorManager.Colors.UiHeaderColor;
 
             // Clear legend
             for (int i = 1; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);

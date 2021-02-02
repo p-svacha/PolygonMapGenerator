@@ -1,0 +1,61 @@
+Election Tactics
+----------------
+
+1. To Do
+
+1.1 Modifiers
+	- Add modifier icons to election results below the party name with hover effect
+
+1.2 Constitution
+	- Add constitution tab in header
+	- Constitution is readonly information about current game rules
+	- Consitution describes following points:
+		- Win condition (total elections won, elections in a row won, total seats won, fixed end year, popular vote), (and / or multiplie win conditions)
+		- Seat distribution (minimum seats per district, population per seat, scaling population requirement)
+		- Constitution voting system (one vote per party, one vote per seat, one vote per district), (how many votes per cycle)
+		- District addition system (one district per cycle, no more districts)
+		- District voting system (winner takes it all, proportionally, alternative vote)
+		- Bans (on economies, religions, etc)
+
+1.3 Events tab
+	- Add an event tab in header
+
+	1.3.1 Constitution voting
+		- Each election cycle there's a random vote on a change in the constitution
+		- Add interactive display to vote
+
+	1.3.2 Event
+		- Each election cycle there's a random event happening
+		- More events can be forced with campaigns
+		- Add readonly event display with detailed description
+
+1.4 Campaigns tab
+	- Add campaigns tab in header
+	- Campaigns can be chosen with campaign points
+	- Each cycle there are three campaigns that can be chosen from
+	- Campaigns can have different costs according to the severity of their impact
+	- Campaigns can be locked for later for 1 campaign point
+	- Campaigns can be rerolled for 1 campaign point
+	- Examples of campaigns:
+		- Propaganda campaigns - Add a positive modifier for your party in a chosen district for a certain time
+		- Diffarmation campaigns - Add a negative or exclusion modifier to a chosen enemy party in a chosen district for a certain time
+		- District campaigns - Split or exclude a district from the game
+		- Force event campaigns - Force a certain random event for the next cycle
+		- Constitution vote campaigns - Force a certain random constitution vote
+
+1.5 District info
+	- Show overlay when hovering over a trait
+	- Improve mentality mouseover with arial and better design
+
+1.6 General election
+	- Show political view during general election
+	- Add intro animation
+	- Add outro animation
+
+1.7 Map controls
+	- Add popularity view that shows absolute popularity through policies per district
+	- Add density view
+	- Fix legend width bug
+
+1.8 Main menu
+	- Add main menu

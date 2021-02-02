@@ -14,7 +14,7 @@ namespace ElectionTactics
         {
             District = d;
             Text.text = d.Name;
-            transform.position = new Vector3(District.Region.Center.x, 0.01f, District.Region.Center.y);
+            transform.position = new Vector3(District.Region.CenterPoi.x, 0.01f, District.Region.CenterPoi.y);
         }
     }
 }

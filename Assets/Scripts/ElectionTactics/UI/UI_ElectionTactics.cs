@@ -20,8 +20,9 @@ namespace ElectionTactics
         // Standings
         public UI_Standings Standings;
 
-        // Header
-        public GameObject Header;
+        [Header ("Header")]
+        public Image Header;
+        public Image ElectionPanel;
         public Button ElectionButton;
         public Text PPText;
         public TabButton ParliamentTabButton;
@@ -31,7 +32,8 @@ namespace ElectionTactics
         public Dictionary<Tab, GameObject> TabPanels = new Dictionary<Tab, GameObject>(); // Which tab is connected to which object
         public Dictionary<Tab, TabButton> TabButtons = new Dictionary<Tab, TabButton>(); // Which tab is part of which button
 
-        // Side Content
+        [Header("Side Panel")]
+        public Image SidePanel;
         public UI_Parliament Parliament;
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
@@ -47,6 +49,12 @@ namespace ElectionTactics
 
         void Start()
         {
+            // Colors
+            Header.color = ColorManager.Colors.UiHeaderColor;
+            ElectionPanel.color = ColorManager.Colors.UiSpecialColor;
+            SidePanel.color = ColorManager.Colors.UiMainColor;
+
+            // Listeners
             ElectionButton.onClick.AddListener(() => Game.RunGeneralElection());
 
             TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
@@ -89,12 +97,12 @@ namespace ElectionTactics
 
         public void SelectTab(Tab tab)
         {
-            TabButtons[ActiveTab].Background.color = ColorManager.Colors.HeaderColor;
+            TabButtons[ActiveTab].SetSelected(false);
             TabPanels[ActiveTab].SetActive(false);
 
             ActiveTab = tab;
 
-            TabButtons[ActiveTab].Background.color = ColorManager.Colors.PanelColor;
+            TabButtons[ActiveTab].SetSelected(true);
             TabPanels[ActiveTab].SetActive(true);
 
             switch(tab)

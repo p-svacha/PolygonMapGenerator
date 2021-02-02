@@ -38,26 +38,33 @@ namespace ElectionTactics
 
         // Rules
         private const int PlayerPolicyPointsPerCycle = 3;
-        private const int MinAIPolicyPointsPerCycle = 5;
-        private const int MaxAIPolicyPointsPerCycle = 6;
+        private const int MinAIPolicyPointsPerCycle = 4;
+        private const int MaxAIPolicyPointsPerCycle = 7;
         private const int NumOpponents = 3;
         private const int MaxPolicyValue = 8;
-        private const int ElectionsToWin = 8;
+        private const int ElectionsToWin = 5;
 
         // General Election
         public int ElectionCycle;
         private float HeaderSlideTime = 1f;
+
         private float DistrictPanTime = 2f;
-        private float PostDistrictPanTime = 1f;
+        private float PostDistrictPanTime = 1f; // Length of pause after moving to a district
+
+        private float ModifierSlideTime = 1f; // Length of slide animation per modifier
+        private float PostModifierSlideTime = 1.5f; // Length of pause after a modifier
+
         private float GraphAnimationTime = 6f;
         private float PostGraphPauseTime = 2f;
         private float ListAnimationTime = 1f;
         private float PostListAnimationTime = 1f;
+
         private const float SpeedModifier = 0.75f;
 
         private List<District> ElectionOrder;
         private int CurElectionDistrictIndex;
         private District CurElectionDistrict;
+        private int CurModifierIndex;
 
 
         #region Initialization
@@ -426,6 +433,12 @@ namespace ElectionTactics
             UI.Standings.Init(Parties);
         }
 
+        public void AddModifier(District d, Modifier mod)
+        {
+            d.Modifiers.Add(mod);
+            mod.District = d;
+        }
+
         #endregion
 
         #region Election
@@ -463,19 +476,18 @@ namespace ElectionTactics
         private void MoveToNextElectionDistrict()
         {
             UI.Parliament.CurrentElectionGraph.ClearGraph();
+            UI.Parliament.ModifierSliderContainer.ClearContainer();
 
             if (CurElectionDistrict != null) CurElectionDistrict.Region.Unhighlight();
 
             if (CurElectionDistrictIndex < ElectionOrder.Count)
             {
+                // Update current district
                 CurElectionDistrict = ElectionOrder[CurElectionDistrictIndex];
                 CurElectionDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
 
-                UI.Parliament.CurrentElectionContainer.SetActive(true);
-                UI.Parliament.CurrentElectionTitle.text = CurElectionDistrict.Name;
-                UI.Parliament.CurrentElectionSeatsText.text = CurElectionDistrict.Seats.ToString();
-                UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
-                if(CurElectionDistrict.LastElectionResult != null)
+                // Update current election graph header
+                if (CurElectionDistrict.LastElectionResult != null)
                 {
                     UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
@@ -487,6 +499,23 @@ namespace ElectionTactics
                     UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(false);
                     UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(false);
                 }
+
+                // Get election results
+                CurElectionDistrict.RunElection(PlayerParty, Parties);
+                CurElectionDistrict.CurrentWinnerParty.Seats += CurElectionDistrict.Seats;
+
+                List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
+                foreach (KeyValuePair<Party, float> kvp in CurElectionDistrict.LastElectionResult.VoteShare)
+                    dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
+                int yMax = (((int)CurElectionDistrict.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
+
+                // Update current election graph
+                UI.Parliament.CurrentElectionContainer.SetActive(true);
+                UI.Parliament.CurrentElectionTitle.text = CurElectionDistrict.Name;
+                UI.Parliament.CurrentElectionSeatsText.text = CurElectionDistrict.Seats.ToString();
+                UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
+                UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, UI.Font, GraphAnimationTime, startAnimation: false);
+                
                 CameraHandler.MoveToFocusDistricts(new List<District>() { CurElectionDistrict }, DistrictPanTime);
                 Invoke(nameof(RunCurrentDistrictElection), DistrictPanTime + PostDistrictPanTime);
             }
@@ -499,19 +528,21 @@ namespace ElectionTactics
 
         private void RunCurrentDistrictElection()
         {
-            CurElectionDistrict.RunElection(PlayerParty, Parties);
-            CurElectionDistrict.CurrentWinnerParty.Seats += CurElectionDistrict.Seats;
+            CurModifierIndex = 0;
 
-            List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
-            foreach (KeyValuePair<Party, float> kvp in CurElectionDistrict.LastElectionResult.VoteShare)
-                dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
-            int yMax = (((int)CurElectionDistrict.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
+            float totalModifierDelay = CurElectionDistrict.Modifiers.Count * (ModifierSlideTime + PostModifierSlideTime);
 
-            UI.Parliament.CurrentElectionGraph.ShowAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, UI.Font, GraphAnimationTime);
+            for(int i = 0; i < CurElectionDistrict.Modifiers.Count; i++)
+            {
+                float delay = i * (ModifierSlideTime + PostModifierSlideTime);
+                Invoke(nameof(SlideInNextModifier), delay);
+            }            
+
             CurElectionDistrictIndex++;
-            Invoke(nameof(UpdatePartyList), GraphAnimationTime + PostGraphPauseTime);
-            Invoke(nameof(UnhighlightPartyList), GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + 0.1f);
-            Invoke(nameof(MoveToNextElectionDistrict), GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + PostListAnimationTime);
+            Invoke(nameof(StartGraphAnimation), totalModifierDelay);
+            Invoke(nameof(UpdatePartyList), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime);
+            Invoke(nameof(UnhighlightPartyList), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + 0.1f);
+            Invoke(nameof(MoveToNextElectionDistrict), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + PostListAnimationTime);
         }
 
         private void UpdatePartyList()
@@ -525,8 +556,22 @@ namespace ElectionTactics
             UI.Parliament.PartyList.UnhighlightParty(CurElectionDistrict.CurrentWinnerParty);
         }
 
+        private void StartGraphAnimation()
+        {
+            UI.Parliament.CurrentElectionGraph.StartAnimation();
+        }
+
+        private void SlideInNextModifier()
+        {
+            UI.Parliament.ModifierSliderContainer.SlideInModifier(CurElectionDistrict.Modifiers[CurModifierIndex], ModifierSlideTime);
+            CurModifierIndex++;
+        }
+
         private void EndElection()
         {
+            // District actions
+            foreach (District d in Districts.Values) d.OnElectionEnd();
+
             // Distribute Game points
             List<Party> winnerParties = Parties.Where(x => x.Seats == Parties.Max(y => y.Seats)).ToList();
             foreach (Party p in winnerParties) AddGamePoint(p);

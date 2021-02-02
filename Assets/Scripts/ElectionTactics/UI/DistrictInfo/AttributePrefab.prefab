@@ -211,6 +211,7 @@ MonoBehaviour:
   MainText: {fileID: 2689260648514534326}
   Tooltip: {fileID: 9007998440483485544}
   TooltipText: {fileID: 7352359234181648154}
+  HLG: {fileID: 7652144816793003670}
   HasTooltip: 0
 --- !u!1 &6098812174633684429
 GameObject:

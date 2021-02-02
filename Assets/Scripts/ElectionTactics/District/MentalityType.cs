@@ -13,6 +13,9 @@ namespace ElectionTactics
         Decided,
         Undecided,
         Predictable,
-        Unpredictable
+        Unpredictable,
+        Rebellious,
+        Stable,
+        Revolutionary
     }
 }

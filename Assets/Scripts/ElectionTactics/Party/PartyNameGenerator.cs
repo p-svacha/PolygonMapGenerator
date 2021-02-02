@@ -40,6 +40,7 @@ namespace ElectionTactics
             "Orange",
             "White",
             "Purple",
+            "Pink",
             "Brown",
             "Left",
             "Leftist",
@@ -54,7 +55,8 @@ namespace ElectionTactics
             "Conservationist",
             "Internationalist",
             "Marxist",
-            "Neofascist"
+            "Neofascist",
+            "Free"
         };
 
         private static List<string> PartyTypeNouns = new List<string>() // T
@@ -85,6 +87,13 @@ namespace ElectionTactics
             "Womens",
             "Mens",
             "Corporate",
+            "Science",
+            "Thought",
+            "Equality",
+            "Equity",
+            "Occupation",
+            "Rebel",
+            "Anarchy"
         };
 
         private static List<string> PartyNouns = new List<string>() // P
@@ -133,13 +142,13 @@ namespace ElectionTactics
         {
             new Color(0.80f, 0.80f, 0.80f), // 0 - White
             new Color(0.00f, 0.50f, 0.00f), // 1 - Green
-            new Color(0.00f, 0.25f, 0.50f), // 2 - Blue
-            new Color(0.50f, 0.00f, 0.00f), // 3 - Red
+            new Color(0.10f, 0.40f, 0.90f), // 2 - Blue
+            new Color(0.80f, 0.00f, 0.00f), // 3 - Red
             new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
-            new Color(0.05f, 0.05f, 0.05f), // 5 - Black
+            new Color(0.00f, 0.00f, 0.00f), // 5 - Black
             new Color(0.75f, 0.50f, 0.16f), // 6 - Orange
-            new Color(0.45f, 0.00f, 0.45f), // 7 - Purple
-            new Color(0.33f, 0.16f, 0.00f), // 8 - Brown
+            new Color(0.80f, 0.00f, 0.80f), // 7 - Purple
+            new Color(0.66f, 0.32f, 0.10f), // 8 - Brown
         };
 
 
@@ -177,7 +186,7 @@ namespace ElectionTactics
             if (partyName.Contains("Yellow") && !alreadyTaken.Contains(Colors[4])) return Colors[4];
             if (partyName.Contains("Black") && !alreadyTaken.Contains(Colors[5])) return Colors[5];
             if (partyName.Contains("Orange") && !alreadyTaken.Contains(Colors[6])) return Colors[6];
-            if (partyName.Contains("Purple") && !alreadyTaken.Contains(Colors[7])) return Colors[7];
+            if (partyName.Contains("Purple") || partyName.Contains("Pink") && !alreadyTaken.Contains(Colors[7])) return Colors[7];
             if (partyName.Contains("Brown") && !alreadyTaken.Contains(Colors[8])) return Colors[8];
             else return GetRandomColor(alreadyTaken);
         }

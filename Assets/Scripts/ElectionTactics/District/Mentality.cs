@@ -7,6 +7,7 @@ namespace ElectionTactics
     public class Mentality
     {
         public MentalityType Type { get; protected set; }
+        public string Name { get; protected set; }
         public string Description { get; protected set; }
 
         public Mentality(MentalityType type)
@@ -16,39 +17,62 @@ namespace ElectionTactics
             switch(type)
             {
                 case MentalityType.Undecided:
+                    Name = "Undecided";
                     Description = "Parties have a very low base chance of being voted for.";
                     break;
 
                 case MentalityType.Decided:
+                    Name = "Decided";
                     Description = "Parties have a very low base chance of being voted for.";
                     break;
 
                 case MentalityType.Religious:
+                    Name = "Religious";
                     Description = "Religion policy effect is doubled.";
                     break;
 
                 case MentalityType.Secular:
+                    Name = "Secular";
                     Description = "Religion policy effect is halved.";
                     break;
 
                 case MentalityType.Linguistic:
+                    Name = "Linguistic";
                     Description = "Language policy effect is doubled.";
                     break;
 
                 case MentalityType.Nonlinguistic:
+                    Name = "Non-Linguistic";
                     Description = "Language policy effect is halved.";
                     break;
 
                 case MentalityType.Predictable:
+                    Name = "Predictable";
                     Description = "Higher voter turnout leads to consistent results.";
                     break;
 
                 case MentalityType.Unpredictable:
+                    Name = "Unpredictable";
                     Description = "Due to low voter turnout results can vary a lot.";
                     break;
 
+                case MentalityType.Rebellious:
+                    Name = "Rebellious";
+                    Description = "The party that won the last election will get a malus for the next one";
+                    break;
+
+                case MentalityType.Stable:
+                    Name = "Stable";
+                    Description = "The party that won the last election will get a bonus for the next one";
+                    break;
+
+                case MentalityType.Revolutionary:
+                    Name = "Revolutionary";
+                    Description = "The party that won the last election will be excluded for the next one";
+                    break;
+
                 default:
-                    throw new System.Exception("MentalityType not handled");
+                    throw new System.Exception("MentalityType not handled for Mentality Name & Description");
             }
         }
 
@@ -77,6 +101,13 @@ namespace ElectionTactics
                     return !d.MentalityTypes.Contains(MentalityType.Unpredictable);
                 case MentalityType.Unpredictable:
                     return !d.MentalityTypes.Contains(MentalityType.Predictable);
+
+                case MentalityType.Rebellious:
+                    return (!d.MentalityTypes.Contains(MentalityType.Stable) && !d.MentalityTypes.Contains(MentalityType.Revolutionary));
+                case MentalityType.Stable:
+                    return (!d.MentalityTypes.Contains(MentalityType.Rebellious) && !d.MentalityTypes.Contains(MentalityType.Revolutionary));
+                case MentalityType.Revolutionary:
+                    return (!d.MentalityTypes.Contains(MentalityType.Rebellious) && !d.MentalityTypes.Contains(MentalityType.Stable));
             }
             throw new System.Exception("MentalityType not handled in CanAdoptMentality()");
         }
