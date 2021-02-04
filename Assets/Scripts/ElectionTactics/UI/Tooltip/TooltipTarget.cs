@@ -11,7 +11,9 @@ namespace ElectionTactics
         public string Text;
 
         public bool IsFocussed;
+        public bool IsInitialized;
         private float Delay = 1f;
+        private int MouseOffset = 5;
         public float CurrentDelay;
 
         public Tooltip Tooltip;
@@ -45,12 +47,24 @@ namespace ElectionTactics
                     Tooltip = Instantiate(PrefabManager.Prefabs.Tooltip, GameObject.Find("Overlays").transform);
                     Tooltip.Title.text = Title;
                     Tooltip.Text.text = Text;
-                    Vector2 mouse = Input.mousePosition;
+                    Tooltip.transform.position = Input.mousePosition + new Vector3(MouseOffset, -MouseOffset, 0);
                     float width = Mathf.Max(Tooltip.Title.preferredWidth, Tooltip.Text.preferredWidth);
-                    if (mouse.x + width > Screen.width) Tooltip.transform.position = new Vector2(Screen.width - width, mouse.y);
-                    else Tooltip.transform.position = mouse;
+                    float height = Tooltip.GetComponent<RectTransform>().rect.height;
+                    if (Tooltip.transform.position.x + width > Screen.width) Tooltip.transform.position = new Vector2(Screen.width - width, Tooltip.transform.position.y);
+                    if (Tooltip.transform.position.y - height < 0) Tooltip.transform.position = new Vector2(Tooltip.transform.position.x, height);
+                    Canvas.ForceUpdateCanvases();
+                    Tooltip.gameObject.SetActive(false);
+                    IsInitialized = false;
                 }
-            }    
+            }
+            else if(IsFocussed && Tooltip != null && !IsInitialized) // Do not question this code, else it might stop working
+            {
+                    Tooltip.gameObject.SetActive(true);
+                    Canvas.ForceUpdateCanvases();
+                    Tooltip.gameObject.SetActive(false);
+                    Tooltip.gameObject.SetActive(true);
+                    IsInitialized = true;
+            }
         }
     }
 }

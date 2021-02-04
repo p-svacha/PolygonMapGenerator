@@ -21,6 +21,7 @@ namespace ElectionTactics
         [HideInInspector]
         public TabButton ActiveTabButton;
 
+        [Header("Legend")]
         public GameObject LegendContainer;
         public Text LegendTitleText;
         private Dictionary<Color, string> Legend = new Dictionary<Color, string>();
@@ -85,6 +86,7 @@ namespace ElectionTactics
 
                 case MapDisplayMode.Political:
                     LegendTitleText.text = "Parties";
+                    Legend.Add(ColorManager.Colors.NoImpactColor, "None");
                     foreach (Region r in Map.LandRegions)
                     {
                         if (Game.Districts.ContainsKey(r))

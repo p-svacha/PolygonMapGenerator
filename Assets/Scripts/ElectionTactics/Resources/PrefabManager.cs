@@ -7,6 +7,7 @@ namespace ElectionTactics
     public class PrefabManager : MonoBehaviour
     {
         public Tooltip Tooltip;
+        public Font GraphFont;
 
         public static PrefabManager Prefabs
         {

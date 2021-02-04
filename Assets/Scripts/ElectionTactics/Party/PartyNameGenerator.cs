@@ -93,7 +93,8 @@ namespace ElectionTactics
             "Equity",
             "Occupation",
             "Rebel",
-            "Anarchy"
+            "Anarchy",
+            "Senior"
         };
 
         private static List<string> PartyNouns = new List<string>() // P
@@ -114,7 +115,11 @@ namespace ElectionTactics
             "Coalition",
             "Faction",
             "Militia",
-            "Cartel"
+            "Cartel",
+            "Council",
+            "Tigers",
+            "Panthers",
+            "Lions"
         };
 
         private static Dictionary<char, List<string>> ListDict = new Dictionary<char, List<string>>()

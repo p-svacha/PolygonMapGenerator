@@ -12,23 +12,28 @@ namespace ElectionTactics
 
         public UI_DistrictAttribute AttributePrefab;
         public UI_ModifierListElement ModifierListElementPrefab;
-        public Font GraphFont;
 
+        [Header("Header")]
         public Button BackButton;
         public Text TitleText;
         public Text PopulationText;
         public Text SeatsText;
 
+        [Header("Traits")]
         public GameObject GeographyPanel;
         public Text DensityText;
         public Text AgeText;
         public Text LanguageText;
         public Text ReligionText;
         public GameObject EconomyPanel;
-        public GameObject CulturePanel;
-        public WindowGraph ElectionGraph;
+        public GameObject MentalityPanel;
 
+        [Header("Modifiers")]
+        public GameObject ModifierContainer;
         public GameObject ModifierContent;
+
+        [Header("Election Graph")]
+        public UI_DistrictElectionGraph ElectionGraph;
 
         // Start is called before the first frame update
         void Start()
@@ -75,38 +80,37 @@ namespace ElectionTactics
             // Mentality
             foreach (Mentality m in d.Mentalities)
             {
-                UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, CulturePanel.transform);
+                UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, MentalityPanel.transform);
                 mentalityAtt.Init(m.Name, m.Name, m.Description);
                 mentalityAtt.MainText.alignment = TextAnchor.MiddleRight;
             }
 
             // Modifiers
-            foreach(Modifier m in d.Modifiers)
+            if (d.Modifiers.Count > 0)
             {
-                UI_ModifierListElement modElem = Instantiate(ModifierListElementPrefab, ModifierContent.transform);
-                modElem.Init(m);
+                ModifierContainer.SetActive(true);
+                foreach (Modifier m in d.Modifiers)
+                {
+                    UI_ModifierListElement modElem = Instantiate(ModifierListElementPrefab, ModifierContent.transform);
+                    modElem.Init(m);
+                }
             }
+            else ModifierContainer.SetActive(false);
 
             // Election Result
-            if (d.LastElectionResult != null)
+            if (d.ElectionResults.Count > 0)
             {
-                List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
-                foreach (KeyValuePair<Party, float> kvp in d.LastElectionResult.VoteShare)
-                    dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
-                int yMax = (((int)d.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-                ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, GraphFont, 0.25f, startAnimation: true);
+                ElectionGraph.gameObject.SetActive(true);
+                ElectionGraph.Init(d.ElectionResults);
             }
-            else
-            {
-                ElectionGraph.ClearGraph();
-            }
+            else ElectionGraph.gameObject.SetActive(false);
         }
 
         private void ClearAllPanels()
         {
             for (int i = 1; i < GeographyPanel.transform.childCount; i++) Destroy(GeographyPanel.transform.GetChild(i).gameObject);
             for (int i = 1; i < EconomyPanel.transform.childCount; i++) Destroy(EconomyPanel.transform.GetChild(i).gameObject);
-            for (int i = 1; i < CulturePanel.transform.childCount; i++) Destroy(CulturePanel.transform.GetChild(i).gameObject);
+            for (int i = 1; i < MentalityPanel.transform.childCount; i++) Destroy(MentalityPanel.transform.GetChild(i).gameObject);
             for (int i = 0; i < ModifierContent.transform.childCount; i++) Destroy(ModifierContent.transform.GetChild(i).gameObject);
         }
     }

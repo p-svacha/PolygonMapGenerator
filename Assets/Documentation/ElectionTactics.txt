@@ -45,7 +45,11 @@ Election Tactics
 
 1.5 District info
 	- Show overlay when hovering over a trait
-	- Improve mentality mouseover with arial and better design
+	- Add year to election result graph and with buttons:
+		- "<<": go to first election
+		- "<": go to previous election
+		- ">": go to next election
+		- ">>": go to last election
 
 1.6 General election
 	- Show political view during general election
@@ -57,8 +61,33 @@ Election Tactics
 	- Add density view
 	- Fix legend width bug
 
-1.8 Main menu
-	- Add main menu
+1.8 Save / Load games
+	- Make it possible to save games
+	- Make save states loadable
+	- One save state is enough to start (to avoid additional menu)
 
-1.9 Tooltip
-	- Add a tooltip template to use consistently for all tooltips	
+1.9 Main menu
+	- Add main menu with options:
+		- Start new game
+		- Load game
+		- Quit to Desktop
+
+1.10 Game setup screen
+	- Add a game screen that appears after clicking "start new game" in the main menu.
+	- It should contain elements:
+		- Party Name Input
+		- # Opponents Slider
+		- Difficulty Dropdown (opponents will get policy points per cycle depending on this)
+		- Start Game Button
+
+1.11 In-Game menu tab
+	- Add ingame menu tab with some buttons:
+		- Save Game
+		- Quit to Main Menu
+		- Quit to Desktop
+
+1.12 Parliament tab
+	- Add popular vote calculation
+	- Add popular vote display
+
+

@@ -25,7 +25,7 @@ namespace ElectionTactics
         public List<MentalityType> MentalityTypes = new List<MentalityType>();
 
         // Election
-        public ElectionResult LastElectionResult;
+        public List<ElectionResult> ElectionResults = new List<ElectionResult>();
         public Party CurrentWinnerParty;
         public float PlayerPartyShare;
         public float CurrentWinnerShare;
@@ -214,7 +214,9 @@ namespace ElectionTactics
             }
 
             // Apply modifiers
-            foreach (Modifier m in Modifiers)
+            List<Modifier> electionModifiers = new List<Modifier>(); // Copy is created so that the modifiers in the election result don't get changed later
+            foreach (Modifier m in Modifiers) electionModifiers.Add(m);
+            foreach (Modifier m in electionModifiers)
             {
                 if (m.Type == ModifierType.Positive) partyPoints[m.Party] += PositiveModifierImpact;
                 else if (m.Type == ModifierType.Negative) partyPoints[m.Party] -= NegativeModifierImpact;
@@ -244,17 +246,20 @@ namespace ElectionTactics
             // Create result
             ElectionResult result = new ElectionResult()
             {
+                ElectionCycle = Game.ElectionCycle,
+                Year = Game.Year,
                 District = this,
-                VoteShare = voterShares
+                VoteShare = voterShares,
+                Modifiers = electionModifiers
             };
 
-            LastElectionResult = result;
-            CurrentWinnerParty = LastElectionResult.VoteShare.First(x => x.Value == LastElectionResult.VoteShare.Max(y => y.Value)).Key;
-            CurrentWinnerShare = LastElectionResult.VoteShare.First(x => x.Value == LastElectionResult.VoteShare.Max(y => y.Value)).Value;
-            PlayerPartyShare = LastElectionResult.VoteShare.First(x => x.Key == playerParty).Value;
+            ElectionResults.Add(result);
+            CurrentWinnerParty = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Key;
+            CurrentWinnerShare = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Value;
+            PlayerPartyShare = result.VoteShare.First(x => x.Key == playerParty).Value;
             if (CurrentWinnerParty == playerParty)
             {
-                float secondHighest = LastElectionResult.VoteShare.Values.OrderByDescending(x => x).ToList()[1];
+                float secondHighest = result.VoteShare.Values.OrderByDescending(x => x).ToList()[1];
                 CurrentMargin = CurrentWinnerShare - secondHighest;
             }
             else CurrentMargin = PlayerPartyShare - CurrentWinnerShare;
@@ -319,6 +324,12 @@ namespace ElectionTactics
             if (t.Category == 2) return MediumImpactPopularity;
             if (t.Category == 1) return LowImpactPopularity;
             throw new System.Exception("Geography traits with a category outside 1,2,3 is not allowed.");
+        }
+
+        public ElectionResult GetLatestElectionResult()
+        {
+            if (ElectionResults.Count > 0) return ElectionResults[ElectionResults.Count - 1];
+            else return null;
         }
 
         #endregion

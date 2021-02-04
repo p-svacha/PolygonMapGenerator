@@ -7,4 +7,5 @@ public class Tooltip : MonoBehaviour
 {
     public Text Title;
     public Text Text;
+    public VerticalLayoutGroup VLG;
 }

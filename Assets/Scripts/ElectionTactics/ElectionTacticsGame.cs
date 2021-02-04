@@ -46,6 +46,7 @@ namespace ElectionTactics
 
         // General Election
         public int ElectionCycle;
+        public int Year;
         private float HeaderSlideTime = 1f;
 
         private float DistrictPanTime = 2f;
@@ -91,6 +92,7 @@ namespace ElectionTactics
 
         private void OnMapGenerated()
         {
+            Year = 1999;
             Map = PMG.Map;
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
@@ -202,6 +204,7 @@ namespace ElectionTactics
         {
             // Start next cycle
             ElectionCycle++;
+            Year++;
             AddRandomDistrict();
             AddPolicyPoints(PlayerParty, PlayerPolicyPointsPerCycle);
             foreach (Party p in OpponentParties)
@@ -487,7 +490,7 @@ namespace ElectionTactics
                 CurElectionDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
 
                 // Update current election graph header
-                if (CurElectionDistrict.LastElectionResult != null)
+                if (CurElectionDistrict.ElectionResults.Count > 0)
                 {
                     UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
@@ -501,13 +504,13 @@ namespace ElectionTactics
                 }
 
                 // Get election results
-                CurElectionDistrict.RunElection(PlayerParty, Parties);
+                ElectionResult result = CurElectionDistrict.RunElection(PlayerParty, Parties);
                 CurElectionDistrict.CurrentWinnerParty.Seats += CurElectionDistrict.Seats;
 
                 List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
-                foreach (KeyValuePair<Party, float> kvp in CurElectionDistrict.LastElectionResult.VoteShare)
+                foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
                     dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
-                int yMax = (((int)CurElectionDistrict.LastElectionResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
+                int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
 
                 // Update current election graph
                 UI.Parliament.CurrentElectionContainer.SetActive(true);
@@ -558,7 +561,7 @@ namespace ElectionTactics
 
         private void StartGraphAnimation()
         {
-            UI.Parliament.CurrentElectionGraph.StartAnimation();
+            UI.Parliament.CurrentElectionGraph.StartInitAnimation();
         }
 
         private void SlideInNextModifier()

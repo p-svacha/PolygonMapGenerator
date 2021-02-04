@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ElectionTactics;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -34,9 +35,14 @@ public class WindowGraph : MonoBehaviour
     private List<Text> BarLabels = new List<Text>();
     private float MaxValue;
     private float MaxBarHeight;
-    private bool IsAnimating;
+    private GraphAnimationType AnimationType;
     private float AnimationTime;
     private float AnimationDelay;
+
+    private List<GraphDataPoint> SourceDataPoints;
+    private List<GraphDataPoint> TargetDataPoints;
+    private float SourceYMax;
+    private float TargetYMax;
 
     void Start()
     {
@@ -44,42 +50,72 @@ public class WindowGraph : MonoBehaviour
 
     void Update()
     {
-        if(IsAnimating && AnimationDelay >= AnimationTime)
+        if(AnimationType != GraphAnimationType.None)
         {
-            ShowBarGraph(DataPoints, YMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
-            IsAnimating = false;
-        }
-        else if(IsAnimating)
-        {
-            float r = AnimationDelay / AnimationTime;
-            float curValue = MaxValue * r;
-            float curHeight = MaxBarHeight * r;
-
-            for(int i = 0; i < DataPoints.Count; i++)
+            if (AnimationDelay >= AnimationTime)
             {
-                float barX = (i + 1) * XStep;
-                float barValue, barHeight;
-                if(DataPoints[i].Value < curValue)
+                if(AnimationType == GraphAnimationType.Update)
                 {
-                    barValue = DataPoints[i].Value;
-                    barHeight = (barValue / YMax) * (GraphHeight - YMarginTop);
+                    YMax = TargetYMax;
+                    DataPoints = TargetDataPoints;
                 }
-                else
-                {
-                    barValue = curValue;
-                    barHeight = curHeight;
-                }
-                Vector2 pos = new Vector2(barX, barHeight / 2);
-                Vector2 size = new Vector2(BarWidth, barHeight);
-                RectTransform rect = Bars[i].GetComponent<RectTransform>();
-                rect.anchoredPosition = pos;
-                rect.sizeDelta = size;
 
-                float barLabelY = barHeight + FontSize;
-                BarLabels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(barX, barLabelY);
-                BarLabels[i].text = barValue.ToString("0.0") + "%";
+                ShowBarGraph(DataPoints, YMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
+                AnimationType = GraphAnimationType.None;
             }
-            AnimationDelay += Time.deltaTime;
+            else
+            {
+                float r = AnimationDelay / AnimationTime;
+
+                switch (AnimationType)
+                {
+                    case GraphAnimationType.Init:
+                        float curValue = MaxValue * r;
+                        float curHeight = MaxBarHeight * r;
+
+                        for (int i = 0; i < DataPoints.Count; i++)
+                        {
+                            float barX = (i + 1) * XStep;
+                            float barValue, barHeight;
+                            if (DataPoints[i].Value < curValue)
+                            {
+                                barValue = DataPoints[i].Value;
+                                barHeight = (barValue / YMax) * (GraphHeight - YMarginTop);
+                            }
+                            else
+                            {
+                                barValue = curValue;
+                                barHeight = curHeight;
+                            }
+                            Vector2 pos = new Vector2(barX, barHeight / 2);
+                            Vector2 size = new Vector2(BarWidth, barHeight);
+                            RectTransform rect = Bars[i].GetComponent<RectTransform>();
+                            rect.anchoredPosition = pos;
+                            rect.sizeDelta = size;
+
+                            float barLabelY = barHeight + FontSize;
+                            BarLabels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(barX, barLabelY);
+                            BarLabels[i].text = barValue.ToString("0.0") + "%";
+                        }
+                        break;
+
+                    case GraphAnimationType.Update:
+                        List<GraphDataPoint> tmpDataPoints = new List<GraphDataPoint>();
+                        float tmpYMax = 0;
+                        for(int i = 0; i < TargetDataPoints.Count; i++)
+                        {
+                            float value = SourceDataPoints[i].Value + (TargetDataPoints[i].Value - SourceDataPoints[i].Value) * r;
+                            GraphDataPoint tmpDataPoint = new GraphDataPoint(TargetDataPoints[i].Label, value, TargetDataPoints[i].Color, TargetDataPoints[i].Icons, TargetDataPoints[i].IconTooltipTitles, TargetDataPoints[i].IconTooltipTexts);
+                            tmpDataPoints.Add(tmpDataPoint);
+
+                            tmpYMax = SourceYMax + (TargetYMax - SourceYMax) * r;
+                        }
+                        ShowBarGraph(tmpDataPoints, tmpYMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
+                        break;
+                }
+
+                AnimationDelay += Time.deltaTime;
+            }
         }
     }
 
@@ -90,9 +126,8 @@ public class WindowGraph : MonoBehaviour
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
         Bars.Clear();
         BarLabels.Clear();
-        IsAnimating = false;
     }
-    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool animation = false)
+    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool zeroed = false)
     {
         GraphWidth = GraphContainer.rect.width;
         GraphHeight = GraphContainer.rect.height;
@@ -119,40 +154,39 @@ public class WindowGraph : MonoBehaviour
         {
             float xPos = (i + 1) * XStep;
             float height = (dataPoints[i].Value / yMax) * (GraphHeight - YMarginTop);
-            if (animation) height = 0;
+            if (zeroed) height = 0;
             Bars.Add(CreateBar(xPos, BarWidth, height, dataPoints[i].Color)); // Bars
-            BarLabels.Add(DrawText(animation ? "" : dataPoints[i].Value.ToString("0.0") + "%", new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
+            BarLabels.Add(DrawText(zeroed ? "" : dataPoints[i].Value.ToString("0.0") + "%", new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
         }
     }
     public void InitAnimatedBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, float animationTime, bool startAnimation)
     {
-        ShowBarGraph(dataPoints, yMax, yStep, barSpacing, axisColor, axisStepColor, font, animation: true);
+        ShowBarGraph(dataPoints, yMax, yStep, barSpacing, axisColor, axisStepColor, font, zeroed: true);
         MaxValue = dataPoints.Max(x => x.Value);
         MaxBarHeight = (MaxValue / yMax) * (GraphHeight - YMarginTop);
         AnimationTime = animationTime;
         AnimationDelay = 0f;
-        if (startAnimation) StartAnimation();
+        if (startAnimation) StartInitAnimation();
     }
-    public void StartAnimation()
+    public void StartInitAnimation()
     {
-        IsAnimating = true;
+        AnimationType = GraphAnimationType.Init;
+    }
+
+    public void UpdateAnimatedBarGraph(List<GraphDataPoint> dataPoints, float yMax, float animationTime)
+    {
+        SourceDataPoints = DataPoints;
+        TargetDataPoints = dataPoints;
+        SourceYMax = YMax;
+        TargetYMax = yMax;
+        AnimationTime = animationTime;
+        AnimationDelay = 0f;
+        AnimationType = GraphAnimationType.Update;
     }
 
     #endregion
 
-    private void ShowRandomGraph()
-    {
-        int n = Random.Range(3, 9);
-        int maxValue = Random.Range(4, 13) * 10;
-        float spacing = Random.Range(1, 4);
-        int step = Random.Range(1, 3) * 10;
-        List<GraphDataPoint> testList = new List<GraphDataPoint>();
-        for(int i = 0; i < n; i++)
-        {
-            testList.Add(new GraphDataPoint("P" + i, Random.Range(0, maxValue), new Color(Random.value, Random.value, Random.value)));
-        }
-        ShowBarGraph(testList, maxValue, step, spacing * 0.1f, Color.white, Color.grey, Font);
-    }
+    #region GraphElements
 
     private void CreateCircle(Vector2 anchoredPos, float size)
     {
@@ -197,16 +231,35 @@ public class WindowGraph : MonoBehaviour
         return textObj;
     }
 
+    private Image DrawImage(Sprite sprite, Vector2 centerPos, Vector2 dimensions, string tooltipTitle = "", string tooltipText = "")
+    {
+        GameObject obj = new GameObject("ModifierIcon", typeof(Image));
+        obj.transform.SetParent(GraphContainer, false);
+        Image imgObj = obj.GetComponent<Image>();
+        imgObj.sprite = sprite;
+        RectTransform rect = obj.GetComponent<RectTransform>();
+        rect.anchoredPosition = centerPos;
+        rect.sizeDelta = dimensions;
+        rect.anchorMin = new Vector2(0, 0);
+        rect.anchorMax = new Vector2(0, 0);
+
+        // Tooltip
+        if(tooltipTitle != "")
+        {
+            TooltipTarget tooltipTarget = obj.AddComponent<TooltipTarget>();
+            tooltipTarget.Title = tooltipTitle;
+            tooltipTarget.Text = tooltipText;
+        }
+
+        return imgObj;
+    }
+
     private GameObject CreateBar(float x, float width, float height, Color c)
     {
         Vector2 position = new Vector2(x, height / 2);
         Vector2 dimensions = new Vector2(width, height);
         return DrawRectangle(position, dimensions, c);
     }
-
-    
-
-    
 
     private void DrawAxis()
     {
@@ -219,12 +272,21 @@ public class WindowGraph : MonoBehaviour
         {
             float xPos = (i + 1) * XStep + 1;
             DrawText(DataPoints[i].Label, new Vector2(xPos, -FontSize), new Vector2(BarWidth, FontSize), DataPoints[i].Color, Font, FontSize); // X-axis labels
+            for(int j = 0; j < DataPoints[i].Icons.Count; j++) // X-axis label icons
+            {
+                Vector2 dimensions = new Vector2(20, 20);
+                float iconXStep = 25;
+                float iconXStart = xPos - (DataPoints[i].Icons.Count - 1) * iconXStep * 0.5f;
+                float iconX = iconXStart + j * iconXStep;
+                float iconY = -FontSize * 2;
+                DrawImage(DataPoints[i].Icons[j], new Vector2(iconX, iconY), dimensions, DataPoints[i].IconTooltipTitles[j], DataPoints[i].IconTooltipTexts[j]);
+            }
         }
 
         // Y-axis
         DrawRectangle(new Vector2(-AxisWidth / 2, GraphHeight / 2), new Vector2(AxisWidth, GraphHeight), AxisColor);
         DrawRectangle(new Vector2(GraphWidth / 2, GraphHeight - YMarginTop), new Vector2(GraphWidth, AxisWidth), AxisStepColor);
-        DrawText(YMax.ToString(), new Vector2(-FontSize, GraphHeight - YMarginTop), new Vector2(4 * FontSize, FontSize), AxisColor, Font, FontSize);
+        DrawText(((int)YMax).ToString(), new Vector2(-FontSize, GraphHeight - YMarginTop), new Vector2(4 * FontSize, FontSize), AxisColor, Font, FontSize);
         int yAxisSteps = (int)(YMax / YStep);
         if (YMax % YStep == 0) yAxisSteps--;
         for (int i = 0; i < yAxisSteps; i++)
@@ -249,4 +311,24 @@ public class WindowGraph : MonoBehaviour
             CreateCircle(new Vector2(xPos, yPos), circleSize);
         }
     }
+
+    #endregion
+
+    #region Test
+
+    private void ShowRandomGraph()
+    {
+        int n = Random.Range(3, 9);
+        int maxValue = Random.Range(4, 13) * 10;
+        float spacing = Random.Range(1, 4);
+        int step = Random.Range(1, 3) * 10;
+        List<GraphDataPoint> testList = new List<GraphDataPoint>();
+        for (int i = 0; i < n; i++)
+        {
+            testList.Add(new GraphDataPoint("P" + i, Random.Range(0, maxValue), new Color(Random.value, Random.value, Random.value)));
+        }
+        ShowBarGraph(testList, maxValue, step, spacing * 0.1f, Color.white, Color.grey, Font);
+    }
+
+    #endregion
 }
