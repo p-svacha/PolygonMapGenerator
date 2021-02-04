@@ -12,6 +12,10 @@
 
         _RiverMask("River Mask (Greyscale)", 2D) = "black" {}
         _RiverCol("River Color", Color) = (0,0,0,1)
+
+        _Blink("Blink", Float) = 0
+        _BlinkDuration("Blink Duration", Float) = 2
+        _BlinkColor("Blink Color", Color) = (1,1,1)
     }
     SubShader
     {
@@ -28,6 +32,9 @@
         sampler2D _MainTex;
         sampler2D _BorderMask;
         sampler2D _RiverMask;
+        float _Blink;
+        float _BlinkDuration;
+        float3 _BlinkColor;
 
         struct Input
         {
@@ -61,6 +68,12 @@
             // Blend with border mask
             fixed4 borderMask = tex2D(_BorderMask, IN.uv_BorderMask);
             c = (borderMask * _BorderCol) + ((1 - borderMask) * c);
+
+            if (_Blink == 1.0f) 
+            {
+                float r = (0.5f + abs(sin(_Time.w * (1 / _BlinkDuration))));
+                c *= r;
+            }
 
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables

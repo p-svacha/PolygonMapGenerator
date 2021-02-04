@@ -177,27 +177,6 @@ namespace ElectionTactics
                 }
                 break;
             }
-
-
-            /*
-            if(Input.GetKeyDown(KeyCode.Space))
-            {
-                if(UI.SelectedDistrict != null)
-                {
-                    UI.SelectedDistrict.RunElection(PlayerParty, Parties);
-                    UI.DistrictInfo.Init(UI.SelectedDistrict);
-                }
-            }
-            if(Input.GetKeyDown(KeyCode.D))
-            {
-                AddRandomDistrict();
-            }
-            if(Input.GetKeyDown(KeyCode.S))
-            {
-                Parties[UnityEngine.Random.Range(0, Parties.Count)].Seats += UnityEngine.Random.Range(1, 11);
-                UI.Parliament.PartyList.MovePositions(Parties, 1f);
-            }
-            */
         }
 
         private void StartElectionCycle()
@@ -214,6 +193,7 @@ namespace ElectionTactics
             }
 
             State = GameState.Running;
+            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
         }
 
         /// <summary>
@@ -455,8 +435,9 @@ namespace ElectionTactics
             foreach (Party p in Parties.Where(p => p != PlayerParty))
                 p.AI.DistributePolicyPoints();
 
+            // Set political map view
             UI.SelectTab(Tab.Parliament);
-            UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
+            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
 
             // Lock policies
             foreach(Party party in Parties)
@@ -478,16 +459,17 @@ namespace ElectionTactics
 
         private void MoveToNextElectionDistrict()
         {
+            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
             UI.Parliament.CurrentElectionGraph.ClearGraph();
             UI.Parliament.ModifierSliderContainer.ClearContainer();
 
-            if (CurElectionDistrict != null) CurElectionDistrict.Region.Unhighlight();
+            if (CurElectionDistrict != null) CurElectionDistrict.Region.SetBlinking(false);
 
             if (CurElectionDistrictIndex < ElectionOrder.Count)
             {
                 // Update current district
                 CurElectionDistrict = ElectionOrder[CurElectionDistrictIndex];
-                CurElectionDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
+                CurElectionDistrict.Region.SetBlinking(true);
 
                 // Update current election graph header
                 if (CurElectionDistrict.ElectionResults.Count > 0)

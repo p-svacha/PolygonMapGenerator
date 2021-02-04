@@ -86,8 +86,11 @@ namespace ElectionTactics
 
             // Population calculation
             Population = (int)(Region.Area * 1000000);
-            if (Density == Density.Urban) Population = (int)(Population * 1.4f);
-            if (Density == Density.Rural) Population = (int)(Population * 0.6f);
+            float populationModifier = 0f;
+            if (Density == Density.Urban) populationModifier = Random.Range(1.2f, 1.6f);
+            if (Density == Density.Mixed) populationModifier = Random.Range(0.8f, 1.2f);
+            if (Density == Density.Rural) populationModifier = Random.Range(0.4f, 0.8f);
+            Population = (int)(Population * populationModifier);
             Population = (Population / 1000) * 1000;
 
             // Seat calculation

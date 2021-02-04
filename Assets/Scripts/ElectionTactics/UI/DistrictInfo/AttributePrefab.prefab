@@ -114,8 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b385f7efe684247a7b28f31a56cbca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainText: {fileID: 2689260648514534326}
-  HLG: {fileID: 0}
+  UI: {fileID: 0}
+  DisplayText: {fileID: 0}
   TooltipTarget: {fileID: 0}
 --- !u!114 &4401269561904429486
 MonoBehaviour:
@@ -132,5 +132,6 @@ MonoBehaviour:
   Title: 
   Text: 
   IsFocussed: 0
+  IsInitialized: 0
   CurrentDelay: 0
   Tooltip: {fileID: 0}

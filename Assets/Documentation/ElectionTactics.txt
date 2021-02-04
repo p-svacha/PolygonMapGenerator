@@ -3,9 +3,6 @@ Election Tactics
 
 1. To Do
 
-1.1 Modifiers
-	- Add modifier icons to election results below the party name with hover effect
-
 1.2 Constitution
 	- Add constitution tab in header
 	- Constitution is readonly information about current game rules
@@ -45,11 +42,6 @@ Election Tactics
 
 1.5 District info
 	- Show overlay when hovering over a trait
-	- Add year to election result graph and with buttons:
-		- "<<": go to first election
-		- "<": go to previous election
-		- ">": go to next election
-		- ">>": go to last election
 
 1.6 General election
 	- Show political view during general election

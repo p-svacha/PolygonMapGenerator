@@ -6,6 +6,7 @@ namespace ElectionTactics
 {
     public enum PolicyType
     {
+        None,
         Geography,
         Economy,
         Density,

@@ -21,10 +21,10 @@ namespace ElectionTactics
 
         [Header("Traits")]
         public GameObject GeographyPanel;
-        public Text DensityText;
-        public Text AgeText;
-        public Text LanguageText;
-        public Text ReligionText;
+        public GameObject DensityContainer;
+        public GameObject AgeGroupContainer;
+        public GameObject ReligionContainer;
+        public GameObject LanguageContainer;
         public GameObject EconomyPanel;
         public GameObject MentalityPanel;
 
@@ -60,29 +60,37 @@ namespace ElectionTactics
             foreach (GeographyTrait gt in d.Geography)
             {
                 UI_DistrictAttribute geoAtt = Instantiate(AttributePrefab, GeographyPanel.transform);
-                geoAtt.Init(gt.FullName, gt.BaseName, "");
+                geoAtt.Init(UI, gt);
             }
 
             // Demography
-            DensityText.text = EnumHelper.GetDescription(d.Density);
-            AgeText.text = EnumHelper.GetDescription(d.AgeGroup);
-            LanguageText.text = EnumHelper.GetDescription(d.Language);
-            ReligionText.text = EnumHelper.GetDescription(d.Religion);
+            UI_DistrictAttribute densityAtt = Instantiate(AttributePrefab, DensityContainer.transform);
+            densityAtt.Init(UI, d.Density);
+            densityAtt.transform.SetAsFirstSibling();
+            UI_DistrictAttribute ageAtt = Instantiate(AttributePrefab, AgeGroupContainer.transform);
+            ageAtt.Init(UI, d.AgeGroup);
+            ageAtt.transform.SetAsFirstSibling();
+            UI_DistrictAttribute religionAtt = Instantiate(AttributePrefab, ReligionContainer.transform);
+            religionAtt.Init(UI, d.Religion);
+            religionAtt.transform.SetAsFirstSibling();
+            UI_DistrictAttribute languageAtt = Instantiate(AttributePrefab, LanguageContainer.transform);
+            languageAtt.Init(UI, d.Language);
+            languageAtt.transform.SetAsFirstSibling();
 
             // Economy
             UI_DistrictAttribute eco1Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco1Att.Init("1. " + EnumHelper.GetDescription(d.Economy1), EnumHelper.GetDescription(d.Economy1), "");
+            eco1Att.Init(UI, d.Economy1);
             UI_DistrictAttribute eco2Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco2Att.Init("2. " + EnumHelper.GetDescription(d.Economy2), EnumHelper.GetDescription(d.Economy2), "");
+            eco2Att.Init(UI, d.Economy2);
             UI_DistrictAttribute eco3Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco3Att.Init("3. " + EnumHelper.GetDescription(d.Economy3), EnumHelper.GetDescription(d.Economy3), "");
+            eco3Att.Init(UI, d.Economy3);
 
             // Mentality
             foreach (Mentality m in d.Mentalities)
             {
                 UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, MentalityPanel.transform);
-                mentalityAtt.Init(m.Name, m.Name, m.Description);
-                mentalityAtt.MainText.alignment = TextAnchor.MiddleRight;
+                mentalityAtt.Init(UI, m.Name, m.Name, m.Description);
+                mentalityAtt.DisplayText.alignment = TextAnchor.MiddleRight;
             }
 
             // Modifiers
@@ -112,6 +120,11 @@ namespace ElectionTactics
             for (int i = 1; i < EconomyPanel.transform.childCount; i++) Destroy(EconomyPanel.transform.GetChild(i).gameObject);
             for (int i = 1; i < MentalityPanel.transform.childCount; i++) Destroy(MentalityPanel.transform.GetChild(i).gameObject);
             for (int i = 0; i < ModifierContent.transform.childCount; i++) Destroy(ModifierContent.transform.GetChild(i).gameObject);
+
+            for (int i = 0; i < DensityContainer.transform.childCount - 1; i++) Destroy(DensityContainer.transform.GetChild(i).gameObject);
+            for (int i = 0; i < AgeGroupContainer.transform.childCount - 1; i++) Destroy(AgeGroupContainer.transform.GetChild(i).gameObject);
+            for (int i = 0; i < ReligionContainer.transform.childCount - 1; i++) Destroy(ReligionContainer.transform.GetChild(i).gameObject);
+            for (int i = 0; i < LanguageContainer.transform.childCount - 1; i++) Destroy(LanguageContainer.transform.GetChild(i).gameObject);
         }
     }
 }

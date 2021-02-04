@@ -132,9 +132,9 @@ namespace ElectionTactics
             }
             else if (d != null) // Clicking on a district
             {
-                if (SelectedDistrict != null) SelectedDistrict.Region.Unhighlight();
+                UnselectDistrict();
                 SelectedDistrict = d;
-                SelectedDistrict.Region.Highlight(ColorManager.Colors.SelectedDistrictColor);
+                SelectedDistrict.Region.SetBlinking(true);
                 SelectTab(Tab.DistrictInfo);
                 DistrictInfo.Init(d);
             }
@@ -152,7 +152,7 @@ namespace ElectionTactics
         {
             if(SelectedDistrict != null)
             {
-                SelectedDistrict.Region.Unhighlight();
+                SelectedDistrict.Region.SetBlinking(false);
                 SelectedDistrict = null;
             }
         }

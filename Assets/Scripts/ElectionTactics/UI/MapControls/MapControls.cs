@@ -87,16 +87,20 @@ namespace ElectionTactics
                 case MapDisplayMode.Political:
                     LegendTitleText.text = "Parties";
                     Legend.Add(ColorManager.Colors.NoImpactColor, "None");
-                    foreach (Region r in Map.LandRegions)
+                    foreach(Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
+                    foreach (Region r in Map.LandRegions) 
                     {
                         if (Game.Districts.ContainsKey(r))
                         {
-                            if (Game.Districts[r].CurrentWinnerParty != null)
+                            Party displayedParty = null;
+                            if(Game.State == GameState.GeneralElection)
                             {
-                                Party winnerParty = Game.Districts[r].CurrentWinnerParty;
-                                r.SetColor(winnerParty.Color);
-                                if (!Legend.ContainsKey(winnerParty.Color)) Legend.Add(winnerParty.Color, winnerParty.Name);
+                                if (Game.Districts[r].GetLatestElectionResult() != null && Game.Districts[r].GetLatestElectionResult().ElectionCycle == Game.ElectionCycle)
+                                    displayedParty = Game.Districts[r].CurrentWinnerParty;
                             }
+                            else displayedParty = Game.Districts[r].CurrentWinnerParty;
+
+                            if (displayedParty != null) r.SetColor(displayedParty.Color);
                             else r.SetColor(ColorManager.Colors.NoImpactColor);
                         }
                         else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
@@ -253,6 +257,11 @@ namespace ElectionTactics
                 LegendEntry entry = Instantiate(LegendEntryPrefab, LegendContainer.transform);
                 entry.Init(kvp.Key, kvp.Value);
             }
+        }
+
+        public void ClearOverlay()
+        {
+            SetMapDisplayMode(DisplayMode);
         }
 
         #endregion

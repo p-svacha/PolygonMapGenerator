@@ -76,7 +76,7 @@ namespace ElectionTactics
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Policy.Party.Game.UI.MapControls.UpdateMapDisplay();
+            Policy.Party.Game.UI.MapControls.ClearOverlay();
         }
     }
 }

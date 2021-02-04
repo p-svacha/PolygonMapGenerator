@@ -55,8 +55,9 @@ public class Region : MonoBehaviour
     // Display mode
     private MapDisplayMode DisplayMode;
     private Color Color;
-    private bool Highlighted;
-    private Color HighlightColor;
+    private bool IsHighlighted;
+    private Color HighlightColor; // Highlight color always has top priority when Highlighted is true
+    public bool IsBlinking;
     private bool ShowRegionBorders;
     public Texture2D RegionBorderMaskTexture;
 
@@ -170,23 +171,31 @@ public class Region : MonoBehaviour
                 break;
         }
 
-        if (Highlighted) GetComponent<Renderer>().material.color = HighlightColor;
+        if (IsHighlighted) GetComponent<Renderer>().material.color = HighlightColor;
         else GetComponent<Renderer>().material.color = Color;
 
         if (ShowRegionBorders) GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", RegionBorderMaskTexture);
         else GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", Texture2D.blackTexture);
+
+        GetComponent<MeshRenderer>().material.SetFloat("_Blink", IsBlinking ? 1 : 0);
+    }
+
+    public void SetBlinking(bool b)
+    {
+        IsBlinking = b;
+        UpdateDisplayMode();
     }
 
     public void Highlight(Color highlightColor)
     {
-        Highlighted = true;
+        IsHighlighted = true;
         HighlightColor = highlightColor;
         UpdateDisplayMode();
     }
 
     public void Unhighlight()
     {
-        Highlighted = false;
+        IsHighlighted = false;
         UpdateDisplayMode();
     }
 
