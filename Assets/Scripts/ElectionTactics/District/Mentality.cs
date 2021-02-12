@@ -46,14 +46,14 @@ namespace ElectionTactics
                     Description = "Language policy effectiveness in this district is halved.";
                     break;
 
-                case MentalityType.Predictable:
-                    Name = "Predictable";
-                    Description = "Higher voter turnout leads to consistent results.";
+                case MentalityType.HighVoterTurnout:
+                    Name = "High Voter Turnout";
+                    Description = "A high voter turnout leads to consistent results and a high count of total votes.";
                     break;
 
-                case MentalityType.Unpredictable:
-                    Name = "Unpredictable";
-                    Description = "Due to low voter turnout results can vary a lot.";
+                case MentalityType.LowVoterTurnout:
+                    Name = "Low Voter Turnout";
+                    Description = "A low voter turnout leads to inconsistent results and a low count of total votes.";
                     break;
 
                 case MentalityType.Rebellious:
@@ -97,10 +97,10 @@ namespace ElectionTactics
                 case MentalityType.Nonlinguistic:
                     return !d.MentalityTypes.Contains(MentalityType.Linguistic);
 
-                case MentalityType.Predictable:
-                    return !d.MentalityTypes.Contains(MentalityType.Unpredictable);
-                case MentalityType.Unpredictable:
-                    return !d.MentalityTypes.Contains(MentalityType.Predictable);
+                case MentalityType.HighVoterTurnout:
+                    return !d.MentalityTypes.Contains(MentalityType.LowVoterTurnout);
+                case MentalityType.LowVoterTurnout:
+                    return !d.MentalityTypes.Contains(MentalityType.HighVoterTurnout);
 
                 case MentalityType.Rebellious:
                     return (!d.MentalityTypes.Contains(MentalityType.Stable) && !d.MentalityTypes.Contains(MentalityType.Revolutionary));

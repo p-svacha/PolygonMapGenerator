@@ -13,31 +13,44 @@ namespace ElectionTactics
 
         public PostGameScreen PostGameScreen;
         
-        // Map Controls
+        [Header ("Map Controls")]
         public MapControls MapControls;
         public UI_DistrictLabel DistrictLabelPrefab;
-
-        // Standings
-        public UI_Standings Standings;
 
         [Header ("Header")]
         public Image Header;
         public Image ElectionPanel;
         public Button ElectionButton;
+        public Text YearText;
         public Text PPText;
-        public TabButton ParliamentTabButton;
-        public TabButton PolicyTabButton;
+        public Text CPText;
+
+        [Header("Tab Buttons")]
         public TabButton DistrictTabButton;
+        public TabButton ParliamentTabButton;
+        public TabButton ConstitutionTabButton;
+        public TabButton EventsTabButton;
+        public TabButton PoliciesTabButton;
+        public TabButton CampaignsTabButton;
+        public TabButton VotingTabButton;
+        public TabButton SettingsTabButton;
+
         public Tab ActiveTab;
         public Dictionary<Tab, GameObject> TabPanels = new Dictionary<Tab, GameObject>(); // Which tab is connected to which object
         public Dictionary<Tab, TabButton> TabButtons = new Dictionary<Tab, TabButton>(); // Which tab is part of which button
 
         [Header("Side Panel")]
         public Image SidePanel;
-        public UI_Parliament Parliament;
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
+        public UI_Parliament Parliament;
+        public UI_Constitution Constitution;
+        public UI_Events Events;
         public UI_PolicySelection PolicySelection;
+        public UI_Campaigns Campaigns;
+        public UI_Voting Voting;
+        public UI_Settings Settings;
+        
         public District SelectedDistrict;
 
         // Header Animation
@@ -57,10 +70,6 @@ namespace ElectionTactics
             // Listeners
             ElectionButton.onClick.AddListener(() => Game.RunGeneralElection());
 
-            TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
-            TabButtons.Add(Tab.Policies, PolicyTabButton);
-            PolicyTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies));
-
             TabPanels.Add(Tab.DistrictList, DistrictList.gameObject);
             TabButtons.Add(Tab.DistrictList, DistrictTabButton);
             DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList));
@@ -71,6 +80,30 @@ namespace ElectionTactics
             TabPanels.Add(Tab.Parliament, Parliament.gameObject);
             TabButtons.Add(Tab.Parliament, ParliamentTabButton);
             ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament));
+
+            TabPanels.Add(Tab.Constitution, Constitution.gameObject);
+            TabButtons.Add(Tab.Constitution, ConstitutionTabButton);
+            ConstitutionTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Constitution));
+
+            TabPanels.Add(Tab.Events, Events.gameObject);
+            TabButtons.Add(Tab.Events, EventsTabButton);
+            EventsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Events));
+
+            TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
+            TabButtons.Add(Tab.Policies, PoliciesTabButton);
+            PoliciesTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies));
+
+            TabPanels.Add(Tab.Campaigns, Campaigns.gameObject);
+            TabButtons.Add(Tab.Campaigns, CampaignsTabButton);
+            CampaignsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Campaigns));
+
+            TabPanels.Add(Tab.Voting, Voting.gameObject);
+            TabButtons.Add(Tab.Voting, VotingTabButton);
+            VotingTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Voting));
+
+            TabPanels.Add(Tab.Settings, Settings.gameObject);
+            TabButtons.Add(Tab.Settings, SettingsTabButton);
+            SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings));
         }
 
         #region Update
@@ -119,7 +152,7 @@ namespace ElectionTactics
 
                 case Tab.Parliament:
                     UnselectDistrict();
-                    Parliament.Init(Game.Parties);
+                    Parliament.Init(Game, Game.Parties);
                     break;
             }
         }
@@ -174,17 +207,24 @@ namespace ElectionTactics
             HeaderTargetPos = new Vector2(0, 0);
         }
 
-        public void UpdatePolicyPointDisplay()
+        public void UpdateHeaderValues()
         {
+            YearText.text = Game.Year.ToString();
             PPText.text = Game.PlayerParty.PolicyPoints.ToString();
+            CPText.text = Game.PlayerParty.CampaignPoints.ToString();
         }
     }
 
     public enum Tab
     {
-        Parliament,
-        Policies,
         DistrictList,
-        DistrictInfo
+        DistrictInfo,
+        Parliament,
+        Constitution,
+        Events,
+        Policies,
+        Campaigns,
+        Voting,
+        Settings
     }
 }

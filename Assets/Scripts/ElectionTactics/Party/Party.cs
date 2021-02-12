@@ -13,11 +13,15 @@ namespace ElectionTactics {
         public Color Color;
         public PartyAI AI;
 
-        public int GamePoints;
+        public int TotalElectionsWon;
+        public int TotalSeatsWon;
+        public int TotalDistrictsWon;
+        public int TotalVotes;
 
         public List<Policy> Policies = new List<Policy>();
 
         public int PolicyPoints;
+        public int CampaignPoints;
         public int Seats;
 
         public Party(ElectionTacticsGame game, string name, Color c, bool isAi)

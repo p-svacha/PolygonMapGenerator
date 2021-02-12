@@ -12,7 +12,7 @@ namespace ElectionTactics
 
         public void SetSelected(bool active)
         {
-            Background.color = active ? ColorManager.Colors.UiMainColor : ColorManager.Colors.UiHeaderColor;
+            Background.color = active ? ColorManager.Colors.UiSpecialColor : ColorManager.Colors.UiHeaderColor;
         }
     }
 }

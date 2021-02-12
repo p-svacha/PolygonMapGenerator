@@ -17,6 +17,7 @@ namespace ElectionTactics
         public GameState State;
 
         public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
+        public Constitution Constitution;
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -100,6 +101,9 @@ namespace ElectionTactics
             InitMentalities();
 
             CreateParties();
+            
+            Constitution = new Constitution(this);
+            UI.Constitution.Init(Constitution);
 
             UI.SelectTab(Tab.Parliament);
             StartElectionCycle();
@@ -145,8 +149,6 @@ namespace ElectionTactics
                 Parties.Add(p);
                 OpponentParties.Add(p);
             }
-
-            UI.Standings.Init(Parties);
         }
 
         #endregion
@@ -194,6 +196,8 @@ namespace ElectionTactics
 
             State = GameState.Running;
             UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
+            UI.SelectTab(Tab.Parliament);
+            UI.UpdateHeaderValues();
         }
 
         /// <summary>
@@ -201,9 +205,10 @@ namespace ElectionTactics
         /// </summary>
         private bool HandleWinConditions()
         {
-            if(Parties.Where(x => x.GamePoints >= ElectionsToWin).Count() > 0 && Parties.Where(x => x.GamePoints == Parties.Max(p => p.GamePoints)).Count() == 1)
+            Party winner = Constitution.WinCondition.GetWinner();
+            if (winner != null)
             {
-                WinnerParty = Parties.First(x => x.GamePoints == Parties.Max(p => p.GamePoints));
+                WinnerParty = winner;
                 UI.PostGameScreen.Init(this);
                 return true;
             }
@@ -392,7 +397,7 @@ namespace ElectionTactics
     public void AddPolicyPoints(Party p, int amount)
         {
             p.PolicyPoints += amount;
-            UI.UpdatePolicyPointDisplay();
+            UI.UpdateHeaderValues();
         }
 
         public void IncreasePolicy(Policy p)
@@ -400,20 +405,14 @@ namespace ElectionTactics
             if (p.Party.PolicyPoints == 0 || p.Value == p.MaxValue) return;
             p.Party.PolicyPoints--;
             p.IncreaseValue();
-            UI.UpdatePolicyPointDisplay();
+            UI.UpdateHeaderValues();
         }
         public void DecreasePolicy(Policy p)
         {
             if (p.Value == p.LockedValue) return;
             p.Party.PolicyPoints++;
             p.DecreaseValue();
-            UI.UpdatePolicyPointDisplay();
-        }
-
-        public void AddGamePoint(Party party)
-        {
-            party.GamePoints++;
-            UI.Standings.Init(Parties);
+            UI.UpdateHeaderValues();
         }
 
         public void AddModifier(District d, Modifier mod)
@@ -435,8 +434,9 @@ namespace ElectionTactics
             foreach (Party p in Parties.Where(p => p != PlayerParty))
                 p.AI.DistributePolicyPoints();
 
-            // Set political map view
+            // Set UI
             UI.SelectTab(Tab.Parliament);
+            UI.Parliament.StandingsContainer.SetActive(false);
             UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
 
             // Lock policies
@@ -447,7 +447,7 @@ namespace ElectionTactics
             foreach(Party p in Parties)
             {
                 p.Seats = 0;
-                UI.Parliament.PartyList.Init(Parties);
+                UI.Parliament.ParliamentPartyList.Init(Parties, Parties.Select(x => x.Seats.ToString()).ToList(), dynamic: true);
             }
 
             ElectionOrder = Districts.Values.OrderBy(x => x.Population).ToList();
@@ -487,7 +487,10 @@ namespace ElectionTactics
 
                 // Get election results
                 ElectionResult result = CurElectionDistrict.RunElection(PlayerParty, Parties);
-                CurElectionDistrict.CurrentWinnerParty.Seats += CurElectionDistrict.Seats;
+                result.Winner.Seats += CurElectionDistrict.Seats;
+                result.Winner.TotalSeatsWon += CurElectionDistrict.Seats;
+                result.Winner.TotalDistrictsWon++;
+                foreach (Party p in Parties) p.TotalVotes += result.Votes[p];
 
                 List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
                 foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
@@ -532,13 +535,13 @@ namespace ElectionTactics
 
         private void UpdatePartyList()
         {
-            UI.Parliament.PartyList.HighlightParty(CurElectionDistrict.CurrentWinnerParty);
-            UI.Parliament.PartyList.MovePositions(Parties, ListAnimationTime);
+            UI.Parliament.ParliamentPartyList.HighlightParty(CurElectionDistrict.CurrentWinnerParty);
+            UI.Parliament.ParliamentPartyList.MovePositions(Parties, ListAnimationTime);
         }
 
         private void UnhighlightPartyList()
         {
-            UI.Parliament.PartyList.UnhighlightParty(CurElectionDistrict.CurrentWinnerParty);
+            UI.Parliament.ParliamentPartyList.UnhighlightParty(CurElectionDistrict.CurrentWinnerParty);
         }
 
         private void StartGraphAnimation()
@@ -559,7 +562,7 @@ namespace ElectionTactics
 
             // Distribute Game points
             List<Party> winnerParties = Parties.Where(x => x.Seats == Parties.Max(y => y.Seats)).ToList();
-            foreach (Party p in winnerParties) AddGamePoint(p);
+            foreach (Party p in winnerParties) p.TotalElectionsWon++;
 
             // Check win condition
             if (HandleWinConditions()) return;

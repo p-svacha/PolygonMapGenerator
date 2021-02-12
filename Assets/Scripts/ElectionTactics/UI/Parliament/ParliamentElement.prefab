@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 8222859887869093100}
   - component: {fileID: 8222859887869093012}
   m_Layer: 5
-  m_Name: PartyListElement
+  m_Name: ParliamentElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,4 +389,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 8222859887869093098}
   NameText: {fileID: 8222859886579515672}
-  SeatsText: {fileID: 8222859886961351917}
+  ValueText: {fileID: 8222859886961351917}

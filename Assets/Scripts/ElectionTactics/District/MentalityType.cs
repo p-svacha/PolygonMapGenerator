@@ -12,8 +12,8 @@ namespace ElectionTactics
         Nonlinguistic,
         Decided,
         Undecided,
-        Predictable,
-        Unpredictable,
+        HighVoterTurnout,
+        LowVoterTurnout,
         Rebellious,
         Stable,
         Revolutionary

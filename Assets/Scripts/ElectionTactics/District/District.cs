@@ -35,20 +35,27 @@ namespace ElectionTactics
         public const int RequiredPopulationPerSeat = 40000;
         public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
-        public int Population;  // How many inhabitants the district has
+        public int Population;  // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
         public int Seats;       // How many seats this district has in the parliament
         public int Voters;      // How many people cast a vote
 
-        public int BasePopularity = 20;
-        public int UndecidedBasePopularity = 40;
-        public int DecidedBasePopularity = 5;
+        public const int LowVoterTurnoutMinVoters = 100;
+        public const int LowVoterTurnoutMaxVoters = 150;
+        public const int MediumVoterTurnoutMinVoters = 200;
+        public const int MediumVoterTurnoutMaxVoters = 300;
+        public const int HighVoterTurnoutMinVoters = 400;
+        public const int HighVoterTurnoutMaxVoters = 500;
 
-        public int LowImpactPopularity = 3;
-        public int MediumImpactPopularity = 5;
-        public int HighImpactPopularity = 7;
+        public const int BasePopularity = 20;
+        public const int UndecidedBasePopularity = 40;
+        public const int DecidedBasePopularity = 5;
 
-        public int PositiveModifierImpact = 30;
-        public int NegativeModifierImpact = 30;
+        public const int LowImpactPopularity = 3;
+        public const int MediumImpactPopularity = 5;
+        public const int HighImpactPopularity = 7;
+
+        public const int PositiveModifierImpact = 30;
+        public const int NegativeModifierImpact = 30;
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
@@ -106,9 +113,9 @@ namespace ElectionTactics
             Seats = Mathf.Max(MinSeats, tmpSeats);
 
             // Voter calculation
-            if (MentalityTypes.Contains(MentalityType.Predictable)) Voters = Random.Range(400, 500);
-            else if (MentalityTypes.Contains(MentalityType.Unpredictable)) Voters = Random.Range(100, 150);
-            else Voters = Random.Range(200, 300);
+            if (MentalityTypes.Contains(MentalityType.HighVoterTurnout)) Voters = Random.Range(HighVoterTurnoutMinVoters, HighVoterTurnoutMaxVoters + 1);
+            else if (MentalityTypes.Contains(MentalityType.LowVoterTurnout)) Voters = Random.Range(LowVoterTurnoutMinVoters, LowVoterTurnoutMaxVoters + 1);
+            else Voters = Random.Range(MediumVoterTurnoutMinVoters, MediumVoterTurnoutMaxVoters + 1);
         }
 
         private void SetGeographyTraits()
@@ -245,6 +252,13 @@ namespace ElectionTactics
                 Party singleWinnerParty = winnerParties[Random.Range(0, winnerParties.Count)];
                 voterShares[singleWinnerParty] += 0.1f;
             }
+            Party winner = voterShares.First(x => x.Value == voterShares.Max(y => y.Value)).Key;
+
+            // Adjust amount of voters to the size of the district
+            foreach(Party p in parties)
+            {
+                partyVotes[p] *= Population / HighVoterTurnoutMaxVoters; // This defines that the absolutely highest possible amount of voters is equal to the population 
+            }
 
             // Create result
             ElectionResult result = new ElectionResult()
@@ -252,7 +266,9 @@ namespace ElectionTactics
                 ElectionCycle = Game.ElectionCycle,
                 Year = Game.Year,
                 District = this,
+                Votes = partyVotes,
                 VoteShare = voterShares,
+                Winner = winner,
                 Modifiers = electionModifiers
             };
 

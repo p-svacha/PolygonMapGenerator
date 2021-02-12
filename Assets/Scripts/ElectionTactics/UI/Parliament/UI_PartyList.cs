@@ -15,6 +15,7 @@ namespace ElectionTactics
         private Dictionary<UI_PartyListElement, Vector2> TargetPositions = new Dictionary<UI_PartyListElement, Vector2>();
         List<Party> Parties;
 
+        private bool Dynamic;
         private bool IsAnimating;
         private float AnimationTime;
         private float CurrentAnimationTime;
@@ -37,19 +38,21 @@ namespace ElectionTactics
             }
         }
 
-        public void Init(List<Party> parties)
+        public void Init(List<Party> parties, List<string> values, bool dynamic)
         {
             ListElements.Clear();
             Parties = parties;
+            Dynamic = dynamic;
 
             for (int i = 0; i < ListContainer.transform.childCount; i++) Destroy(ListContainer.transform.GetChild(i).gameObject);
 
-            foreach (Party p in parties.OrderByDescending(x => x.Seats))
+            for(int i = 0; i < parties.Count; i++)
             {
                 UI_PartyListElement elem = Instantiate(PartyListElementPrefab, ListContainer.transform, false);
-                elem.Init(p);
+                elem.Init(parties[i], values[i]);
                 ListElements.Add(elem);
             }
+
             CalculateTargetPositions(parties);
             UpdatePartyPosition(parties);
         }
@@ -89,7 +92,8 @@ namespace ElectionTactics
             TargetPositions.Clear();
 
             int counter = 0;
-            foreach (Party p in parties.OrderByDescending(x => x.Seats))
+            List<Party> sortedList = Dynamic ? parties.OrderByDescending(x => x.Seats).ToList() : parties;
+            foreach (Party p in sortedList)
             {
                 float y = -(counter * 70);
                 UI_PartyListElement elem = ListElements.First(x => x.Party == p);

@@ -3,11 +3,20 @@ Election Tactics
 
 1. To Do
 
+1.1 General Gameplay
+	- Add year display and year mechanics:
+		- Instead of "Election", the button sais "End Year"
+		- Each year you get 1 PP
+		- Each year you get 1 CP
+		- Each year there is 1 event
+		- Each year there is 1 constitution vote
+		- There is a general election every 4 years (can be changed through constitution)
+
 1.2 Constitution
 	- Add constitution tab in header
 	- Constitution is readonly information about current game rules
 	- Consitution describes following points:
-		- Win condition (total elections won, elections in a row won, total seats won, fixed end year, popular vote), (and / or multiplie win conditions)
+		- Captial (yes / no, # bonus seats)
 		- Seat distribution (minimum seats per district, population per seat, scaling population requirement)
 		- Constitution voting system (one vote per party, one vote per seat, one vote per district), (how many votes per cycle)
 		- District addition system (one district per cycle, no more districts)
@@ -28,7 +37,7 @@ Election Tactics
 
 1.4 Campaigns tab
 	- Add campaigns tab in header
-	- Campaigns can be chosen with campaign points
+	- Campaigns can be chosen with campaign points (CP)
 	- Each cycle there are three campaigns that can be chosen from
 	- Campaigns can have different costs according to the severity of their impact
 	- Campaigns can be locked for later for 1 campaign point
@@ -40,18 +49,13 @@ Election Tactics
 		- Force event campaigns - Force a certain random event for the next cycle
 		- Constitution vote campaigns - Force a certain random constitution vote
 
-1.5 District info
-	- Show overlay when hovering over a trait
-
 1.6 General election
-	- Show political view during general election
 	- Add intro animation
 	- Add outro animation
 
 1.7 Map controls
 	- Add popularity view that shows absolute popularity through policies per district
 	- Add density view
-	- Fix legend width bug
 
 1.8 Save / Load games
 	- Make it possible to save games

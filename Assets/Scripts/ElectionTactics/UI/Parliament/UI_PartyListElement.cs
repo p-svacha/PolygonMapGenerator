@@ -9,21 +9,21 @@ namespace ElectionTactics
     {
         public Image Background;
         public Text NameText;
-        public Text SeatsText;
+        public Text ValueText;
         public Party Party;
 
-        public void Init(Party p)
+        public void Init(Party p, string value)
         {
             Party = p;
             NameText.text = p.Name;
             NameText.color = p.Color;
-            SeatsText.text = p.Seats.ToString();
+            ValueText.text = value;
             Background.color = ColorManager.Colors.UiMainColorLighter1;
         }
 
         public void UpdateValues()
         {
-            SeatsText.text = Party.Seats.ToString();
+            ValueText.text = Party.Seats.ToString();
         }
     }
 }

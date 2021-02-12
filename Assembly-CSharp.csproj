@@ -59,7 +59,6 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Policies\UI_PolicySelection.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\UI_ElectionTactics.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Election\ElectionResult.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_Standings.cs" />
     <Compile Include="Assets\Scripts\Map\Landmass.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\GeographyPolicy.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\TextureGenerator.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\UI_DistrictLabel.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Parliament\UI_PartyListElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\ReligionPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Constitution\WinCondition.cs" />
     <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\WaterCreator.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\PartyAI.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Constitution\UI_Constitution.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPath.cs" />
     <Compile Include="Assets\Scripts\Map\Border.cs" />
@@ -97,11 +98,13 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\WindowGraph.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Constitution\Constitution.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\GeographyTrait.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\PolygonMapGenerator.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameModel.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\PrefabManager.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Campaigns\UI_Campaigns.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Tooltip\TooltipTarget.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\IconManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\Impact.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\District\Mentality.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\MapControls.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\GraphAnimationType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\MentalityType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierListElement.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Assets\Scripts\FlagGeneration\FlagGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Tooltip\Tooltip.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Settings\UI_Settings.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\GeographyTraitType.cs" />
@@ -130,16 +135,17 @@
     <Compile Include="Assets\Scripts\Map\MaterialHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\EconomyTrait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\Density.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\Standings\UI_StandingsElement.cs" />
     <Compile Include="Assets\Scripts\Map\BorderType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\clipper.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\Party.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\Events\UI_Events.cs" />
     <Compile Include="Assets\Scripts\Map\Region.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E01_NewNationEmerge.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Modifier\ModifierType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\ElectionTacticsGame.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\PriorityQueue.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\ConstitutionVoting\UI_Voting.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Policies\PolicyControl.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\PolygonCenterFinder.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\PostGame\PostGameScreen.cs" />
@@ -161,7 +167,8 @@
     <Compile Include="Assets\Scripts\ElectionTactics\GameState.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPointType.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\GraphAnimationType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Constitution\ConstitutionChapter.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Constitution\DistrictSeatDistribution.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Shaders\LandShader_Political.shader" />
