@@ -9,7 +9,7 @@ public static class ColorManager
     /// <summary>
     /// Returns a color that is not similar to a color in otherColors
     /// </summary>
-    public static Color GetRandomColor(List<Color> otherColors)
+    public static Color GetRandomColor(List<Color> otherColors = null)
     {
         float diff = 0;
         Color color = Color.white;
@@ -22,11 +22,15 @@ public static class ColorManager
 
             color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 
-            diff = float.MaxValue;
-            foreach(Color c in otherColors)
+            if (otherColors == null) diff = 99;
+            else
             {
-                float cDiff = Math.Abs(color.r - c.r) + Math.Abs(color.g - c.g) + Math.Abs(color.b - c.b);
-                if (cDiff < diff) diff = cDiff;
+                diff = float.MaxValue;
+                foreach (Color c in otherColors)
+                {
+                    float cDiff = Math.Abs(color.r - c.r) + Math.Abs(color.g - c.g) + Math.Abs(color.b - c.b);
+                    if (cDiff < diff) diff = cDiff;
+                }
             }
         }
 

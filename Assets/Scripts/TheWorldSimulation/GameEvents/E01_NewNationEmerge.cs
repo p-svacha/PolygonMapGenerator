@@ -7,12 +7,12 @@ public class E01_NewNationEmerge : GameEvent
 {
     private Region Capital;
 
-    public override int GetProbability(GameModel Model)
+    public override int GetProbability(WorldSimulation Model)
     {
         return (int)(Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null).Count() * 0.3f);
     }
 
-    public override void InitExecution(GameModel Model)
+    public override void InitExecution(WorldSimulation Model)
     {
         base.InitExecution(Model);
 
@@ -21,7 +21,7 @@ public class E01_NewNationEmerge : GameEvent
         CameraHandler.MoveToFocusRegion(Capital);
     }
 
-    protected override void Execute(GameModel Model, GameEventHandler Hanlder)
+    protected override void Execute(WorldSimulation Model, GameEventHandler Hanlder)
     {
         Nation newNation = Model.CreateNation(Capital);
         Model.AddLog("A new nation " + newNation.Name + " has emerged. It has called its capital " + newNation.Capital.Name + ".");

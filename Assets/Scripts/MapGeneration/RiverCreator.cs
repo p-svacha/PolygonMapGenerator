@@ -151,7 +151,7 @@ public static class RiverCreator
         foreach (IntPoint p in polyTree.Childs[0].m_polygon)
             polygonVertices.Add(new Vector2((float)p.X, (float)p.Y));
 
-        MeshGenerator.GeneratePolygon(polygonVertices, PMG);
+        //MeshGenerator.GeneratePolygon(polygonVertices, PMG);
 
         for (int i = 0; i < riverPath.Nodes.Count; i++)
         {

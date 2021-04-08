@@ -38,10 +38,17 @@ public class MenuUI : MonoBehaviour
 
     private void StartMapGeneration(int size)
     {
-        PMG.GenerateMap(size, size, 0.08f, 1.5f, true, PolygonMapGenerator.DefaultLandColor, PolygonMapGenerator.DefaultWaterColor);
+        PMG.GenerateMap(size, size, 0.08f, 1.5f, true, PolygonMapGenerator.DefaultLandColor, PolygonMapGenerator.DefaultWaterColor, true, OnLoadingDone);
 
         LoadingScreen.gameObject.SetActive(true);
         Hide();
+    }
+
+    private void OnLoadingDone()
+    {
+        GameObject game = new GameObject("GameModel");
+        WorldSimulation model = game.AddComponent<WorldSimulation>();
+        model.Init(PMG.Map);
     }
 
     public void Hide()

@@ -25,7 +25,7 @@ public class UI_NationInfo : MonoBehaviour
         {
             NationName.text = nation.Name;
             NationCapital.text = nation.Capital.Name;
-            NationRegions.text = nation.Provinces.Count.ToString() + (nation.Provinces.Count == 1 ? " Region" : " Regions");
+            NationRegions.text = nation.Regions.Count.ToString() + (nation.Regions.Count == 1 ? " Region" : " Regions");
             NationArea.text = nation.Area.ToString("0.00") + " km²";
             NationFlag.sprite = nation.Flag;
         }

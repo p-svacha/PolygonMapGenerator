@@ -49,7 +49,7 @@ public static class TextureGenerator
             }
         }
         splatMap.Apply();
-        MaterialHandler.SatelliteLandMaterial.SetTexture("_Control", splatMap);
+        //MaterialHandler.SatelliteLandMaterial.SetTexture("_Control", splatMap);
 
         // Shore texture
         int shoreTexSize = 2048;
@@ -84,7 +84,7 @@ public static class TextureGenerator
             }
         }
         shoreTexture.Apply();
-        MaterialHandler.SatelliteLandMaterial.SetTexture("_OverlayMask", shoreTexture);
+        //MaterialHandler.SatelliteLandMaterial.SetTexture("_OverlayMask", shoreTexture);
 
     }
 

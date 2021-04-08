@@ -12,10 +12,10 @@ public class GameEventHandler
         new E02_NationExpand(),
     };
 
-    private GameModel Model;
+    private WorldSimulation Model;
     public GameEvent ActiveEvent;
 
-    public GameEventHandler(GameModel model)
+    public GameEventHandler(WorldSimulation model)
     {
         Model = model;
     }

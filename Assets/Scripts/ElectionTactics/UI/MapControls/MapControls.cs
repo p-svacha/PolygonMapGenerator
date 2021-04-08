@@ -71,6 +71,9 @@ namespace ElectionTactics
             for (int i = 1; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);
             Legend.Clear();
 
+            // Show region borders in active districts only
+            foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.Districts.ContainsKey(r));
+
             DisplayMode = mode;
             switch(mode)
             {

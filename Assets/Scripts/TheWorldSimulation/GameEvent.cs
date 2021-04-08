@@ -17,16 +17,16 @@ public abstract class GameEvent
 
     protected CameraHandler CameraHandler;
 
-    public abstract int GetProbability(GameModel Model);
+    public abstract int GetProbability(WorldSimulation Model);
 
-    public virtual void InitExecution(GameModel Model)
+    public virtual void InitExecution(WorldSimulation Model)
     {
         CameraCurrentFocusTime = 0f;
         if(CameraHandler == null) CameraHandler = Camera.main.GetComponent<CameraHandler>();
         State = ExecutionState.ZoomIn;
     }
 
-    public void Update(GameModel Model, GameEventHandler Handler)
+    public void Update(WorldSimulation Model, GameEventHandler Handler)
     {
         switch (State)
         {
@@ -56,7 +56,7 @@ public abstract class GameEvent
         }
     }
 
-    protected abstract void Execute(GameModel Model, GameEventHandler Handler);
+    protected abstract void Execute(WorldSimulation Model, GameEventHandler Handler);
     public void ExecutionDone(GameEventHandler Handler)
     {
         Handler.ExecutionDone();

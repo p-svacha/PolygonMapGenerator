@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MaterialHandler : MonoBehaviour
 {
+    public Material DefaultMaterial;
+
+    /*
     public Material TopographicLandMaterial;
     public Material TopographicWaterMaterial;
 
@@ -12,6 +15,7 @@ public class MaterialHandler : MonoBehaviour
 
     public Material SatelliteLandMaterial;
     public Material SatelliteWaterMaterial;
+    */
 
     public Color LandColor;
     public Color WaterColor;

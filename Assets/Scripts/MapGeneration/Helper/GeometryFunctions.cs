@@ -109,4 +109,81 @@ public static class GeometryFunctions
         return (v.x >= minX && v.x <= maxX && v.y >= minY && v.y <= maxY);
     }
 
+    public static Vector2 RotateVector(Vector2 v, float degrees)
+    {
+        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
+        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
+
+        float tx = v.x;
+        float ty = v.y;
+
+        float vx = (cos * tx) - (sin * ty);
+        float vy = (sin * tx) + (cos * ty);
+        return new Vector2(vx, vy);
+    }
+
+    // Find the point of intersection between
+    // the lines p1 --> p2 and p3 --> p4.
+    public static Vector2 FindIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    {
+        bool lines_intersect = false;
+        bool segments_intersect = false;
+        Vector2 intersection = new Vector2(0, 0);
+
+        // Get the segments' parameters.
+        float dx12 = p2.x - p1.x;
+        float dy12 = p2.y - p1.y;
+        float dx34 = p4.x - p3.x;
+        float dy34 = p4.y - p3.y;
+
+        // Solve for t1 and t2
+        float denominator = (dy12 * dx34 - dx12 * dy34);
+
+        float t1 =
+            ((p1.x - p3.x) * dy34 + (p3.y - p1.y) * dx34)
+                / denominator;
+        if (float.IsInfinity(t1))
+        {
+            // The lines are parallel (or close enough to it).
+            lines_intersect = false;
+            segments_intersect = false;
+            intersection = new Vector2(0,0);
+            return intersection;
+        }
+        lines_intersect = true;
+
+        float t2 =
+            ((p3.x - p1.x) * dy12 + (p1.y - p3.y) * dx12)
+                / -denominator;
+
+        // Find the point of intersection.
+        intersection = new Vector2(p1.x + dx12 * t1, p1.y + dy12 * t1);
+
+        // The segments intersect if t1 and t2 are between 0 and 1.
+        segments_intersect =
+            ((t1 >= 0) && (t1 <= 1) &&
+             (t2 >= 0) && (t2 <= 1));
+
+            // Find the closest points on the segments.
+            if (t1 < 0)
+            {
+                t1 = 0;
+            }
+            else if (t1 > 1)
+            {
+                t1 = 1;
+            }
+
+            if (t2 < 0)
+            {
+                t2 = 0;
+            }
+            else if (t2 > 1)
+            {
+                t2 = 1;
+            }
+
+        return intersection;
+    }
+
 }

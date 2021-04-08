@@ -9,13 +9,13 @@ public class E02_NationExpand : GameEvent
     private Region NewProvince;
     private List<Region> Candidates = new List<Region>();
 
-    public override int GetProbability(GameModel Model)
+    public override int GetProbability(WorldSimulation Model)
     {
         Candidates = Model.Map.Regions.Where(x => !x.IsWater && x.Nation == null && x.AdjacentRegions.Any(y => y.Nation != null)).ToList();
         return Candidates.Count;
     }
 
-    public override void InitExecution(GameModel Model)
+    public override void InitExecution(WorldSimulation Model)
     {
         base.InitExecution(Model);
 
@@ -30,7 +30,7 @@ public class E02_NationExpand : GameEvent
         CameraHandler.MoveToFocusRegion(NewProvince);
     }
 
-    protected override void Execute(GameModel Model, GameEventHandler Handler)
+    protected override void Execute(WorldSimulation Model, GameEventHandler Handler)
     {
         Model.CaptureRegion(CapturingNation, NewProvince);
         Model.AddLog("The nation " + CapturingNation.Name + " has expanded. It has called its new province " + NewProvince.Name);

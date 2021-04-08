@@ -48,7 +48,7 @@ public class PolygonMapGenerator : MonoBehaviour
     public Color LandColor;
     public Color WaterColor;
 
-    public const float START_LINES_PER_KM = 0.2f; // Active lines per km map side length
+    public const float START_LINES_PER_KM = 0.6f; // Active lines per km map side length
     public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
 
     public const float SPLIT_CHANCE = 0.09f; // Chance that a line splits into 2 lines at a vertex
@@ -84,14 +84,14 @@ public class PolygonMapGenerator : MonoBehaviour
         NameGeneratorThread.Start();
     }
 
-    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, Color landColor, Color waterColor, bool drawRegionBorders = false, Action callback = null)
+    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, Color landColor, Color waterColor, bool drawRegionBorders = false, Action callback = null, bool destroyOldMap = false)
     {
         Callback = callback;
 
         StartCreation = DateTime.Now;
         StateTimeStamp = DateTime.Now;
 
-        Reset();
+        Reset(destroyOldMap);
 
         Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         //seed = -663403863;
@@ -175,7 +175,7 @@ public class PolygonMapGenerator : MonoBehaviour
             case MapGenerationState.DrawMap:
                 DrawMap(ShowRegionBorders);
                 SwitchState(MapGenerationState.GenerationDone);
-                Debug.Log(">----------- Map of size " + MapSize + "u^2 generated with " + Map.Regions.Count + " regions (" + Map.Regions.Where(x => !x.IsWater).Count() + " land, " + Map.Regions.Where(x => x.IsWater).Count() + " water) in " + (DateTime.Now - StartCreation).TotalSeconds + " seconds.");
+                Debug.Log(">----------- Map of size " + MapSize + "u^2 generated with " + Map.Regions.Count + " regions (" + Map.Regions.Where(x => !x.IsWater).Count() + " land, " + Map.Regions.Where(x => x.IsWater).Count() + " water) in " + (DateTime.Now - StartCreation).TotalSeconds + " seconds.\nPerformed " + NumMerges + " merges and " + NumSplits + " splits.");
                 break;
 
             case MapGenerationState.GenerationAborted:
@@ -197,10 +197,13 @@ public class PolygonMapGenerator : MonoBehaviour
         GenerationState = nextState;
     }
 
-    private void Reset()
+    private void Reset(bool destroyOldMap)
     {
-        if (Map != null) Map.DestroyAllGameObjects();
+        if (destroyOldMap && Map != null) Map.DestroyAllGameObjects();
         Map = null;
+
+        NumSplits = 0;
+        NumMerges = 0;
 
         CornerNodes.Clear();
         EdgeNodes.Clear();
@@ -703,14 +706,22 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public void DrawMap(bool showRegionBorders)
     {
-        if (Map != null) Map.DestroyAllGameObjects();
-
         Map = new Map(this);
-        
+
+        GameObject mapObject = new GameObject("Map");
+        Map.RootObject = mapObject;
+        GameObject borderPointsContainer = new GameObject("BorderPoints");
+        borderPointsContainer.transform.SetParent(mapObject.transform);
+        GameObject bordersContainer = new GameObject("Borders");
+        bordersContainer.transform.SetParent(mapObject.transform);
+        GameObject polygonsContainer = new GameObject("Regions");
+        polygonsContainer.transform.SetParent(mapObject.transform);
+
         // Add border points
         foreach (GraphNode n in Nodes)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.SetParent(borderPointsContainer.transform);
             BorderPoint borderPoint = sphere.AddComponent<BorderPoint>();
             n.BorderPoint = borderPoint;
             Map.BorderPoints.Add(borderPoint);
@@ -720,6 +731,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphConnection c in InGraphConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.SetParent(bordersContainer.transform);
             Border border = cube.AddComponent<Border>();
             c.Border = border;
             Map.Borders.Add(border);
@@ -728,6 +740,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphConnection c in EdgeConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.SetParent(bordersContainer.transform);
             Border border = cube.AddComponent<Border>();
             c.Border = border;
             Map.EdgeBorders.Add(border);
@@ -737,7 +750,8 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphPolygon p in Polygons)
         {
             // Mesh
-            GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes.Select(x => x.Vertex).ToList(), this);
+            GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes, this);
+            polygon.transform.SetParent(polygonsContainer.transform);
 
             // Collider
             polygon.AddComponent<MeshCollider>();
@@ -1003,8 +1017,18 @@ public class PolygonMapGenerator : MonoBehaviour
 
     #region Map Modification
 
-    private void MergePolygons(GraphPolygon p1, GraphPolygon p2)
+    public bool CanMergePolygons(GraphPolygon p1, GraphPolygon p2)
     {
+        if (p1 == p2) return false;
+        if (!p1.AdjacentPolygons.Contains(p2)) return false;
+        if (!p2.AdjacentPolygons.Contains(p1)) return false;
+        return true;
+    }
+
+    public void MergePolygons(GraphPolygon p1, GraphPolygon p2)
+    {
+        if (!CanMergePolygons(p1, p2)) return;
+
         NumMerges++;
 
         // Create relevant lists
@@ -1031,16 +1055,17 @@ public class PolygonMapGenerator : MonoBehaviour
         FindPolygonsFromNode(p1.Nodes.Where(x => !nodesBetweenPolygons.Contains(x)).ToList()[0], ignoreVisitedNodes: true, removePolygons: false);
     }
 
+    public bool CanSplitPolygon(GraphPolygon p)
+    {
+        return p.Area > 3 * MinPolygonArea;
+    }
+
     /// <summary>
     /// Splits the given polygon into two seperate polygons at random. Can do nothing in certain cases. If forceSplit is true, it will try until a valid split is reached.
     /// </summary>
     public void SplitPolygon(GraphPolygon p)
     {
-        if (p.Area < 3 * MinPolygonArea)
-        {
-            Debug.Log("Polygon is too small to split. Abort.");
-            return;
-        }
+        if (!CanSplitPolygon(p)) return;
 
         NumSplits++;
 

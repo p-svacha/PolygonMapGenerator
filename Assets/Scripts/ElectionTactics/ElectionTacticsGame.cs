@@ -108,6 +108,7 @@ namespace ElectionTactics
             UI.SelectTab(Tab.Parliament);
             StartElectionCycle();
             CameraHandler.FocusDistricts(Districts.Values.ToList());
+            UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
 
             State = GameState.Running;
         }

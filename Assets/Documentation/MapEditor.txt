@@ -1,0 +1,4 @@
+1. Known issues in map generation
+
+- When a polygon is split and the split is starting on a 3-way junction where 1 polygon is water, then the water polygon turns into land after the split
+- It is possible to merge 2 polygons so that the new polygon fully engulves another polygon, this should not be allowed

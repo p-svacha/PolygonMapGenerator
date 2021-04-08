@@ -52,14 +52,12 @@ public class Region : MonoBehaviour
     // Game
     public Nation Nation { get; private set; }
 
-    // Display mode
-    private MapDisplayMode DisplayMode;
+    // Display
     private Color Color;
     private bool IsHighlighted;
-    private Color HighlightColor; // Highlight color always has top priority when Highlighted is true
+    private Color HighlightColor; // HighlightColor overrides Color if IsHighlighted is true
     public bool IsBlinking;
     private bool ShowRegionBorders;
-    public Texture2D RegionBorderMaskTexture;
 
     public void Init(GraphPolygon p)
     {
@@ -92,6 +90,8 @@ public class Region : MonoBehaviour
         IsEdgeRegion = p.IsEdgePolygon;
         IsOuterOcean = p.IsOuterPolygon;
         DistanceFromNearestWater = p.DistanceFromNearestWater;
+
+        GetComponent<Renderer>().material = MaterialHandler.Materials.DefaultMaterial;
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public class Region : MonoBehaviour
     public void SetNation(Nation n)
     {
         Nation = n;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     public void TurnToWater()
@@ -133,49 +133,13 @@ public class Region : MonoBehaviour
         IsWater = true;
     }
 
-    public void SetDisplayMode(MapDisplayMode mode)
+    public void UpdateDisplay()
     {
-        DisplayMode = mode;
-        UpdateDisplayMode();
-    }
+        if (IsHighlighted) GetComponent<Renderer>().material.SetColor("_Color", HighlightColor);
+        else GetComponent<Renderer>().material.SetColor("_Color", Color);
 
-    private void UpdateDisplayMode()
-    {
-        switch (DisplayMode)
-        {
-            case MapDisplayMode.Topographic:
-                if (IsWater)
-                {
-                    GetComponent<Renderer>().material = MaterialHandler.Materials.TopographicWaterMaterial;
-                    GetComponent<MeshRenderer>().material.color = MaterialHandler.Materials.WaterColor;
-                }
-                else
-                {
-                    GetComponent<Renderer>().material = MaterialHandler.Materials.TopographicLandMaterial;
-                    GetComponent<MeshRenderer>().material.color = MaterialHandler.Materials.LandColor;
-                }
-                break;
-
-            case MapDisplayMode.Political:
-                if (IsWater) GetComponent<Renderer>().material = MaterialHandler.Materials.PoliticalWaterMaterial;
-                else
-                {
-                    GetComponent<Renderer>().material = MaterialHandler.Materials.PoliticalLandMaterial;
-                    GetComponent<MeshRenderer>().material.color = Nation == null ? MaterialHandler.Materials.LandColor : Nation.PrimaryColor;
-                }
-                break;
-
-            case MapDisplayMode.Satellite:
-                if (IsWater) GetComponent<Renderer>().material = MaterialHandler.Materials.SatelliteWaterMaterial;
-                else GetComponent<Renderer>().material = MaterialHandler.Materials.SatelliteLandMaterial;
-                break;
-        }
-
-        if (IsHighlighted) GetComponent<Renderer>().material.color = HighlightColor;
-        else GetComponent<Renderer>().material.color = Color;
-
-        if (ShowRegionBorders) GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", RegionBorderMaskTexture);
-        else GetComponent<MeshRenderer>().material.SetTexture("_BorderMask", Texture2D.blackTexture);
+        if (ShowRegionBorders) GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
+        else GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color);
 
         GetComponent<MeshRenderer>().material.SetFloat("_Blink", IsBlinking ? 1 : 0);
     }
@@ -183,32 +147,32 @@ public class Region : MonoBehaviour
     public void SetBlinking(bool b)
     {
         IsBlinking = b;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     public void Highlight(Color highlightColor)
     {
         IsHighlighted = true;
         HighlightColor = highlightColor;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     public void Unhighlight()
     {
         IsHighlighted = false;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     public void SetColor(Color c)
     {
         Color = c;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     public void SetShowRegionBorders(bool b)
     {
         ShowRegionBorders = b;
-        UpdateDisplayMode();
+        UpdateDisplay();
     }
 
     #region Getters

@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using UnityEngine;
 
-public class GameModel : MonoBehaviour
+public class WorldSimulation : MonoBehaviour
 {
     public Map Map;
     public GameUI GameUI;
@@ -25,7 +24,7 @@ public class GameModel : MonoBehaviour
         FlagGenerator = GameObject.Find("FlagGenerator").GetComponent<FlagGenerator>();
         FlagGenerator.GenerateFlag();
         Map = map;
-        Map.SetDisplayMode(MapDisplayMode.Topographic);
+        Map.UpdateDisplay();
         GameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
         MarkovChainWordGenerator.TargetNumWords = Map.Regions.Count * 2;
         GameObject.Find("LoadingScreen").SetActive(false);
@@ -62,7 +61,8 @@ public class GameModel : MonoBehaviour
             EventHandler.ExecuteRandomEvent();
             Year++;
         }
-        Map.HandleInputs();
+
+        if (Input.GetKeyDown(KeyCode.R)) Map.ShowRegionBorders(!Map.IsShowingRegionBorders);
     }
 
     public void AddLog(string text)
@@ -75,7 +75,7 @@ public class GameModel : MonoBehaviour
     public void CaptureRegion(Nation nation, Region region)
     {
         if(region.Name == null) region.Name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
-        nation.AddProvince(region);
+        nation.AddRegion(region);
     }
 
     public Nation CreateNation(Region region)
@@ -86,7 +86,7 @@ public class GameModel : MonoBehaviour
         newNation.Capital = region;
         newNation.Flag = FlagGenerator.GenerateFlag();
         newNation.PrimaryColor = ColorManager.GetRandomColor(Nations.Select(x => x.PrimaryColor).ToList());
-        newNation.AddProvince(region);
+        newNation.AddRegion(region);
         Nations.Add(newNation);
         return newNation;
     }

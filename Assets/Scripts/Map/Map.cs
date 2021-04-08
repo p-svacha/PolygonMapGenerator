@@ -9,6 +9,7 @@ public class Map
 {
     public Texture2D RegionBorderMaskTexture;
 
+    public GameObject RootObject;
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> EdgeBorders = new List<Border>();
@@ -18,7 +19,6 @@ public class Map
     public List<River> Rivers = new List<River>();
 
     // Display Mode
-    public MapDisplayMode DisplayMode;
     public bool IsShowingRegionBorders;
 
     public int Width;
@@ -33,7 +33,7 @@ public class Map
 
         //MaterialHandler.PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
         //MaterialHandler.TopographicLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
-        RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
+        //RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
     public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, Color landColor, Color waterColor)
@@ -50,11 +50,9 @@ public class Map
     {
         foreach (Region r in Regions)
         {
-            r.RegionBorderMaskTexture = RegionBorderMaskTexture;
             if (!r.IsWater) r.SetColor(landColor);
             else r.SetColor(waterColor);
         }
-        SetDisplayMode(MapDisplayMode.Topographic);
         ShowRegionBorders(showRegionBorders);
     }
 
@@ -156,27 +154,9 @@ public class Map
         foreach (Region r in Regions) r.InitAdditionalInfo();
     }
 
-    public void HandleInputs()
-    {
-        // S - Satellite display
-        if(Input.GetKeyDown(KeyCode.S))
-            SetDisplayMode(MapDisplayMode.Satellite);
-
-        // P - Political display
-        if (Input.GetKeyDown(KeyCode.P))
-            SetDisplayMode(MapDisplayMode.Political);
-
-        // R - Show region borders
-        if (Input.GetKeyDown(KeyCode.R) && (DisplayMode == MapDisplayMode.Political || DisplayMode == MapDisplayMode.Topographic))
-            ShowRegionBorders(!IsShowingRegionBorders);
-    }
-
     public void DestroyAllGameObjects()
     {
-        foreach (Border b in Borders) GameObject.Destroy(b.gameObject);
-        foreach (Border b in EdgeBorders) GameObject.Destroy(b.gameObject);
-        foreach (BorderPoint bp in BorderPoints) GameObject.Destroy(bp.gameObject);
-        foreach (Region r in Regions) GameObject.Destroy(r.gameObject);
+        GameObject.Destroy(RootObject.gameObject);
     }
 
     public void ToggleHideBorders()
@@ -190,11 +170,10 @@ public class Map
         foreach (BorderPoint bp in BorderPoints) bp.gameObject.SetActive(!bp.gameObject.activeSelf);
     }
 
-    public void SetDisplayMode(MapDisplayMode mode)
+    public void UpdateDisplay()
     {
-        DisplayMode = mode;
-        foreach (Region r in Regions) r.SetDisplayMode(mode);
-        foreach (River r in Rivers) r.SetDisplayMode(mode);
+        foreach (Region r in Regions) r.UpdateDisplay();
+        //foreach (River r in Rivers) r.SetDisplayMode(mode);
     }
 
     public void ShowRegionBorders(bool show)

@@ -13,13 +13,8 @@ public class River : MonoBehaviour
 
     public float Length;
 
-    // Display mode
-    private MapDisplayMode DisplayMode;
-    private MaterialHandler MaterialHandler;
-
     public void Init(string name, List<BorderPoint> bps, List<Border> borders, List<Region> regions)
     {
-        MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
         Name = name;
 
         BorderPoints = bps;
@@ -31,29 +26,7 @@ public class River : MonoBehaviour
         foreach (Region r in Regions) r.Rivers.Add(this);
 
         Length = Borders.Sum(x => x.Length);
-    }
 
-    public void SetDisplayMode(MapDisplayMode mode)
-    {
-        DisplayMode = mode;
-        UpdateDisplayMode();
-    }
-
-    private void UpdateDisplayMode()
-    {
-        switch (DisplayMode)
-        {
-            case MapDisplayMode.Topographic:
-                GetComponent<Renderer>().material = MaterialHandler.TopographicWaterMaterial;
-                break;
-
-            case MapDisplayMode.Political:
-                GetComponent<Renderer>().material = MaterialHandler.PoliticalWaterMaterial;
-                break;
-
-            case MapDisplayMode.Satellite:
-                GetComponent<Renderer>().material = MaterialHandler.SatelliteWaterMaterial;
-                break;
-        }
+        GetComponent<Renderer>().material = MaterialHandler.Materials.DefaultMaterial;
     }
 }

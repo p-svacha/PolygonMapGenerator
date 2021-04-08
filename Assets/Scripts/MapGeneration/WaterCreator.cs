@@ -236,6 +236,7 @@ public static class WaterCreator
     public static void DoExpandOcean(PolygonMapGenerator PMG)
     {
         List<GraphPolygon> shorePolygons = PMG.Polygons.Where(x => !x.IsWater && x.IsNextToWater).ToList();
+        if (shorePolygons.Count == 0) return;
         GraphPolygon newWater = shorePolygons[UnityEngine.Random.Range(0, shorePolygons.Count)];
         TurnPolygonToWater(newWater);
     }
@@ -249,6 +250,7 @@ public static class WaterCreator
     public static void DoTurnRandomPolygonToWater(PolygonMapGenerator PMG)
     {
         List<GraphPolygon> landPolygons = PMG.Polygons.Where(x => !x.IsWater).ToList();
+        if (landPolygons.Count == 0) return;
         GraphPolygon newWater = landPolygons[UnityEngine.Random.Range(0, landPolygons.Count)];
         TurnPolygonToWater(newWater);
     }
@@ -264,7 +266,10 @@ public static class WaterCreator
     public static void DoExpandLand(PolygonMapGenerator PMG)
     {
         List<GraphPolygon> waterShorePolygons = PMG.Polygons.Where(x => !x.IsEdgePolygon && !x.AdjacentPolygons.Any(y => y.IsEdgePolygon) && x.IsWater && x.IsNextToLand()).ToList();
-        if (waterShorePolygons.Count == 0) return;
+
+        // When there is no land yet, just convert a random polygon to land
+        if (waterShorePolygons.Count == 0) waterShorePolygons = PMG.Polygons.Where(x => !x.IsEdgePolygon).ToList();
+
         GraphPolygon newLand = waterShorePolygons[UnityEngine.Random.Range(0, waterShorePolygons.Count)];
         TurnPolygonToLand(newLand);
     }

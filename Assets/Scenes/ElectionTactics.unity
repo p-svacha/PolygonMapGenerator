@@ -7789,7 +7789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WaterColor: {r: 0.28835887, g: 0.52588207, b: 0.754717, a: 1}
   ActiveDistrictColor: {r: 0.73915094, g: 0.9339623, b: 0.7004717, a: 1}
-  InactiveDistrictColor: {r: 1, g: 1, b: 1, a: 1}
+  InactiveDistrictColor: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
   SelectedDistrictColor: {r: 0.9450981, g: 0.43529415, b: 0.33333334, a: 1}
   HighImpactColor: {r: 1, g: 0.16666667, b: 0, a: 1}
   MediumImpactColor: {r: 0.9622642, g: 0.5324815, b: 0.24056605, a: 1}
@@ -13653,18 +13653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca420a5a835cf04439cc8960d4a39115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TopographicLandMaterial: {fileID: 2100000, guid: 1a4184d8d0ab3974ea8d2bd8fd76c724,
-    type: 2}
-  TopographicWaterMaterial: {fileID: 2100000, guid: a03408e8d2747db489db927718172e54,
-    type: 2}
-  PoliticalLandMaterial: {fileID: 2100000, guid: e7b12b017541be54f91cf4e25a65ad3a,
-    type: 2}
-  PoliticalWaterMaterial: {fileID: 2100000, guid: 0dd59363f0087184db205409fe8b4baf,
-    type: 2}
-  SatelliteLandMaterial: {fileID: 2100000, guid: eef4b7ece5124974f91521b9a9b2f7b5,
-    type: 2}
-  SatelliteWaterMaterial: {fileID: 2100000, guid: e04b40bf0be048be81d0021195b74e5c,
-    type: 2}
+  DefaultMaterial: {fileID: 2100000, guid: cd7b118cb348e9d4b8b8151e9bdcada3, type: 2}
   LandColor: {r: 0.73915094, g: 0.9339623, b: 0.7004717, a: 1}
   WaterColor: {r: 0.28835887, g: 0.52588207, b: 0.754717, a: 1}
   HighlightColor: {r: 1, g: 0, b: 0, a: 0}
