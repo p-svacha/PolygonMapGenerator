@@ -58,17 +58,7 @@ public class Map
             if (!r.IsWater) r.SetColor(landColor);
             else r.SetColor(waterColor);
         }
-        GameObject landmassBorderContainer = new GameObject("Landmass Borders");
-        landmassBorderContainer.transform.SetParent(RootObject.transform);
-        foreach(Landmass lm in Landmasses)
-        {
-            List<GameObject> curLandmassBorders = MeshGenerator.CreatePolygonGroupBorder(lm.Regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultBorderWidth * 3, Color.black);
-            foreach(GameObject border in curLandmassBorders)
-            {
-                border.transform.SetParent(landmassBorderContainer.transform);
-                LandmassBorders.Add(border);
-            }
-        }
+        
         ShowRegionBorders(showRegionBorders);
     }
 
@@ -82,6 +72,7 @@ public class Map
 
     private void IdentifyLandmasses()
     {
+        // Identify landmasses
         Landmasses.Clear();
 
         List<Region> regionsWithoutLandmass = new List<Region>();
@@ -108,6 +99,20 @@ public class Map
             {
                 r.Landmass = newLandmass;
                 regionsWithoutLandmass.Remove(r);
+            }
+        }
+
+        // Create landmass coast border meshes
+        GameObject landmassBorderContainer = new GameObject("Landmass Borders");
+        landmassBorderContainer.transform.SetParent(RootObject.transform);
+
+        foreach (Landmass lm in Landmasses)
+        {
+            List<GameObject> curLandmassBorders = MeshGenerator.CreatePolygonGroupBorder(lm.Regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultCoastBorderWidth, Color.black, onOutside: true, height: 0.0001f);
+            foreach (GameObject border in curLandmassBorders)
+            {
+                border.transform.SetParent(landmassBorderContainer.transform);
+                LandmassBorders.Add(border);
             }
         }
     }

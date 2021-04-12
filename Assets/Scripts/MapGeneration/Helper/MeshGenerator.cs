@@ -97,7 +97,7 @@ public class MeshGenerator
         return polygon;
     }
 
-    public static GameObject CreateSinglePolygonBorder(List<GraphNode> nodes, float width, Color c, bool clockwise = false)
+    public static GameObject CreateSinglePolygonBorder(List<GraphNode> nodes, float width, Color c, float height, bool clockwise = false)
     {
         List<Vector2> outerVertices = nodes.Select(x => x.Vertex).ToList();
         List<Vector2> innerVertices = new List<Vector2>();
@@ -131,12 +131,11 @@ public class MeshGenerator
         }
 
         // Create full vertex list (outer0, inner0, outer1, inner1, outer2, inner2, ...)
-        float borderHeight = 0.0001f;
         Vector3[] vertices = new Vector3[outerVertices.Count + innerVertices.Count];
         for (int i = 0; i < outerVertices.Count; i++)
         {
-            vertices[2 * i] = new Vector3(outerVertices[i].x, borderHeight, outerVertices[i].y);
-            vertices[2 * i + 1] = new Vector3(innerVertices[i].x, borderHeight, innerVertices[i].y);
+            vertices[2 * i] = new Vector3(outerVertices[i].x, height, outerVertices[i].y);
+            vertices[2 * i + 1] = new Vector3(innerVertices[i].x, height, innerVertices[i].y);
         }
 
         // Create triangles ( 0/2/1, 1/2/3, 2/4/3, 3/4/5, 4/6/5, 5/6/7, ...) 
@@ -178,9 +177,9 @@ public class MeshGenerator
     }
 
     /// <summary>
-    /// Creates a GameObject with a mesh that represents the bounds of multiple polygons.
+    /// Creates a GameObject with a mesh that represents the bounds of multiple polygons. onOutside means the border will be drawn on the outside of the polygons,
     /// </summary>
-    public static List<GameObject> CreatePolygonGroupBorder(List<GraphPolygon> polygons, float width, Color c)
+    public static List<GameObject> CreatePolygonGroupBorder(List<GraphPolygon> polygons, float width, Color c, bool onOutside, float height)
     {
         List<GameObject> borders = new List<GameObject>();
 
@@ -199,8 +198,8 @@ public class MeshGenerator
         {
             List<Vector2> outerVertices = border.Select(x => x.Vertex).ToList();
             bool isClockwise = IsClockwise(outerVertices);
-            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, isClockwise));
-            else borders.Add(CreateSinglePolygonBorder(border, width, c, !isClockwise));
+            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? !isClockwise : isClockwise));
+            else borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? isClockwise : !isClockwise));
         }
 
         return borders;

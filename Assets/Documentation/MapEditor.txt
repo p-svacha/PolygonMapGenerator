@@ -2,25 +2,23 @@
 
 - When a polygon is split and the split is starting on a 3-way junction where 1 polygon is water, then the water polygon turns into land after the split
 - It is possible to merge 2 polygons so that the new polygon fully engulves another polygon, this should not be allowed
+- In very rare cases the map generation results in a stackoverflow in the function FindPolygon
+- In very rare cases polygons are created with extremely shard edges (like 1° angles)
 
 
 2. High prio bugfixes
 
-- make coast borders on the outside (on the water) to prevent overlap with nation borders
-- new function (FindClusters) that splits a list of polygons into clusters, already implemented in landmass indentification
-	- use new function to split nation into clusters before generating border meshes
-- fix adjacency overlay for multiple selection
-- parallel lines that are exactly at angle of z axis create distorted borders (maybe mistake in RotateVector?)
-- in very rare cases border meshes still get distorted (probably impossible to fix)
+- PROBABLY FIXED: parallel lines that are exactly at angle of z axis create distorted borders (maybe mistake in RotateVector?)
+- in very rare cases border meshes still get distorted (at exactly 90°?)
 
 3. big features to add
 
-- zoom and moving
 - merge should treat first polygon as source and the resulting polygon should inherit all attributes from source
 - split and merge should only recalculate the affected regions
 - give nations a name upon creation
 - improved labeling of polygons and polygon groups: https://observablehq.com/@veltman/centerline-labeling
-- when creating a nation with a region of another nation, remove that region from the other nation (recalculate border meshes and name labeling)
 - biomes according to temperature and humidity distribution (see SavingPlanetX)
+- TurnToWater & TurnToLand Buttons
+
 
 

@@ -111,6 +111,9 @@ public static class GeometryFunctions
 
     public static Vector2 RotateVector(Vector2 v, float degrees)
     {
+        if(degrees == 90) return new Vector2(-v.y, v.x);
+        if (degrees == -90) return new Vector2(v.y, -v.x);
+
         float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
         float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
 
@@ -132,9 +135,15 @@ public static class GeometryFunctions
         Vector2 intersection = new Vector2(0, 0);
 
         // Check parallel
+        if(Math.Abs(p1.x - p2.x) < 0.001f && Math.Abs(p3.x - p4.x) < 0.001f)
+        {
+            parralel = true;
+            intersection = new Vector2(0, 0);
+            return intersection;
+        }
         float a1 = (p1.y - p2.y) / (p1.x - p2.x);
         float a2 = (p3.y - p4.y) / (p3.x - p4.x);
-        if(Math.Abs(a1 - a2) < 0.00001f)
+        if( Math.Abs(a1 - a2) < 0.00001f)
         {
             parralel = true;
             intersection = new Vector2(0, 0);

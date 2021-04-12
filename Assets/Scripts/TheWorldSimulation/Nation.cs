@@ -12,9 +12,10 @@ public class Nation
     public Region Capital;
 
     public List<Region> Regions = new List<Region>();
+    public List<List<Region>> Clusters = new List<List<Region>>();
     public float Area;
 
-    public List<GameObject> NationPolygons = new List<GameObject>();
+    public List<GameObject> Borders = new List<GameObject>();
 
     public void AddRegion(Region region)
     {
@@ -22,18 +23,26 @@ public class Nation
         Regions.Add(region);
         region.SetNation(this);
         region.SetColor(PrimaryColor);
-        CalculateArea();
+        UpdateProperties();
     }
 
     public void RemoveRegion(Region region)
     {
         Regions.Remove(region);
         region.SetNation(null);
-        CalculateArea();
+        UpdateProperties();
     }
 
-    private void CalculateArea()
+    private void UpdateProperties()
     {
+        foreach (GameObject border in Borders) GameObject.Destroy(border);
+
         Area = Regions.Sum(x => x.Area);
+        Clusters = PolygonMapFunctions.FindClusters(Regions);
+        foreach (List<Region> cluster in Clusters)
+        {
+            List<GameObject> clusterBorders = MeshGenerator.CreatePolygonGroupBorder(cluster.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultCoastBorderWidth, SecondaryColor, onOutside: false, height: 0.0002f);
+            foreach (GameObject clusterBorder in clusterBorders) Borders.Add(clusterBorder);
+        }
     }
 }

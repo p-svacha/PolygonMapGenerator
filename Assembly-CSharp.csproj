@@ -169,6 +169,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Shaders\unused\LandShader_Political.shader" />
