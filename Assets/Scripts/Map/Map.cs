@@ -10,6 +10,10 @@ public class Map
     public Texture2D RegionBorderMaskTexture;
 
     public GameObject RootObject;
+    public GameObject BorderPointContainer;
+    public GameObject BorderContainer;
+    public GameObject RegionContainer;
+
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> EdgeBorders = new List<Border>();
@@ -19,6 +23,7 @@ public class Map
     public List<River> Rivers = new List<River>();
 
     // Display Mode
+    public List<GameObject> LandmassBorders = new List<GameObject>();
     public bool IsShowingRegionBorders;
 
     public int Width;
@@ -52,6 +57,17 @@ public class Map
         {
             if (!r.IsWater) r.SetColor(landColor);
             else r.SetColor(waterColor);
+        }
+        GameObject landmassBorderContainer = new GameObject("Landmass Borders");
+        landmassBorderContainer.transform.SetParent(RootObject.transform);
+        foreach(Landmass lm in Landmasses)
+        {
+            List<GameObject> curLandmassBorders = MeshGenerator.CreatePolygonGroupBorder(lm.Regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultBorderWidth * 3, Color.black);
+            foreach(GameObject border in curLandmassBorders)
+            {
+                border.transform.SetParent(landmassBorderContainer.transform);
+                LandmassBorders.Add(border);
+            }
         }
         ShowRegionBorders(showRegionBorders);
     }
@@ -161,13 +177,12 @@ public class Map
 
     public void ToggleHideBorders()
     {
-        foreach (Border b in Borders) b.gameObject.SetActive(!b.gameObject.activeSelf);
-        foreach (Border b in EdgeBorders) b.gameObject.SetActive(!b.gameObject.activeSelf);
+        BorderContainer.SetActive(!BorderContainer.gameObject.activeSelf);
     }
 
     public void ToggleHideBorderPoints()
     {
-        foreach (BorderPoint bp in BorderPoints) bp.gameObject.SetActive(!bp.gameObject.activeSelf);
+        BorderPointContainer.SetActive(!BorderPointContainer.gameObject.activeSelf);
     }
 
     public void UpdateDisplay()
@@ -179,6 +194,7 @@ public class Map
     public void ShowRegionBorders(bool show)
     {
         IsShowingRegionBorders = show;
+        //foreach (GameObject landmassBorder in LandmassBorders) landmassBorder.SetActive(show);
         foreach (Region r in Regions.Where(x => !x.IsWater)) r.SetShowRegionBorders(show);
     }
 

@@ -43,6 +43,8 @@ public class PolygonMapGenerator : MonoBehaviour
     public bool Island;
 
     public bool ShowRegionBorders;
+    public const float DefaultBorderWidth = 0.01f;
+    public const float DefaultCoastBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
     public Color LandColor;
@@ -710,18 +712,18 @@ public class PolygonMapGenerator : MonoBehaviour
 
         GameObject mapObject = new GameObject("Map");
         Map.RootObject = mapObject;
-        GameObject borderPointsContainer = new GameObject("BorderPoints");
-        borderPointsContainer.transform.SetParent(mapObject.transform);
-        GameObject bordersContainer = new GameObject("Borders");
-        bordersContainer.transform.SetParent(mapObject.transform);
-        GameObject polygonsContainer = new GameObject("Regions");
-        polygonsContainer.transform.SetParent(mapObject.transform);
+        Map.BorderPointContainer = new GameObject("BorderPoints");
+        Map.BorderPointContainer.transform.SetParent(mapObject.transform);
+        Map.BorderContainer = new GameObject("Borders");
+        Map.BorderContainer.transform.SetParent(mapObject.transform);
+        Map.RegionContainer = new GameObject("Regions");
+        Map.RegionContainer.transform.SetParent(mapObject.transform);
 
         // Add border points
         foreach (GraphNode n in Nodes)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.SetParent(borderPointsContainer.transform);
+            sphere.transform.SetParent(Map.BorderPointContainer.transform);
             BorderPoint borderPoint = sphere.AddComponent<BorderPoint>();
             n.BorderPoint = borderPoint;
             Map.BorderPoints.Add(borderPoint);
@@ -731,7 +733,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphConnection c in InGraphConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.SetParent(bordersContainer.transform);
+            cube.transform.SetParent(Map.BorderContainer.transform);
             Border border = cube.AddComponent<Border>();
             c.Border = border;
             Map.Borders.Add(border);
@@ -740,7 +742,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphConnection c in EdgeConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.SetParent(bordersContainer.transform);
+            cube.transform.SetParent(Map.BorderContainer.transform);
             Border border = cube.AddComponent<Border>();
             c.Border = border;
             Map.EdgeBorders.Add(border);
@@ -751,7 +753,7 @@ public class PolygonMapGenerator : MonoBehaviour
         {
             // Mesh
             GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes, this);
-            polygon.transform.SetParent(polygonsContainer.transform);
+            polygon.transform.SetParent(Map.RegionContainer.transform);
 
             // Collider
             polygon.AddComponent<MeshCollider>();
@@ -762,7 +764,7 @@ public class PolygonMapGenerator : MonoBehaviour
             Map.Regions.Add(region);
         }
 
-        foreach (GraphNode n in Nodes) n.BorderPoint.Init(n);
+        foreach (GraphNode n in Nodes) n.BorderPoint.Init(Map, n);
         foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphPolygon p in Polygons) p.Region.Init(p);

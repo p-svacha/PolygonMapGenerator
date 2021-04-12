@@ -8232,7 +8232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca420a5a835cf04439cc8960d4a39115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultMaterial: {fileID: 2100000, guid: cd7b118cb348e9d4b8b8151e9bdcada3, type: 2}
+  DefaultMaterial: {fileID: 2100000, guid: f609a52a90327e14d8c1523cfa363120, type: 2}
   LandColor: {r: 0.73915094, g: 0.9339623, b: 0.7004717, a: 1}
   WaterColor: {r: 0.28835887, g: 0.52588207, b: 0.754717, a: 1}
   HighlightColor: {r: 0, g: 0, b: 0, a: 0}

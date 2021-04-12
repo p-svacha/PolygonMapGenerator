@@ -21,7 +21,7 @@ public static class GeometryFunctions
     // 0 --> p, q and r are colinear 
     // 1 --> Clockwise 
     // 2 --> Counterclockwise 
-    private static int orientation(Vector2 p, Vector2 q, Vector2 r)
+    public static int orientation(Vector2 p, Vector2 q, Vector2 r)
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-Vector2s/ 
         // for details of below formula. 
@@ -124,11 +124,22 @@ public static class GeometryFunctions
 
     // Find the point of intersection between
     // the lines p1 --> p2 and p3 --> p4.
-    public static Vector2 FindIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    public static Vector2 FindIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, ref bool parralel)
     {
+        parralel = false;
         bool lines_intersect = false;
         bool segments_intersect = false;
         Vector2 intersection = new Vector2(0, 0);
+
+        // Check parallel
+        float a1 = (p1.y - p2.y) / (p1.x - p2.x);
+        float a2 = (p3.y - p4.y) / (p3.x - p4.x);
+        if(Math.Abs(a1 - a2) < 0.00001f)
+        {
+            parralel = true;
+            intersection = new Vector2(0, 0);
+            return intersection;
+        }
 
         // Get the segments' parameters.
         float dx12 = p2.x - p1.x;

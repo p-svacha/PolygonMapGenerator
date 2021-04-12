@@ -228,7 +228,8 @@ public class UI_MapEditor : MonoBehaviour
         newNation.PrimaryColor = ColorManager.GetRandomColor();
         newNation.SecondaryColor = ColorManager.GetRandomColor(new List<Color>() { newNation.PrimaryColor });
         foreach (Region r in SelectedRegions) newNation.AddRegion(r);
-        newNation.CreateNationPolygons();
+        ClearRegionSelection();
+        MeshGenerator.CreatePolygonGroupBorder(newNation.Regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultCoastBorderWidth, newNation.SecondaryColor);
     }
 
     public void HighlightNeighbours()

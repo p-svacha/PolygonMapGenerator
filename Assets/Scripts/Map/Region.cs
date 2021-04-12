@@ -58,6 +58,7 @@ public class Region : MonoBehaviour
     private Color HighlightColor; // HighlightColor overrides Color if IsHighlighted is true
     public bool IsBlinking;
     private bool ShowRegionBorders;
+    public GameObject Border;
 
     public void Init(GraphPolygon p)
     {
@@ -92,6 +93,9 @@ public class Region : MonoBehaviour
         DistanceFromNearestWater = p.DistanceFromNearestWater;
 
         GetComponent<Renderer>().material = MaterialHandler.Materials.DefaultMaterial;
+
+        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black);
+        Border.transform.SetParent(transform);
     }
 
     /// <summary>
@@ -138,8 +142,7 @@ public class Region : MonoBehaviour
         if (IsHighlighted) GetComponent<Renderer>().material.SetColor("_Color", HighlightColor);
         else GetComponent<Renderer>().material.SetColor("_Color", Color);
 
-        if (ShowRegionBorders) GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color.black);
-        else GetComponent<MeshRenderer>().material.SetColor("_BorderColor", Color);
+        Border.SetActive(ShowRegionBorders);
 
         GetComponent<MeshRenderer>().material.SetFloat("_Blink", IsBlinking ? 1 : 0);
     }
