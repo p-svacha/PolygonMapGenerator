@@ -17,7 +17,7 @@
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-        // 1. Pass: Paint black
+        // 1. Pass: Paint normally in border color
         Pass
         {
             CGPROGRAM
@@ -58,7 +58,7 @@
         }
 
         
-        // 2. Pass: Shrink in normal direction and paint normally
+        // 2. Pass: Shrink in tangent direction and paint normally
         Pass
         {
             CGPROGRAM

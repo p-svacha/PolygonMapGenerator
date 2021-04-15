@@ -21,7 +21,7 @@ public static class GeometryFunctions
     // 0 --> p, q and r are colinear 
     // 1 --> Clockwise 
     // 2 --> Counterclockwise 
-    public static int orientation(Vector2 p, Vector2 q, Vector2 r)
+    private static int orientation(Vector2 p, Vector2 q, Vector2 r)
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-Vector2s/ 
         // for details of below formula. 
@@ -206,4 +206,46 @@ public static class GeometryFunctions
         return intersection;
     }
 
+    /// <summary>
+    /// Returns if the polygon with the given points is in clockwise or anticlockwise rotation
+    /// </summary>
+    public static bool IsClockwise(List<Vector2> points)
+    {
+        int num_points = points.Count;
+        Vector2[] pts = new Vector2[num_points + 1];
+        for (int i = 0; i < points.Count; i++) pts[i] = points[i];
+        pts[num_points] = points[0];
+
+        // Get the areas.
+        float area = 0;
+        for (int i = 0; i < num_points; i++)
+        {
+            area +=
+                (pts[i + 1].x - pts[i].x) *
+                (pts[i + 1].y + pts[i].y) / 2;
+        }
+
+        return area < 0;
+    }
+
+    /// <summary>
+    /// Determines if the given point is inside the polygon
+    /// </summary>
+    public static bool IsPointInPolygon4(List<Vector2> polygon, Vector2 testPoint)
+    {
+        bool result = false;
+        int j = polygon.Count - 1;
+        for (int i = 0; i < polygon.Count; i++)
+        {
+            if (polygon[i].y < testPoint.y && polygon[j].y >= testPoint.y || polygon[j].y < testPoint.y && polygon[i].y >= testPoint.y)
+            {
+                if (polygon[i].x + (testPoint.y - polygon[i].y) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < testPoint.x)
+                {
+                    result = !result;
+                }
+            }
+            j = i;
+        }
+        return result;
+    }
 }

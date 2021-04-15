@@ -75,6 +75,7 @@ public class UI_MapEditor : MonoBehaviour
     public List<Region> SelectedRegionWaterNeighbours = new List<Region>();
 
     // Nations
+    public List<Nation> Nations = new List<Nation>();
     public Dictionary<Region, Nation> NationMap;
 
 
@@ -124,7 +125,6 @@ public class UI_MapEditor : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.Mouse2)) IsMouseWheelDown = false;
             if (IsMouseWheelDown)
             {
-                Debug.Log("Drag");
                 float speed = Camera.main.transform.position.y * DRAG_SPEED;
                 Camera.main.transform.position += new Vector3(-Input.GetAxis("Mouse X") * speed, 0f, -Input.GetAxis("Mouse Y") * speed);
             }
@@ -138,6 +138,8 @@ public class UI_MapEditor : MonoBehaviour
         // Reset
         ClearRegionSelection();
         NationMap = new Dictionary<Region, Nation>();
+        foreach (Nation n in Nations) n.DestroyAllObjects();
+        Nations.Clear();
 
         // Generate new map
         float minRegionArea = float.Parse(MinAreaText.text);
@@ -302,16 +304,18 @@ public class UI_MapEditor : MonoBehaviour
     private void CreateNation()
     {
         Nation newNation = new Nation();
-        newNation.Name = "Test";
+        newNation.Name = MarkovChainWordGenerator.GetRandomName(10);
         newNation.PrimaryColor = ColorManager.GetRandomColor();
         newNation.SecondaryColor = ColorManager.GetRandomColor(new List<Color>() { newNation.PrimaryColor });
         foreach (Region r in SelectedRegions)
         {
             if (NationMap[r] != null) NationMap[r].RemoveRegion(r);
-            newNation.AddRegion(r);
+            newNation.AddRegion(r, false);
             NationMap[r] = newNation;
         }
         ClearRegionSelection();
+        newNation.UpdateProperties();
+        Nations.Add(newNation);
     }
 
     public void HighlightNeighbours()

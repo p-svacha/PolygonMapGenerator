@@ -123,7 +123,7 @@ public class MeshGenerator
             Vector2 targetPoint = GeometryFunctions.FindIntersection(beforeParallelStart, beforeParallelEnd, afterParallelStart, afterParallelEnd, ref parallel);
             if (parallel) // lines are parallel -> no intersection
             {
-                Debug.Log("Found a parallel border in border mesh creation");
+                //Debug.Log("Found a parallel border in border mesh creation");
                 targetPoint = thisVertex + toBefore90 * width;
             }
 
@@ -183,21 +183,13 @@ public class MeshGenerator
     {
         List<GameObject> borders = new List<GameObject>();
 
-        // Make a list of all nodes that are on a border
-        List<GraphNode> borderNodes = new List<GraphNode>();
-        foreach (GraphPolygon p in polygons)
-            foreach (GraphNode n in p.Nodes.Where(x => !x.Polygons.All(p => polygons.Contains(p)) || x.Type == BorderPointType.Edge))
-                if(!borderNodes.Contains(n)) borderNodes.Add(n);
-
-
-
         // Find outer mesh vertices
-        List<List<GraphNode>> outerNodes = FindOutsideNodes(polygons, borderNodes);
+        List<List<GraphNode>> outerNodes = PolygonMapFunctions.FindOutsideNodes(polygons);
         List<GraphNode> outsideBorder = outerNodes.First(x => x.Count == outerNodes.Max(y => y.Count));
         foreach(List<GraphNode> border in outerNodes)
         {
             List<Vector2> outerVertices = border.Select(x => x.Vertex).ToList();
-            bool isClockwise = IsClockwise(outerVertices);
+            bool isClockwise = GeometryFunctions.IsClockwise(outerVertices);
             if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? !isClockwise : isClockwise));
             else borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? isClockwise : !isClockwise));
         }
@@ -205,103 +197,7 @@ public class MeshGenerator
         return borders;
     }
 
-    private static List<List<GraphNode>> FindOutsideNodes(List<GraphPolygon> cluster, List<GraphNode> nodes)
-    {
-        List<List<GraphNode>> outsideNodes = new List<List<GraphNode>>();
 
-        while (nodes.Count > 0)
-        {
-            Debug.Log("Remainig nodes: " + nodes.Count);
-            List<GraphNode> currentBorder = new List<GraphNode>();
-
-            GraphNode startNode = nodes[0];
-            currentBorder.Add(startNode);
-
-
-
-            GraphNode prevNode = startNode;
-            if(startNode.ConnectedNodes.Where(x => nodes.Contains(x)).FirstOrDefault() == null)
-            {
-                foreach (GraphNode n in nodes)
-                {
-                    n.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.red;
-                }
-                startNode.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.blue;
-            }
-            GraphNode currentNode = startNode.ConnectedNodes.Where(x => nodes.Contains(x) && startNode.GetConnectionTo(x).Polygons.Any(p => cluster.Contains(p)) && (startNode.GetConnectionTo(x).Polygons.Any(p => !cluster.Contains(p)) || x.Type == BorderPointType.Edge)).First();
-
-            int counter = 0;
-            while (currentNode != startNode && counter < 10010)
-            {
-                if (counter == 10000) throw new System.Exception("OVERLFOW");
-                int remainingConnections = currentNode.ConnectedNodes.Where(x => nodes.Contains(x)).Count();
-                if(remainingConnections <= 2) nodes.Remove(currentNode);
-                currentBorder.Add(currentNode);
-
-                GraphNode nextNode = FindNextOutsideNode(prevNode, currentNode, cluster, nodes);
-                prevNode = currentNode;
-                currentNode = nextNode;
-
-                counter++;
-            }
-            nodes.Remove(startNode);
-
-            outsideNodes.Add(currentBorder);
-        }
-
-        return outsideNodes;
-    }
-
-    private static GraphNode FindNextOutsideNode(GraphNode from, GraphNode to, List<GraphPolygon> cluster, List<GraphNode> borderNodes)
-    {
-        // Next node must fulfill following criteria:
-        // - must not be previous node
-        // - must have at least 1 polygon belonging to the cluster
-        // - must have at least 1 polygon not belonging to the cluster
-        // - connection to node must have at least 1 polygon belonging to the cluster
-        // - connection to node must have at least 1 polygon not belonging to the cluster
-
-        float smallestAngle = float.MaxValue;
-        GraphNode toNode = null;
-
-        foreach (GraphNode connectedNode in to.ConnectedNodes.Where(x => borderNodes.Contains(x) && (to.GetConnectionTo(x).Polygons.Any(p => !cluster.Contains(p)) || x.Type == BorderPointType.Edge) && to.GetConnectionTo(x).Polygons.Any(p => cluster.Contains(p))))
-        {
-            if (connectedNode != from)
-            {
-                float angle = Vector2.SignedAngle(to.Vertex - from.Vertex, connectedNode.Vertex - to.Vertex);
-                if (angle < smallestAngle)
-                {
-                    smallestAngle = angle;
-                    toNode = connectedNode;
-                }
-            }
-        }
-        if(toNode == null)
-        {
-            from.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.green;
-            to.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.red;
-        }
-        return toNode;
-    }
-
-    private static bool IsClockwise(List<Vector2> points)
-    {
-        int num_points = points.Count;
-        Vector2[] pts = new Vector2[num_points + 1];
-        for (int i = 0; i < points.Count; i++) pts[i] = points[i];
-        pts[num_points] = points[0];
-
-        // Get the areas.
-        float area = 0;
-        for (int i = 0; i < num_points; i++)
-        {
-            area +=
-                (pts[i + 1].x - pts[i].x) *
-                (pts[i + 1].y + pts[i].y) / 2;
-        }
-
-        return area < 0;
-    }
 
 
 }

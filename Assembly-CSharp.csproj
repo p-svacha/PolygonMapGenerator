@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\Map\River.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\TopologyCreator.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\PartyAI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\ConstitutionVoting\UI_Voting.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\ColorManager.cs" />
@@ -169,17 +170,51 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\VPoint.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\VEdge.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\ParabolaMath.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\MinHeap.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneCircleEvent.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSiteEvent.cs" />
+    <Compile Include="Assets\Scripts\PolygonLabels\CenterlineLabler.cs" />
+    <Compile Include="Assets\Scripts\PolygonLabels\CurvedText.cs" />
   </ItemGroup>
   <ItemGroup>
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\unused\LandShader_Political.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
      <None Include="Assets\Shaders\DistrictShader.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\Documentation\ElectionTactics.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
      <None Include="Assets\Resources\Textures\HITW_Terrain-Textures-Set\HITW-Terrain-Textures-LICENSE.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
      <None Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\Water Specular.shader" />
      <None Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\Water Surface.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\Documentation\MapEditor.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
      <None Include="Assets\Scripts\NameGeneration\InputData\Province.txt" />
+     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\2020.3.2f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
