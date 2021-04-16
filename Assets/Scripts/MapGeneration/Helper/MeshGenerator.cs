@@ -168,7 +168,7 @@ public class MeshGenerator
         MeshRenderer renderer = border.AddComponent<MeshRenderer>();
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
-        renderer.material = MaterialHandler.Materials.DefaultMaterial;
+        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
         renderer.material.color = c;
         MeshFilter filter = border.AddComponent<MeshFilter>();
         filter.mesh = msh;

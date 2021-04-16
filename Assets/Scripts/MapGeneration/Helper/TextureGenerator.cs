@@ -9,7 +9,7 @@ public static class TextureGenerator
 {
     public static void GenerateSatelliteTexture(PolygonMapGenerator PMG)
     {
-        MaterialHandler MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MaterialHandler>();
+        MapDisplaySettings MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MapDisplaySettings>();
 
         // Land texture
         int perlinRange = 10000;

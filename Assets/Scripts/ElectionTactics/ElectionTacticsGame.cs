@@ -80,7 +80,7 @@ namespace ElectionTactics
 
         private void StartGame()
         {
-            PMG.GenerateMap(10, 10, 0.08f, 1.5f, island: true, ColorManager.Colors.InactiveDistrictColor, ColorManager.Colors.WaterColor, drawRegionBorders: true, callback: OnMapGenerated);
+            PMG.GenerateMap(10, 10, 0.08f, 1.5f, island: true, MapDrawMode.Basic, drawRegionBorders: true, callback: OnMapGenerated);
 
             HeaderSlideTime *= SpeedModifier;
             DistrictPanTime *= SpeedModifier;

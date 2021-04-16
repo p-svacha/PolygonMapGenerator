@@ -36,6 +36,11 @@ public class Region : MonoBehaviour
     public Vector2 Centroid; // Mathematical average center of polygon
     public Vector2 CenterPoi; // Point of inaccessability - this is the point with the biggest distance to any edge
 
+    // Climate
+    public int Temperature;
+    public int Precipitation;
+    public Biome Biome;
+
     // Topography
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
     public List<Border> Borders = new List<Border>();
@@ -86,13 +91,17 @@ public class Region : MonoBehaviour
         CoastLength = p.Coastline;
         CoastRatio = CoastLength / TotalBorderLength;
 
+        Temperature = p.Temperature;
+        Precipitation = p.Precipitation;
+        Biome = p.Biome;
+
         IsWater = p.IsWater;
         IsNextToWater = p.IsNextToWater;
         IsEdgeRegion = p.IsEdgePolygon;
         IsOuterOcean = p.IsOuterPolygon;
         DistanceFromNearestWater = p.DistanceFromNearestWater;
 
-        GetComponent<Renderer>().material = MaterialHandler.Materials.DefaultMaterial;
+        GetComponent<Renderer>().material = MapDisplaySettings.Settings.DefaultMaterial;
 
         Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, height: 0.0001f);
         Border.transform.SetParent(transform);

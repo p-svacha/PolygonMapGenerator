@@ -28,6 +28,10 @@ public class GraphPolygon
     public bool HasRiver;
     public int DistanceFromNearestWater;
 
+    public int Temperature;
+    public int Precipitation;
+    public Biome Biome;
+
     public Vector2 CenterPoi; // Point of inaccessability - this is the point with the biggest distance to any edge
 
     public Region Region;

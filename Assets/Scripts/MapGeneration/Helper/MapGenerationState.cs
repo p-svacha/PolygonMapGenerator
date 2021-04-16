@@ -13,6 +13,7 @@ public enum MapGenerationState
     MergeSmallPolygons,
     CreateWaters,
     FindWaterNeighbours,
+    ApplyBiomes,
     //CreateTopology,
     //CreateRivers,
     DrawMap,

@@ -22,7 +22,8 @@ public class Map
     public List<WaterBody> WaterBodies = new List<WaterBody>();
     public List<River> Rivers = new List<River>();
 
-    // Display Mode
+    // Display
+    public MapDrawMode DrawMode;
     public List<GameObject> LandmassBorders = new List<GameObject>();
     public bool IsShowingRegionBorders;
 
@@ -41,26 +42,39 @@ public class Map
         //RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, Color landColor, Color waterColor)
+    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, MapDrawMode drawMode)
     {
         InitRivers(PMG);
-        InitDisplay(showRegionBorders, landColor, waterColor);
+        UpdateDrawMode(drawMode);
+        ShowRegionBorders(showRegionBorders);
         IdentifyLandmasses();
         IdentifyWaterBodies();
         InitAdditionalRegionInfo();
         FocusMapInEditor();
-        
     }
 
-    private void InitDisplay(bool showRegionBorders, Color landColor, Color waterColor)
+    public void UpdateDrawMode(MapDrawMode drawMode)
     {
-        foreach (Region r in Regions)
+        DrawMode = drawMode;
+
+        switch(DrawMode)
         {
-            if (!r.IsWater) r.SetColor(landColor);
-            else r.SetColor(waterColor);
+            case MapDrawMode.Basic:
+                foreach (Region r in Regions)
+                {
+                    if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                    else r.SetColor(MapDisplaySettings.Settings.LandColor);
+                }
+                break;
+
+            case MapDrawMode.Biomes:
+                foreach (Region r in Regions)
+                {
+                    if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                    else r.SetColor(MapDisplaySettings.Settings.GetBiomeColor(r.Biome));
+                }
+                break;
         }
-        
-        ShowRegionBorders(showRegionBorders);
     }
 
     private void InitRivers(PolygonMapGenerator PMG)

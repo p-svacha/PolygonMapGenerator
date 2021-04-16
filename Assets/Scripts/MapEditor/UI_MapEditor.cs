@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,7 +31,11 @@ public class UI_MapEditor : MonoBehaviour
     public Text MinAreaText;
     public Text MaxAreaText;
     public Toggle IslandToggle;
+
+    [Header("Display")]
     public Toggle RegionBorderToggle;
+    public Dropdown DrawModeDropdown;
+    public MapDrawMode CurrentDrawMode;
 
     [Header("Map Information")]
     public GameObject MapInfoPanel;
@@ -85,10 +90,14 @@ public class UI_MapEditor : MonoBehaviour
     {
         GenerateButton.onClick.AddListener(Generate);
 
+        RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
+        foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
+        DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
+        DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
+
         TurnToLandButton.onClick.AddListener(TurnSelectedToRegionsToLand);
         TurnToWaterButton.onClick.AddListener(TurnSelectedRegionsToWater);
         SplitRegionButton.onClick.AddListener(SplitSelectedRegion);
-        RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
         MergeRegionsButton.onClick.AddListener(MergeSelectedRegions);
         CreateNationButton.onClick.AddListener(CreateNation);
 
@@ -145,7 +154,7 @@ public class UI_MapEditor : MonoBehaviour
         // Generate new map
         float minRegionArea = float.Parse(MinAreaText.text);
         float maxRegionArea = float.Parse(MaxAreaText.text);
-        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, PolygonMapGenerator.DefaultLandColor, PolygonMapGenerator.DefaultWaterColor, RegionBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
+        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, CurrentDrawMode, RegionBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
     }
 
     private void Reset()
@@ -169,7 +178,13 @@ public class UI_MapEditor : MonoBehaviour
 
     private void ToggleRegionBorders(bool enabled)
     {
-        if (PMG.Map != null) PMG.Map.ShowRegionBorders(enabled);
+        if (CurrentMap != null) CurrentMap.ShowRegionBorders(enabled);
+    }
+
+    private void DrawModeDropdown_OnValueChanged(int value)
+    {
+        CurrentDrawMode = (MapDrawMode) Enum.Parse(typeof(MapDrawMode), DrawModeDropdown.options[value].text);
+        if(CurrentMap != null) CurrentMap.UpdateDrawMode(CurrentDrawMode);
     }
 
     private void SetMapInformation(Map map)

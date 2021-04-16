@@ -43,12 +43,11 @@ public class PolygonMapGenerator : MonoBehaviour
     public bool Island;
 
     public bool ShowRegionBorders;
+    public MapDrawMode DrawMode;
     public const float DefaultBorderWidth = 0.005f;
     public const float DefaultCoastBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
-    public Color LandColor;
-    public Color WaterColor;
 
     public const float START_LINES_PER_KM = 0.6f; // Active lines per km map side length
     public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
@@ -86,7 +85,7 @@ public class PolygonMapGenerator : MonoBehaviour
         NameGeneratorThread.Start();
     }
 
-    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, Color landColor, Color waterColor, bool drawRegionBorders = false, Action callback = null, bool destroyOldMap = false)
+    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, MapDrawMode drawMode, bool drawRegionBorders = false, Action callback = null, bool destroyOldMap = false)
     {
         Callback = callback;
 
@@ -106,9 +105,8 @@ public class PolygonMapGenerator : MonoBehaviour
         MinPolygonArea = minPolygonArea;
         MaxPolygonArea = maxPolygonArea;
         Island = island;
+        DrawMode = drawMode;
         ShowRegionBorders = drawRegionBorders;
-        LandColor = landColor;
-        WaterColor = waterColor;
 
         MapSize = Width * Height;
 
@@ -159,6 +157,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.FindWaterNeighbours:
                 FindWaterNeighbours();
+                SwitchState(MapGenerationState.ApplyBiomes);
+                break;
+
+            case MapGenerationState.ApplyBiomes:
+                BiomeCreator.CreateBiomes(this);
                 SwitchState(MapGenerationState.DrawMap);
                 break;
 
@@ -780,7 +783,7 @@ public class PolygonMapGenerator : MonoBehaviour
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
-        Map.InitializeMap(this, showRegionBorders, LandColor, WaterColor);
+        Map.InitializeMap(this, showRegionBorders, DrawMode);
 
         Callback?.Invoke();
     }

@@ -27,6 +27,6 @@ public class River : MonoBehaviour
 
         Length = Borders.Sum(x => x.Length);
 
-        GetComponent<Renderer>().material = MaterialHandler.Materials.DefaultMaterial;
+        GetComponent<Renderer>().material = MapDisplaySettings.Settings.DefaultMaterial;
     }
 }
