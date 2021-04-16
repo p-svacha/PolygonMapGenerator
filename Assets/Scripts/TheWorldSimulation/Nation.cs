@@ -63,8 +63,8 @@ public class Nation
         foreach(List<Region> cluster in Clusters)
         {
             List<List<GraphNode>> clusterBorders = PolygonMapFunctions.FindOutsideNodes(cluster.Select(x => x.Polygon).ToList());
-            List<GraphNode> outsideBorder = clusterBorders.OrderByDescending(x => x.Count).First();
-            RegionLabels.Add(CenterlineLabler.LabelPolygon(outsideBorder, Name));
+            GameObject clusterLabel = CenterlineLabler.LabelPolygon(clusterBorders, Name, SecondaryColor);
+            RegionLabels.Add(clusterLabel);
         }
     }
 }

@@ -43,7 +43,7 @@ public class PolygonMapGenerator : MonoBehaviour
     public bool Island;
 
     public bool ShowRegionBorders;
-    public const float DefaultBorderWidth = 0.01f;
+    public const float DefaultBorderWidth = 0.005f;
     public const float DefaultCoastBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
@@ -706,7 +706,15 @@ public class PolygonMapGenerator : MonoBehaviour
         }
     }
 
-    public void DrawMap(bool showRegionBorders)
+    /// <summary>
+    /// Redraw should be called when regions of the map have changed, for example after a merge/split or after turnToLand/turnToWater
+    /// </summary>
+    public void Redraw()
+    {
+        SwitchState(MapGenerationState.FindWaterNeighbours);
+    }
+
+    private void DrawMap(bool showRegionBorders)
     {
         Map = new Map(this);
 

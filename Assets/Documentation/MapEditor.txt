@@ -3,7 +3,8 @@
 - When a polygon is split and the split is starting on a 3-way junction where 1 polygon is water, then the water polygon turns into land after the split
 - It is possible to merge 2 polygons so that the new polygon fully engulves another polygon, this should not be allowed
 - In very rare cases the map generation results in a stackoverflow in the function FindPolygon
-- In very rare cases polygons are created with extremely shard edges (like 1° angles)
+- In very rare cases polygons are created with extremely sharp edges (like 1° angles)
+- Sometimes FindOuterBorder does not work, search for "<=2" in PolygonMapFunctions and see comment
 
 
 2. High prio bugfixes
@@ -13,12 +14,13 @@
 
 3. big features to add
 
-- merge should treat first polygon as source and the resulting polygon should inherit all attributes from source
-- split and merge should only recalculate the affected regions
-- give nations a name upon creation
-- improved labeling of polygons and polygon groups: https://observablehq.com/@veltman/centerline-labeling
+- PROBABLY NOT POSSIBLE: region altering functions should only recalculate the affected regions and not redraw the whole map (split/merge/turntoland/turntowater)
+- give nations a name upon creation with the new neural network name generator
 - biomes according to temperature and humidity distribution (see SavingPlanetX)
-- TurnToWater & TurnToLand Buttons
+- rivers
+- textures for different biomes instead of plain colors
+- smooth texture shading between textures between regions
+- make the shader possible to handle transparent color overlays
 
 
 

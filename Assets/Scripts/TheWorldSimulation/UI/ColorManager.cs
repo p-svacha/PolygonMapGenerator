@@ -16,7 +16,7 @@ public static class ColorManager
 
         int counter = 0;
 
-        while(diff < 0.5f && counter < 50)
+        while(diff < 1f && counter < 50)
         {
             counter++;
 

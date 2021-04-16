@@ -64,6 +64,8 @@ public class UI_MapEditor : MonoBehaviour
     public Text MultRegions_WaterNeighboursText;
 
     [Header("Buttons")]
+    public Button TurnToLandButton;
+    public Button TurnToWaterButton;
     public Button SplitRegionButton;
     public Button MergeRegionsButton;
     public Button CreateNationButton;
@@ -82,6 +84,9 @@ public class UI_MapEditor : MonoBehaviour
     void Start()
     {
         GenerateButton.onClick.AddListener(Generate);
+
+        TurnToLandButton.onClick.AddListener(TurnSelectedToRegionsToLand);
+        TurnToWaterButton.onClick.AddListener(TurnSelectedRegionsToWater);
         SplitRegionButton.onClick.AddListener(SplitSelectedRegion);
         RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
         MergeRegionsButton.onClick.AddListener(MergeSelectedRegions);
@@ -135,16 +140,20 @@ public class UI_MapEditor : MonoBehaviour
     {
         if (int.Parse(WidthText.text) < 3 || int.Parse(WidthText.text) > 25 || int.Parse(HeightText.text) < 3 || int.Parse(HeightText.text) > 25 || float.Parse(MinAreaText.text) > 0.5) return;
 
-        // Reset
-        ClearRegionSelection();
-        NationMap = new Dictionary<Region, Nation>();
-        foreach (Nation n in Nations) n.DestroyAllObjects();
-        Nations.Clear();
+        Reset();
 
         // Generate new map
         float minRegionArea = float.Parse(MinAreaText.text);
         float maxRegionArea = float.Parse(MaxAreaText.text);
         PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, PolygonMapGenerator.DefaultLandColor, PolygonMapGenerator.DefaultWaterColor, RegionBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
+    }
+
+    private void Reset()
+    {
+        ClearRegionSelection();
+        NationMap = new Dictionary<Region, Nation>();
+        foreach (Nation n in Nations) n.DestroyAllObjects();
+        Nations.Clear();
     }
 
     private void OnMapGenerationDone()
@@ -271,6 +280,8 @@ public class UI_MapEditor : MonoBehaviour
 
     private void UpdateButtons()
     {
+        TurnToLandButton.interactable = CurrentMap != null && SelectedRegions.Count > 0 && SelectedRegions.All(x => x.IsWater);
+        TurnToWaterButton.interactable = CurrentMap != null && SelectedRegions.Count > 0 && SelectedRegions.All(x => !x.IsWater);
         SplitRegionButton.interactable = CurrentMap != null && SelectedRegions.Count == 1 && PMG.CanSplitPolygon(SelectedRegions[0].Polygon);
         MergeRegionsButton.interactable = CurrentMap != null && SelectedRegions.Count == 2 && PMG.CanMergePolygons(SelectedRegions[0].Polygon, SelectedRegions[1].Polygon);
         CreateNationButton.interactable = CurrentMap != null && SelectedRegions.Count > 0 && SelectedRegions.All(x => !x.IsWater);
@@ -285,20 +296,34 @@ public class UI_MapEditor : MonoBehaviour
         UpdateSelectionProperties();
     }
 
+    #region Button Actions
+
+    private void TurnSelectedToRegionsToLand()
+    {
+        foreach (Region r in SelectedRegions) r.Polygon.IsWater = false;
+        Reset();
+        PMG.Redraw();
+    }
+
+    private void TurnSelectedRegionsToWater()
+    {
+        foreach (Region r in SelectedRegions) r.Polygon.IsWater = true;
+        Reset();
+        PMG.Redraw();
+    }
+
     private void SplitSelectedRegion()
     {
         PMG.SplitPolygon(SelectedRegions[0].Polygon);
-        ClearRegionSelection();
-        PMG.FindWaterNeighbours();
-        PMG.DrawMap(RegionBorderToggle.isOn);
+        Reset();
+        PMG.Redraw();
     }
 
     private void MergeSelectedRegions()
     {
         PMG.MergePolygons(SelectedRegions[0].Polygon, SelectedRegions[1].Polygon);
         ClearRegionSelection();
-        PMG.FindWaterNeighbours();
-        PMG.DrawMap(RegionBorderToggle.isOn);
+        PMG.Redraw();
     }
 
     private void CreateNation()
@@ -317,6 +342,8 @@ public class UI_MapEditor : MonoBehaviour
         newNation.UpdateProperties();
         Nations.Add(newNation);
     }
+
+    #endregion
 
     public void HighlightNeighbours()
     {

@@ -13,21 +13,25 @@ using VoronoiLib.Structures;
 public static class CenterlineLabler
 {
 
-    public static GameObject LabelPolygon(List<GraphNode> polygon, string label)
+    public static GameObject LabelPolygon(List<List<GraphNode>> polygonBorders, string label, Color color)
     {
         // 1. Compute voronoi of given points with "VoronoiLib"
         List<FortuneSite> points = new List<FortuneSite>();
-        foreach (GraphNode n in polygon) points.Add(new FortuneSite(n.Vertex.x, n.Vertex.y));
+        List<GraphNode> nodes = new List<GraphNode>();
+        foreach (List<GraphNode> polygonBorder in polygonBorders)
+            foreach (GraphNode n in polygonBorder)
+                if (!nodes.Contains(n)) nodes.Add(n);
+        foreach (GraphNode n in nodes) points.Add(new FortuneSite(n.Vertex.x, n.Vertex.y));
 
         float margin = 0.2f;
-        float minX = polygon.Min(x => x.Vertex.x) - margin;
-        float maxX = polygon.Max(x => x.Vertex.x) + margin;
-        float minY = polygon.Min(x => x.Vertex.y) - margin;
-        float maxY = polygon.Max(x => x.Vertex.y) + margin; 
+        float minX = nodes.Min(x => x.Vertex.x) - margin;
+        float maxX = nodes.Max(x => x.Vertex.x) + margin;
+        float minY = nodes.Min(x => x.Vertex.y) - margin;
+        float maxY = nodes.Max(x => x.Vertex.y) + margin; 
         LinkedList<VEdge> voronoi = FortunesAlgorithm.Run(points, minX, minY, maxX, maxY);
 
         // 2. Remove all edges that have either start or end outside of polygon
-        List<Vector2> vertices = polygon.Select(x => x.Vertex).ToList();
+        List<Vector2> vertices = nodes.Select(x => x.Vertex).ToList();
         List<VEdge> edgesToRemove = new List<VEdge>();
         foreach(VEdge edge in voronoi)
         {
@@ -39,7 +43,7 @@ public static class CenterlineLabler
         foreach (VEdge edge in edgesToRemove) voronoi.Remove(edge);
 
         // DEBUG voronoi
-        //foreach (VEdge edge in voronoi) Debug.DrawLine(new Vector3((float)edge.Start.X, 0f, (float)edge.Start.Y), new Vector3((float)edge.End.X, 0f, (float)edge.End.Y), Color.red, 30);
+        foreach (VEdge edge in voronoi) Debug.DrawLine(new Vector3((float)edge.Start.X, 0f, (float)edge.Start.Y), new Vector3((float)edge.End.X, 0f, (float)edge.End.Y), Color.red, 30);
 
         // 3. Turn remaining edges into a graph (create a list of for each point representing the points it is connected to)
         Dictionary<VPoint, List<VPoint>> voronoiGraph = new Dictionary<VPoint, List<VPoint>>();
@@ -69,7 +73,7 @@ public static class CenterlineLabler
             {
                 if (startPoint.Key == endPoint.Key) continue;
 
-                List<VPoint> leavesPath = GetPath(new List<VPoint>() { startPoint.Key }, endPoint.Key, voronoiGraph);
+                List<VPoint> leavesPath = GetShortestPath(new List<VPoint>() { startPoint.Key }, endPoint.Key, voronoiGraph);
                 if (leavesPath == null) continue;
                 float distanceWithPenalty = GetPathDistance(leavesPath, curvePenalty);
                 if(distanceWithPenalty > longestDistance)
@@ -86,6 +90,9 @@ public static class CenterlineLabler
                 }
             }
         }
+
+        // If the straight centerline is too short, take the longer curvy one instead
+        if (GetPathDistance(centerLine, 0f) < 0.4f * GetPathDistance(centerLineNoPenalty, 0f)) centerLine = centerLineNoPenalty;
 
         // 5. Smoothen the centerline
         int smoothSteps = 5;
@@ -108,14 +115,14 @@ public static class CenterlineLabler
 
 
         // 7. Place text along centerline
-        return DrawTextAlongPath(label, smoothCenterLine);
+        return DrawTextAlongPath(label, smoothCenterLine, color);
     }
 
     
     /// <summary>
-    /// Returns the path between the given start point (sole element of currentPath) and the endpoint within the voronoiGraph
+    /// Returns the best path between the given start point (sole element of currentPath) and the endpoint within the voronoiGraph
     /// </summary>
-    private static List<VPoint> GetPath(List<VPoint> currentPath, VPoint endPoint, Dictionary<VPoint, List<VPoint>> voronoiGraph)
+    private static List<VPoint> GetShortestPath(List<VPoint> currentPath, VPoint endPoint, Dictionary<VPoint, List<VPoint>> voronoiGraph)
     {
         
 
@@ -131,16 +138,27 @@ public static class CenterlineLabler
         else if (voronoiGraph[currentPoint].All(x => currentPath.Contains(x))) return null;
         else
         {
+            List<VPoint> shortestPath = null;
+            float shortestDistance = float.MaxValue;
+
             foreach (VPoint nextPoint in voronoiGraph[currentPoint].Where(x => !currentPath.Contains(x)))
             {
                 List<VPoint> nextPath = new List<VPoint>();
                 nextPath.AddRange(currentPath);
                 nextPath.Add(nextPoint);
-                List<VPoint> nextPointPath = GetPath(nextPath, endPoint, voronoiGraph);
-                if (nextPointPath != null) return nextPointPath;
+                List<VPoint> nextPointPath = GetShortestPath(nextPath, endPoint, voronoiGraph);
+                if (nextPointPath != null)
+                {
+                    float nextPointPathDistance = GetPathDistance(nextPointPath, 0f);
+                    if(nextPointPathDistance < shortestDistance)
+                    {
+                        shortestDistance = nextPointPathDistance;
+                        shortestPath = nextPointPath;
+                    }
+                }
             }
+            return shortestPath;
         }
-        return null;
     }
 
     /// <summary>
@@ -173,7 +191,8 @@ public static class CenterlineLabler
     private static List<VPoint> SmoothLine(List<VPoint> line)
     {
         List<VPoint> smoothLine = new List<VPoint>();
-        for (int i = 0; i < line.Count; i++)
+        smoothLine.Add(line[0]);
+        for (int i = 1; i < line.Count - 1; i++)
         {
             List<VPoint> avgPoints = new List<VPoint>();
             if (i > 0) avgPoints.Add(line[i - 1]);
@@ -183,6 +202,7 @@ public static class CenterlineLabler
             VPoint smoothenedPoint = new VPoint(avgPoints.Average(x => x.X), avgPoints.Average(x => x.Y));
             smoothLine.Add(smoothenedPoint);
         }
+        smoothLine.Add(line.Last());
         return smoothLine;
     }
 
@@ -192,7 +212,7 @@ public static class CenterlineLabler
     /// PreferredSize defines the font size in world space. If the path is too short for the whole text, the size is scaled down.
     /// LetterPaddingFactor defines the space between letters relatively to the font size. (1 = space is equal to font size)
     /// </summary>
-    private static GameObject DrawTextAlongPath(string text, List<VPoint> path, float position = 0.5f, float preferredSize = 0.15f, float letterPaddingFactor = 1f)
+    private static GameObject DrawTextAlongPath(string text, List<VPoint> path, Color color, float position = 0.5f, float preferredSize = 0.15f, float letterPaddingFactor = 1f)
     {
         GameObject textObject = new GameObject(text);
 
@@ -206,7 +226,7 @@ public static class CenterlineLabler
         float totalPathDistance = GetPathDistance(path, 0f);
         float desiredStartDistance = (totalPathDistance * 0.5f) - (totalTextWidth * 0.5f);
 
-        while(desiredStartDistance < 0)
+        while(desiredStartDistance < 0.1f)
         {
             preferredSize -= 0.01f;
             letterPadding = preferredSize * letterPaddingFactor;
@@ -233,6 +253,7 @@ public static class CenterlineLabler
             TextMesh textMesh = letterObject.AddComponent<TextMesh>();
             textMesh.anchor = TextAnchor.MiddleCenter;
             textMesh.text = c.ToString();
+            textMesh.color = color;
             letterObject.transform.localScale = new Vector3(preferredSize, preferredSize, preferredSize);
 
             // Make it smooth and crisp
@@ -258,11 +279,6 @@ public static class CenterlineLabler
         }
 
         return textObject;
-    }
-
-    private static float GetPathDistance(List<Vector2> path, float v)
-    {
-        throw new NotImplementedException();
     }
 
     private static Vector2 VPointToVector2(VPoint point)

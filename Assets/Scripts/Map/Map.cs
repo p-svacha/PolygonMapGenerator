@@ -44,11 +44,12 @@ public class Map
     public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, Color landColor, Color waterColor)
     {
         InitRivers(PMG);
+        InitDisplay(showRegionBorders, landColor, waterColor);
         IdentifyLandmasses();
         IdentifyWaterBodies();
         InitAdditionalRegionInfo();
         FocusMapInEditor();
-        InitDisplay(showRegionBorders, landColor, waterColor);
+        
     }
 
     private void InitDisplay(bool showRegionBorders, Color landColor, Color waterColor)

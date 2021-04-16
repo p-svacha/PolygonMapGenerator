@@ -78,7 +78,7 @@ public static class PolygonMapFunctions
             {
                 if (counter == 10000) throw new System.Exception("OVERLFOW");
                 int remainingConnections = currentNode.ConnectedNodes.Where(x => borderNodes.Contains(x)).Count();
-                if (remainingConnections <= 3) borderNodes.Remove(currentNode); // THIS DOESNT REALLY WORK YET: some nodes need to be kept in the list if they are part of multiple outside polygons. find out how to properly code this
+                if (remainingConnections <= 2) borderNodes.Remove(currentNode); // THIS DOESNT REALLY WORK YET: some nodes need to be kept in the list if they are part of multiple outside polygons. find out how to properly code this
                 currentBorder.Add(currentNode);
 
                 GraphNode nextNode = FindNextOutsideNode(prevNode, currentNode, cluster, borderNodes);
@@ -123,6 +123,7 @@ public static class PolygonMapFunctions
         {
             from.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.green;
             to.BorderPoint.GetComponent<MeshRenderer>().material.color = Color.red;
+            throw new System.Exception("Couldn't find next node of ouf outside border");
         }
         return toNode;
     }
