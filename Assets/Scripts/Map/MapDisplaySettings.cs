@@ -40,7 +40,7 @@ public class MapDisplaySettings : MonoBehaviour
         if (b == Biome.Tropical) return TropicalColor;
         if (b == Biome.TemperateRainForest) return TemperateRainforestColor;
         if (b == Biome.Temperate) return TemperateColor;
-        if (b == Biome.Taiga) return TaigaColor;
+        if (b == Biome.BorealForest) return TaigaColor;
         if (b == Biome.Shrubland) return ShrublandColor;
         if (b == Biome.Savanna) return SavannaColor;
         if (b == Biome.Grassland) return GrasslandColor;

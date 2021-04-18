@@ -13,6 +13,7 @@ public class Map
     public GameObject BorderPointContainer;
     public GameObject BorderContainer;
     public GameObject RegionContainer;
+    public GameObject RiverContainer;
 
     public List<Border> Borders = new List<Border>();
     public List<BorderPoint> BorderPoints = new List<BorderPoint>();
@@ -26,6 +27,7 @@ public class Map
     public MapDrawMode DrawMode;
     public List<GameObject> LandmassBorders = new List<GameObject>();
     public bool IsShowingRegionBorders;
+    public bool IsShowingShorelineBorders;
 
     public int Width;
     public int Height;
@@ -36,17 +38,14 @@ public class Map
         Width = PMG.Width;
         Height = PMG.Height;
         Area = Width * Height;
-
-        //MaterialHandler.PoliticalLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
-        //MaterialHandler.TopographicLandMaterial.SetTexture("_RiverMask", TextureGenerator.CreateRiverMaskTexture(PMG));
-        //RegionBorderMaskTexture = TextureGenerator.CreateRegionBorderMaskTexture(PMG);
     }
 
-    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, MapDrawMode drawMode)
+    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, bool showShorelineBorders, MapDrawMode drawMode)
     {
         InitRivers(PMG);
         UpdateDrawMode(drawMode);
         ShowRegionBorders(showRegionBorders);
+        ShowShorelineBorders(showShorelineBorders);
         IdentifyLandmasses();
         IdentifyWaterBodies();
         InitAdditionalRegionInfo();
@@ -65,6 +64,7 @@ public class Map
                     if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                     else r.SetColor(MapDisplaySettings.Settings.LandColor);
                 }
+                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 break;
 
             case MapDrawMode.Biomes:
@@ -73,15 +73,20 @@ public class Map
                     if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                     else r.SetColor(MapDisplaySettings.Settings.GetBiomeColor(r.Biome));
                 }
+                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 break;
         }
     }
 
     private void InitRivers(PolygonMapGenerator PMG)
     {
+        RiverContainer = new GameObject("Rivers");
+        RiverContainer.transform.SetParent(RootObject.transform);
         foreach (GraphPath r in PMG.RiverPaths)
         {
-            Rivers.Add(RiverCreator.CreateRiverObject(r, PMG));
+            River riverObject = RiverCreator.CreateRiverObject(r, PMG);
+            riverObject.transform.SetParent(RiverContainer.transform);
+            Rivers.Add(riverObject);
         }
     }
 
@@ -208,14 +213,18 @@ public class Map
     public void UpdateDisplay()
     {
         foreach (Region r in Regions) r.UpdateDisplay();
-        //foreach (River r in Rivers) r.SetDisplayMode(mode);
     }
 
     public void ShowRegionBorders(bool show)
     {
         IsShowingRegionBorders = show;
-        //foreach (GameObject landmassBorder in LandmassBorders) landmassBorder.SetActive(show);
         foreach (Region r in Regions.Where(x => !x.IsWater)) r.SetShowRegionBorders(show);
+    }
+
+    public void ShowShorelineBorders(bool show)
+    {
+        IsShowingShorelineBorders = show;
+        foreach (GameObject landmassBorder in LandmassBorders) landmassBorder.SetActive(show);
     }
 
     private void FocusMapCentered()

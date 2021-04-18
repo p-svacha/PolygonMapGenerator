@@ -12,10 +12,10 @@ public enum MapGenerationState
     SplitBigPolygons,
     MergeSmallPolygons,
     CreateWaters,
-    FindWaterNeighbours,
+    CreateTopology,
+    CreateRivers,
     ApplyBiomes,
-    //CreateTopology,
-    //CreateRivers,
+    FindWaterNeighbours,
     DrawMap,
     GenerationDone,
     GenerationAborted

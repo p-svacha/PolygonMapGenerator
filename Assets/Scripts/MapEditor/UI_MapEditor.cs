@@ -30,10 +30,13 @@ public class UI_MapEditor : MonoBehaviour
     public Text HeightText;
     public Text MinAreaText;
     public Text MaxAreaText;
-    public Toggle IslandToggle;
+
+    [Header("Topology")]
+    public Dropdown MapTypeDropdown;
 
     [Header("Display")]
     public Toggle RegionBorderToggle;
+    public Toggle ShorelineBorderToggle;
     public Dropdown DrawModeDropdown;
     public MapDrawMode CurrentDrawMode;
 
@@ -50,6 +53,7 @@ public class UI_MapEditor : MonoBehaviour
     public GameObject RegionInfoPanel;
     public Text RegionAreaText;
     public Text RegionIdText;
+    public Text Region_BiomeText;
     public Text TotalBorderText;
     public Text LandBorderText;
     public Text CoastlineText;
@@ -90,7 +94,11 @@ public class UI_MapEditor : MonoBehaviour
     {
         GenerateButton.onClick.AddListener(Generate);
 
+        foreach (MapType mapType in Enum.GetValues(typeof(MapType))) MapTypeDropdown.options.Add(new Dropdown.OptionData(mapType.ToString()));
+        MapTypeDropdown.value = 1; MapTypeDropdown.value = 0;
+
         RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
+        ShorelineBorderToggle.onValueChanged.AddListener(ToggleShorelineBorders);
         foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
         DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
         DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
@@ -154,7 +162,8 @@ public class UI_MapEditor : MonoBehaviour
         // Generate new map
         float minRegionArea = float.Parse(MinAreaText.text);
         float maxRegionArea = float.Parse(MaxAreaText.text);
-        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, IslandToggle.isOn, CurrentDrawMode, RegionBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
+        MapType type = (MapType)Enum.Parse(typeof(MapType), MapTypeDropdown.options[MapTypeDropdown.value].text);
+        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, type, CurrentDrawMode, RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
     }
 
     private void Reset()
@@ -172,6 +181,9 @@ public class UI_MapEditor : MonoBehaviour
         CurrentMap = PMG.Map;
         MinCameraHeight = 0.4f;
         MaxCameraHeight = Mathf.Max(CurrentMap.Width, CurrentMap.Height) * 1.2f;
+        ToggleRegionBorders(RegionBorderToggle.isOn);
+        ToggleShorelineBorders(ShorelineBorderToggle.isOn);
+        DrawModeDropdown_OnValueChanged(DrawModeDropdown.value);
 
         foreach (Region r in CurrentMap.Regions) NationMap.Add(r, null);
     }
@@ -179,6 +191,11 @@ public class UI_MapEditor : MonoBehaviour
     private void ToggleRegionBorders(bool enabled)
     {
         if (CurrentMap != null) CurrentMap.ShowRegionBorders(enabled);
+    }
+
+    private void ToggleShorelineBorders(bool enabled)
+    {
+        if (CurrentMap != null) CurrentMap.ShowShorelineBorders(enabled);
     }
 
     private void DrawModeDropdown_OnValueChanged(int value)
@@ -242,6 +259,7 @@ public class UI_MapEditor : MonoBehaviour
 
             RegionAreaText.text = selectedRegion.Area.ToString("0.00") + " km²";
             RegionIdText.text = selectedRegion.Polygon.Id.ToString();
+            Region_BiomeText.text = selectedRegion.Biome.ToString();
             TotalBorderText.text = selectedRegion.TotalBorderLength.ToString("0.00" + " km");
             LandBorderText.text = selectedRegion.InlandBorderLength.ToString("0.00" + " km");
             CoastlineText.text = selectedRegion.CoastLength.ToString("0.00" + " km");

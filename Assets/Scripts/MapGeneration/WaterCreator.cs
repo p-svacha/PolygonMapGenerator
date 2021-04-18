@@ -29,16 +29,32 @@ public static class WaterCreator
 
     public static void CreateWaters(PolygonMapGenerator PMG)
     {
-        if (PMG.Island)
+        switch(PMG.MapType)
         {
-            CreateOuterOcean(PMG);
-            TurnEdgePolygonsToWater(PMG);
+            case MapType.Regional:
+                PerformContinentCuts(PMG);
+                TurnRandomPolygonsToWater(PMG);
+                ExpandOceans(PMG);
+                CreateBallOceans(PMG);
+                ExpandLand(PMG);
+                break;
+
+            case MapType.Island:
+                CreateOuterOcean(PMG);
+                TurnEdgePolygonsToWater(PMG);
+                PerformContinentCuts(PMG);
+                TurnRandomPolygonsToWater(PMG);
+                ExpandOceans(PMG);
+                CreateBallOceans(PMG);
+                ExpandLand(PMG);
+                break;
+
+            case MapType.Continents:
+                CreateOuterOcean(PMG);
+                TurnEdgePolygonsToWater(PMG);
+                CreateContinentsWithNoise(PMG);
+                break;
         }
-        CreateContinents(PMG);
-        TurnRandomPolygonsToWater(PMG);
-        ExpandOceans(PMG);
-        CreateBallOceans(PMG);
-        ExpandLand(PMG);
     }
 
     public static void HandleInput(PolygonMapGenerator PMG)
@@ -169,7 +185,7 @@ public static class WaterCreator
 
     }
 
-    private static void CreateContinents(PolygonMapGenerator PMG)
+    private static void PerformContinentCuts(PolygonMapGenerator PMG)
     {
         int sizePerContinentCuts = UnityEngine.Random.Range(SIZE_PER_CONTINENT_CUT - SIZE_PER_CONTINENT_CUT_RANGE, SIZE_PER_CONTINENT_CUT + SIZE_PER_CONTINENT_CUT_RANGE);
         int numContinentCuts = Math.Max(PMG.MapSize / sizePerContinentCuts, MIN_CONTINENT_CUTS);
@@ -292,6 +308,17 @@ public static class WaterCreator
             foreach (GraphNode n in p.Nodes) n.SetType();
             foreach (GraphConnection c in p.Connections) c.SetType();
             foreach (GraphPolygon pn in p.AdjacentPolygons) pn.IsNextToWater = pn.AdjacentPolygons.Any(x => x.IsWater);
+        }
+    }
+
+    private static void CreateContinentsWithNoise(PolygonMapGenerator PMG)
+    {
+        ContinentNoise noise = new ContinentNoise();
+
+        foreach (GraphPolygon polygon in PMG.Polygons.Where(x => (!x.IsEdgePolygon && !x.AdjacentPolygons.Any(y => y.IsEdgePolygon))))
+        {
+            float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG);
+            if (noiseValue < 0.2f) TurnPolygonToWater(polygon);
         }
     }
 }

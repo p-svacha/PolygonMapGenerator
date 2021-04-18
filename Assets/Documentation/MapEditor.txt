@@ -4,23 +4,31 @@
 - It is possible to merge 2 polygons so that the new polygon fully engulves another polygon, this should not be allowed
 - In very rare cases the map generation results in a stackoverflow in the function FindPolygon
 - In very rare cases polygons are created with extremely sharp edges (like 1° angles)
+	- if not possible to fix: just make border creation detect those angles and act accordingly to avoid spikes
 - Sometimes FindOuterBorder does not work, search for "<=2" in PolygonMapFunctions and see comment
 
 
 2. High prio bugfixes
 
-- PROBABLY FIXED: parallel lines that are exactly at angle of z axis create distorted borders (maybe mistake in RotateVector?)
-- in very rare cases border meshes still get distorted (at exactly 90°?)
+- rivers with parallel lines sometimes get distorted
+- parralel lines that are also parallel to z axis don't register as parallel
+- HAVEN'T SEEN THIS IN A WHILE: in very rare cases border meshes still get distorted (at exactly 90°?)
+
 
 3. big features to add
 
+- make temperature / precipitation / continent noise scale with map size
+- add options for low/high temp, low/high precip, small/big continents
+- new "continents" mode with noise continental style
+- dropdown for topology type (region, island, continents)
+- mountain ranges
+- add names to landmarks (lakes, islands, peninsulas, straights, deserts, forests)
+- make nation borders semi-transparent
 - PROBABLY NOT POSSIBLE: region altering functions should only recalculate the affected regions and not redraw the whole map (split/merge/turntoland/turntowater)
 - give nations a name upon creation with the new neural network name generator
-- biomes according to temperature and humidity distribution (see SavingPlanetX)
-- rivers
 - textures for different biomes instead of plain colors
 - smooth texture shading between textures between regions
-- make the shader possible to handle transparent color overlays
+- make the shader possible to handle transparent color overlays1
 
 
 

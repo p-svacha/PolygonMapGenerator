@@ -40,14 +40,21 @@ public class PolygonMapGenerator : MonoBehaviour
     public int Height;
     public float MinPolygonArea;
     public float MaxPolygonArea;
-    public bool Island;
+    public MapType MapType;
 
     public bool ShowRegionBorders;
+    public bool ShowShorelineBorders;
     public MapDrawMode DrawMode;
     public const float DefaultBorderWidth = 0.005f;
     public const float DefaultCoastBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
+
+    // Layers (y-height of different objects so they don't overlap
+    public static float LAYER_REGION = 0f;
+    public static float LAYER_RIVER = 0.00001f;
+    public static float LAYER_SHORE = 0.00002f;
+    public static float LAYER_REGION_BORDER = 0.00003f;
 
     public const float START_LINES_PER_KM = 0.6f; // Active lines per km map side length
     public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
@@ -85,7 +92,7 @@ public class PolygonMapGenerator : MonoBehaviour
         NameGeneratorThread.Start();
     }
 
-    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, bool island, MapDrawMode drawMode, bool drawRegionBorders = false, Action callback = null, bool destroyOldMap = false)
+    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, MapType mapType, MapDrawMode drawMode, bool drawRegionBorders = false, bool drawShoreLineBorder = true, Action callback = null, bool destroyOldMap = false)
     {
         Callback = callback;
 
@@ -96,7 +103,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         //seed = -663403863;
-        Debug.Log("Generating " + width + "/" + height + (island ? " island" : " non-island") + " map with region sizes between " + minPolygonArea + " and " + maxPolygonArea + ".");
+        Debug.Log("Generating " + width + "/" + height + mapType.ToString() + " map with region sizes between " + minPolygonArea + " and " + maxPolygonArea + ".");
         Debug.Log("SEED: " + Seed);
         UnityEngine.Random.InitState(Seed);
 
@@ -104,9 +111,10 @@ public class PolygonMapGenerator : MonoBehaviour
         Height = height;
         MinPolygonArea = minPolygonArea;
         MaxPolygonArea = maxPolygonArea;
-        Island = island;
+        MapType = mapType;
         DrawMode = drawMode;
         ShowRegionBorders = drawRegionBorders;
+        ShowShorelineBorders = drawShoreLineBorder;
 
         MapSize = Width * Height;
 
@@ -120,8 +128,8 @@ public class PolygonMapGenerator : MonoBehaviour
         switch(GenerationState)
         {
             case MapGenerationState.CreateMapBounds:
-                if (Island) CreateIslandMapBounds();
-                else CreateNonIslandMapBounds();
+                if(MapType == MapType.Regional) CreateNonIslandMapBounds();
+                else CreateIslandMapBounds();
                 SwitchState(MapGenerationState.CreateInitialGraph);
                 break;
 
@@ -152,20 +160,9 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.CreateWaters:
                 WaterCreator.CreateWaters(this);
-                SwitchState(MapGenerationState.FindWaterNeighbours);
+                SwitchState(MapGenerationState.CreateTopology); // Skip river creation
                 break;
 
-            case MapGenerationState.FindWaterNeighbours:
-                FindWaterNeighbours();
-                SwitchState(MapGenerationState.ApplyBiomes);
-                break;
-
-            case MapGenerationState.ApplyBiomes:
-                BiomeCreator.CreateBiomes(this);
-                SwitchState(MapGenerationState.DrawMap);
-                break;
-
-                /*
             case MapGenerationState.CreateTopology:
                 TopologyCreator.CreateTopology(this);
                 SwitchState(MapGenerationState.CreateRivers);
@@ -173,12 +170,21 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.CreateRivers:
                 RiverCreator.CreateRivers(this);
+                SwitchState(MapGenerationState.ApplyBiomes);
+                break;
+
+            case MapGenerationState.ApplyBiomes:
+                BiomeCreator.CreateBiomes(this);
+                SwitchState(MapGenerationState.FindWaterNeighbours);
+                break;
+
+            case MapGenerationState.FindWaterNeighbours:
+                FindWaterNeighbours();
                 SwitchState(MapGenerationState.DrawMap);
                 break;
-                */
 
             case MapGenerationState.DrawMap:
-                DrawMap(ShowRegionBorders);
+                DrawMap();
                 SwitchState(MapGenerationState.GenerationDone);
                 Debug.Log(">----------- Map of size " + MapSize + "u^2 generated with " + Map.Regions.Count + " regions (" + Map.Regions.Where(x => !x.IsWater).Count() + " land, " + Map.Regions.Where(x => x.IsWater).Count() + " water) in " + (DateTime.Now - StartCreation).TotalSeconds + " seconds.\nPerformed " + NumMerges + " merges and " + NumSplits + " splits.");
                 break;
@@ -438,7 +444,7 @@ public class PolygonMapGenerator : MonoBehaviour
             newAngle = (angle + angleChange) % 360;
         }
         float length = RandomSegmentLength();
-        Vector2 endPoint = new Vector2((float)(startNode.Vertex.x + (Math.Sin(ToRad(angle)) * length)), (float)(startNode.Vertex.y + (Math.Cos(ToRad(angle)) * length)));
+        Vector2 endPoint = new Vector2((float)(startNode.Vertex.x + (Math.Sin(Mathf.Deg2Rad * angle) * length)), (float)(startNode.Vertex.y + (Math.Cos(Mathf.Deg2Rad * angle) * length)));
 
         float searchRange = MAX_SEGMENT_LENGTH * 5f;
 
@@ -701,11 +707,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private void SplitBigPolygons()
     {               
-        GraphPolygon largest = Island ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
+        GraphPolygon largest = MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
         while (largest.Area > MaxPolygonArea)
         {
             SplitPolygon(largest);
-            largest = Island ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
+            largest = MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
         }
     }
 
@@ -717,7 +723,7 @@ public class PolygonMapGenerator : MonoBehaviour
         SwitchState(MapGenerationState.FindWaterNeighbours);
     }
 
-    private void DrawMap(bool showRegionBorders)
+    private void DrawMap()
     {
         Map = new Map(this);
 
@@ -763,7 +769,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphPolygon p in Polygons)
         {
             // Mesh
-            GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes, this);
+            GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes.Select(x => x.Vertex).ToList(), this, layer: LAYER_REGION);
             polygon.transform.SetParent(Map.RegionContainer.transform);
 
             // Collider
@@ -783,7 +789,7 @@ public class PolygonMapGenerator : MonoBehaviour
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
-        Map.InitializeMap(this, showRegionBorders, DrawMode);
+        Map.InitializeMap(this, ShowRegionBorders, ShowShorelineBorders, DrawMode);
 
         Callback?.Invoke();
     }
@@ -1092,8 +1098,8 @@ public class PolygonMapGenerator : MonoBehaviour
         int beforeConnectionAngle = (int)(Vector2.SignedAngle(new Vector2(beforeNode.Vertex.x - splitNode.Vertex.x, beforeNode.Vertex.y - splitNode.Vertex.y), new Vector2(0, 1)));
         int afterConnectionAngle = (int)(Vector2.SignedAngle(new Vector2(afterNode.Vertex.x - splitNode.Vertex.x, afterNode.Vertex.y - splitNode.Vertex.y), new Vector2(0, 1)));
 
-        beforeConnectionAngle = mod(beforeConnectionAngle, 360);
-        afterConnectionAngle = mod(afterConnectionAngle, 360);
+        beforeConnectionAngle = Mod(beforeConnectionAngle, 360);
+        afterConnectionAngle = Mod(afterConnectionAngle, 360);
 
         // Get list of valid angles that are inside the polygon
         List<int> validAngles = new List<int>();
@@ -1197,7 +1203,7 @@ public class PolygonMapGenerator : MonoBehaviour
         List<int> otherAngles = new List<int>();
         foreach(int angle in angles)
         {
-            int modAngle = mod(angle, 360);
+            int modAngle = Mod(angle, 360);
             otherAngles.Add(modAngle);
             otherAngles.Add(modAngle - 360);
             otherAngles.Add(modAngle + 360);

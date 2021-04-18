@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class MeshGenerator
 {
-    public static GameObject GeneratePolygon(List<GraphNode> nodes, PolygonMapGenerator PMG)
+    public static GameObject GeneratePolygon(List<Vector2> vertices2D, PolygonMapGenerator PMG, float layer)
     {
-        List<Vector2> vertices2D = nodes.Select(x => x.Vertex).ToList();
-
         // Use the triangulator to get indices for creating triangles
         Triangulator tr = new Triangulator(vertices2D.ToArray());
         int[] indices = tr.Triangulate();
@@ -19,62 +17,8 @@ public class MeshGenerator
         Vector2[] uvs = new Vector2[vertices2D.Count];
         for (int i = 0; i < vertices.Length; i++)
         {
-            vertices[i] = new Vector3(vertices2D[i].x, 0, vertices2D[i].y);
+            vertices[i] = new Vector3(vertices2D[i].x, layer, vertices2D[i].y);
             if(PMG != null) uvs[i] = new Vector2(vertices2D[i].x / PMG.Width, vertices2D[i].y / PMG.Height);
-
-            /*
-            // tangent calc
-            GraphNode beforeNode = nodes[i == 0 ? vertices2D.Count - 1 : i - 1];
-            GraphNode thisNode = nodes[i];
-            GraphNode afterNode = nodes[i == vertices2D.Count - 1 ? 0 : i + 1];
-
-            Vector2 beforeVertex = beforeNode.Vertex;
-            Vector2 thisVertex = thisNode.Vertex;
-            Vector2 afterVertex = afterNode.Vertex;
-
-            Vector2 toBefore = (beforeVertex - thisVertex).normalized;
-            Vector2 toAfter = (afterVertex - thisVertex).normalized;
-
-            
-            Vector2 toBefore90 = GeometryFunctions.RotateVector(toBefore, 90);
-            Vector2 toAfter90 = GeometryFunctions.RotateVector(toAfter, -90);
-
-            float beforeWidth = 1f;
-            float afterWidth = 1f;
-
-            if (thisNode.Type == BorderPointType.Shore && beforeNode.Type == BorderPointType.Shore) beforeWidth *= 2;
-            if (thisNode.Type == BorderPointType.Shore && afterNode.Type == BorderPointType.Shore) afterWidth *= 2;
-
-            Vector2 beforeParallelStart = thisVertex + toBefore90 * beforeWidth;
-            Vector2 beforeParallelEnd = beforeVertex + toBefore90 * beforeWidth;
-
-            Vector2 afterParallelStart = thisVertex + toAfter90 * afterWidth;
-            Vector2 afterParallelEnd = afterVertex + toAfter90 * afterWidth;
-
-            Vector2 targetPoint = GeometryFunctions.FindIntersection(beforeParallelStart, beforeParallelEnd, afterParallelStart, afterParallelEnd);
-            if(targetPoint == new Vector2(0,0)) // lines are parallel -> no intersection
-            {
-                Debug.Log("found parallel");
-                targetPoint = thisVertex + toBefore90;
-            }
-            Vector2 tangent = targetPoint - thisVertex;
-
-            Vector2 normalizedBeforeVertex = thisVertex + toBefore;
-            Vector2 normalizedAfterVertex = thisVertex + toAfter;
-            Vector2 tangent = (normalizedAfterVertex - normalizedBeforeVertex).normalized;
-            tangent = GeometryFunctions.RotateVector(tangent, -90);
-            
-
-            float angle = Mathf.Abs(Vector2.Angle((beforeVertex - thisVertex).normalized, (afterVertex - thisVertex).normalized));
-            float factor = (180 - angle) * 0.005f;
-            tangent *= (1 + factor);
-            
-
-            if (nodes[i].Type == BorderPointType.Shore) tangent *= 2;
-
-            tangents[i] = new Vector4(tangent.x, 0, tangent.y, 0);
-            */
-            
         }
 
         // Create the mesh
@@ -97,7 +41,7 @@ public class MeshGenerator
         return polygon;
     }
 
-    public static GameObject CreateSinglePolygonBorder(List<GraphNode> nodes, float width, Color c, float height, bool clockwise = false)
+    public static GameObject CreateSinglePolygonBorder(List<GraphNode> nodes, float width, Color c, float layer, bool clockwise = false)
     {
         List<Vector2> outerVertices = nodes.Select(x => x.Vertex).ToList();
         List<Vector2> innerVertices = new List<Vector2>();
@@ -107,25 +51,7 @@ public class MeshGenerator
             Vector2 thisVertex = outerVertices[i];
             Vector2 afterVertex = outerVertices[i == outerVertices.Count - 1 ? 0 : i + 1];
 
-            Vector2 toBefore = (beforeVertex - thisVertex).normalized;
-            Vector2 toAfter = (afterVertex - thisVertex).normalized;
-
-            Vector2 toBefore90 = GeometryFunctions.RotateVector(toBefore, clockwise ? -90 : 90);
-            Vector2 toAfter90 = GeometryFunctions.RotateVector(toAfter, clockwise ? 90 : -90);
-
-            Vector2 beforeParallelStart = thisVertex + toBefore90 * width;
-            Vector2 beforeParallelEnd = beforeVertex + toBefore90 * width;
-
-            Vector2 afterParallelStart = thisVertex + toAfter90 * width;
-            Vector2 afterParallelEnd = afterVertex + toAfter90 * width;
-
-            bool parallel = false;
-            Vector2 targetPoint = GeometryFunctions.FindIntersection(beforeParallelStart, beforeParallelEnd, afterParallelStart, afterParallelEnd, ref parallel);
-            if (parallel) // lines are parallel -> no intersection
-            {
-                //Debug.Log("Found a parallel border in border mesh creation");
-                targetPoint = thisVertex + toBefore90 * width;
-            }
+            Vector2 targetPoint = GeometryFunctions.GetOffsetIntersection(beforeVertex, thisVertex, afterVertex, width, width, clockwise);
 
             innerVertices.Add(targetPoint);
         }
@@ -134,8 +60,8 @@ public class MeshGenerator
         Vector3[] vertices = new Vector3[outerVertices.Count + innerVertices.Count];
         for (int i = 0; i < outerVertices.Count; i++)
         {
-            vertices[2 * i] = new Vector3(outerVertices[i].x, height, outerVertices[i].y);
-            vertices[2 * i + 1] = new Vector3(innerVertices[i].x, height, innerVertices[i].y);
+            vertices[2 * i] = new Vector3(outerVertices[i].x, layer, outerVertices[i].y);
+            vertices[2 * i + 1] = new Vector3(innerVertices[i].x, layer, innerVertices[i].y);
         }
 
         // Create triangles ( 0/2/1, 1/2/3, 2/4/3, 3/4/5, 4/6/5, 5/6/7, ...) 
@@ -190,8 +116,8 @@ public class MeshGenerator
         {
             List<Vector2> outerVertices = border.Select(x => x.Vertex).ToList();
             bool isClockwise = GeometryFunctions.IsClockwise(outerVertices);
-            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? !isClockwise : isClockwise));
-            else borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? isClockwise : !isClockwise));
+            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, layer: PolygonMapGenerator.LAYER_SHORE, onOutside ? !isClockwise : isClockwise));
+            else borders.Add(CreateSinglePolygonBorder(border, width, c, layer: PolygonMapGenerator.LAYER_SHORE, onOutside ? isClockwise : !isClockwise));
         }
 
         return borders;

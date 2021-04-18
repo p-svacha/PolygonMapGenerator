@@ -59,7 +59,7 @@ public static class BiomeCreator
         {
             if (Precipitation < 300) return Biome.Grassland;
             else if (Precipitation < 400) return Biome.Shrubland;
-            else return Biome.Taiga;
+            else return Biome.BorealForest;
         }
         else if (Temperature < 14)
         {

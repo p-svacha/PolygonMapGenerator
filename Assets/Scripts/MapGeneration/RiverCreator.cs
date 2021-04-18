@@ -1,5 +1,4 @@
-﻿using ClipperLib;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +7,13 @@ using static GeometryFunctions;
 
 public static class RiverCreator
 {
-    private static float START_RIVER_SIZE = 0.02f;
+    private static float START_RIVER_SIZE = 0.01f;
     private static int SIZE_PER_RIVER = 23;
     private static int SIZE_PER_RIVER_RANGE = 6;
-    private static float MIN_RIVER_EXPANSION_RATE = 0.001f;
-    private static float MAX_RIVER_EXPANSION_RATE = 0.004f;
-    private static float MIN_RIVER_MAX_WIDTH = 0.065f;
-    private static float MAX_RIVER_MAX_WIDTH = 0.11f;
+    private static float MIN_RIVER_EXPANSION_RATE = 0.0005f;
+    private static float MAX_RIVER_EXPANSION_RATE = 0.002f;
+    private static float MIN_RIVER_MAX_WIDTH = 0.03f;
+    private static float MAX_RIVER_MAX_WIDTH = 0.06f;
 
     public static void CreateRivers(PolygonMapGenerator PMG)
     {
@@ -47,7 +46,7 @@ public static class RiverCreator
             currentEndPoint = lastSegment.EndNode;
             lastEndPoint = lastSegment.StartNode;
         }
-        lastEndPoint.RiverWidth = 0;
+        lastEndPoint.RiverWidth = riverWidth;
         currentEndPoint.RiverWidth = riverWidth;
 
         forbiddenConnections.AddRange(lastEndPoint.Connections);
@@ -136,117 +135,103 @@ public static class RiverCreator
     public static River CreateRiverObject(GraphPath riverPath, PolygonMapGenerator PMG)
     {
         Debug.Log("Creating mesh for river with " + riverPath.Nodes.Count + " points");
-        Vector2[] vertices = new Vector2[riverPath.Nodes.Count * 2 - 1];
-        List<int> triangles = new List<int>();
 
-        List<IntPoint> path = new List<IntPoint>();
-        foreach(Vector2 v in riverPath.Nodes.Select(x => x.Vertex))
-            path.Add(new IntPoint(v.x, v.y));
-        ClipperOffset offsetter = new ClipperOffset();
-        offsetter.AddPath(path, JoinType.jtSquare, EndType.etClosedPolygon);
-        PolyTree polyTree = new PolyTree();
-        offsetter.Execute(ref polyTree, riverPath.Nodes[1].RiverWidth);
-
-        List<Vector2> polygonVertices = new List<Vector2>();
-        foreach (IntPoint p in polyTree.Childs[0].m_polygon)
-            polygonVertices.Add(new Vector2((float)p.X, (float)p.Y));
-
-        //MeshGenerator.GeneratePolygon(polygonVertices, PMG);
-
-        for (int i = 0; i < riverPath.Nodes.Count; i++)
+        // Calculate vertices of river polygon
+        List<Vector2> polygonVerticesHalf1 = new List<Vector2>();
+        List<Vector2> polygonVerticesHalf2 = new List<Vector2>();
+        for(int i = 1; i < riverPath.Nodes.Count - 1; i++)
         {
-            if (i == 0)
+            Vector2 startPoint = riverPath.Nodes[i - 1].Vertex;
+            Vector2 thisPoint = riverPath.Nodes[i].Vertex;
+            Vector2 nextPoint = riverPath.Nodes[i + 1].Vertex;
+
+            float startWidth = riverPath.Nodes[i - 1].RiverWidth;
+            float endWidth = riverPath.Nodes[i].RiverWidth;
+
+            Debug.Log("River point " + i + ": startWidth = " + startWidth + ", endWidth = " + endWidth);
+            
+            if(i == 1) // Add two starting points
             {
-                vertices[0] = riverPath.Nodes[i].Vertex;
-                triangles.Add(0);
-                triangles.Add(2);
-                triangles.Add(1);
+                Vector2 rotatedVector = GeometryFunctions.RotateVector((thisPoint - startPoint).normalized * startWidth, 90);
+                polygonVerticesHalf1.Add(startPoint + rotatedVector);
+                polygonVerticesHalf2.Add(startPoint - rotatedVector);
             }
-            else
+
+            polygonVerticesHalf1.Add(GeometryFunctions.GetOffsetIntersection(startPoint, thisPoint, nextPoint, startWidth, endWidth, true));
+            polygonVerticesHalf2.Add(GeometryFunctions.GetOffsetIntersection(startPoint, thisPoint, nextPoint, startWidth, endWidth, false));
+
+            if(i == riverPath.Nodes.Count - 2) // Add two ending points (calculate river delta by taking intersecion between river and shoreline
             {
-                Vector2 lastPosition = riverPath.Nodes[i - 1].Vertex;
-                Vector2 currentPointPosition = riverPath.Nodes[i].Vertex;
-                Vector2 nextPointPosition;
-                if (i == riverPath.Nodes.Count - 1)
+                GraphNode lastNode = riverPath.Nodes.Last();
+                List<GraphConnection> shoreDelta = lastNode.Connections.Where(x => x.Type == BorderType.Shore).ToList();
+                List<GraphNode> riverDeltaPoints = new List<GraphNode>();
+                foreach(GraphConnection delta in shoreDelta)
                 {
-                    nextPointPosition = currentPointPosition + new Vector2(currentPointPosition.x - lastPosition.x, currentPointPosition.y - lastPosition.y);
+                    if (delta.StartNode == lastNode) riverDeltaPoints.Add(delta.EndNode);
+                    else riverDeltaPoints.Add(delta.StartNode);
+                }
+
+                Vector2 endPoint1, endPoint2;
+
+                // TODO: DOES NOT WORK YET
+                GraphPolygon firstPolygon = riverPath.Nodes[i].Polygons.First(x => GeometryFunctions.IsPointInPolygon4(x.Nodes.Select(x => x.Vertex).ToList(), polygonVerticesHalf1.Last()));
+
+                bool addDeltaMidPoint = true;
+                if(riverDeltaPoints[0].Polygons.Contains(firstPolygon))
+                {
+                    endPoint1 = GeometryFunctions.GetOffsetIntersection(thisPoint, nextPoint, riverDeltaPoints[0].Vertex, endWidth, 0f, true);
+                    endPoint2 = GeometryFunctions.GetOffsetIntersection(thisPoint, nextPoint, riverDeltaPoints[1].Vertex, endWidth, 0f, false);
+
+                    if (!GeometryFunctions.IsPointOnLineSegment(endPoint1, riverDeltaPoints[0].Vertex, lastNode.Vertex))
+                    {
+                        endPoint1 = lastNode.Vertex;
+                        addDeltaMidPoint = false;
+                    }
+                    if (!GeometryFunctions.IsPointOnLineSegment(endPoint2, riverDeltaPoints[1].Vertex, lastNode.Vertex))
+                    {
+                        endPoint2 = lastNode.Vertex;
+                        addDeltaMidPoint = false;
+                    }
                 }
                 else
                 {
-                    nextPointPosition = riverPath.Nodes[i + 1].Vertex;
+                    endPoint1 = GeometryFunctions.GetOffsetIntersection(thisPoint, nextPoint, riverDeltaPoints[1].Vertex, endWidth, 0f, true);
+                    endPoint2 = GeometryFunctions.GetOffsetIntersection(thisPoint, nextPoint, riverDeltaPoints[0].Vertex, endWidth, 0f, false);
+
+                    if (!GeometryFunctions.IsPointOnLineSegment(endPoint1, riverDeltaPoints[1].Vertex, lastNode.Vertex))
+                    {
+                        endPoint1 = lastNode.Vertex;
+                        addDeltaMidPoint = false;
+                    }
+                    if (!GeometryFunctions.IsPointOnLineSegment(endPoint2, riverDeltaPoints[0].Vertex, lastNode.Vertex))
+                    {
+                        endPoint2 = lastNode.Vertex;
+                        addDeltaMidPoint = false;
+                    }
                 }
 
-                float beforeConnectionAngle = Vector2.SignedAngle(new Vector2(lastPosition.x - currentPointPosition.x, lastPosition.y - currentPointPosition.y), new Vector2(0, 1));
-                float afterConnectionAngle = Vector2.SignedAngle(new Vector2(nextPointPosition.x - currentPointPosition.x, nextPointPosition.y - currentPointPosition.y), new Vector2(0, 1));
-
-                beforeConnectionAngle = mod(beforeConnectionAngle, 360);
-                afterConnectionAngle = mod(afterConnectionAngle, 360);
-
-                Debug.Log("angles for point " + i + ": " + beforeConnectionAngle + ", " + afterConnectionAngle);
-
-                if (beforeConnectionAngle > afterConnectionAngle) afterConnectionAngle += 360;
-
-                float meshAngle1 = mod(beforeConnectionAngle + ((afterConnectionAngle - beforeConnectionAngle) / 2), 360);
-                float meshAngle2 = mod(meshAngle1 + 180, 360);
-
-                Vector2 meshVertex1 = new Vector2(
-                    (float)(currentPointPosition.x + (Math.Sin(ToRad(meshAngle1)) * riverPath.Nodes[i].RiverWidth / 2)),
-                    (float)(currentPointPosition.y + (Math.Cos(ToRad(meshAngle1)) * riverPath.Nodes[i].RiverWidth / 2)));
-                Vector2 meshVertex2 = new Vector2(
-                    (float)(currentPointPosition.x + (Math.Sin(ToRad(meshAngle2)) * riverPath.Nodes[i].RiverWidth / 2)),
-                    (float)(currentPointPosition.y + (Math.Cos(ToRad(meshAngle2)) * riverPath.Nodes[i].RiverWidth / 2)));
-
-                vertices[i * 2 - 1] = meshVertex1;
-                vertices[i * 2] = meshVertex2;
-
-                if(i > 1)
-                {
-                    triangles.Add(((i - 1) * 2) - 1);
-                    triangles.Add(((i - 1) * 2));
-                    triangles.Add(((i - 1) * 2) + 1);
-
-                    triangles.Add(((i - 1) * 2));
-                    triangles.Add(((i - 1) * 2) + 2);
-                    triangles.Add(((i - 1) * 2) + 1);
-                }
+                polygonVerticesHalf1.Add(endPoint1);
+                if (addDeltaMidPoint) polygonVerticesHalf1.Add(lastNode.Vertex);
+                polygonVerticesHalf2.Add(endPoint2);
             }
         }
 
-        Debug.Log("River vertices");
-        foreach (Vector2 v in vertices) Debug.Log(v.ToString());
+        polygonVerticesHalf2.Reverse();
+        List<Vector2> polygonVertices = polygonVerticesHalf1;
+        polygonVertices.AddRange(polygonVerticesHalf2);
 
-        // Create mesh
-        // Create the Vector3 vertices
-        Vector3[] vertices3D = new Vector3[vertices.Length];
-        Vector2[] uvs = new Vector2[vertices.Length];
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices3D[i] = new Vector3(vertices[i].x, 0, vertices[i].y);
-            uvs[i] = new Vector2(vertices[i].x / PMG.Width, vertices[i].y / PMG.Height);
-        }
+        List<Vector2> polygonVerticesList = polygonVertices.ToList();
+        if (GeometryFunctions.IsClockwise(polygonVerticesList)) polygonVerticesList.Reverse();
 
-        // Create the mesh
-        Mesh msh = new Mesh();
-        msh.vertices = vertices3D;
-        msh.uv = uvs;
-        msh.triangles = triangles.ToArray();
-        msh.RecalculateNormals();
-        msh.RecalculateBounds();
+        // Create object 
+        GameObject riverObject = MeshGenerator.GeneratePolygon(polygonVerticesList, PMG, layer: PolygonMapGenerator.LAYER_RIVER);
 
-        // Set up game object with mesh;
-        GameObject riverObject = new GameObject("River");
         string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16) + " River";
         River river = riverObject.AddComponent<River>();
         river.Init(name, riverPath.Nodes.Select(x => x.BorderPoint).ToList(), riverPath.Connections.Select(x => x.Border).ToList(), riverPath.Polygons.Select(x => x.Region).ToList());
 
-        riverObject.transform.position = new Vector3(0, 0.001f, 0);
-        MeshRenderer renderer = riverObject.AddComponent<MeshRenderer>();
-        Color ranCol = Color.red;
-        renderer.material.color = ranCol;
-        MeshFilter filter = riverObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
-        filter.mesh = msh;
+        riverObject.GetComponent<MeshRenderer>().material.color = Color.red;
 
-        riverObject.transform.localScale = new Vector3(1, -1, 1);
         riverObject.name = "River";
 
         return river;

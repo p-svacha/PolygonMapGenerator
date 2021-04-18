@@ -5,35 +5,28 @@ using UnityEngine;
 
 public static class GeometryFunctions
 {
-    // Given three colinear Vector2s p, q, r, the function checks if 
-    // Vector2 q lies on line segment 'pr' 
-    private static Boolean onSegment(Vector2 p, Vector2 q, Vector2 r)
-    {
-        if (q.x <= Math.Max(p.x, r.x) && q.x >= Math.Min(p.x, r.x) &&
-            q.y <= Math.Max(p.y, r.y) && q.y >= Math.Min(p.y, r.y))
-            return true;
+    #region Public Functions
 
-        return false;
+
+    /// <summary>
+    /// Modulo that can handle negative ints
+    /// </summary>
+    public static int Mod(int x, int m)
+    {
+        return (x % m + m) % m;
     }
 
-    // To find orientation of ordered triplet (p, q, r). 
-    // The function returns following values 
-    // 0 --> p, q and r are colinear 
-    // 1 --> Clockwise 
-    // 2 --> Counterclockwise 
-    private static int orientation(Vector2 p, Vector2 q, Vector2 r)
+    /// <summary>
+    /// Modulo that can handle negative floats
+    /// </summary>
+    public static float Mod(float x, float m)
     {
-        // See https://www.geeksforgeeks.org/orientation-3-ordered-Vector2s/ 
-        // for details of below formula. 
-        float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-
-        if (val == 0) return 0; // colinear 
-
-        return (val > 0) ? 1 : 2; // clock or counterclock wise 
+        return (x % m + m) % m;
     }
 
-    // The main function that returns true if line segment 'p1q1' 
-    // and 'p2q2' intersect. 
+    /// <summary>
+    /// Returns true if line segment 'p1q1' and 'p2q2' intersect.
+    /// </summary>
     public static Boolean DoLineSegmentsIntersect(Vector2 p1, Vector2 q1, Vector2 p2, Vector2 q2)
     {
         // Find the four orientations needed for general and 
@@ -63,20 +56,9 @@ public static class GeometryFunctions
         return false; // Doesn't fall in any of the above cases 
     }
 
-    public static float ToRad(float angle)
-    {
-        return (float)(Math.PI / 180 * angle);
-    }
-
-    public static int mod(int x, int m)
-    {
-        return (x % m + m) % m;
-    }
-    public static float mod(float x, float m)
-    {
-        return (x % m + m) % m;
-    }
-
+    /// <summary>
+    /// Returns the area of a polygon with the given points
+    /// </summary>
     public static float GetPolygonArea(List<Vector2> points)
     {
         // Add the first point to the end.
@@ -98,20 +80,21 @@ public static class GeometryFunctions
         return Math.Abs(area);
     }
 
+    /// <summary>
+    /// Returns how much apart two degree values are. For example the degree distance between 350° and 10° would return 20°.
+    /// </summary>
     public static int DegreeDistance(int deg1, int deg2)
     {
         int absDistance = deg1 > deg2 ? deg1 - deg2 : deg2 - deg1;
-        return absDistance <= 180 ? absDistance : 360-absDistance;
+        return absDistance <= 180 ? absDistance : 360 - absDistance;
     }
 
-    public static bool IsInRange(Vector2 v, float minX, float maxX, float minY, float maxY)
-    {
-        return (v.x >= minX && v.x <= maxX && v.y >= minY && v.y <= maxY);
-    }
-
+    /// <summary>
+    /// Returns a the rotated vector of a given vector by x degrees.
+    /// </summary>
     public static Vector2 RotateVector(Vector2 v, float degrees)
     {
-        if(degrees == 90) return new Vector2(-v.y, v.x);
+        if (degrees == 90) return new Vector2(-v.y, v.x);
         if (degrees == -90) return new Vector2(v.y, -v.x);
 
         float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
@@ -123,87 +106,6 @@ public static class GeometryFunctions
         float vx = (cos * tx) - (sin * ty);
         float vy = (sin * tx) + (cos * ty);
         return new Vector2(vx, vy);
-    }
-
-    // Find the point of intersection between
-    // the lines p1 --> p2 and p3 --> p4.
-    public static Vector2 FindIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, ref bool parralel)
-    {
-        parralel = false;
-        bool lines_intersect = false;
-        bool segments_intersect = false;
-        Vector2 intersection = new Vector2(0, 0);
-
-        // Check parallel
-        if(Math.Abs(p1.x - p2.x) < 0.001f && Math.Abs(p3.x - p4.x) < 0.001f)
-        {
-            parralel = true;
-            intersection = new Vector2(0, 0);
-            return intersection;
-        }
-        float a1 = (p1.y - p2.y) / (p1.x - p2.x);
-        float a2 = (p3.y - p4.y) / (p3.x - p4.x);
-        if( Math.Abs(a1 - a2) < 0.00001f)
-        {
-            parralel = true;
-            intersection = new Vector2(0, 0);
-            return intersection;
-        }
-
-        // Get the segments' parameters.
-        float dx12 = p2.x - p1.x;
-        float dy12 = p2.y - p1.y;
-        float dx34 = p4.x - p3.x;
-        float dy34 = p4.y - p3.y;
-
-        // Solve for t1 and t2
-        float denominator = (dy12 * dx34 - dx12 * dy34);
-
-        float t1 =
-            ((p1.x - p3.x) * dy34 + (p3.y - p1.y) * dx34)
-                / denominator;
-        if (float.IsInfinity(t1))
-        {
-            // The lines are parallel (or close enough to it).
-            lines_intersect = false;
-            segments_intersect = false;
-            intersection = new Vector2(0,0);
-            return intersection;
-        }
-        lines_intersect = true;
-
-        float t2 =
-            ((p3.x - p1.x) * dy12 + (p1.y - p3.y) * dx12)
-                / -denominator;
-
-        // Find the point of intersection.
-        intersection = new Vector2(p1.x + dx12 * t1, p1.y + dy12 * t1);
-
-        // The segments intersect if t1 and t2 are between 0 and 1.
-        segments_intersect =
-            ((t1 >= 0) && (t1 <= 1) &&
-             (t2 >= 0) && (t2 <= 1));
-
-            // Find the closest points on the segments.
-            if (t1 < 0)
-            {
-                t1 = 0;
-            }
-            else if (t1 > 1)
-            {
-                t1 = 1;
-            }
-
-            if (t2 < 0)
-            {
-                t2 = 0;
-            }
-            else if (t2 > 1)
-            {
-                t2 = 1;
-            }
-
-        return intersection;
     }
 
     /// <summary>
@@ -248,4 +150,161 @@ public static class GeometryFunctions
         }
         return result;
     }
+
+    /// <summary>
+    /// This function returns the intersection of two lines (prevPoint - thisPoint, thisPoint - nextPoint) with a certain offset of two of those lines. Useful for adding a certain width to a path (i.e. borders or rivers).
+    /// It does it by making a parallel line to the two lines with a given offset and then taking the intersection point of the offsetted parallel lines.
+    /// The function will return the offseted point on the INSIDE of the three points, given the direction (clockwise or not) of the three points. If you want it on the outside, simply switch the direction.
+    /// </summary>
+    public static Vector2 GetOffsetIntersection(Vector2 prevPoint, Vector2 thisPoint, Vector2 nextPoint, float prevOffset, float nextOffset, bool clockwise)
+    {
+        Vector2 toBefore = (prevPoint - thisPoint).normalized;
+        Vector2 toAfter = (nextPoint - thisPoint).normalized;
+
+        Vector2 toBefore90 = RotateVector(toBefore, clockwise ? -90 : 90);
+        Vector2 toAfter90 = RotateVector(toAfter, clockwise ? 90 : -90);
+
+        if (IsParallel(thisPoint - prevPoint, nextPoint - thisPoint)) return thisPoint + toBefore90 * ((prevOffset + nextOffset) / 2);
+
+        Vector2 beforeParallelStart = thisPoint + toBefore90 * prevOffset;
+        Vector2 beforeParallelEnd = prevPoint + toBefore90 * prevOffset;
+
+        Vector2 afterParallelStart = thisPoint + toAfter90 * nextOffset;
+        Vector2 afterParallelEnd = nextPoint + toAfter90 * nextOffset;
+
+        Vector2 targetPoint = FindIntersection(beforeParallelStart, beforeParallelEnd, afterParallelStart, afterParallelEnd);
+
+        return targetPoint;
+    }
+
+    /// <summary>
+    /// Returns if the two vectors p and q are close to parallel
+    /// </summary>
+    public static bool IsParallel(Vector2 p, Vector2 q)
+    {
+        Vector2 pn = p.normalized;
+        Vector2 qn = q.normalized;
+        float xDiff = Math.Abs(pn.x - qn.x);
+        float yDiff = Math.Abs(pn.y - qn.y);
+        return ((xDiff + yDiff) < 0.002f); 
+    }
+
+    public static bool IsPointOnLineSegment(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
+    {
+        float AB = Mathf.Sqrt((lineEnd.x - lineStart.x) * (lineEnd.x - lineStart.x) + (lineEnd.y - lineStart.y) * (lineEnd.y - lineStart.y));
+        float AP = Mathf.Sqrt((point.x - lineStart.x) * (point.x - lineStart.x) + (point.y - lineStart.y) * (point.y - lineStart.y));
+        float PB = Mathf.Sqrt((lineEnd.x - point.x) * (lineEnd.x - point.x) + (lineEnd.y - point.y) * (lineEnd.y - point.y));
+        return Mathf.Abs(AB - (AP + PB)) < 0.001f;
+    }
+
+    #endregion
+
+    #region Private functions
+
+    // Given three colinear Vector2s p, q, r, the function checks if 
+    // Vector2 q lies on line segment 'pr' 
+    private static Boolean onSegment(Vector2 p, Vector2 q, Vector2 r)
+    {
+        if (q.x <= Math.Max(p.x, r.x) && q.x >= Math.Min(p.x, r.x) &&
+            q.y <= Math.Max(p.y, r.y) && q.y >= Math.Min(p.y, r.y))
+            return true;
+
+        return false;
+    }
+
+    // To find orientation of ordered triplet (p, q, r). 
+    // The function returns following values 
+    // 0 --> p, q and r are colinear 
+    // 1 --> Clockwise 
+    // 2 --> Counterclockwise 
+    private static int orientation(Vector2 p, Vector2 q, Vector2 r)
+    {
+        // See https://www.geeksforgeeks.org/orientation-3-ordered-Vector2s/ 
+        // for details of below formula. 
+        float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+        if (val == 0) return 0; // colinear 
+
+        return (val > 0) ? 1 : 2; // clock or counterclock wise 
+    }
+
+    // Find the point of intersection between
+    // the lines p1 --> p2 and p3 --> p4.
+    private static Vector2 FindIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    {
+        bool segments_intersect = false;
+        Vector2 intersection = new Vector2(0, 0);
+
+        // Check parallel
+        if(Math.Abs(p1.x - p2.x) < 0.001f && Math.Abs(p3.x - p4.x) < 0.001f)
+        {
+            Debug.LogWarning("WARNING: A PARALLEL LINE HAS BEEN FOUND IN THE SECOND CHECK THAT HAS BEEN SKIPPED IN FIRST CHECK. RETURNING 0/0 VECTOR");
+            intersection = new Vector2(0, 0);
+            return intersection;
+        }
+        float a1 = (p1.y - p2.y) / (p1.x - p2.x);
+        float a2 = (p3.y - p4.y) / (p3.x - p4.x);
+        if( Math.Abs(a1 - a2) < 0.00001f)
+        {
+            intersection = new Vector2(0, 0);
+            return intersection;
+        }
+
+        // Get the segments' parameters.
+        float dx12 = p2.x - p1.x;
+        float dy12 = p2.y - p1.y;
+        float dx34 = p4.x - p3.x;
+        float dy34 = p4.y - p3.y;
+
+        // Solve for t1 and t2
+        float denominator = (dy12 * dx34 - dx12 * dy34);
+
+        float t1 =
+            ((p1.x - p3.x) * dy34 + (p3.y - p1.y) * dx34)
+                / denominator;
+        if (float.IsInfinity(t1))
+        {
+            // The lines are parallel (or close enough to it).
+            segments_intersect = false;
+            intersection = new Vector2(0,0);
+            return intersection;
+        }
+
+        float t2 =
+            ((p3.x - p1.x) * dy12 + (p1.y - p3.y) * dx12)
+                / -denominator;
+
+        // Find the point of intersection.
+        intersection = new Vector2(p1.x + dx12 * t1, p1.y + dy12 * t1);
+
+        // The segments intersect if t1 and t2 are between 0 and 1.
+        segments_intersect =
+            ((t1 >= 0) && (t1 <= 1) &&
+             (t2 >= 0) && (t2 <= 1));
+
+            // Find the closest points on the segments.
+            if (t1 < 0)
+            {
+                t1 = 0;
+            }
+            else if (t1 > 1)
+            {
+                t1 = 1;
+            }
+
+            if (t2 < 0)
+            {
+                t2 = 0;
+            }
+            else if (t2 > 1)
+            {
+                t2 = 1;
+            }
+
+        return intersection;
+    }
+
+    #endregion
+
+
 }

@@ -11,7 +11,7 @@ public enum Biome
     Shrubland,
     Temperate,
     TemperateRainForest,
-    Taiga,
+    BorealForest,
     Tropical,
     Savanna,
     TropicalRainForest

@@ -5,7 +5,7 @@ public class PrecipitationNoise : Noise
     private int PolePrecipitation;
     private int EquatorPrecipitation;
 
-    private float BaseScale = 0.09f;
+    private float BaseScale = 0.2f;
     private int OffsetX;
     private int OffsetY;
 

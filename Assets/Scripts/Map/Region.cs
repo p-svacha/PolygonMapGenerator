@@ -103,7 +103,7 @@ public class Region : MonoBehaviour
 
         GetComponent<Renderer>().material = MapDisplaySettings.Settings.DefaultMaterial;
 
-        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, height: 0.0001f);
+        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
         Border.transform.SetParent(transform);
     }
 

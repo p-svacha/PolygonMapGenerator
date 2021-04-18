@@ -69,7 +69,6 @@
     <Compile Include="Assets\Scripts\MapGeneration\Noise\ContinentNoise.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneCircleEvent.cs" />
     <Compile Include="Assets\Scripts\EnumHelper.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Helper\clipper.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierListElement.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPolygon.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictInfo\UI_DistrictAttribute.cs" />
@@ -108,6 +107,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
     <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
+    <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\LanguagePolicy.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictListElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\Party.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\ParabolaMath.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WaterTopologyNoise.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Properties\AssemblyInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\PartyAI.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\BiomeCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\ConstitutionVoting\UI_Voting.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\ColorManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\IconManager.cs" />
@@ -193,9 +195,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\BiomeCreator.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
-    <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
