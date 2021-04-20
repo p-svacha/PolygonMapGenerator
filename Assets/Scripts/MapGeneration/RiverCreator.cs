@@ -18,7 +18,7 @@ public static class RiverCreator
     public static void CreateRivers(PolygonMapGenerator PMG)
     {
         int sizePerRiver = UnityEngine.Random.Range(SIZE_PER_RIVER - SIZE_PER_RIVER_RANGE, SIZE_PER_RIVER + SIZE_PER_RIVER_RANGE);
-        int numRivers = PMG.MapSize / sizePerRiver;
+        int numRivers = PMG.GenerationSettings.Area / sizePerRiver;
         Debug.Log("Creating " + numRivers + " rivers.");
         for (int i = 0; i < numRivers; i++) DoCreateRiver(PMG);
     }

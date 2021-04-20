@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Map
 {
-    public Texture2D RegionBorderMaskTexture;
+    public MapGenerationSettings Attributes;
 
     public GameObject RootObject;
     public GameObject BorderPointContainer;
@@ -29,20 +29,16 @@ public class Map
     public bool IsShowingRegionBorders;
     public bool IsShowingShorelineBorders;
 
-    public int Width;
-    public int Height;
-    public int Area;
-
-    public Map(PolygonMapGenerator PMG)
+    public Map(MapGenerationSettings settings)
     {
-        Width = PMG.Width;
-        Height = PMG.Height;
-        Area = Width * Height;
+        Attributes = settings;
     }
 
-    public void InitializeMap(PolygonMapGenerator PMG, bool showRegionBorders, bool showShorelineBorders, MapDrawMode drawMode)
+    /// <summary>
+    /// This function always has to be called after the map is received from the map generator
+    /// </summary>
+    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, MapDrawMode drawMode)
     {
-        InitRivers(PMG);
         UpdateDrawMode(drawMode);
         ShowRegionBorders(showRegionBorders);
         ShowShorelineBorders(showShorelineBorders);
@@ -75,18 +71,6 @@ public class Map
                 }
                 foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 break;
-        }
-    }
-
-    private void InitRivers(PolygonMapGenerator PMG)
-    {
-        RiverContainer = new GameObject("Rivers");
-        RiverContainer.transform.SetParent(RootObject.transform);
-        foreach (GraphPath r in PMG.RiverPaths)
-        {
-            River riverObject = RiverCreator.CreateRiverObject(r, PMG);
-            riverObject.transform.SetParent(RiverContainer.transform);
-            Rivers.Add(riverObject);
         }
     }
 
@@ -230,13 +214,13 @@ public class Map
     private void FocusMapCentered()
     {
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
-        Camera.main.transform.position = new Vector3(Width / 2f, Height, Height / 2f);
+        Camera.main.transform.position = new Vector3(Attributes.Width / 2f, Attributes.Height, Attributes.Height / 2f);
     }
 
     private void FocusMapInEditor()
     {
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
-        Camera.main.transform.position = new Vector3(Width * 0.7f, Height * 0.9f, Height * 0.5f);
+        Camera.main.transform.position = new Vector3(Attributes.Width * 0.7f, Attributes.Height * 0.9f, Attributes.Height * 0.5f);
     }
 
     #region Getters

@@ -25,9 +25,9 @@ public class TemperatureNoise : Noise
     /// <summary>
     /// Returns average temperature for the given position in °C
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
-        float yEquator = PMG.Height / 2;
+        float yEquator = settings.Height / 2;
         float baseTemp = PoleTemperature + ((1 - (Mathf.Abs(y - yEquator) / yEquator)) * (EquatorTemperature - PoleTemperature));
         float tempModifier = Mathf.PerlinNoise(OffsetX + x * BaseScale, OffsetY + y * BaseScale) * TempModifyRange - TempModifyRange / 2;
         return baseTemp + tempModifier;

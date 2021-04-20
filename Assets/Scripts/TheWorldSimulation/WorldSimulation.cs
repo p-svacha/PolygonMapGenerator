@@ -24,6 +24,7 @@ public class WorldSimulation : MonoBehaviour
         FlagGenerator = GameObject.Find("FlagGenerator").GetComponent<FlagGenerator>();
         FlagGenerator.GenerateFlag();
         Map = map;
+        Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, MapDrawMode.Basic);
         Map.UpdateDisplay();
         GameUI = GameObject.Find("GameUI").GetComponent<GameUI>();
         MarkovChainWordGenerator.TargetNumWords = Map.Regions.Count * 2;

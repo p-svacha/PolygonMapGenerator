@@ -20,7 +20,7 @@ public static class BiomeCreator
 
         foreach (GraphPolygon polygon in PMG.Polygons)
         {
-            float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG);
+            float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG.GenerationSettings);
             polygon.Temperature = (int)noiseValue;
         }
 
@@ -35,7 +35,7 @@ public static class BiomeCreator
 
         foreach (GraphPolygon polygon in PMG.Polygons)
         {
-            float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG);
+            float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG.GenerationSettings);
             polygon.Precipitation = (int)noiseValue;
         }
 

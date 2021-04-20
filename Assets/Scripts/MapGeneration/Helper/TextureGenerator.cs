@@ -14,7 +14,7 @@ public static class TextureGenerator
         // Land texture
         int perlinRange = 10000;
         Vector2 offset = new Vector2(UnityEngine.Random.Range(-perlinRange, perlinRange), UnityEngine.Random.Range(-perlinRange, perlinRange));
-        float perlinScale =PMG.Width * 0.000365f;
+        float perlinScale = PMG.GenerationSettings.Width * 0.000365f;
 
         int texSize = 2048;
         Texture2D splatMap = new Texture2D(texSize, texSize);
@@ -66,8 +66,8 @@ public static class TextureGenerator
             for(int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
-                int texX = (int)((worldPosition.x / PMG.Width) * shoreTexSize);
-                int texY = (int)((worldPosition.y / PMG.Height) * shoreTexSize);
+                int texX = (int)((worldPosition.x / PMG.GenerationSettings.Width) * shoreTexSize);
+                int texY = (int)((worldPosition.y / PMG.GenerationSettings.Height) * shoreTexSize);
                 for(int x = texX - fadeRange; x < texX + fadeRange + 1; x++)
                 {
                     for(int y = texY -fadeRange; y < texY + fadeRange + 1; y++)
@@ -90,8 +90,8 @@ public static class TextureGenerator
 
     public static Texture2D CreateRegionBorderMaskTexture(PolygonMapGenerator PMG)
     {
-        int texWidth = PMG.Width * 400;
-        int texHeight = PMG.Height * 400;
+        int texWidth = PMG.GenerationSettings.Width * 400;
+        int texHeight = PMG.GenerationSettings.Height * 400;
         Texture2D regionBorderTexture = new Texture2D(texWidth, texHeight);
         for (int y = 0; y < texHeight; y++)
             for (int x = 0; x < texWidth; x++)
@@ -105,8 +105,8 @@ public static class TextureGenerator
             for (int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
-                int texX = (int)((worldPosition.x / PMG.Width) * texWidth);
-                int texY = (int)((worldPosition.y / PMG.Height) * texHeight);
+                int texX = (int)((worldPosition.x / PMG.GenerationSettings.Width) * texWidth);
+                int texY = (int)((worldPosition.y / PMG.GenerationSettings.Height) * texHeight);
                 for (int x = texX - range; x < texX + range + 1; x++)
                 {
                     for (int y = texY - range; y < texY + range + 1; y++)
@@ -124,8 +124,8 @@ public static class TextureGenerator
 
     public static Texture2D CreateRiverMaskTexture(PolygonMapGenerator PMG)
     {
-        int texWidth = PMG.Width * 400;
-        int texHeight = PMG.Height * 400;
+        int texWidth = PMG.GenerationSettings.Width * 400;
+        int texHeight = PMG.GenerationSettings.Height * 400;
         Texture2D riverMaskTexture = new Texture2D(texWidth, texHeight);
         for (int y = 0; y < texHeight; y++)
             for (int x = 0; x < texWidth; x++)
@@ -138,8 +138,8 @@ public static class TextureGenerator
             for (int i = 0; i < steps + 1; i++)
             {
                 Vector2 worldPosition = Vector2.Lerp(c.StartNode.Vertex, c.EndNode.Vertex, 1f * i / steps);
-                int texX = (int)((worldPosition.x / PMG.Width) * texWidth);
-                int texY = (int)((worldPosition.y / PMG.Height) * texHeight);
+                int texX = (int)((worldPosition.x / PMG.GenerationSettings.Width) * texWidth);
+                int texY = (int)((worldPosition.y / PMG.GenerationSettings.Height) * texHeight);
                 for (int x = texX - range; x < texX + range + 1; x++)
                 {
                     for (int y = texY - range; y < texY + range + 1; y++)

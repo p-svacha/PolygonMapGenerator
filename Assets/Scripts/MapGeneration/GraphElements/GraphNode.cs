@@ -31,7 +31,7 @@ public class GraphNode
         Id = idCounter++;
         Vertex = v;
 
-        Type = (v.x == 0 || v.x == PMG.Width || v.y == 0 || v.y == PMG.Height) ? BorderPointType.Edge : BorderPointType.Inland;
+        Type = (v.x == 0 || v.x == PMG.GenerationSettings.Width || v.y == 0 || v.y == PMG.GenerationSettings.Height) ? BorderPointType.Edge : BorderPointType.Inland;
     }
 
     public void SetType()

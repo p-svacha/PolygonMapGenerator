@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class Noise
 {
-    public abstract float GetValue(float x, float y, PolygonMapGenerator PMG);
+    public abstract float GetValue(float x, float y, MapGenerationSettings settings);
 }

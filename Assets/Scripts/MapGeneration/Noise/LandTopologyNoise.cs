@@ -30,7 +30,7 @@ public class LandTopologyNoise : Noise
     /// 2 = Mountains
     /// 3 = Lake
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
         float hillValue = Mathf.PerlinNoise(HillOffsetX + x * BaseScale, HillOffsetY + y * BaseScale);
         float mountainValue = Mathf.PerlinNoise(MountainOffsetX + x * BaseScale, MountainOffsetY + y * BaseScale);

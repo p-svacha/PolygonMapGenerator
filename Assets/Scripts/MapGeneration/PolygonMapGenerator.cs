@@ -16,7 +16,7 @@ public class PolygonMapGenerator : MonoBehaviour
     public MapGenerationState GenerationState;
 
     public int Seed;
-    public Map Map;
+    private Map Map;
 
     public List<GraphNode> CornerNodes = new List<GraphNode>();
     public List<GraphNode> EdgeNodes = new List<GraphNode>(); // Edge nodes (are on the graph edge)
@@ -35,16 +35,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private List<GraphPolygon> LastRemovedPolygons = new List<GraphPolygon>(); // Used when splitting or merging polygons to find polygons that remained unchanged so the attributes can be transferred
 
-    public Action Callback; // Gets called when map generation is done
-    public int Width;
-    public int Height;
-    public float MinPolygonArea;
-    public float MaxPolygonArea;
-    public MapType MapType;
+    public Action<Map> Callback; // Gets called when map generation is done
 
-    public bool ShowRegionBorders;
-    public bool ShowShorelineBorders;
-    public MapDrawMode DrawMode;
+    public MapGenerationSettings GenerationSettings; // Settings containing all necessary information for the kind of map that should be created
+
+    // Default values
     public const float DefaultBorderWidth = 0.005f;
     public const float DefaultCoastBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
@@ -56,20 +51,18 @@ public class PolygonMapGenerator : MonoBehaviour
     public static float LAYER_SHORE = 0.00002f;
     public static float LAYER_REGION_BORDER = 0.00003f;
 
-    public const float START_LINES_PER_KM = 0.6f; // Active lines per km map side length
-    public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on a grid
+    // Graph construction values
+    private int NumStartLines;
+    public const float START_LINES_PER_KM = 0.6f; // Number of random walker lines per km the map generation starts with
+    public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on an evenly distributed grid
 
-    public const float SPLIT_CHANCE = 0.09f; // Chance that a line splits into 2 lines at a vertex
+    private float RealSplitChance; // Actual chance that a line splits into 2 lines at a vertex
+    public const float DEFAULT_SPLIT_CHANCE = 0.0675f; // Chance that a line splits into 2 lines at a vertex with an average desired polygon area of 1. The value changes depending on the average desired polygon area
     public const float MAX_TURN_ANGLE = 45; // °
     public const float SNAP_DISTANCE = 0.07f; // Range, where a point snaps to a nearby point
     public const float MIN_SEGMENT_LENGTH = 0.08f;
     public const float MAX_SEGMENT_LENGTH = 0.13f;
     public const float MIN_SPLIT_ANGLE = 55; // °, the minimum angle when a split forms
-
-    //public const float MAX_LAND_POLYGON_SIZE = 1.5f; // Land polygons larger than this will be split
-    //public const float MIN_POLYGON_SIZE = 0.08f; // Polygons smaller than this will get merged with their smallest neighbour
-
-    public int MapSize;
 
     private Queue<Action> Actions = new Queue<Action>();
 
@@ -92,31 +85,23 @@ public class PolygonMapGenerator : MonoBehaviour
         NameGeneratorThread.Start();
     }
 
-    public void GenerateMap(int width, int height, float minPolygonArea, float maxPolygonArea, MapType mapType, MapDrawMode drawMode, bool drawRegionBorders = false, bool drawShoreLineBorder = true, Action callback = null, bool destroyOldMap = false)
+    public void GenerateMap(MapGenerationSettings settings, Action<Map> callback = null)
     {
+        GenerationSettings = settings;
         Callback = callback;
 
         StartCreation = DateTime.Now;
         StateTimeStamp = DateTime.Now;
 
-        Reset(destroyOldMap);
+        Reset();
 
         Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
         //seed = -663403863;
-        Debug.Log("Generating " + width + "/" + height + mapType.ToString() + " map with region sizes between " + minPolygonArea + " and " + maxPolygonArea + ".");
+        Debug.Log("Generating " + GenerationSettings.Width + "/" + GenerationSettings.Height + GenerationSettings.MapType.ToString() + " map with region sizes between " + GenerationSettings.MinPolygonArea + " and " + GenerationSettings.MaxPolygonArea + ".");
         Debug.Log("SEED: " + Seed);
         UnityEngine.Random.InitState(Seed);
 
-        Width = width;
-        Height = height;
-        MinPolygonArea = minPolygonArea;
-        MaxPolygonArea = maxPolygonArea;
-        MapType = mapType;
-        DrawMode = drawMode;
-        ShowRegionBorders = drawRegionBorders;
-        ShowShorelineBorders = drawShoreLineBorder;
-
-        MapSize = Width * Height;
+        RealSplitChance = DEFAULT_SPLIT_CHANCE * (1f / GenerationSettings.AvgPolygonArea);
 
         SwitchState(MapGenerationState.CreateMapBounds);
     }
@@ -128,7 +113,7 @@ public class PolygonMapGenerator : MonoBehaviour
         switch(GenerationState)
         {
             case MapGenerationState.CreateMapBounds:
-                if(MapType == MapType.Regional) CreateNonIslandMapBounds();
+                if(GenerationSettings.MapType == MapType.Regional) CreateNonIslandMapBounds();
                 else CreateIslandMapBounds();
                 SwitchState(MapGenerationState.CreateInitialGraph);
                 break;
@@ -186,7 +171,7 @@ public class PolygonMapGenerator : MonoBehaviour
             case MapGenerationState.DrawMap:
                 DrawMap();
                 SwitchState(MapGenerationState.GenerationDone);
-                Debug.Log(">----------- Map of size " + MapSize + "u^2 generated with " + Map.Regions.Count + " regions (" + Map.Regions.Where(x => !x.IsWater).Count() + " land, " + Map.Regions.Where(x => x.IsWater).Count() + " water) in " + (DateTime.Now - StartCreation).TotalSeconds + " seconds.\nPerformed " + NumMerges + " merges and " + NumSplits + " splits.");
+                Debug.Log(">----------- Map of size " + GenerationSettings.Area + "u^2 generated with " + Map.Regions.Count + " regions (" + Map.Regions.Where(x => !x.IsWater).Count() + " land, " + Map.Regions.Where(x => x.IsWater).Count() + " water) in " + (DateTime.Now - StartCreation).TotalSeconds + " seconds.\nPerformed " + NumMerges + " merges and " + NumSplits + " splits.");
                 break;
 
             case MapGenerationState.GenerationAborted:
@@ -208,9 +193,8 @@ public class PolygonMapGenerator : MonoBehaviour
         GenerationState = nextState;
     }
 
-    private void Reset(bool destroyOldMap)
+    private void Reset()
     {
-        if (destroyOldMap && Map != null) Map.DestroyAllGameObjects();
         Map = null;
 
         NumSplits = 0;
@@ -251,11 +235,11 @@ public class PolygonMapGenerator : MonoBehaviour
         float borderMargin = 2 * MAX_SEGMENT_LENGTH;
         GraphNode innerCornerBotLeft = new GraphNode(new Vector2(borderMargin, borderMargin), this);
         AddNode(innerCornerBotLeft);
-        GraphNode innerCornerBotRight = new GraphNode(new Vector2(Width - borderMargin, borderMargin), this);
+        GraphNode innerCornerBotRight = new GraphNode(new Vector2(GenerationSettings.Width - borderMargin, borderMargin), this);
         AddNode(innerCornerBotRight);
-        GraphNode innerCornerTopRight = new GraphNode(new Vector2(Width - borderMargin, Height - borderMargin), this);
+        GraphNode innerCornerTopRight = new GraphNode(new Vector2(GenerationSettings.Width - borderMargin, GenerationSettings.Height - borderMargin), this);
         AddNode(innerCornerTopRight);
-        GraphNode innerCornerTopLeft = new GraphNode(new Vector2(borderMargin, Height - borderMargin), this);
+        GraphNode innerCornerTopLeft = new GraphNode(new Vector2(borderMargin, GenerationSettings.Height - borderMargin), this);
         AddNode(innerCornerTopLeft);
 
         // Create connections between corners and inner corners
@@ -268,7 +252,7 @@ public class PolygonMapGenerator : MonoBehaviour
         float y = 0f;
         float x = borderMargin;
         GraphNode lastNode = innerCornerBotLeft;
-        while(x < Width - 3 * MAX_SEGMENT_LENGTH)
+        while(x < GenerationSettings.Width - 3 * MAX_SEGMENT_LENGTH)
         {
             x += RandomSegmentLength();
             y = MAX_SEGMENT_LENGTH + RandomSegmentLength();
@@ -282,10 +266,10 @@ public class PolygonMapGenerator : MonoBehaviour
         // Create right map edge between inner corners
         y = borderMargin;
         lastNode = innerCornerBotRight;
-        while (y < Height - 3 * MAX_SEGMENT_LENGTH)
+        while (y < GenerationSettings.Height - 3 * MAX_SEGMENT_LENGTH)
         {
             y += RandomSegmentLength();
-            x = Width - MAX_SEGMENT_LENGTH - RandomSegmentLength();
+            x = GenerationSettings.Width - MAX_SEGMENT_LENGTH - RandomSegmentLength();
             GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
             AddNode(nextNode);
             AddConnection(lastNode, nextNode, isEdgeConnection: false);
@@ -294,12 +278,12 @@ public class PolygonMapGenerator : MonoBehaviour
         AddConnection(lastNode, innerCornerTopRight, isEdgeConnection: false);
 
         // Create top map edge between inner corners
-        x = Width - borderMargin;
+        x = GenerationSettings.Width - borderMargin;
         lastNode = innerCornerTopRight;
         while (x > 3 * MAX_SEGMENT_LENGTH)
         {
             x -= RandomSegmentLength();
-            y = Height - MAX_SEGMENT_LENGTH - RandomSegmentLength();
+            y = GenerationSettings.Height - MAX_SEGMENT_LENGTH - RandomSegmentLength();
             GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
             AddNode(nextNode);
             AddConnection(lastNode, nextNode, isEdgeConnection: false);
@@ -308,7 +292,7 @@ public class PolygonMapGenerator : MonoBehaviour
         AddConnection(lastNode, innerCornerTopLeft, isEdgeConnection: false);
 
         // Create left map edge between inner corners
-        y = Height - borderMargin;
+        y = GenerationSettings.Height - borderMargin;
         lastNode = innerCornerTopLeft;
         while (y > 3 * MAX_SEGMENT_LENGTH)
         {
@@ -330,7 +314,7 @@ public class PolygonMapGenerator : MonoBehaviour
         float y = 0f;
         float x = 0f;
         GraphNode lastNode = CornerNode_BotLeft;
-        while (x < Width - 1.5f * MAX_SEGMENT_LENGTH)
+        while (x < GenerationSettings.Width - 1.5f * MAX_SEGMENT_LENGTH)
         {
             x += RandomSegmentLength();
             GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
@@ -341,10 +325,10 @@ public class PolygonMapGenerator : MonoBehaviour
         AddConnection(lastNode, CornerNode_BotRight, isEdgeConnection: true);
 
         // Create right map edge between inner corners
-        x = Width;
+        x = GenerationSettings.Width;
         y = 0f;
         lastNode = CornerNode_BotRight;
-        while (y < Height - 1.5f * MAX_SEGMENT_LENGTH)
+        while (y < GenerationSettings.Height - 1.5f * MAX_SEGMENT_LENGTH)
         {
             y += RandomSegmentLength();
             GraphNode nextNode = new GraphNode(new Vector2(x, y), this);
@@ -355,8 +339,8 @@ public class PolygonMapGenerator : MonoBehaviour
         AddConnection(lastNode, CornerNode_TopRight, isEdgeConnection: true);
 
         // Create top map edge between inner corners
-        x = Width;
-        y = Height;
+        x = GenerationSettings.Width;
+        y = GenerationSettings.Height;
         lastNode = CornerNode_TopRight;
         while (x > 1.5 * MAX_SEGMENT_LENGTH)
         {
@@ -370,7 +354,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         // Create left map edge between inner corners
         x = 0f;
-        y = Height;
+        y = GenerationSettings.Height;
         lastNode = CornerNode_TopLeft;
         while (y > 1.5 * MAX_SEGMENT_LENGTH)
         {
@@ -388,13 +372,13 @@ public class PolygonMapGenerator : MonoBehaviour
         GraphNode cornerBotLeft = new GraphNode(new Vector2(0, 0), this);
         AddNode(cornerBotLeft, isEdgeNode: true, isCornerNode: true);
 
-        GraphNode cornerBotRight = new GraphNode(new Vector2(Width, 0), this);
+        GraphNode cornerBotRight = new GraphNode(new Vector2(GenerationSettings.Width, 0), this);
         AddNode(cornerBotRight, isEdgeNode: true, isCornerNode: true);
 
-        GraphNode cornerTopRight = new GraphNode(new Vector2(Width, Height), this);
+        GraphNode cornerTopRight = new GraphNode(new Vector2(GenerationSettings.Width, GenerationSettings.Height), this);
         AddNode(cornerTopRight, isEdgeNode: true, isCornerNode: true);
 
-        GraphNode cornerTopLeft = new GraphNode(new Vector2(0, Height), this);
+        GraphNode cornerTopLeft = new GraphNode(new Vector2(0, GenerationSettings.Height), this);
         AddNode(cornerTopLeft, isEdgeNode: true, isCornerNode: true);
     }
 
@@ -405,10 +389,11 @@ public class PolygonMapGenerator : MonoBehaviour
     private void CreateInitialGraph()
     {
         // Init random walkers at certain positions
-        int xStartLines = (int)(START_LINES_PER_KM * Width);
-        int yStartLines = (int)(START_LINES_PER_KM * Height);
-        float xStartLineStep = (float)(Width) / (xStartLines + 1f);
-        float yStartLineStep = (float)(Height) / (yStartLines + 1f);
+        int xStartLines = (int)(START_LINES_PER_KM * GenerationSettings.Width);
+        int yStartLines = (int)(START_LINES_PER_KM * GenerationSettings.Height);
+        NumStartLines = xStartLines * yStartLines;
+        float xStartLineStep = (float)(GenerationSettings.Width) / (xStartLines + 1f);
+        float yStartLineStep = (float)(GenerationSettings.Height) / (yStartLines + 1f);
         for (int y = 0; y < yStartLines; y++)
         {
             for (int x = 0; x < xStartLines; x++)
@@ -546,7 +531,7 @@ public class PolygonMapGenerator : MonoBehaviour
         {
             Actions.Enqueue(() => CreateSegment(endNode, newAngle, changeAngle: true, canSplit: canSplit));
 
-            if(canSplit && UnityEngine.Random.Range(0f, 1f) < SPLIT_CHANCE)
+            if(canSplit && UnityEngine.Random.Range(0f, 1f) < RealSplitChance)
             {
                 //Debug.Log("Split at " + startNode.Vertex.ToString());
                 List<int> nodeAngles = startNode.GetNodeAngles();
@@ -697,7 +682,7 @@ public class PolygonMapGenerator : MonoBehaviour
     private void MergeSmallPolygons()
     {
         GraphPolygon smallest = Polygons.OrderBy(x => x.Area).First();
-        while (Polygons.OrderBy(x => x.Area).First().Area < MinPolygonArea)
+        while (Polygons.OrderBy(x => x.Area).First().Area < GenerationSettings.MinPolygonArea)
         {
             GraphPolygon smallestNeighbour = smallest.AdjacentPolygons.OrderBy(x => x.Area).First();
             MergePolygons(smallest, smallestNeighbour);
@@ -706,12 +691,18 @@ public class PolygonMapGenerator : MonoBehaviour
     }
 
     private void SplitBigPolygons()
-    {               
-        GraphPolygon largest = MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
-        while (largest.Area > MaxPolygonArea)
+    {
+        // Debug Info for monitoring performance of initial graph
+        List<float> orderedAreas = Polygons.Select(x => x.Area).OrderByDescending(x => x).ToList();
+        float initialAvgArea = orderedAreas.Average();
+        float initialMedianArea = orderedAreas[orderedAreas.Count / 2];
+        Debug.Log(START_LINES_PER_KM + " ( " + NumStartLines + " ) start lines per km in an area of " + GenerationSettings.Area + " created " + Polygons.Count + " initial polygons with an average area of " + initialAvgArea + " and a median area of " + initialMedianArea);
+
+        GraphPolygon largest = GenerationSettings.MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
+        while (largest.Area > GenerationSettings.MaxPolygonArea)
         {
             SplitPolygon(largest);
-            largest = MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
+            largest = GenerationSettings.MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
         }
     }
 
@@ -725,7 +716,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private void DrawMap()
     {
-        Map = new Map(this);
+        Map = new Map(GenerationSettings);
 
         GameObject mapObject = new GameObject("Map");
         Map.RootObject = mapObject;
@@ -786,12 +777,20 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
         foreach (GraphPolygon p in Polygons) p.Region.Init(p);
 
+        // Add rivers
+        Map.RiverContainer = new GameObject("Rivers");
+        Map.RiverContainer.transform.SetParent(mapObject.transform);
+        foreach (GraphPath r in RiverPaths)
+        {
+            River riverObject = RiverCreator.CreateRiverObject(r, this);
+            riverObject.transform.SetParent(Map.RiverContainer.transform);
+            Map.Rivers.Add(riverObject);
+        }
+
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
 
-        Map.InitializeMap(this, ShowRegionBorders, ShowShorelineBorders, DrawMode);
-
-        Callback?.Invoke();
+        Callback?.Invoke(Map);
     }
 
     private void FindAllPolygons()
@@ -1076,7 +1075,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public bool CanSplitPolygon(GraphPolygon p)
     {
-        return p.Area > 3 * MinPolygonArea;
+        return p.Area > 3 * GenerationSettings.MinPolygonArea;
     }
 
     /// <summary>
@@ -1161,7 +1160,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
         
         // We check if one of the new polyons is too small. If yes, remove the last split and start again.
-        if(LastSegmentPolygons.Any(x => x.Area < MinPolygonArea))
+        if(LastSegmentPolygons.Any(x => x.Area < GenerationSettings.MinPolygonArea))
         {
             //Debug.Log("Split created too small polygon.");
             foreach (GraphPolygon poly in LastSegmentPolygons) 
@@ -1196,7 +1195,7 @@ public class PolygonMapGenerator : MonoBehaviour
     }
     public Vector2 RandomPoint()
     {
-        return new Vector2(UnityEngine.Random.Range(MAX_SEGMENT_LENGTH, Width - MAX_SEGMENT_LENGTH), UnityEngine.Random.Range(MAX_SEGMENT_LENGTH, Height - MAX_SEGMENT_LENGTH));
+        return new Vector2(UnityEngine.Random.Range(MAX_SEGMENT_LENGTH, GenerationSettings.Width - MAX_SEGMENT_LENGTH), UnityEngine.Random.Range(MAX_SEGMENT_LENGTH, GenerationSettings.Height - MAX_SEGMENT_LENGTH));
     }
     public int RandomValidAngle(List<int> angles) // Returns an angle that is at least MIN_SPLIT_ANGLE away from an angle in the list
     {

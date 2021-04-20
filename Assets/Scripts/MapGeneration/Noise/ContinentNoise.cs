@@ -4,17 +4,24 @@ using UnityEngine;
 
 public class ContinentNoise : Noise
 {
-    private RidgedMultifractalNoise rmfn = new RidgedMultifractalNoise(1, 2, 6, Random.Range(int.MinValue, int.MaxValue));
-    private float baseScale = 0.3f;
+    private RidgedMultifractalNoise RmfNoise;
+    private const float BASE_SCALE = 0.3f;
+    private float Scale;
+
+    public ContinentNoise(float scaleFactor)
+    {
+        Scale = BASE_SCALE * scaleFactor;
+        RmfNoise = new RidgedMultifractalNoise(1, 2, 6, Random.Range(int.MinValue, int.MaxValue));
+    }
 
     /// <summary>
     /// Returns the land type for the given position:
     /// 0 = Water
     /// 1 = Land
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
-        float val = (float)(rmfn.GetValue(x * baseScale, y * baseScale, 1));
+        float val = (float)(RmfNoise.GetValue(x * Scale, y * Scale, 1));
         return val;
     }
 }

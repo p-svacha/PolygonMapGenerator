@@ -17,7 +17,7 @@ public class WindNoise : Noise
     /// <summary>
     /// Returns the wind direction for the given position in ° (0-359)
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
         float noiseValue = Mathf.PerlinNoise(OffsetX + x * BaseScale, OffsetY + y * BaseScale);
         float value = mod((int)(noiseValue * 720f), 360);

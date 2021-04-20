@@ -21,9 +21,9 @@ public class PrecipitationNoise : Noise
     /// <summary>
     /// Returns the annual precipitation for the given position in mm
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
-        float yEquator = PMG.Height / 2;
+        float yEquator = settings.Height / 2;
         float basePrec = PolePrecipitation + ((1 - (Mathf.Abs(y - yEquator) / yEquator)) * (EquatorPrecipitation - PolePrecipitation));
         float precMoidifer = Mathf.PerlinNoise(OffsetX + x * BaseScale, OffsetY + y * BaseScale);
         return basePrec * precMoidifer;

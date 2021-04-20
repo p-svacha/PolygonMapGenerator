@@ -31,14 +31,17 @@ public class UI_MapEditor : MonoBehaviour
     public Text MinAreaText;
     public Text MaxAreaText;
 
-    [Header("Topology")]
+    [Header("Map Type")]
     public Dropdown MapTypeDropdown;
+    private MapType CurrentMapType;
+    public GameObject ContinentsOptions;
+    public Slider ContinentSizeSlider;
 
     [Header("Display")]
     public Toggle RegionBorderToggle;
     public Toggle ShorelineBorderToggle;
     public Dropdown DrawModeDropdown;
-    public MapDrawMode CurrentDrawMode;
+    private MapDrawMode CurrentDrawMode;
 
     [Header("Map Information")]
     public GameObject MapInfoPanel;
@@ -92,13 +95,15 @@ public class UI_MapEditor : MonoBehaviour
 
     void Start()
     {
-        GenerateButton.onClick.AddListener(Generate);
+        GenerateButton.onClick.AddListener(GenerateButton_OnClick);
 
         foreach (MapType mapType in Enum.GetValues(typeof(MapType))) MapTypeDropdown.options.Add(new Dropdown.OptionData(mapType.ToString()));
+        MapTypeDropdown.onValueChanged.AddListener(MapTypeDropdown_OnValueChanged);
         MapTypeDropdown.value = 1; MapTypeDropdown.value = 0;
+        ContinentSizeSlider.onValueChanged.AddListener(ContinentSizeSlider_OnValueChanged);
 
-        RegionBorderToggle.onValueChanged.AddListener(ToggleRegionBorders);
-        ShorelineBorderToggle.onValueChanged.AddListener(ToggleShorelineBorders);
+        RegionBorderToggle.onValueChanged.AddListener(RegionBorderToggle_OnValueChanged);
+        ShorelineBorderToggle.onValueChanged.AddListener(ShorelineBorderToggle_OnValueChanged);
         foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
         DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
         DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
@@ -133,7 +138,7 @@ public class UI_MapEditor : MonoBehaviour
             }
         }
 
-        if (PMG.Map != null)
+        if (CurrentMap != null)
         {
             if (Input.mouseScrollDelta.y != 0) // Scroll
             {
@@ -153,18 +158,7 @@ public class UI_MapEditor : MonoBehaviour
         }
     }
 
-    private void Generate()
-    {
-        if (int.Parse(WidthText.text) < 3 || int.Parse(WidthText.text) > 25 || int.Parse(HeightText.text) < 3 || int.Parse(HeightText.text) > 25 || float.Parse(MinAreaText.text) > 0.5) return;
-
-        Reset();
-
-        // Generate new map
-        float minRegionArea = float.Parse(MinAreaText.text);
-        float maxRegionArea = float.Parse(MaxAreaText.text);
-        MapType type = (MapType)Enum.Parse(typeof(MapType), MapTypeDropdown.options[MapTypeDropdown.value].text);
-        PMG.GenerateMap(int.Parse(WidthText.text), int.Parse(HeightText.text), minRegionArea, maxRegionArea, type, CurrentDrawMode, RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, callback: OnMapGenerationDone, destroyOldMap:false);
-    }
+    #region General
 
     private void Reset()
     {
@@ -174,26 +168,74 @@ public class UI_MapEditor : MonoBehaviour
         Nations.Clear();
     }
 
-    private void OnMapGenerationDone()
+    private void GenerateButton_OnClick()
     {
-        SetMapInformation(PMG.Map);
+        if (int.Parse(WidthText.text) < 3 || int.Parse(WidthText.text) > 25 || int.Parse(HeightText.text) < 3 || int.Parse(HeightText.text) > 25 || float.Parse(MinAreaText.text) > 0.5) return;
+
+        Reset();
+
+        // Generate new map
+        int width = int.Parse(WidthText.text);
+        int height = int.Parse(HeightText.text);
+        float minRegionArea = float.Parse(MinAreaText.text);
+        float maxRegionArea = float.Parse(MaxAreaText.text);
+        float continentSizeFactor = ContinentSizeSlider.value;
+        MapGenerationSettings settings = new MapGenerationSettings(width, height, minRegionArea, maxRegionArea, CurrentMapType, continentSizeFactor);
+        PMG.GenerateMap(settings, callback: OnMapGenerationDone);
+    }
+
+    private void OnMapGenerationDone(Map map)
+    {
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
-        CurrentMap = PMG.Map;
+        CurrentMap = map;
+        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, CurrentDrawMode);
+
+        SetMapInformation(CurrentMap);
+        
         MinCameraHeight = 0.4f;
-        MaxCameraHeight = Mathf.Max(CurrentMap.Width, CurrentMap.Height) * 1.2f;
-        ToggleRegionBorders(RegionBorderToggle.isOn);
-        ToggleShorelineBorders(ShorelineBorderToggle.isOn);
-        DrawModeDropdown_OnValueChanged(DrawModeDropdown.value);
+        MaxCameraHeight = Mathf.Max(CurrentMap.Attributes.Width, CurrentMap.Attributes.Height) * 1.2f;
 
         foreach (Region r in CurrentMap.Regions) NationMap.Add(r, null);
     }
 
-    private void ToggleRegionBorders(bool enabled)
+    #endregion
+
+    #region Map Type
+
+    private void MapTypeDropdown_OnValueChanged(int value)
+    {
+        CurrentMapType = (MapType)Enum.Parse(typeof(MapType), MapTypeDropdown.options[value].text);
+        switch(CurrentMapType)
+        {
+            case MapType.Regional:
+                ContinentsOptions.SetActive(false);
+                break;
+
+            case MapType.Island:
+                ContinentsOptions.SetActive(false);
+                break;
+
+            case MapType.Continents:
+                ContinentsOptions.SetActive(true);
+                break;
+        }
+    }
+
+    private void ContinentSizeSlider_OnValueChanged(float value)
+    {
+
+    }
+
+    #endregion
+
+    #region Display
+
+    private void RegionBorderToggle_OnValueChanged(bool enabled)
     {
         if (CurrentMap != null) CurrentMap.ShowRegionBorders(enabled);
     }
 
-    private void ToggleShorelineBorders(bool enabled)
+    private void ShorelineBorderToggle_OnValueChanged(bool enabled)
     {
         if (CurrentMap != null) CurrentMap.ShowShorelineBorders(enabled);
     }
@@ -204,14 +246,18 @@ public class UI_MapEditor : MonoBehaviour
         if(CurrentMap != null) CurrentMap.UpdateDrawMode(CurrentDrawMode);
     }
 
+    #endregion
+
+
+
     private void SetMapInformation(Map map)
     {
         if (map == null) MapInfoPanel.SetActive(false);
         else
         {
             MapInfoPanel.SetActive(true);
-            MapAreaText.text = map.Area.ToString() + " km²";
-            NumRegionsText.text = map.NumLandRegions.ToString();
+            MapAreaText.text = map.Attributes.Area.ToString() + " km²";
+            NumRegionsText.text = map.NumLandRegions.ToString() + " (" + map.Regions.Count + ")";
             LandAreaText.text = map.LandArea.ToString("0.00") + " km²";
             WaterAreaText.text = map.WaterArea.ToString("0.00") + " km²";
             NumLandmassesText.text = map.NumLandmasses.ToString();

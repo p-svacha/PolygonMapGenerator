@@ -161,35 +161,35 @@ namespace ElectionTactics
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 1));
 
             // Northern
-            if (Region.Centroid.y > Game.Map.Height - (Game.Map.Height * 0.1f))
+            if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.1f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 3));
-            else if (Region.Centroid.y > Game.Map.Height - (Game.Map.Height * 0.2f))
+            else if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.2f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 2));
-            else if (Region.Centroid.y > Game.Map.Height - (Game.Map.Height * 0.3f))
+            else if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.3f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 1));
 
             // Southern
-            if (Region.Centroid.y < Game.Map.Height * 0.1f)
+            if (Region.Centroid.y < Game.Map.Attributes.Height * 0.1f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 3));
-            else if (Region.Centroid.y < Game.Map.Height * 0.2f)
+            else if (Region.Centroid.y < Game.Map.Attributes.Height * 0.2f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 2));
-            else if (Region.Centroid.y < Game.Map.Height * 0.3f)
+            else if (Region.Centroid.y < Game.Map.Attributes.Height * 0.3f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 1));
 
             // Eastern
-            if (Region.Centroid.x > Game.Map.Width - (Game.Map.Width * 0.1f))
+            if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.1f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 3));
-            else if (Region.Centroid.x > Game.Map.Width - (Game.Map.Width * 0.2f))
+            else if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.2f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 2));
-            else if (Region.Centroid.x > Game.Map.Width - (Game.Map.Width * 0.3f))
+            else if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.3f))
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 1));
 
             // Western
-            if (Region.Centroid.x < Game.Map.Width * 0.1f)
+            if (Region.Centroid.x < Game.Map.Attributes.Width * 0.1f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 3));
-            else if (Region.Centroid.x < Game.Map.Width * 0.2f)
+            else if (Region.Centroid.x < Game.Map.Attributes.Width * 0.2f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 2));
-            else if (Region.Centroid.x < Game.Map.Width * 0.3f)
+            else if (Region.Centroid.x < Game.Map.Attributes.Width * 0.3f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 1));
 
             // Lakeside

@@ -1,5 +1,6 @@
 1. Known issues in map generation
 
+- Sometimes SplitPolygon > FindPolygonsFromNode > FindPolygon leads to a stack overflow
 - When a polygon is split and the split is starting on a 3-way junction where 1 polygon is water, then the water polygon turns into land after the split
 - It is possible to merge 2 polygons so that the new polygon fully engulves another polygon, this should not be allowed
 - In very rare cases the map generation results in a stackoverflow in the function FindPolygon

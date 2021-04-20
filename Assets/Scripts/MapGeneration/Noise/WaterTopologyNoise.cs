@@ -19,7 +19,7 @@ public class WaterTopologyNoise : Noise
     /// 0 = Ocean
     /// 1 = Deep Ocean
     /// </summary>
-    public override float GetValue(float x, float y, PolygonMapGenerator PMG)
+    public override float GetValue(float x, float y, MapGenerationSettings settings)
     {
         float deepOceanValue = Mathf.PerlinNoise(DeepOceanOffsetX + x * BaseScale, DeepOceanOffsetY + y * BaseScale);
         if (deepOceanValue < 0.5f) return 1;

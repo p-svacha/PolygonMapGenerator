@@ -18,7 +18,7 @@ public class MeshGenerator
         for (int i = 0; i < vertices.Length; i++)
         {
             vertices[i] = new Vector3(vertices2D[i].x, layer, vertices2D[i].y);
-            if(PMG != null) uvs[i] = new Vector2(vertices2D[i].x / PMG.Width, vertices2D[i].y / PMG.Height);
+            if(PMG != null) uvs[i] = new Vector2(vertices2D[i].x / PMG.GenerationSettings.Width, vertices2D[i].y / PMG.GenerationSettings.Height);
         }
 
         // Create the mesh

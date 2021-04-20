@@ -38,17 +38,18 @@ public class MenuUI : MonoBehaviour
 
     private void StartMapGeneration(int size)
     {
-        PMG.GenerateMap(size, size, 0.08f, 1.5f, MapType.Island, MapDrawMode.Basic, true, true, OnLoadingDone);
+        MapGenerationSettings settings = new MapGenerationSettings(size, size, 0.08f, 1.5f, MapType.Island);
+        PMG.GenerateMap(settings, OnMapGenerationDone);
 
         LoadingScreen.gameObject.SetActive(true);
         Hide();
     }
 
-    private void OnLoadingDone()
+    private void OnMapGenerationDone(Map map)
     {
         GameObject game = new GameObject("GameModel");
         WorldSimulation model = game.AddComponent<WorldSimulation>();
-        model.Init(PMG.Map);
+        model.Init(map);
     }
 
     public void Hide()

@@ -66,13 +66,13 @@ public class CameraHandler : MonoBehaviour
 
     public void MoveToFocusMap(Map m)
     {
-        Vector3 targetPosition = new Vector3(m.Width / 2f, m.Height, m.Height / 2f);
+        Vector3 targetPosition = new Vector3(m.Attributes.Width / 2f, m.Attributes.Height, m.Attributes.Height / 2f);
         InitMovement(targetPosition, DefaultZoomTime);
     }
 
     public void JumpToFocusMap(Map m)
     {
-        transform.position = new Vector3(m.Width / 2f, m.Height, m.Height / 2f);
+        transform.position = new Vector3(m.Attributes.Width / 2f, m.Attributes.Height, m.Attributes.Height / 2f);
     }
 
 

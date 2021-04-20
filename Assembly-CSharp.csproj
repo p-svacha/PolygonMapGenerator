@@ -100,9 +100,9 @@
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
-    <Compile Include="Assets\Scripts\PolygonLabels\CurvedText.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPoint.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
     <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
@@ -195,7 +195,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

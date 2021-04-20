@@ -80,7 +80,8 @@ namespace ElectionTactics
 
         private void StartGame()
         {
-            PMG.GenerateMap(10, 10, 0.08f, 1.5f, MapType.Island, MapDrawMode.Basic, drawRegionBorders: true, drawShoreLineBorder: true, callback: OnMapGenerated);
+            MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, MapType.Island);
+            PMG.GenerateMap(settings, callback: OnMapGenerationDone);
 
             HeaderSlideTime *= SpeedModifier;
             DistrictPanTime *= SpeedModifier;
@@ -91,10 +92,11 @@ namespace ElectionTactics
             PostListAnimationTime *= SpeedModifier;
         }
 
-        private void OnMapGenerated()
+        private void OnMapGenerationDone(Map map)
         {
             Year = 1999;
-            Map = PMG.Map;
+            Map = map;
+            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, MapDrawMode.Basic);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             InitGeograhyTraits();
