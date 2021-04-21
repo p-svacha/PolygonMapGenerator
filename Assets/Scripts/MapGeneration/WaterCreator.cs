@@ -55,6 +55,8 @@ public static class WaterCreator
                 CreateContinentsWithNoise(PMG);
                 break;
         }
+
+        foreach (GraphPolygon p in PMG.Polygons) p.UpdateNeighbours();
     }
 
     private static void CreateOuterOcean(PolygonMapGenerator PMG)

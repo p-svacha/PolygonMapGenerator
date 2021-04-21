@@ -10,8 +10,12 @@ public class GraphPolygon
 
     public List<GraphNode> Nodes = new List<GraphNode>();
     public List<GraphConnection> Connections = new List<GraphConnection>();
+
     public List<GraphPolygon> AdjacentPolygons = new List<GraphPolygon>();
+    public List<GraphPolygon> Neighbours = new List<GraphPolygon>();
+    public List<GraphPolygon> LandNeighbours = new List<GraphPolygon>();
     public List<GraphPolygon> WaterNeighbours = new List<GraphPolygon>();
+
     public List<GraphPath> Rivers = new List<GraphPath>();
 
     // Attributes
@@ -33,6 +37,7 @@ public class GraphPolygon
     public Biome Biome;
 
     public Vector2 CenterPoi; // Point of inaccessability - this is the point with the biggest distance to any edge
+    public Vector2 Centroid; // Average point of all border points
 
     public Region Region;
 
@@ -49,8 +54,33 @@ public class GraphPolygon
         Height = nodes.Max(x => x.Vertex.y) - nodes.Min(x => x.Vertex.y);
         Jaggedness = 1f - (Area / (Width * Height));
 
+        Centroid = new Vector2(Nodes.Average(x => x.Vertex.x), Nodes.Average(x => x.Vertex.y));
         float[] poi = PolygonCenterFinder.GetPolyLabel(ConvertPolygonToFloatArray(), precision: 0.05f);
         CenterPoi = new Vector2(poi[0], poi[1]);
+    }
+
+    public void AddAdjacentPolygon(GraphPolygon adj)
+    {
+        if(!AdjacentPolygons.Contains(adj))
+        {
+            AdjacentPolygons.Add(adj);
+            UpdateNeighbours();
+        }
+    }
+
+    public void AddWaterNeighbour(GraphPolygon wn)
+    {
+        if(!WaterNeighbours.Contains(wn))
+        {
+            WaterNeighbours.Add(wn);
+            UpdateNeighbours();
+        }
+    }
+
+    public void UpdateNeighbours()
+    {
+        LandNeighbours = AdjacentPolygons.Where(x => !x.IsWater).ToList();
+        Neighbours = LandNeighbours.Concat(WaterNeighbours).ToList();
     }
 
     public void FindRivers()
@@ -73,13 +103,6 @@ public class GraphPolygon
         return (Enumerable.SequenceEqual(polyNodeIds, otherPolyNodeIds));
     }
 
-    public List<GraphPolygon> LandNeighbours
-    {
-        get
-        {
-            return AdjacentPolygons.Where(x => !x.IsWater).ToList();
-        }
-    }
     public float TotalBorderLength
     {
         get

@@ -656,8 +656,8 @@ public class PolygonMapGenerator : MonoBehaviour
             if (c.Polygons.Count > 1) throw new Exception("It is not allowed to add a polygon to a connection that already has 2 polygons");
             foreach (GraphPolygon neighbour in c.Polygons)
             {
-                if (!newPolygon.AdjacentPolygons.Contains(neighbour)) newPolygon.AdjacentPolygons.Add(neighbour);
-                if (!neighbour.AdjacentPolygons.Contains(newPolygon)) neighbour.AdjacentPolygons.Add(newPolygon);
+                newPolygon.AddAdjacentPolygon(neighbour);
+                neighbour.AddAdjacentPolygon(newPolygon);
             }
             if (!c.Polygons.Contains(newPolygon)) c.Polygons.Add(newPolygon);
         }
@@ -977,38 +977,41 @@ public class PolygonMapGenerator : MonoBehaviour
             }
         }
 
-        // Look for islands (regions which have no land or water neighbours yet): Find the closest land by going through water regions and assign them water neighbours
-        List<GraphPolygon> islands = Polygons.Where(x => !x.IsWater && x.LandNeighbours.Count == 0 && x.WaterNeighbours.Count == 0).ToList();
-        foreach(GraphPolygon island in islands)
+        // Connect clusters (region groups that are connected through water or land) until there is only one clutster left (so every region is reachable from every other region)
+        List<List<GraphPolygon>> clusters = PolygonMapFunctions.FindClusters(Polygons.Where(x => !x.IsWater).ToList(), landConnectionsOnly: false);
+        while(clusters.Count > 1)
         {
-            List<GraphPolygon> adjacentWaters = island.AdjacentPolygons.Where(x => x.IsWater).ToList();
-            List<GraphPolygon> closestLand = FindClosestLandTo(island, adjacentWaters);
-            foreach (GraphPolygon closeLand in closestLand) AssignWaterNeighbours(island, closeLand);
-        }
-    }
-    private void AssignWaterNeighbours(GraphPolygon p1, GraphPolygon p2)
-    {
-        p1.WaterNeighbours.Add(p2);
-        p2.WaterNeighbours.Add(p1);
-    }
-
-    private List<GraphPolygon> FindClosestLandTo(GraphPolygon origin, List<GraphPolygon> waterCluster)
-    {
-        List<GraphPolygon> closeLand = new List<GraphPolygon>();
-        List<GraphPolygon> nextWaterCluster = new List<GraphPolygon>();
-        foreach(GraphPolygon water in waterCluster)
-        {
-            foreach(GraphPolygon adj in water.AdjacentPolygons)
+            // Connect the two closest clusters
+            float shortestDistance = float.MaxValue;
+            GraphPolygon shortestDistancePoly1 = null;
+            GraphPolygon shortestDistancePoly2 = null;
+            foreach (List<GraphPolygon> cluster1 in clusters)
             {
-                if(adj != origin)
+                foreach(List<GraphPolygon> cluster2 in clusters)
                 {
-                    if (adj.IsWater) nextWaterCluster.Add(adj);
-                    else closeLand.Add(adj);
+                    if(cluster1 != cluster2)
+                    {
+                        List<GraphPolygon> closestPair = PolygonMapFunctions.FindClosestPolygons(cluster1, cluster2);
+                        float distance = Vector2.Distance(closestPair[0].Centroid, closestPair[1].Centroid);
+                        if(distance < shortestDistance)
+                        {
+                            shortestDistance = distance;
+                            shortestDistancePoly1 = closestPair[0];
+                            shortestDistancePoly2 = closestPair[1];
+                        }
+                    }
                 }
             }
+
+            AssignWaterNeighbours(shortestDistancePoly1, shortestDistancePoly2);
+            clusters = PolygonMapFunctions.FindClusters(Polygons.Where(x => !x.IsWater).ToList(), landConnectionsOnly: false);
         }
-        if (closeLand.Count > 0) return closeLand;
-        else return FindClosestLandTo(origin, nextWaterCluster);
+    }
+
+    private void AssignWaterNeighbours(GraphPolygon p1, GraphPolygon p2)
+    {
+        p1.AddWaterNeighbour(p2);
+        p2.AddWaterNeighbour(p1);
     }
 
     /// <summary>

@@ -11,31 +11,60 @@ public static class PolygonMapFunctions
     /// <summary>
     /// Takes a list of regions as an input and splits them into clusters. A cluster is defined as each region is reachable from each other region in the cluster through direct land connections.
     /// </summary>
-    public static List<List<Region>> FindClusters(List<Region> regions)
+    public static List<List<GraphPolygon>> FindClusters(List<GraphPolygon> polygons, bool landConnectionsOnly = true)
     {
-        List<List<Region>> clusters = new List<List<Region>>();
+        List<List<GraphPolygon>> clusters = new List<List<GraphPolygon>>();
 
-        List<Region> regionsWithoutCluster = new List<Region>();
-        regionsWithoutCluster.AddRange(regions);
+        List<GraphPolygon> polygonsWithoutCluster = new List<GraphPolygon>();
+        polygonsWithoutCluster.AddRange(polygons);
 
-        while (regionsWithoutCluster.Count > 0)
+        while (polygonsWithoutCluster.Count > 0)
         {
-            List<Region> cluster = new List<Region>();
-            Queue<Region> regionsToAdd = new Queue<Region>();
-            regionsToAdd.Enqueue(regionsWithoutCluster[0]);
-            while (regionsToAdd.Count > 0)
+            List<GraphPolygon> cluster = new List<GraphPolygon>();
+            Queue<GraphPolygon> polygonsToAdd = new Queue<GraphPolygon>();
+            polygonsToAdd.Enqueue(polygonsWithoutCluster[0]);
+            while (polygonsToAdd.Count > 0)
             {
-                Region regionToAdd = regionsToAdd.Dequeue();
-                cluster.Add(regionToAdd);
-                foreach (Region neighbourRegion in regionToAdd.AdjacentRegions.Where(x => !x.IsWater && regions.Contains(x)))
-                    if (!cluster.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
-                        regionsToAdd.Enqueue(neighbourRegion);
+                GraphPolygon polygonToAdd = polygonsToAdd.Dequeue();
+                cluster.Add(polygonToAdd);
+                List<GraphPolygon> neighbouringPolygons = landConnectionsOnly ? polygonToAdd.LandNeighbours.Where(x => polygons.Contains(x)).ToList() : polygonToAdd.Neighbours.Where(x => polygons.Contains(x)).ToList();
+                foreach (GraphPolygon neighbourPolygon in neighbouringPolygons)
+                    if (!cluster.Contains(neighbourPolygon) && !polygonsToAdd.Contains(neighbourPolygon))
+                        polygonsToAdd.Enqueue(neighbourPolygon);
             }
             clusters.Add(cluster);
-            foreach (Region r in cluster) regionsWithoutCluster.Remove(r);
+            foreach (GraphPolygon p in cluster) polygonsWithoutCluster.Remove(p);
         }
 
         return clusters;
+    }
+
+    public static List<List<Region>> FindClusters(List<Region> regions, bool landConnectionsOnly = true)
+    {
+        return FindClusters(regions.Select(x => x.Polygon).ToList()).Select(x => x.Select(y => y.Region).ToList()).ToList();
+    }
+
+    /// <summary>
+    /// Returns a list with the two polygons that are closest to each other. First polygon is from fromPolygons, second polygon is from toPolygons
+    /// </summary>
+    public static List<GraphPolygon> FindClosestPolygons(List<GraphPolygon> fromPolygons, List<GraphPolygon> toPolygons)
+    {
+        float shortestDistance = float.MaxValue;
+        List<GraphPolygon> shortestPair = new List<GraphPolygon>();
+
+        foreach(GraphPolygon from in fromPolygons)
+        {
+            foreach(GraphPolygon to in toPolygons)
+            {
+                float distance = Vector2.Distance(from.Centroid, to.Centroid);
+                if(distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    shortestPair = new List<GraphPolygon>() { from, to };
+                }
+            }
+        }
+        return shortestPair;
     }
 
     #region Polygon Group Border

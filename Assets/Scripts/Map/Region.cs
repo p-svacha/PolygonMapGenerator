@@ -80,7 +80,7 @@ public class Region : MonoBehaviour
         Height = p.Height;
         XPos = p.Nodes.Min(x => x.Vertex.x);
         YPos = p.Nodes.Min(x => x.Vertex.y);
-        Centroid = new Vector2(p.Nodes.Average(x => x.Vertex.x), p.Nodes.Average(x => x.Vertex.y));
+        Centroid = p.Centroid;
         CenterPoi = p.CenterPoi;
 
         Area = p.Area;
