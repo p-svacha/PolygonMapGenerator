@@ -16,6 +16,7 @@ public class GraphPolygon
     public List<GraphPolygon> LandNeighbours = new List<GraphPolygon>();
     public List<GraphPolygon> WaterNeighbours = new List<GraphPolygon>();
 
+    public List<GraphPolygon> Continent = new List<GraphPolygon>();
     public List<GraphPath> Rivers = new List<GraphPath>();
 
     // Attributes

@@ -10,13 +10,16 @@ using UnityEngine;
 using System.Threading;
 
 using static GeometryFunctions;
+using MapGeneration.ContinentCreation;
 
 public class PolygonMapGenerator : MonoBehaviour
 {
     public MapGenerationState GenerationState;
 
+    public MapGenerationSettings GenerationSettings; // Settings containing all necessary information for the kind of map that should be created
     public int Seed;
     private Map Map;
+    public Action<Map> Callback; // Gets called when map generation is done
 
     public List<GraphNode> CornerNodes = new List<GraphNode>();
     public List<GraphNode> EdgeNodes = new List<GraphNode>(); // Edge nodes (are on the graph edge)
@@ -27,6 +30,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public List<GraphPath> RiverPaths = new List<GraphPath>();
 
+    public List<List<GraphPolygon>> Landmasses = new List<List<GraphPolygon>>();
+    public List<List<GraphPolygon>> WaterBodies = new List<List<GraphPolygon>>();
+    public List<List<GraphPolygon>> Continents = new List<List<GraphPolygon>>();
+
+    // Temporary data during generation
     private List<GraphNode> InvalidNodes = new List<GraphNode>(); // Nodes that have less polygons than borders (and or not edge nodes)
 
     private List<GraphNode> LastSegmentNodes = new List<GraphNode>(); // Used for knowing which nodes were newly created in the last segment
@@ -34,10 +42,6 @@ public class PolygonMapGenerator : MonoBehaviour
     private List<GraphPolygon> LastSegmentPolygons = new List<GraphPolygon>(); // Used for knowing which polygons were newly created in the last search period
 
     private List<GraphPolygon> LastRemovedPolygons = new List<GraphPolygon>(); // Used when splitting or merging polygons to find polygons that remained unchanged so the attributes can be transferred
-
-    public Action<Map> Callback; // Gets called when map generation is done
-
-    public MapGenerationSettings GenerationSettings; // Settings containing all necessary information for the kind of map that should be created
 
     // Default values
     public const float DefaultBorderWidth = 0.005f;
@@ -165,6 +169,11 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.FindWaterNeighbours:
                 FindWaterNeighbours();
+                SwitchState(MapGenerationState.CreateContinents);
+                break;
+
+            case MapGenerationState.CreateContinents:
+                ContinentCreator.CreateContinents(this);
                 SwitchState(MapGenerationState.DrawMap);
                 break;
 
@@ -726,8 +735,13 @@ public class PolygonMapGenerator : MonoBehaviour
         Map.BorderContainer.transform.SetParent(mapObject.transform);
         Map.RegionContainer = new GameObject("Regions");
         Map.RegionContainer.transform.SetParent(mapObject.transform);
+        Map.RiverContainer = new GameObject("Rivers");
+        Map.RiverContainer.transform.SetParent(mapObject.transform);
+        Map.ContinentContainer = new GameObject("Continents");
+        Map.ContinentContainer.transform.SetParent(mapObject.transform);
 
         // Add border points
+        Map.BorderPoints = new List<BorderPoint>();
         foreach (GraphNode n in Nodes)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -738,6 +752,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         // Add inmap borders (no edge borders)
+        Map.Borders = new List<Border>();
         foreach (GraphConnection c in InGraphConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -747,6 +762,7 @@ public class PolygonMapGenerator : MonoBehaviour
             Map.Borders.Add(border);
         }
         // Add edge borders
+        Map.EdgeBorders = new List<Border>();
         foreach (GraphConnection c in EdgeConnections)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -757,11 +773,12 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         // Add regions
+        Map.Regions = new List<Region>();
         foreach (GraphPolygon p in Polygons)
         {
             // Mesh
             GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes.Select(x => x.Vertex).ToList(), this, layer: LAYER_REGION);
-            polygon.transform.SetParent(Map.RegionContainer.transform);
+            //polygon.transform.SetParent(Map.RegionContainer.transform);
 
             // Collider
             polygon.AddComponent<MeshCollider>();
@@ -778,8 +795,7 @@ public class PolygonMapGenerator : MonoBehaviour
         foreach (GraphPolygon p in Polygons) p.Region.Init(p);
 
         // Add rivers
-        Map.RiverContainer = new GameObject("Rivers");
-        Map.RiverContainer.transform.SetParent(mapObject.transform);
+        Map.Rivers = new List<River>();
         foreach (GraphPath r in RiverPaths)
         {
             River riverObject = RiverCreator.CreateRiverObject(r, this);
@@ -789,6 +805,64 @@ public class PolygonMapGenerator : MonoBehaviour
 
         Map.ToggleHideBorderPoints();
         Map.ToggleHideBorders();
+
+        // Add landmasses
+        Map.Landmasses = new List<Landmass>();
+        foreach(List<GraphPolygon> landmassList in Landmasses)
+        {
+            GameObject landmassObject = new GameObject("Landmass");
+            landmassObject.transform.SetParent(Map.RegionContainer.transform);
+            Landmass landmass = landmassObject.AddComponent<Landmass>();
+            landmass.Init(landmassList.Select(x => x.Region).ToList());
+
+            foreach(Region r in landmass.Regions)
+            {
+                r.Landmass = landmass;
+                r.transform.SetParent(landmassObject.transform);
+            }
+
+            // border
+            landmass.Borders = MeshGenerator.CreatePolygonGroupBorder(landmassList, PolygonMapGenerator.DefaultCoastBorderWidth, Color.black, onOutside: true, height: 0.0001f);
+            
+            foreach (GameObject border in landmass.Borders)
+            {
+                border.transform.SetParent(landmass.transform);
+            }
+
+            Map.Landmasses.Add(landmass);
+        }
+
+        // Add water bodies
+        Map.WaterBodies = new List<WaterBody>();
+        foreach(List<GraphPolygon> waterBodyList in WaterBodies)
+        {
+            GameObject waterBodyObject = new GameObject("WaterBody");
+            waterBodyObject.transform.SetParent(Map.RegionContainer.transform);
+            WaterBody waterBody = waterBodyObject.AddComponent<WaterBody>();
+            waterBody.Init(waterBodyList.Select(x => x.Region).ToList());
+
+            foreach(Region r in waterBody.Regions)
+            {
+                r.WaterBody = waterBody;
+                r.transform.SetParent(waterBodyObject.transform);
+            }
+
+            Map.WaterBodies.Add(waterBody);
+        }
+
+        // Add continents
+        Map.Continents = new List<Continent>();
+        foreach (List<GraphPolygon> continentList in Continents)
+        {
+            GameObject continentObject = new GameObject("Continent");
+            continentObject.transform.SetParent(Map.ContinentContainer.transform);
+            Continent continent = continentObject.AddComponent<Continent>();
+            continent.Init(continentList.Select(x => x.Region).ToList());
+
+            foreach (Region r in continent.Regions) r.Continent = continent;
+
+            Map.Continents.Add(continent);
+        }
 
         Callback?.Invoke(Map);
     }
@@ -960,8 +1034,13 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public void FindWaterNeighbours()
     {
-        foreach (GraphPolygon poly in Polygons) poly.WaterNeighbours.Clear();
+        foreach (GraphPolygon poly in Polygons)
+        {
+            poly.WaterNeighbours.Clear();
+            poly.UpdateNeighbours();
+        }
 
+        
         // Direct water neighbours: If two regions are connected to the same water region, but are not adjacent, they will be assigned water neighbours.
         foreach(GraphPolygon poly in Polygons.Where(x => !x.IsWater && x.IsNextToWater))
         {
@@ -976,6 +1055,7 @@ public class PolygonMapGenerator : MonoBehaviour
                 }
             }
         }
+        
 
         // Connect clusters (region groups that are connected through water or land) until there is only one clutster left (so every region is reachable from every other region)
         List<List<GraphPolygon>> clusters = PolygonMapFunctions.FindClusters(Polygons.Where(x => !x.IsWater).ToList(), landConnectionsOnly: false);

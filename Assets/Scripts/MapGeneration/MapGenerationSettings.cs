@@ -12,10 +12,13 @@ public class MapGenerationSettings
     public float MaxPolygonArea;
     public float AvgPolygonArea;
 
+    public int MinContinentSize;
+    public int MaxContinentSize;
+
     public MapType MapType;
     public float ContinentSizeScaleFactor;
 
-    public MapGenerationSettings(int width = 10, int height = 10, float minPolygonArea = 0.08f, float maxPolygonArea = 1.5f, MapType mapType = MapType.Island, float continentSizeScaleFactor = 1f)
+    public MapGenerationSettings(int width = 10, int height = 10, float minPolygonArea = 0.08f, float maxPolygonArea = 1.5f, int minContinentSize = 5, int maxContinentSize = 30, MapType mapType = MapType.Island, float continentSizeScaleFactor = 1f)
     {
         Width = width;
         Height = height;
@@ -24,6 +27,9 @@ public class MapGenerationSettings
         MinPolygonArea = minPolygonArea;
         MaxPolygonArea = maxPolygonArea;
         AvgPolygonArea = (minPolygonArea + maxPolygonArea) / 2f;
+
+        MinContinentSize = minContinentSize;
+        MaxContinentSize = maxContinentSize;
 
         MapType = mapType;
         ContinentSizeScaleFactor = continentSizeScaleFactor;

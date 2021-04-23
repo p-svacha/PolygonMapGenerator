@@ -80,7 +80,7 @@ namespace ElectionTactics
 
         private void StartGame()
         {
-            MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, MapType.Island);
+            MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
 
             HeaderSlideTime *= SpeedModifier;

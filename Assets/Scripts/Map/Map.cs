@@ -14,18 +14,20 @@ public class Map
     public GameObject BorderContainer;
     public GameObject RegionContainer;
     public GameObject RiverContainer;
+    public GameObject ContinentContainer;
 
-    public List<Border> Borders = new List<Border>();
-    public List<BorderPoint> BorderPoints = new List<BorderPoint>();
-    public List<Border> EdgeBorders = new List<Border>();
-    public List<Region> Regions = new List<Region>();
-    public List<Landmass> Landmasses = new List<Landmass>();
-    public List<WaterBody> WaterBodies = new List<WaterBody>();
-    public List<River> Rivers = new List<River>();
+    public List<Border> Borders;
+    public List<BorderPoint> BorderPoints;
+    public List<Border> EdgeBorders;
+
+    public List<Region> Regions;
+    public List<Landmass> Landmasses;
+    public List<WaterBody> WaterBodies;
+    public List<Continent> Continents;
+    public List<River> Rivers;
 
     // Display
     public MapDrawMode DrawMode;
-    public List<GameObject> LandmassBorders = new List<GameObject>();
     public bool IsShowingRegionBorders;
     public bool IsShowingShorelineBorders;
 
@@ -42,9 +44,6 @@ public class Map
         UpdateDrawMode(drawMode);
         ShowRegionBorders(showRegionBorders);
         ShowShorelineBorders(showShorelineBorders);
-        IdentifyLandmasses();
-        IdentifyWaterBodies();
-        InitAdditionalRegionInfo();
         FocusMapInEditor();
     }
 
@@ -71,112 +70,19 @@ public class Map
                 }
                 foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 break;
-        }
-    }
 
-    private void IdentifyLandmasses()
-    {
-        // Identify landmasses
-        Landmasses.Clear();
-
-        List<Region> regionsWithoutLandmass = new List<Region>();
-        regionsWithoutLandmass.AddRange(Regions.Where(x => !x.IsWater));
-
-        while(regionsWithoutLandmass.Count > 0)
-        {
-            List<Region> landmassRegions = new List<Region>();
-            Queue<Region> regionsToAdd = new Queue<Region>();
-            regionsToAdd.Enqueue(regionsWithoutLandmass[0]);
-            while(regionsToAdd.Count > 0)
-            {
-                Region regionToAdd = regionsToAdd.Dequeue();
-                landmassRegions.Add(regionToAdd);
-                foreach (Region neighbourRegion in regionToAdd.AdjacentRegions.Where(x => !x.IsWater))
-                    if (!landmassRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
-                        regionsToAdd.Enqueue(neighbourRegion);
-            }
-            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
-            if (landmassRegions.Count < 5) name += " Island";
-            Landmass newLandmass = new Landmass(landmassRegions, name);
-            Landmasses.Add(newLandmass);
-            foreach (Region r in landmassRegions)
-            {
-                r.Landmass = newLandmass;
-                regionsWithoutLandmass.Remove(r);
-            }
-        }
-
-        // Create landmass coast border meshes
-        GameObject landmassBorderContainer = new GameObject("Landmass Borders");
-        landmassBorderContainer.transform.SetParent(RootObject.transform);
-
-        foreach (Landmass lm in Landmasses)
-        {
-            List<GameObject> curLandmassBorders = MeshGenerator.CreatePolygonGroupBorder(lm.Regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultCoastBorderWidth, Color.black, onOutside: true, height: 0.0001f);
-            foreach (GameObject border in curLandmassBorders)
-            {
-                border.transform.SetParent(landmassBorderContainer.transform);
-                LandmassBorders.Add(border);
-            }
-        }
-    }
-
-    private void IdentifyWaterBodies()
-    {
-        WaterBodies.Clear();
-
-        List<Region> regionsWithoutWaterBody = new List<Region>();
-        regionsWithoutWaterBody.AddRange(Regions.Where(x => x.IsWater && !x.IsOuterOcean));
-
-        while (regionsWithoutWaterBody.Count > 0)
-        {
-            List<Region> waterBodyRegions = new List<Region>();
-            Queue<Region> regionsToAdd = new Queue<Region>();
-            regionsToAdd.Enqueue(regionsWithoutWaterBody[0]);
-            while (regionsToAdd.Count > 0)
-            {
-                Region regionToAdd = regionsToAdd.Dequeue();
-                waterBodyRegions.Add(regionToAdd);
-                foreach (Region neighbourRegion in regionToAdd.AdjacentRegions.Where(x => x.IsWater && !x.IsOuterOcean))
-                    if (!waterBodyRegions.Contains(neighbourRegion) && !regionsToAdd.Contains(neighbourRegion))
-                        regionsToAdd.Enqueue(neighbourRegion);
-            }
-            string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16);
-            bool isLake;
-            if (waterBodyRegions.Count < 5)
-            {
-                name = "Lake " + name;
-                isLake = true;
-            }
-            else
-            {
-                name += " Ocean";
-                isLake = false;
-            }
-            WaterBody newWaterBody = new WaterBody(name, waterBodyRegions, isLake);
-
-            // Add outer ocean to ocean
-            if(!isLake)
-            {
-                foreach (Region r in Regions.Where(x => x.IsOuterOcean))
+            case MapDrawMode.Continents:
+                foreach (Region r in WaterRegions) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                List<Color> continentColors = new List<Color>();
+                foreach(Continent continent in Continents)
                 {
-                    newWaterBody.Regions.Add(r);
-                    r.WaterBody = newWaterBody;
+                    Color continentColor = ColorManager.GetRandomDistinctColor(continentColors);
+                    foreach (Region r in continent.Regions) r.SetColor(continentColor);
+                    continentColors.Add(continentColor);
                 }
-            }
-
-            WaterBodies.Add(newWaterBody);
-            foreach (Region r in waterBodyRegions)
-            {
-                r.WaterBody = newWaterBody;
-                regionsWithoutWaterBody.Remove(r);
-            }
+                break;
         }
-    }
-
-    private void InitAdditionalRegionInfo()
-    {
-        foreach (Region r in Regions) r.InitAdditionalInfo();
     }
 
     public void DestroyAllGameObjects()
@@ -194,11 +100,6 @@ public class Map
         BorderPointContainer.SetActive(!BorderPointContainer.gameObject.activeSelf);
     }
 
-    public void UpdateDisplay()
-    {
-        foreach (Region r in Regions) r.UpdateDisplay();
-    }
-
     public void ShowRegionBorders(bool show)
     {
         IsShowingRegionBorders = show;
@@ -208,10 +109,10 @@ public class Map
     public void ShowShorelineBorders(bool show)
     {
         IsShowingShorelineBorders = show;
-        foreach (GameObject landmassBorder in LandmassBorders) landmassBorder.SetActive(show);
+        foreach (Landmass landmass in Landmasses) landmass.ShowBorders(show);
     }
 
-    private void FocusMapCentered()
+    public void FocusMapCentered()
     {
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
         Camera.main.transform.position = new Vector3(Attributes.Width / 2f, Attributes.Height, Attributes.Height / 2f);
@@ -226,6 +127,7 @@ public class Map
     #region Getters
 
     public List<Region> LandRegions { get { return Regions.Where(x => !x.IsWater).ToList(); } }
+    public List<Region> WaterRegions { get { return Regions.Where(x => x.IsWater).ToList(); } }
 
     public int NumLandRegions { get { return Regions.Where(x => !x.IsWater).Count(); } }
     public int NumWaterRegions { get { return Regions.Where(x => x.IsWater).Count(); } }

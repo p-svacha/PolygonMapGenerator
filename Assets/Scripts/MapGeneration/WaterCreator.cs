@@ -56,6 +56,9 @@ public static class WaterCreator
                 break;
         }
 
+        IdentifyLandmasses(PMG);
+        IdentifyWaterBodies(PMG);
+
         foreach (GraphPolygon p in PMG.Polygons) p.UpdateNeighbours();
     }
 
@@ -273,6 +276,74 @@ public static class WaterCreator
         {
             float noiseValue = noise.GetValue(polygon.CenterPoi.x, polygon.CenterPoi.y, PMG.GenerationSettings);
             if (noiseValue < 0.2f) TurnPolygonToWater(polygon);
+        }
+    }
+
+    private static void IdentifyLandmasses(PolygonMapGenerator PMG)
+    {
+        // Identify landmasses
+        PMG.Landmasses = new List<List<GraphPolygon>>();
+
+        List<GraphPolygon> polygonsWithoutLandmass = new List<GraphPolygon>();
+        polygonsWithoutLandmass.AddRange(PMG.Polygons.Where(x => !x.IsWater));
+
+        while (polygonsWithoutLandmass.Count > 0)
+        {
+            List<GraphPolygon> landmassPolygons = new List<GraphPolygon>();
+            Queue<GraphPolygon> polygonsToAdd = new Queue<GraphPolygon>();
+            polygonsToAdd.Enqueue(polygonsWithoutLandmass[0]);
+            while (polygonsToAdd.Count > 0)
+            {
+                GraphPolygon polygonToAdd = polygonsToAdd.Dequeue();
+                landmassPolygons.Add(polygonToAdd);
+                foreach (GraphPolygon neighbourPolygon in polygonToAdd.AdjacentPolygons.Where(x => !x.IsWater))
+                    if (!landmassPolygons.Contains(neighbourPolygon) && !polygonsToAdd.Contains(neighbourPolygon))
+                        polygonsToAdd.Enqueue(neighbourPolygon);
+            }
+            PMG.Landmasses.Add(landmassPolygons);
+            foreach (GraphPolygon poly in landmassPolygons)
+            {
+                polygonsWithoutLandmass.Remove(poly);
+            }
+        }
+    }
+
+    private static void IdentifyWaterBodies(PolygonMapGenerator PMG)
+    {
+        PMG.WaterBodies = new List<List<GraphPolygon>>();
+
+        List<GraphPolygon> polygonsWithoutWaterBody = new List<GraphPolygon>();
+        polygonsWithoutWaterBody.AddRange(PMG.Polygons.Where(x => x.IsWater && !x.IsOuterPolygon));
+
+        while (polygonsWithoutWaterBody.Count > 0)
+        {
+            List<GraphPolygon> waterBodyPolygons = new List<GraphPolygon>();
+            Queue<GraphPolygon> polygonsToAdd = new Queue<GraphPolygon>();
+            polygonsToAdd.Enqueue(polygonsWithoutWaterBody[0]);
+            while (polygonsToAdd.Count > 0)
+            {
+                GraphPolygon polygonToAdd = polygonsToAdd.Dequeue();
+                waterBodyPolygons.Add(polygonToAdd);
+                foreach (GraphPolygon neighbourPolygon in polygonToAdd.AdjacentPolygons.Where(x => x.IsWater && !x.IsOuterPolygon))
+                    if (!waterBodyPolygons.Contains(neighbourPolygon) && !polygonsToAdd.Contains(neighbourPolygon))
+                        polygonsToAdd.Enqueue(neighbourPolygon);
+            }
+            bool isLake = waterBodyPolygons.Count < 5;
+            PMG.WaterBodies.Add(waterBodyPolygons);
+
+            // Add outer ocean to ocean
+            if (!isLake)
+            {
+                foreach (GraphPolygon poly in PMG.Polygons.Where(x => x.IsOuterPolygon))
+                {
+                    waterBodyPolygons.Add(poly);
+                }
+            }
+
+            foreach (GraphPolygon poly in waterBodyPolygons)
+            {
+                polygonsWithoutWaterBody.Remove(poly);
+            }
         }
     }
 }

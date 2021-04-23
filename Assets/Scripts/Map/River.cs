@@ -13,9 +13,9 @@ public class River : MonoBehaviour
 
     public float Length;
 
-    public void Init(string name, List<BorderPoint> bps, List<Border> borders, List<Region> regions)
+    public void Init(List<BorderPoint> bps, List<Border> borders, List<Region> regions)
     {
-        Name = name;
+        Name = "River XYZ";
 
         BorderPoints = bps;
         Borders = borders;

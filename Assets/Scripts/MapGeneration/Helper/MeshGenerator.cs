@@ -123,7 +123,26 @@ public class MeshGenerator
         return borders;
     }
 
+    public static GameObject DrawLine(Vector2 from, Vector2 to, float width, Color color, float yPos = 0.01f, float height = 0.01f)
+    {
+        GameObject lineObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
+        Vector2 center = new Vector2((from.x + to.x) / 2, (from.y + to.y) / 2);
+        float length = Vector2.Distance(from, to);
+        float angle = Vector2.SignedAngle(to - from, new Vector2(1, 0));
+
+        lineObject.transform.position = new Vector3(center.x, yPos, center.y);
+        lineObject.transform.rotation = Quaternion.Euler(0, angle, 0);
+        lineObject.transform.localScale = new Vector3(length, height, width);
+
+        lineObject.GetComponent<MeshRenderer>().material.color = color;
+        lineObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineObject.GetComponent<MeshRenderer>().receiveShadows = false;
+
+        GameObject.Destroy(lineObject.GetComponent<BoxCollider>());
+
+        return lineObject;
+    }
 
 
 }

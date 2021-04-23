@@ -9,15 +9,9 @@ using UnityEngine.UI;
 public class UI_MapEditor : MonoBehaviour
 {
     public PolygonMapGenerator PMG;
+    public BaseMapCameraHandler CameraControls;
 
     public Map CurrentMap;
-
-    // Controls
-    private static float ZOOM_SPEED = 0.3f;
-    private static float DRAG_SPEED = 0.015f;
-    private bool IsMouseWheelDown;
-    private float MinCameraHeight;
-    private float MaxCameraHeight;
 
     [Header("Colors")]
     public Color SelectedColor = Color.red;
@@ -30,6 +24,8 @@ public class UI_MapEditor : MonoBehaviour
     public Text HeightText;
     public Text MinAreaText;
     public Text MaxAreaText;
+    public Text MinContinentSizeText;
+    public Text MaxContinentSizeText;
 
     [Header("Map Type")]
     public Dropdown MapTypeDropdown;
@@ -40,6 +36,7 @@ public class UI_MapEditor : MonoBehaviour
     [Header("Display")]
     public Toggle RegionBorderToggle;
     public Toggle ShorelineBorderToggle;
+    public Toggle ConnectionOverlayToggle;
     public Dropdown DrawModeDropdown;
     private MapDrawMode CurrentDrawMode;
 
@@ -83,6 +80,9 @@ public class UI_MapEditor : MonoBehaviour
     public Button CreateNationButton;
 
     // Interaction
+    public Region LastHoveredRegion;
+    public Region HoveredRegion;
+
     public List<Region> SelectedRegions = new List<Region>();
     public List<Region> SelectedRegionAdjacent = new List<Region>();
     public List<Region> SelectedRegionLandNeighbours = new List<Region>();
@@ -122,39 +122,26 @@ public class UI_MapEditor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Click
+        // Mouse controls
+        if(!CameraControls.IsHoveringUi())
         {
-            bool uiClick = EventSystem.current.IsPointerOverGameObject();
+            // Currently hovered region
+            LastHoveredRegion = HoveredRegion;
+            HoveredRegion = CameraControls.GetHoveredRegion();
 
-            if (!uiClick)
+            // Region selection
+            if (Input.GetMouseButtonDown(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100))
-                {
-                    Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
-                    SelectRegion(mouseRegion);
-                }
-            }
-        }
-
-        if (CurrentMap != null)
-        {
-            if (Input.mouseScrollDelta.y != 0) // Scroll
-            {
-                Camera.main.transform.position += new Vector3(0f, -Input.mouseScrollDelta.y * ZOOM_SPEED, 0f);
-                if (Camera.main.transform.position.y < MinCameraHeight) Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MinCameraHeight, Camera.main.transform.position.z);
-                if (Camera.main.transform.position.y > MaxCameraHeight) Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, MaxCameraHeight, Camera.main.transform.position.z);
+                SelectRegion(HoveredRegion);
             }
 
-            // Dragging with middle mouse button
-            if (Input.GetKeyDown(KeyCode.Mouse2)) IsMouseWheelDown = true;
-            if (Input.GetKeyUp(KeyCode.Mouse2)) IsMouseWheelDown = false;
-            if (IsMouseWheelDown)
+            // Connection overlay
+            if(ConnectionOverlayToggle.isOn && HoveredRegion != LastHoveredRegion)
             {
-                float speed = Camera.main.transform.position.y * DRAG_SPEED;
-                Camera.main.transform.position += new Vector3(-Input.GetAxis("Mouse X") * speed, 0f, -Input.GetAxis("Mouse Y") * speed);
+                if (LastHoveredRegion != null) LastHoveredRegion.ShowConnectionOverlays(false);
+                if (HoveredRegion != null && !HoveredRegion.IsWater) HoveredRegion.ShowConnectionOverlays(true);
             }
+
         }
     }
 
@@ -179,8 +166,10 @@ public class UI_MapEditor : MonoBehaviour
         int height = int.Parse(HeightText.text);
         float minRegionArea = float.Parse(MinAreaText.text);
         float maxRegionArea = float.Parse(MaxAreaText.text);
+        int minContinentSize = int.Parse(MinContinentSizeText.text);
+        int maxContinentSize = int.Parse(MaxContinentSizeText.text);
         float continentSizeFactor = ContinentSizeSlider.value;
-        MapGenerationSettings settings = new MapGenerationSettings(width, height, minRegionArea, maxRegionArea, CurrentMapType, continentSizeFactor);
+        MapGenerationSettings settings = new MapGenerationSettings(width, height, minRegionArea, maxRegionArea, minContinentSize, maxContinentSize, CurrentMapType, continentSizeFactor);
         PMG.GenerateMap(settings, callback: OnMapGenerationDone);
     }
 
@@ -189,12 +178,10 @@ public class UI_MapEditor : MonoBehaviour
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
         CurrentMap = map;
         CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, CurrentDrawMode);
+        CameraControls.Init(map);
 
         SetMapInformation(CurrentMap);
         
-        MinCameraHeight = 0.4f;
-        MaxCameraHeight = Mathf.Max(CurrentMap.Attributes.Width, CurrentMap.Attributes.Height) * 1.2f;
-
         foreach (Region r in CurrentMap.Regions) NationMap.Add(r, null);
     }
 

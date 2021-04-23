@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\PolygonLabels\PolygonCenterFinder.cs" />
     <Compile Include="Assets\Scripts\Map\MapDisplaySettings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Tooltip\Tooltip.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\ParriskGame.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\GeographyTrait.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\TemperatureNoise.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\WorldSimulation.cs" />
@@ -131,11 +132,13 @@
     <Compile Include="Assets\Scripts\NameGeneration\MarkovInputDataType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Constitution\DistrictSeatDistribution.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\PostGame\PostGameScreen.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\Language.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\ColorManager.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Player.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Policies\UI_PolicySelection.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
     <Compile Include="Assets\Scripts\Map\River.cs" />
@@ -179,7 +182,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E01_NewNationEmerge.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\Impact.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\TabButton\TabButton.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Helper\MapGenerationState.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSliderContainer.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\AgeGroup.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\Density.cs" />
@@ -191,11 +194,18 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Tooltip\TooltipTarget.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\LegendEntry.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
+    <Compile Include="Assets\Scripts\MapEditor\BaseMapCameraHandler.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\ContinentCreator.cs" />
+    <Compile Include="Assets\Scripts\Map\Continent.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphEdge.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraph.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

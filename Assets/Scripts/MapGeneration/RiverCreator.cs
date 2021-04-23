@@ -134,7 +134,7 @@ public static class RiverCreator
 
     public static River CreateRiverObject(GraphPath riverPath, PolygonMapGenerator PMG)
     {
-        Debug.Log("Creating mesh for river with " + riverPath.Nodes.Count + " points");
+        //Debug.Log("Creating mesh for river with " + riverPath.Nodes.Count + " points");
 
         // Calculate vertices of river polygon
         List<Vector2> polygonVerticesHalf1 = new List<Vector2>();
@@ -148,7 +148,7 @@ public static class RiverCreator
             float startWidth = riverPath.Nodes[i - 1].RiverWidth;
             float endWidth = riverPath.Nodes[i].RiverWidth;
 
-            Debug.Log("River point " + i + ": startWidth = " + startWidth + ", endWidth = " + endWidth);
+            //Debug.Log("River point " + i + ": startWidth = " + startWidth + ", endWidth = " + endWidth);
             
             if(i == 1) // Add two starting points
             {
@@ -226,9 +226,8 @@ public static class RiverCreator
         // Create object 
         GameObject riverObject = MeshGenerator.GeneratePolygon(polygonVerticesList, PMG, layer: PolygonMapGenerator.LAYER_RIVER);
 
-        string name = MarkovChainWordGenerator.GetRandomName(maxLength: 16) + " River";
         River river = riverObject.AddComponent<River>();
-        river.Init(name, riverPath.Nodes.Select(x => x.BorderPoint).ToList(), riverPath.Connections.Select(x => x.Border).ToList(), riverPath.Polygons.Select(x => x.Region).ToList());
+        river.Init(riverPath.Nodes.Select(x => x.BorderPoint).ToList(), riverPath.Connections.Select(x => x.Border).ToList(), riverPath.Polygons.Select(x => x.Region).ToList());
 
         riverObject.GetComponent<MeshRenderer>().material.color = Color.red;
 

@@ -49,22 +49,48 @@ public static class PolygonMapFunctions
     /// </summary>
     public static List<GraphPolygon> FindClosestPolygons(List<GraphPolygon> fromPolygons, List<GraphPolygon> toPolygons)
     {
-        float shortestDistance = float.MaxValue;
+        float shortestCentroidDistance = float.MaxValue;
+        float shortestPolygonDistance = float.MaxValue;
         List<GraphPolygon> shortestPair = new List<GraphPolygon>();
 
         foreach(GraphPolygon from in fromPolygons)
         {
             foreach(GraphPolygon to in toPolygons)
             {
-                float distance = Vector2.Distance(from.Centroid, to.Centroid);
-                if(distance < shortestDistance)
+                float centroidDistance = Vector2.Distance(from.Centroid, to.Centroid);
+                if(centroidDistance < (shortestCentroidDistance + 2f)) // if we are close to shortest distance, take detailed distance checking between all points
                 {
-                    shortestDistance = distance;
-                    shortestPair = new List<GraphPolygon>() { from, to };
+                    float polygonDistance = GetPolygonDistance(from, to);
+                    if(polygonDistance < shortestPolygonDistance)
+                    {
+                        shortestCentroidDistance = centroidDistance;
+                        shortestPolygonDistance = polygonDistance;
+                        shortestPair = new List<GraphPolygon>() { from, to };
+                    }
                 }
             }
         }
         return shortestPair;
+    }
+
+    /// <summary>
+    /// Returns the shortest distance between two polygons (distance between two closest points)
+    /// </summary>
+    public static float GetPolygonDistance(GraphPolygon p1, GraphPolygon p2)
+    {
+        float shortestDistance = float.MaxValue;
+        foreach(GraphNode fromNode in p1.Nodes)
+        {
+            foreach(GraphNode toNode in p2.Nodes)
+            {
+                float distance = Vector2.Distance(fromNode.Vertex, toNode.Vertex);
+                if(distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                }
+            }
+        }
+        return shortestDistance;
     }
 
     #region Polygon Group Border

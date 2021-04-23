@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Landmass
+public class Landmass : MonoBehaviour
 {
     public List<Region> Regions;
     public string Name;
 
-    public Landmass(List<Region> regions, string name)
+    public List<GameObject> Borders;
+
+    public void Init(List<Region> regions)
     {
+        Name = "Landmass XYZ";
         Regions = regions;
-        Name = name;
+    }
+
+    public void ShowBorders(bool show)
+    {
+        foreach (GameObject border in Borders) border.SetActive(show);
     }
 
     public int Size

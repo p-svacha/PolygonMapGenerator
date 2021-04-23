@@ -49,9 +49,12 @@ public class Region : MonoBehaviour
     public List<Region> LandNeighbours = new List<Region>(); // Land neighbours are land regions that are adjacent to this region
     public List<Region> WaterNeighbours = new List<Region>(); // Water neighbours are land regions that share an adjacent water to this region
     public Dictionary<Region, List<Border>> RegionBorders = new Dictionary<Region, List<Border>>(); // This dictionary contains all borders to a specific region
+
+    public Continent Continent;
     public Landmass Landmass;
     public WaterBody WaterBody;
     public List<River> Rivers = new List<River>();
+
     public int DistanceFromNearestWater;
 
     // Game
@@ -64,6 +67,8 @@ public class Region : MonoBehaviour
     public bool IsBlinking;
     private bool ShowRegionBorders;
     public GameObject Border;
+
+    private List<GameObject> ConnectionOverlays;
 
     public void Init(GraphPolygon p)
     {
@@ -103,19 +108,37 @@ public class Region : MonoBehaviour
 
         GetComponent<Renderer>().material = MapDisplaySettings.Settings.DefaultMaterial;
 
-        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
-        Border.transform.SetParent(transform);
-    }
-
-    /// <summary>
-    /// In here everything can be initialized that relies on additional info from map initialization, such as landmass and waterbody info
-    /// </summary>
-    public void InitAdditionalInfo()
-    {
+        // Coast
         OceanCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && !x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
         OceanCoastRatio = OceanCoastLength / TotalBorderLength;
         LakeCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
         LakeCoastRatio = LakeCoastLength / TotalBorderLength;
+
+        // Border surrounding the region
+        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
+        Border.transform.SetParent(transform);
+
+        // Connection overlays (lines to neighbouring regions)
+        ConnectionOverlays = InitConnectionOverlays();
+        ShowConnectionOverlays(false);
+    }
+
+    private List<GameObject> InitConnectionOverlays()
+    {
+        List<GameObject> connections = new List<GameObject>();
+        foreach (GraphPolygon neighbour in Polygon.LandNeighbours)
+        {
+            GameObject line = MeshGenerator.DrawLine(CenterPoi, neighbour.CenterPoi, 0.015f, Color.red);
+            line.transform.SetParent(transform);
+            connections.Add(line);
+        }
+        foreach (GraphPolygon neighbour in Polygon.WaterNeighbours)
+        {
+            GameObject line = MeshGenerator.DrawLine(CenterPoi, neighbour.CenterPoi, 0.015f, new Color(0.5f, 0.1f, 0.8f));
+            line.transform.SetParent(transform);
+            connections.Add(line);
+        }
+        return connections;
     }
 
     private void SetRegionBorders()
@@ -185,6 +208,11 @@ public class Region : MonoBehaviour
     {
         ShowRegionBorders = b;
         UpdateDisplay();
+    }
+
+    public void ShowConnectionOverlays(bool show)
+    {
+        foreach (GameObject overlay in ConnectionOverlays) overlay.SetActive(show);
     }
 
     #region Getters

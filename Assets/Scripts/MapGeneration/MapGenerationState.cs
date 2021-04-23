@@ -16,6 +16,7 @@ public enum MapGenerationState
     CreateRivers,
     ApplyBiomes,
     FindWaterNeighbours,
+    CreateContinents,
     DrawMap,
     GenerationDone,
     GenerationAborted

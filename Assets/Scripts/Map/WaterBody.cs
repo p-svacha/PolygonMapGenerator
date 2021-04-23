@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WaterBody
+public class WaterBody : MonoBehaviour
 {
     public string Name;
     public List<Region> Regions = new List<Region>();
@@ -12,16 +12,17 @@ public class WaterBody
     public float Area;
     public bool IsLake;
 
-    public WaterBody(string name, List<Region> regions, bool lake)
+    public void Init(List<Region> regions)
     {
-        Name = name;
         Regions = regions;
-        IsLake = lake;
+        IsLake = regions.Count < 5;
         foreach(Region r in regions)
         {
             foreach (Region n in r.AdjacentRegions.Where(x => !x.IsWater))
                 if (!BorderingLandRegions.Contains(n)) BorderingLandRegions.Add(n);
         }
+
+        Name = IsLake ? "Lake XYZ" : "XYZ Ocean";
 
         Area = regions.Sum(x => x.Area);
     }
