@@ -28,7 +28,7 @@ namespace ParriskGame
             State = GameState.Initializing;
             NumPlayers = numPlayers;
 
-            MapGenerationSettings settings = new MapGenerationSettings(15, 10, 0.2f, 1.5f, 5, 30, MapType.Continents);
+            MapGenerationSettings settings = new MapGenerationSettings(15, 10, 0.3f, 1.5f, 5, 12, MapType.Continents);
             PMG.GenerateMap(settings, OnMapGenerationDone);
         }
 
@@ -36,7 +36,7 @@ namespace ParriskGame
         {
             // Init map
             Map = map;
-            Map.InitializeMap(true, true, MapDrawMode.Basic);
+            Map.InitializeMap(true, true, true, MapDrawMode.Basic);
             Map.FocusMapCentered();
 
             foreach(Region r in Map.LandRegions)

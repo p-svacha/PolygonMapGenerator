@@ -36,6 +36,7 @@ public class UI_MapEditor : MonoBehaviour
     [Header("Display")]
     public Toggle RegionBorderToggle;
     public Toggle ShorelineBorderToggle;
+    public Toggle ContinentBorderToggle;
     public Toggle ConnectionOverlayToggle;
     public Dropdown DrawModeDropdown;
     private MapDrawMode CurrentDrawMode;
@@ -99,11 +100,12 @@ public class UI_MapEditor : MonoBehaviour
 
         foreach (MapType mapType in Enum.GetValues(typeof(MapType))) MapTypeDropdown.options.Add(new Dropdown.OptionData(mapType.ToString()));
         MapTypeDropdown.onValueChanged.AddListener(MapTypeDropdown_OnValueChanged);
-        MapTypeDropdown.value = 1; MapTypeDropdown.value = 0;
+        MapTypeDropdown.value = 1; MapTypeDropdown.value = 2;
         ContinentSizeSlider.onValueChanged.AddListener(ContinentSizeSlider_OnValueChanged);
 
         RegionBorderToggle.onValueChanged.AddListener(RegionBorderToggle_OnValueChanged);
         ShorelineBorderToggle.onValueChanged.AddListener(ShorelineBorderToggle_OnValueChanged);
+        ContinentBorderToggle.onValueChanged.AddListener(ContinentBorderToggle_OnValueChanged);
         foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
         DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
         DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
@@ -177,7 +179,7 @@ public class UI_MapEditor : MonoBehaviour
     {
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
         CurrentMap = map;
-        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, CurrentDrawMode);
+        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, CurrentDrawMode);
         CameraControls.Init(map);
 
         SetMapInformation(CurrentMap);
@@ -225,6 +227,11 @@ public class UI_MapEditor : MonoBehaviour
     private void ShorelineBorderToggle_OnValueChanged(bool enabled)
     {
         if (CurrentMap != null) CurrentMap.ShowShorelineBorders(enabled);
+    }
+
+    private void ContinentBorderToggle_OnValueChanged(bool enabled)
+    {
+        if (CurrentMap != null) CurrentMap.ShowContinentBorders(enabled);
     }
 
     private void DrawModeDropdown_OnValueChanged(int value)

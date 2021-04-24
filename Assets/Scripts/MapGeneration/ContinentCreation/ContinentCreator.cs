@@ -29,24 +29,18 @@ namespace MapGeneration.ContinentCreation
             {
                 int minCuts = int.MaxValue;
                 KargerGraph bestGraph = null;
-                for(int i = 0; i < 200; i++)
+                int cyclesWithoutImprovement = 0;
+                while(cyclesWithoutImprovement < 50 || bestGraph == null)
                 {
+                    cyclesWithoutImprovement++;
                     KargerGraph graph = SplitClusterOnce(biggestContinent);
                     if(graph.Vertices[0].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize && graph.Vertices[1].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize && graph.CutSize < minCuts)
                     {
                         minCuts = graph.CutSize;
                         bestGraph = graph;
+                        cyclesWithoutImprovement = 0;
                     }
                 }
-
-                Debug.Log("Best graph has cut size of " + minCuts);
-
-                /*
-                while(graph.Vertices[0].ContainedPolygons.Count < PMG.GenerationSettings.MinContinentSize || graph.Vertices[1].ContainedPolygons.Count < PMG.GenerationSettings.MinContinentSize)
-                {
-                    graph = SplitClusterOnce(biggestContinent);
-                }
-                */
 
                 List<GraphPolygon> newContinent = new List<GraphPolygon>();
                 foreach (GraphPolygon splittedPolygon in bestGraph.Vertices[0].ContainedPolygons)

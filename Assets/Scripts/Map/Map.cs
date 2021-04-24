@@ -30,6 +30,7 @@ public class Map
     public MapDrawMode DrawMode;
     public bool IsShowingRegionBorders;
     public bool IsShowingShorelineBorders;
+    public bool IsShowingContinentBorders;
 
     public Map(MapGenerationSettings settings)
     {
@@ -39,11 +40,12 @@ public class Map
     /// <summary>
     /// This function always has to be called after the map is received from the map generator
     /// </summary>
-    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, MapDrawMode drawMode)
+    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, bool showContinentBorders, MapDrawMode drawMode)
     {
         UpdateDrawMode(drawMode);
         ShowRegionBorders(showRegionBorders);
         ShowShorelineBorders(showShorelineBorders);
+        ShowContinentBorders(showContinentBorders);
         FocusMapInEditor();
     }
 
@@ -110,6 +112,12 @@ public class Map
     {
         IsShowingShorelineBorders = show;
         foreach (Landmass landmass in Landmasses) landmass.ShowBorders(show);
+    }
+
+    public void ShowContinentBorders(bool show)
+    {
+        IsShowingContinentBorders = show;
+        foreach (Continent continent in Continents) continent.ShowBorders(show);
     }
 
     public void FocusMapCentered()

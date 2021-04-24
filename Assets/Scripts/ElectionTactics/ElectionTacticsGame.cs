@@ -96,7 +96,7 @@ namespace ElectionTactics
         {
             Year = 1999;
             Map = map;
-            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, MapDrawMode.Basic);
+            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, MapDrawMode.Basic);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             InitGeograhyTraits();

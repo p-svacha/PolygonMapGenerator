@@ -115,7 +115,7 @@ public class Region : MonoBehaviour
         LakeCoastRatio = LakeCoastLength / TotalBorderLength;
 
         // Border surrounding the region
-        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
+        Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultRegionBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
         Border.transform.SetParent(transform);
 
         // Connection overlays (lines to neighbouring regions)

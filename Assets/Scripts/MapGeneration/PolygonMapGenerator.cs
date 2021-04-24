@@ -44,8 +44,9 @@ public class PolygonMapGenerator : MonoBehaviour
     private List<GraphPolygon> LastRemovedPolygons = new List<GraphPolygon>(); // Used when splitting or merging polygons to find polygons that remained unchanged so the attributes can be transferred
 
     // Default values
-    public const float DefaultBorderWidth = 0.005f;
-    public const float DefaultCoastBorderWidth = 0.02f;
+    public const float DefaultRegionBorderWidth = 0.005f;
+    public const float DefaulContinentBorderWidth = 0.01f;
+    public const float DefaultShorelineBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
 
@@ -819,14 +820,6 @@ public class PolygonMapGenerator : MonoBehaviour
             {
                 r.Landmass = landmass;
                 r.transform.SetParent(landmassObject.transform);
-            }
-
-            // border
-            landmass.Borders = MeshGenerator.CreatePolygonGroupBorder(landmassList, PolygonMapGenerator.DefaultCoastBorderWidth, Color.black, onOutside: true, height: 0.0001f);
-            
-            foreach (GameObject border in landmass.Borders)
-            {
-                border.transform.SetParent(landmass.transform);
             }
 
             Map.Landmasses.Add(landmass);

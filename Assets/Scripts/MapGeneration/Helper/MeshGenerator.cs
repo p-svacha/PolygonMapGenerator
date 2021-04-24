@@ -103,7 +103,8 @@ public class MeshGenerator
     }
 
     /// <summary>
-    /// Creates a GameObject with a mesh that represents the bounds of multiple polygons. onOutside means the border will be drawn on the outside of the polygons,
+    /// Creates a GameObject with a mesh that represents the bounds of multiple polygons. onOutside means the border will be drawn on the outside of the polygons.
+    /// All given polygons must be connected by land for this function to work! If they are not, first split it into clusters with PolygonMapFunctions.FindClusters()
     /// </summary>
     public static List<GameObject> CreatePolygonGroupBorder(List<GraphPolygon> polygons, float width, Color c, bool onOutside, float height)
     {
@@ -116,8 +117,8 @@ public class MeshGenerator
         {
             List<Vector2> outerVertices = border.Select(x => x.Vertex).ToList();
             bool isClockwise = GeometryFunctions.IsClockwise(outerVertices);
-            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, layer: PolygonMapGenerator.LAYER_SHORE, onOutside ? !isClockwise : isClockwise));
-            else borders.Add(CreateSinglePolygonBorder(border, width, c, layer: PolygonMapGenerator.LAYER_SHORE, onOutside ? isClockwise : !isClockwise));
+            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? !isClockwise : isClockwise));
+            else borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? isClockwise : !isClockwise));
         }
 
         return borders;
