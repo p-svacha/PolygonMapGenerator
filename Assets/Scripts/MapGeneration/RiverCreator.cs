@@ -173,8 +173,11 @@ public static class RiverCreator
 
                 Vector2 endPoint1, endPoint2;
 
-                // TODO: DOES NOT WORK YET
-                GraphPolygon firstPolygon = riverPath.Nodes[i].Polygons.First(x => GeometryFunctions.IsPointInPolygon4(x.Nodes.Select(x => x.Vertex).ToList(), polygonVerticesHalf1.Last()));
+                GraphPolygon firstPolygon = riverPath.Nodes[i].Polygons.FirstOrDefault(x => GeometryFunctions.IsPointInPolygon4(x.Nodes.Select(x => x.Vertex).ToList(), polygonVerticesHalf1.Last()));
+                if(firstPolygon == null)
+                {
+                    throw new Exception("Couldn't find direction of river delta. is river too short? length = " + riverPath.Nodes.Count);
+                }
 
                 bool addDeltaMidPoint = true;
                 if(riverDeltaPoints[0].Polygons.Contains(firstPolygon))

@@ -55,10 +55,12 @@ public class PolygonMapGenerator : MonoBehaviour
     public static float LAYER_RIVER = 0.00001f;
     public static float LAYER_SHORE = 0.00002f;
     public static float LAYER_REGION_BORDER = 0.00003f;
+    public static float LAYER_WATER_CONNECTION = 0.00004f;
 
     // Graph construction values
     private int NumStartLines;
-    public const float START_LINES_PER_KM = 0.6f; // Number of random walker lines per km the map generation starts with
+    public const float DEFAULT_START_LINES_PER_KM = 0.6f; // Number of random walker lines per km the map generation starts with
+    public const float BIG_OCEANS_START_LINES_PER_KM = 0.3f; // Number of random walker lines per km the map generation starts with
     public const bool RANDOM_START_LINE_POSITIONS = false; // If true, start lines start at completely random positions. If false, they start on an evenly distributed grid
 
     private float RealSplitChance; // Actual chance that a line splits into 2 lines at a vertex
@@ -130,12 +132,14 @@ public class PolygonMapGenerator : MonoBehaviour
 
             case MapGenerationState.FindInitialPolygons:
                 FindAllPolygons();
+                Debug.Log("Found " + Polygons.Count + " initial polygons before merge/split");
                 SwitchState(MapGenerationState.RemoveInvalidNodes);
                 break;
 
             case MapGenerationState.RemoveInvalidNodes:
                 RemoveInvalidNodes();
-                SwitchState(MapGenerationState.SplitBigPolygons);
+                if (GenerationSettings.MapType == MapType.BigOceans) SwitchState(MapGenerationState.MergeSmallPolygons);
+                else SwitchState(MapGenerationState.SplitBigPolygons);
                 break;
 
             case MapGenerationState.SplitBigPolygons:
@@ -399,8 +403,9 @@ public class PolygonMapGenerator : MonoBehaviour
     private void CreateInitialGraph()
     {
         // Init random walkers at certain positions
-        int xStartLines = (int)(START_LINES_PER_KM * GenerationSettings.Width);
-        int yStartLines = (int)(START_LINES_PER_KM * GenerationSettings.Height);
+        float startLinesPerKm = GenerationSettings.MapType == MapType.BigOceans ? BIG_OCEANS_START_LINES_PER_KM : DEFAULT_START_LINES_PER_KM;
+        int xStartLines = (int)(startLinesPerKm * GenerationSettings.Width);
+        int yStartLines = (int)(startLinesPerKm * GenerationSettings.Height);
         NumStartLines = xStartLines * yStartLines;
         float xStartLineStep = (float)(GenerationSettings.Width) / (xStartLines + 1f);
         float yStartLineStep = (float)(GenerationSettings.Height) / (yStartLines + 1f);
@@ -706,7 +711,7 @@ public class PolygonMapGenerator : MonoBehaviour
         List<float> orderedAreas = Polygons.Select(x => x.Area).OrderByDescending(x => x).ToList();
         float initialAvgArea = orderedAreas.Average();
         float initialMedianArea = orderedAreas[orderedAreas.Count / 2];
-        Debug.Log(START_LINES_PER_KM + " ( " + NumStartLines + " ) start lines per km in an area of " + GenerationSettings.Area + " created " + Polygons.Count + " initial polygons with an average area of " + initialAvgArea + " and a median area of " + initialMedianArea);
+        Debug.Log(DEFAULT_START_LINES_PER_KM + " ( " + NumStartLines + " ) start lines per km in an area of " + GenerationSettings.Area + " created " + Polygons.Count + " initial polygons with an average area of " + initialAvgArea + " and a median area of " + initialMedianArea);
 
         GraphPolygon largest = GenerationSettings.MapType != MapType.Regional ? Polygons.Where(x => !x.IsEdgePolygon).OrderByDescending(x => x.Area).First() : Polygons.OrderByDescending(x => x.Area).First();
         while (largest.Area > GenerationSettings.MaxPolygonArea)
@@ -728,6 +733,7 @@ public class PolygonMapGenerator : MonoBehaviour
     {
         Map = new Map(GenerationSettings);
 
+        // Init all gameobjects
         GameObject mapObject = new GameObject("Map");
         Map.RootObject = mapObject;
         Map.BorderPointContainer = new GameObject("BorderPoints");
@@ -740,6 +746,8 @@ public class PolygonMapGenerator : MonoBehaviour
         Map.RiverContainer.transform.SetParent(mapObject.transform);
         Map.ContinentContainer = new GameObject("Continents");
         Map.ContinentContainer.transform.SetParent(mapObject.transform);
+        Map.WaterConnectionContainer = new GameObject("Water Connections");
+        Map.WaterConnectionContainer.transform.SetParent(mapObject.transform);
 
         // Add border points
         Map.BorderPoints = new List<BorderPoint>();
@@ -855,6 +863,30 @@ public class PolygonMapGenerator : MonoBehaviour
             foreach (Region r in continent.Regions) r.Continent = continent;
 
             Map.Continents.Add(continent);
+        }
+
+        // Add water connections
+        Map.WaterConnections = new List<WaterConnection>();
+        List<GraphPolygon> visitedPolygons = new List<GraphPolygon>();
+        foreach(GraphPolygon polygon in Polygons)
+        {
+            visitedPolygons.Add(polygon);
+            foreach(GraphPolygon waterNeighbour in polygon.WaterNeighbours)
+            {
+                if(!visitedPolygons.Contains(waterNeighbour))
+                {
+                    List<GraphNode> closestNodes = PolygonMapFunctions.GetClosestPolygonNodes(polygon, waterNeighbour);
+                    GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, Color.red, LAYER_WATER_CONNECTION, 0.001f);
+                    waterConObject.transform.SetParent(Map.WaterConnectionContainer.transform);
+                    WaterConnection waterConnection = waterConObject.AddComponent<WaterConnection>();
+                    waterConnection.Init(polygon.Region, waterNeighbour.Region);
+
+                    polygon.Region.WaterConnections.Add(waterConnection);
+                    waterNeighbour.Region.WaterConnections.Add(waterConnection);
+
+                    Map.WaterConnections.Add(waterConnection);
+                }
+            }
         }
 
         Callback?.Invoke(Map);
@@ -1033,21 +1065,22 @@ public class PolygonMapGenerator : MonoBehaviour
             poly.UpdateNeighbours();
         }
 
-        
-        // Direct water neighbours: If two regions are connected to the same water region, but are not adjacent, they will be assigned water neighbours.
+        /*
+        // Direct water neighbours: If two regions are connected to the same water region, but are not on the same landmass, they will be assigned water neighbours.
         foreach(GraphPolygon poly in Polygons.Where(x => !x.IsWater && x.IsNextToWater))
         {
             foreach (GraphPolygon adjacentWater in poly.AdjacentPolygons.Where(x => x.IsWater))
             {
                 foreach(GraphPolygon waterNeighbour in adjacentWater.AdjacentPolygons)
                 {
-                    if(!waterNeighbour.IsWater && waterNeighbour != poly && !poly.AdjacentPolygons.Contains(waterNeighbour) && !poly.WaterNeighbours.Contains(waterNeighbour)) 
+                    if(!waterNeighbour.IsWater && waterNeighbour != poly && poly.Landmass != waterNeighbour.Landmass && !poly.WaterNeighbours.Contains(waterNeighbour)) 
                     {
                         AssignWaterNeighbours(poly, waterNeighbour);
                     }
                 }
             }
         }
+        */
         
 
         // Connect clusters (region groups that are connected through water or land) until there is only one clutster left (so every region is reachable from every other region)

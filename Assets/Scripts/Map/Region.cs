@@ -49,6 +49,7 @@ public class Region : MonoBehaviour
     public List<Region> LandNeighbours = new List<Region>(); // Land neighbours are land regions that are adjacent to this region
     public List<Region> WaterNeighbours = new List<Region>(); // Water neighbours are land regions that share an adjacent water to this region
     public Dictionary<Region, List<Border>> RegionBorders = new Dictionary<Region, List<Border>>(); // This dictionary contains all borders to a specific region
+    public List<WaterConnection> WaterConnections = new List<WaterConnection>(); // List containing all water connection objects (1 per water neighbour)
 
     public Continent Continent;
     public Landmass Landmass;
@@ -62,6 +63,8 @@ public class Region : MonoBehaviour
 
     // Display
     private Color Color;
+    private Texture2D Texture;
+
     private bool IsHighlighted;
     private Color HighlightColor; // HighlightColor overrides Color if IsHighlighted is true
     public bool IsBlinking;
@@ -171,8 +174,12 @@ public class Region : MonoBehaviour
 
     public void UpdateDisplay()
     {
-        if (IsHighlighted) GetComponent<Renderer>().material.SetColor("_Color", HighlightColor);
-        else GetComponent<Renderer>().material.SetColor("_Color", Color);
+        if (IsHighlighted) GetComponent<MeshRenderer>().material.SetColor("_Color", HighlightColor);
+        else GetComponent<MeshRenderer>().material.SetColor("_Color", Color);
+
+        if(Texture != null) GetComponent<MeshRenderer>().material.SetTexture("_MainTex", Texture);
+        else GetComponent<MeshRenderer>().material.SetTexture("_MainTex", Texture2D.whiteTexture);
+
 
         Border.SetActive(ShowRegionBorders);
 
@@ -201,6 +208,12 @@ public class Region : MonoBehaviour
     public void SetColor(Color c)
     {
         Color = c;
+        UpdateDisplay();
+    }
+
+    public void SetTexture(Texture2D texture)
+    {
+        Texture = texture;
         UpdateDisplay();
     }
 

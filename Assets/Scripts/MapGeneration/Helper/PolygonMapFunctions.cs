@@ -93,6 +93,30 @@ public static class PolygonMapFunctions
         return shortestDistance;
     }
 
+    /// <summary>
+    /// Returns a list containing the two graphnodes that are the closest to each other from p1 and p2. The first element is a node from p1, the second element a node from p2.
+    /// </summary>
+    public static List<GraphNode> GetClosestPolygonNodes(GraphPolygon p1, GraphPolygon p2)
+    {
+        float shortestDistance = float.MaxValue;
+        GraphNode n1 = null;
+        GraphNode n2 = null;
+        foreach (GraphNode fromNode in p1.Nodes)
+        {
+            foreach (GraphNode toNode in p2.Nodes)
+            {
+                float distance = Vector2.Distance(fromNode.Vertex, toNode.Vertex);
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    n1 = fromNode;
+                    n2 = toNode;
+                }
+            }
+        }
+        return new List<GraphNode>() { n1, n2 };
+    }
+
     #region Polygon Group Border
 
     /// <summary>

@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 1089242679}
   - component: {fileID: 1089242678}
   m_Layer: 0
-  m_Name: MaterialHandler
+  m_Name: DisplaySettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,6 +309,8 @@ MonoBehaviour:
   DesertColor: {r: 1, g: 0.94378847, b: 0.7783019, a: 0}
   HighlightColor: {r: 0, g: 0, b: 0, a: 0}
   GreyedOutColor: {r: 0, g: 0, b: 0, a: 0}
+  WaterBackgroundTexture: {fileID: 2800000, guid: 61def133d0dd05c4a90761375486e8c7,
+    type: 3}
 --- !u!4 &1089242679
 Transform:
   m_ObjectHideFlags: 0

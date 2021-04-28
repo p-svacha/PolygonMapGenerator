@@ -164,7 +164,7 @@ public static class GeometryFunctions
         Vector2 toBefore90 = RotateVector(toBefore, clockwise ? -90 : 90);
         Vector2 toAfter90 = RotateVector(toAfter, clockwise ? 90 : -90);
 
-        if (IsParallel(thisPoint - prevPoint, nextPoint - thisPoint)) return thisPoint + toBefore90 * ((prevOffset + nextOffset) / 2);
+        if (IsParallel(prevPoint, thisPoint, thisPoint, nextPoint)) return thisPoint + toBefore90 * ((prevOffset + nextOffset) / 2);
 
         Vector2 beforeParallelStart = thisPoint + toBefore90 * prevOffset;
         Vector2 beforeParallelEnd = prevPoint + toBefore90 * prevOffset;
@@ -180,8 +180,13 @@ public static class GeometryFunctions
     /// <summary>
     /// Returns if the two vectors p and q are close to parallel
     /// </summary>
-    public static bool IsParallel(Vector2 p, Vector2 q)
+    public static bool IsParallel(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
     {
+        if (Math.Abs(p1.x - p2.x) < 0.001f && Math.Abs(q1.x - q2.x) < 0.001f) return true;
+
+        Vector2 p = p2 - p1;
+        Vector2 q = q2 - q1;
+
         Vector2 pn = p.normalized;
         Vector2 qn = q.normalized;
         float xDiff = Math.Abs(pn.x - qn.x);

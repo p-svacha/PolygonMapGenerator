@@ -124,6 +124,9 @@ public class MeshGenerator
         return borders;
     }
 
+    /// <summary>
+    /// Draws a line between to points in space
+    /// </summary>
     public static GameObject DrawLine(Vector2 from, Vector2 to, float width, Color color, float yPos = 0.01f, float height = 0.01f)
     {
         GameObject lineObject = GameObject.CreatePrimitive(PrimitiveType.Cube);

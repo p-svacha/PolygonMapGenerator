@@ -6,9 +6,11 @@ public class MapDisplaySettings : MonoBehaviour
 {
     public Material DefaultMaterial;
 
+    [Header("Basic Colors")]
     public Color LandColor;
     public Color WaterColor;
 
+    [Header("Biome Colors")]
     public Color IceColor;
     public Color TundraColor;
     public Color TaigaColor;
@@ -21,14 +23,18 @@ public class MapDisplaySettings : MonoBehaviour
     public Color SavannaColor;
     public Color DesertColor;
 
+    [Header("Special Colors")]
     public Color HighlightColor;
     public Color GreyedOutColor;
+
+    [Header("Textures")]
+    public Texture2D WaterBackgroundTexture;
 
     public static MapDisplaySettings Settings
     {
         get
         {
-            return GameObject.Find("MaterialHandler").GetComponent<MapDisplaySettings>();
+            return GameObject.Find("DisplaySettings").GetComponent<MapDisplaySettings>();
         }
     }
 

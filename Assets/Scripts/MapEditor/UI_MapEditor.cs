@@ -37,6 +37,7 @@ public class UI_MapEditor : MonoBehaviour
     public Toggle RegionBorderToggle;
     public Toggle ShorelineBorderToggle;
     public Toggle ContinentBorderToggle;
+    public Toggle WaterConnectionToggle;
     public Toggle ConnectionOverlayToggle;
     public Dropdown DrawModeDropdown;
     private MapDrawMode CurrentDrawMode;
@@ -44,11 +45,14 @@ public class UI_MapEditor : MonoBehaviour
     [Header("Map Information")]
     public GameObject MapInfoPanel;
     public Text MapAreaText;
-    public Text NumRegionsText;
     public Text LandAreaText;
-    public Text NumLandmassesText;
     public Text WaterAreaText;
+    
+    public Text NumLandmassesText;
     public Text NumWaterBodiesText;
+
+    public Text NumRegionsText;
+    public Text NumContinentsText;
 
     [Header("Region Information")]
     public GameObject RegionInfoPanel;
@@ -106,6 +110,7 @@ public class UI_MapEditor : MonoBehaviour
         RegionBorderToggle.onValueChanged.AddListener(RegionBorderToggle_OnValueChanged);
         ShorelineBorderToggle.onValueChanged.AddListener(ShorelineBorderToggle_OnValueChanged);
         ContinentBorderToggle.onValueChanged.AddListener(ContinentBorderToggle_OnValueChanged);
+        WaterConnectionToggle.onValueChanged.AddListener(WaterConnectionToggle_OnValueChanged);
         foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
         DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
         DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
@@ -179,7 +184,7 @@ public class UI_MapEditor : MonoBehaviour
     {
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
         CurrentMap = map;
-        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, CurrentDrawMode);
+        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, WaterConnectionToggle.isOn, CurrentDrawMode);
         CameraControls.Init(map);
 
         SetMapInformation(CurrentMap);
@@ -204,7 +209,7 @@ public class UI_MapEditor : MonoBehaviour
                 ContinentsOptions.SetActive(false);
                 break;
 
-            case MapType.Continents:
+            case MapType.FractalNoise:
                 ContinentsOptions.SetActive(true);
                 break;
         }
@@ -234,6 +239,11 @@ public class UI_MapEditor : MonoBehaviour
         if (CurrentMap != null) CurrentMap.ShowContinentBorders(enabled);
     }
 
+    private void WaterConnectionToggle_OnValueChanged(bool enabled)
+    {
+        if (CurrentMap != null) CurrentMap.ShowWaterConnections(enabled);
+    }
+
     private void DrawModeDropdown_OnValueChanged(int value)
     {
         CurrentDrawMode = (MapDrawMode) Enum.Parse(typeof(MapDrawMode), DrawModeDropdown.options[value].text);
@@ -256,6 +266,7 @@ public class UI_MapEditor : MonoBehaviour
             WaterAreaText.text = map.WaterArea.ToString("0.00") + " km²";
             NumLandmassesText.text = map.NumLandmasses.ToString();
             NumWaterBodiesText.text = map.NumWaterBodies.ToString();
+            NumContinentsText.text = map.NumContinents.ToString();
         }
     }
 

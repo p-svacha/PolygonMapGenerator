@@ -15,6 +15,7 @@ public class Map
     public GameObject RegionContainer;
     public GameObject RiverContainer;
     public GameObject ContinentContainer;
+    public GameObject WaterConnectionContainer;
 
     public List<Border> Borders;
     public List<BorderPoint> BorderPoints;
@@ -25,12 +26,14 @@ public class Map
     public List<WaterBody> WaterBodies;
     public List<Continent> Continents;
     public List<River> Rivers;
+    public List<WaterConnection> WaterConnections;
 
     // Display
     public MapDrawMode DrawMode;
     public bool IsShowingRegionBorders;
     public bool IsShowingShorelineBorders;
     public bool IsShowingContinentBorders;
+    public bool IsShowingWaterConnections;
 
     public Map(MapGenerationSettings settings)
     {
@@ -40,12 +43,13 @@ public class Map
     /// <summary>
     /// This function always has to be called after the map is received from the map generator
     /// </summary>
-    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, bool showContinentBorders, MapDrawMode drawMode)
+    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, bool showContinentBorders, bool showWaterConnections, MapDrawMode drawMode)
     {
         UpdateDrawMode(drawMode);
         ShowRegionBorders(showRegionBorders);
         ShowShorelineBorders(showShorelineBorders);
         ShowContinentBorders(showContinentBorders);
+        ShowWaterConnections(showWaterConnections);
         FocusMapInEditor();
     }
 
@@ -58,6 +62,8 @@ public class Map
             case MapDrawMode.Basic:
                 foreach (Region r in Regions)
                 {
+                    r.SetTexture(null);
+
                     if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                     else r.SetColor(MapDisplaySettings.Settings.LandColor);
                 }
@@ -67,6 +73,8 @@ public class Map
             case MapDrawMode.Biomes:
                 foreach (Region r in Regions)
                 {
+                    r.SetTexture(null);
+
                     if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                     else r.SetColor(MapDisplaySettings.Settings.GetBiomeColor(r.Biome));
                 }
@@ -74,6 +82,7 @@ public class Map
                 break;
 
             case MapDrawMode.Continents:
+                foreach (Region r in Regions) r.SetTexture(null);
                 foreach (Region r in WaterRegions) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 List<Color> continentColors = new List<Color>();
@@ -83,6 +92,23 @@ public class Map
                     foreach (Region r in continent.Regions) r.SetColor(continentColor);
                     continentColors.Add(continentColor);
                 }
+                break;
+
+            case MapDrawMode.ParriskBoard:
+                foreach (Region r in Regions)
+                {
+                    if(r.IsOuterOcean)
+                    {
+                        r.SetColor(Color.black);
+                    }
+                    else if (r.IsWater)
+                    {
+                        r.SetColor(Color.white);
+                        r.SetTexture(MapDisplaySettings.Settings.WaterBackgroundTexture);
+                    }
+                    else r.SetColor(Color.white);
+                }
+                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
                 break;
         }
     }
@@ -120,6 +146,12 @@ public class Map
         foreach (Continent continent in Continents) continent.ShowBorders(show);
     }
 
+    public void ShowWaterConnections(bool show)
+    {
+        IsShowingWaterConnections = show;
+        foreach (WaterConnection wc in WaterConnections) wc.SetVisible(show);
+    }
+
     public void FocusMapCentered()
     {
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -143,6 +175,7 @@ public class Map
     public float WaterArea { get { return Regions.Where(x => x.IsWater && !x.IsOuterOcean).Sum(x => x.Area); } }
     public int NumLandmasses { get { return Landmasses.Count; } }
     public int NumWaterBodies { get { return WaterBodies.Count; } }
+    public int NumContinents { get { return Continents.Count; } }
 
     #endregion
 }

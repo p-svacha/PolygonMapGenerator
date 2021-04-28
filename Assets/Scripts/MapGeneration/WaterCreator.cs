@@ -49,10 +49,16 @@ public static class WaterCreator
                 ExpandLand(PMG);
                 break;
 
-            case MapType.Continents:
+            case MapType.FractalNoise:
                 CreateOuterOcean(PMG);
                 TurnEdgePolygonsToWater(PMG);
                 CreateContinentsWithNoise(PMG);
+                break;
+
+            case MapType.BigOceans:
+                CreateOuterOcean(PMG);
+                TurnEdgePolygonsToWater(PMG);
+                TurnBigPolygonsToWater(PMG);
                 break;
         }
 
@@ -279,6 +285,19 @@ public static class WaterCreator
         }
     }
 
+    /// <summary>
+    /// Turns polygons that are bigger than the max allowed area into water
+    /// </summary>
+    private static void TurnBigPolygonsToWater(PolygonMapGenerator PMG)
+    {
+        foreach(GraphPolygon polygon in PMG.Polygons)
+        {
+            if (polygon.Area > PMG.GenerationSettings.MaxPolygonArea) TurnPolygonToWater(polygon);
+        }
+    }
+
+    #region Landmass and Waterbody identification
+
     private static void IdentifyLandmasses(PolygonMapGenerator PMG)
     {
         // Identify landmasses
@@ -304,6 +323,14 @@ public static class WaterCreator
             foreach (GraphPolygon poly in landmassPolygons)
             {
                 polygonsWithoutLandmass.Remove(poly);
+            }
+        }
+
+        foreach(List<GraphPolygon> landmass in PMG.Landmasses)
+        {
+            foreach(GraphPolygon polygon in landmass)
+            {
+                polygon.Landmass = landmass;
             }
         }
     }
@@ -346,4 +373,6 @@ public static class WaterCreator
             }
         }
     }
+
+    #endregion
 }

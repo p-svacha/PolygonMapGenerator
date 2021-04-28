@@ -28,17 +28,23 @@ namespace MapGeneration.ContinentCreation
             while(biggestContinent.Count > PMG.GenerationSettings.MaxContinentSize)
             {
                 int minCuts = int.MaxValue;
+                int minCutMinRegions = int.MaxValue;
                 KargerGraph bestGraph = null;
                 int cyclesWithoutImprovement = 0;
                 while(cyclesWithoutImprovement < 50 || bestGraph == null)
                 {
                     cyclesWithoutImprovement++;
                     KargerGraph graph = SplitClusterOnce(biggestContinent);
-                    if(graph.Vertices[0].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize && graph.Vertices[1].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize && graph.CutSize < minCuts)
+                    if(graph.Vertices[0].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize && graph.Vertices[1].ContainedPolygons.Count >= PMG.GenerationSettings.MinContinentSize)
                     {
-                        minCuts = graph.CutSize;
-                        bestGraph = graph;
-                        cyclesWithoutImprovement = 0;
+                        int graphMinCutMinRegions = Mathf.Min(graph.Vertices[0].ContainedPolygons.Count, graph.Vertices[1].ContainedPolygons.Count);
+                        if (graph.CutSize < minCuts || (graph.CutSize == minCuts && graphMinCutMinRegions > minCutMinRegions))
+                        {
+                            minCuts = graph.CutSize;
+                            minCutMinRegions = graphMinCutMinRegions;
+                            bestGraph = graph;
+                            cyclesWithoutImprovement = 0;
+                        }
                     }
                 }
 
