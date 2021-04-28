@@ -45,7 +45,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
     // Default values
     public const float DefaultRegionBorderWidth = 0.005f;
-    public const float DefaulContinentBorderWidth = 0.01f;
+    public const float DefaulContinentBorderWidth = 0.02f;
     public const float DefaultShorelineBorderWidth = 0.02f;
     public static Color DefaultLandColor = new Color(0.74f, 0.93f, 0.70f);
     public static Color DefaultWaterColor = new Color(0.29f, 0.53f, 0.75f);
@@ -875,7 +875,13 @@ public class PolygonMapGenerator : MonoBehaviour
             {
                 if(!visitedPolygons.Contains(waterNeighbour))
                 {
-                    List<GraphNode> closestNodes = PolygonMapFunctions.GetClosestPolygonNodes(polygon, waterNeighbour);
+                    List<GraphNode> closestNodes = PolygonMapFunctions.GetClosestPolygonNodes(polygon, waterNeighbour, ignoreMultiNodes: true, shoreOnly: true);
+                    if(closestNodes[0] == null || closestNodes[1] == null)
+                    {
+                        polygon.Region.SetColor(Color.red);
+                        waterNeighbour.Region.SetColor(Color.red);
+                        throw new Exception("No good nodes found, look for red polygons to see where");
+                    }
                     GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, Color.red, LAYER_WATER_CONNECTION, 0.001f);
                     waterConObject.transform.SetParent(Map.WaterConnectionContainer.transform);
                     WaterConnection waterConnection = waterConObject.AddComponent<WaterConnection>();
@@ -1065,25 +1071,92 @@ public class PolygonMapGenerator : MonoBehaviour
             poly.UpdateNeighbours();
         }
 
-        /*
-        // Direct water neighbours: If two regions are connected to the same water region, but are not on the same landmass, they will be assigned water neighbours.
-        foreach(GraphPolygon poly in Polygons.Where(x => !x.IsWater && x.IsNextToWater))
+        // For each landmass, find the shortest distance from a polygon in that landmass to a polygon in another landmass. They will be connected.
+        // All other polygon pairs, that are within a certain margin of the shortest distance (sorted from shortest to longest distance) will also get connected if
+        // there is no water connection which connects very similar polygons (polygons within a certain range)
+        foreach(List<GraphPolygon> landmassPolygons in Landmasses)
         {
-            foreach (GraphPolygon adjacentWater in poly.AdjacentPolygons.Where(x => x.IsWater))
+            if (Landmasses.Count == 1) break;
+
+            List<GraphPolygon> nonLandmassPolygons = Polygons.Where(x => !x.IsWater && !landmassPolygons.Contains(x)).ToList();
+
+            // First make a dictionary that stores the poi-distance between every landmass polygon to every non-landmass polygon
+            Dictionary<Tuple<GraphPolygon, GraphPolygon>, float> poiDistances = new Dictionary<Tuple<GraphPolygon, GraphPolygon>, float>();
+            foreach(GraphPolygon landmassPoly in landmassPolygons)
             {
-                foreach(GraphPolygon waterNeighbour in adjacentWater.AdjacentPolygons)
+                foreach(GraphPolygon nonLandmassPoly in nonLandmassPolygons)
                 {
-                    if(!waterNeighbour.IsWater && waterNeighbour != poly && poly.Landmass != waterNeighbour.Landmass && !poly.WaterNeighbours.Contains(waterNeighbour)) 
-                    {
-                        AssignWaterNeighbours(poly, waterNeighbour);
-                    }
+                    poiDistances.Add(new Tuple<GraphPolygon, GraphPolygon>(landmassPoly, nonLandmassPoly), Vector2.Distance(landmassPoly.CenterPoi, nonLandmassPoly.CenterPoi));
+                }
+            }
+            poiDistances = poiDistances.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            // For the shortest connections, calculate the real shortest distances
+            Dictionary<Tuple<GraphPolygon, GraphPolygon>, float> realDistances = new Dictionary<Tuple<GraphPolygon, GraphPolygon>, float>();
+            float poiMargin = 3f;
+            float shortestPoiDistance = poiDistances.First().Value;
+            foreach(KeyValuePair<Tuple<GraphPolygon, GraphPolygon>, float> kvp in poiDistances)
+            {
+                if (kvp.Value > shortestPoiDistance + poiMargin) break;
+                realDistances.Add(kvp.Key, PolygonMapFunctions.GetPolygonDistance(kvp.Key.Item1, kvp.Key.Item2));
+            }
+            realDistances = realDistances.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            // Now we add the shortest real distance as a connection and all others within a margin too if they are not reachable within a margin
+            float realMargin = 0.5f;
+            int regionDistanceMargin = 4; // polygons need to have at least x regions between them for the connection to establish
+            float shortestRealDistance = realDistances.First().Value;
+            foreach (KeyValuePair<Tuple<GraphPolygon, GraphPolygon>, float> kvp in realDistances)
+            {
+                if (kvp.Value == shortestRealDistance) AssignWaterNeighbours(kvp.Key.Item1, kvp.Key.Item2);
+                else if(kvp.Value <= shortestRealDistance + realMargin)
+                {
+                    if(PolygonMapFunctions.GetRegionDistance(kvp.Key.Item1, kvp.Key.Item2) >= regionDistanceMargin) AssignWaterNeighbours(kvp.Key.Item1, kvp.Key.Item2);
                 }
             }
         }
-        */
-        
 
-        // Connect clusters (region groups that are connected through water or land) until there is only one clutster left (so every region is reachable from every other region)
+        // Connect polygons within the same landmass that are really close to each other through water but a long distance through land
+        float sameLandmassPoiDistanceMargin = 3f;
+        float sameLandmassRealDistanceMargin = 0.8f;
+        float sameLandmassRegionDistanceMargin = 5;
+        foreach (List<GraphPolygon> landmassPolygons in Landmasses)
+        {
+            // First make a dictionary that stores the poi-distance between all landmass polygons that are eligible for a water connection (meaning they have to be far enough apart through land connections)
+            Dictionary<Tuple<GraphPolygon, GraphPolygon>, float> poiDistances = new Dictionary<Tuple<GraphPolygon, GraphPolygon>, float>();
+
+            foreach (GraphPolygon p1 in landmassPolygons.Where(x => x.AdjacentPolygons.Where(y => y.IsWater).Count() > 0))
+            {
+                foreach(GraphPolygon p2 in landmassPolygons.Where(x => x.AdjacentPolygons.Where(y => y.IsWater).Count() > 0))
+                {
+                    if(p1 != p2 && PolygonMapFunctions.GetRegionDistance(p1, p2) >= sameLandmassRegionDistanceMargin)
+                    {
+                        float poiDistance = Vector2.Distance(p1.CenterPoi, p2.CenterPoi);
+                        if(poiDistance <= sameLandmassPoiDistanceMargin) poiDistances.Add(new Tuple<GraphPolygon, GraphPolygon>(p1, p2), poiDistance);
+                    }
+                }
+            }
+            poiDistances = poiDistances.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            // Then we calculate the real distance for polygons that are close
+            Dictionary<Tuple<GraphPolygon, GraphPolygon>, float> realDistances = new Dictionary<Tuple<GraphPolygon, GraphPolygon>, float>();
+            foreach (KeyValuePair<Tuple<GraphPolygon, GraphPolygon>, float> kvp in poiDistances)
+            {
+                float realDistance = PolygonMapFunctions.GetPolygonDistance(kvp.Key.Item1, kvp.Key.Item2);
+                if(realDistance <= sameLandmassRealDistanceMargin) realDistances.Add(kvp.Key, realDistance);
+
+            }
+            realDistances = realDistances.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            // add water connections ordered starting from shortest if region distance is still low enough
+            foreach (KeyValuePair<Tuple<GraphPolygon, GraphPolygon>, float> kvp in realDistances)
+            {
+                if (PolygonMapFunctions.GetRegionDistance(kvp.Key.Item1, kvp.Key.Item2) >= sameLandmassRegionDistanceMargin) AssignWaterNeighbours(kvp.Key.Item1, kvp.Key.Item2);
+            }
+        }
+
+
+            // Connect clusters (region groups that are connected through water or land) until there is only one clutster left (so every region is reachable from every other region)
         List<List<GraphPolygon>> clusters = PolygonMapFunctions.FindClusters(Polygons.Where(x => !x.IsWater).ToList(), landConnectionsOnly: false);
         while(clusters.Count > 1)
         {

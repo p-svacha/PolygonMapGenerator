@@ -74,6 +74,29 @@ public static class PolygonMapFunctions
     }
 
     /// <summary>
+    /// Returns the number of polygons that have to be traversed (through water or land neighbour) to get from p1 to p2 (neighbouring polygons have distance = 1)
+    /// </summary>
+    public static int GetRegionDistance(GraphPolygon p1, GraphPolygon p2)
+    {
+        int range = 0;
+        List<GraphPolygon> rangePolygons = new List<GraphPolygon>() { p1 };
+        while(!rangePolygons.Contains(p2) && range < 50)
+        {
+            range++;
+            List<GraphPolygon> polygonsToAdd = new List<GraphPolygon>();
+            foreach(GraphPolygon poly in rangePolygons)
+            {
+                foreach(GraphPolygon neighbour in poly.Neighbours)
+                {
+                    if (!rangePolygons.Contains(neighbour) && !polygonsToAdd.Contains(neighbour)) polygonsToAdd.Add(neighbour);
+                }
+            }
+            rangePolygons.AddRange(polygonsToAdd);
+        }
+        return range;
+    }
+
+    /// <summary>
     /// Returns the shortest distance between two polygons (distance between two closest points)
     /// </summary>
     public static float GetPolygonDistance(GraphPolygon p1, GraphPolygon p2)
@@ -95,15 +118,31 @@ public static class PolygonMapFunctions
 
     /// <summary>
     /// Returns a list containing the two graphnodes that are the closest to each other from p1 and p2. The first element is a node from p1, the second element a node from p2.
+    /// if ignoreMultiNodes is true, only nodes that have exactly 2 polygons are considered
+    /// if shoreOnly is true, only nodes that have at least one water polygon will be considered
     /// </summary>
-    public static List<GraphNode> GetClosestPolygonNodes(GraphPolygon p1, GraphPolygon p2)
+    public static List<GraphNode> GetClosestPolygonNodes(GraphPolygon p1, GraphPolygon p2, bool ignoreMultiNodes, bool shoreOnly)
     {
         float shortestDistance = float.MaxValue;
         GraphNode n1 = null;
         GraphNode n2 = null;
-        foreach (GraphNode fromNode in p1.Nodes)
+
+        List<GraphNode> p1Nodes = p1.Nodes;
+        List<GraphNode> p2Nodes = p2.Nodes;
+        if(ignoreMultiNodes)
         {
-            foreach (GraphNode toNode in p2.Nodes)
+            p1Nodes = p1Nodes.Where(x => x.Polygons.Count == 2).ToList();
+            p2Nodes = p2Nodes.Where(x => x.Polygons.Count == 2).ToList();
+        }
+        if(shoreOnly)
+        {
+            p1Nodes = p1Nodes.Where(x => x.Type == BorderPointType.Shore).ToList();
+            p2Nodes = p2Nodes.Where(x => x.Type == BorderPointType.Shore).ToList();
+        }
+
+        foreach (GraphNode fromNode in p1Nodes)
+        {
+            foreach (GraphNode toNode in p2Nodes)
             {
                 float distance = Vector2.Distance(fromNode.Vertex, toNode.Vertex);
                 if (distance < shortestDistance)

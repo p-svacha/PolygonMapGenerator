@@ -173,6 +173,7 @@ public static class RiverCreator
 
                 Vector2 endPoint1, endPoint2;
 
+                // BUG: this method doesn't work 100%
                 GraphPolygon firstPolygon = riverPath.Nodes[i].Polygons.FirstOrDefault(x => GeometryFunctions.IsPointInPolygon4(x.Nodes.Select(x => x.Vertex).ToList(), polygonVerticesHalf1.Last()));
                 if(firstPolygon == null)
                 {
