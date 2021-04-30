@@ -106,7 +106,7 @@ public class MeshGenerator
     /// Creates a GameObject with a mesh that represents the bounds of multiple polygons. onOutside means the border will be drawn on the outside of the polygons.
     /// All given polygons must be connected by land for this function to work! If they are not, first split it into clusters with PolygonMapFunctions.FindClusters()
     /// </summary>
-    public static List<GameObject> CreatePolygonGroupBorder(List<GraphPolygon> polygons, float width, Color c, bool onOutside, float height)
+    public static List<GameObject> CreatePolygonGroupBorder(List<GraphPolygon> polygons, float width, Color c, bool onOutside, float yPos)
     {
         List<GameObject> borders = new List<GameObject>();
 
@@ -117,8 +117,8 @@ public class MeshGenerator
         {
             List<Vector2> outerVertices = border.Select(x => x.Vertex).ToList();
             bool isClockwise = GeometryFunctions.IsClockwise(outerVertices);
-            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? !isClockwise : isClockwise));
-            else borders.Add(CreateSinglePolygonBorder(border, width, c, height, onOutside ? isClockwise : !isClockwise));
+            if(border == outsideBorder) borders.Add(CreateSinglePolygonBorder(border, width, c, yPos, onOutside ? !isClockwise : isClockwise));
+            else borders.Add(CreateSinglePolygonBorder(border, width, c, yPos, onOutside ? isClockwise : !isClockwise));
         }
 
         return borders;
@@ -148,5 +148,102 @@ public class MeshGenerator
         return lineObject;
     }
 
+    public static GameObject DrawArrow(Vector2 from, Vector2 to, Color color, float width = 0.1f, float arrowHeadWidth = 0.2f, float arrowHeadLength = 0.1f, float yPos = 0.01f)
+    {
+        GameObject arrow = new GameObject("Arrow");
+       
+        // Create mesh vertices and triangles
+        Vector2[] vertices2D = new Vector2[7];
+
+        Vector2 v = to - from;
+        Vector2 v90 = GeometryFunctions.RotateVector(v, 90).normalized;
+
+        vertices2D[0] = from + (v90 * width);
+        vertices2D[6] = from - (v90 * width);
+
+        float arrowHeadLengthRatio = arrowHeadLength / Vector2.Distance(from, to);
+        Vector2 headStart = Vector2.Lerp(from, to, 1f - arrowHeadLengthRatio);
+        vertices2D[1] = headStart + (v90 * width);
+        vertices2D[5] = headStart - (v90 * width);
+
+        vertices2D[2] = headStart + (v90 * arrowHeadWidth);
+        vertices2D[4] = headStart - (v90 * arrowHeadWidth);
+
+        vertices2D[3] = to;
+
+        Vector3[] vertices = new Vector3[vertices2D.Length];
+        for (int i = 0; i < vertices2D.Length; i++) vertices[i] = new Vector3(vertices2D[i].x, yPos, vertices2D[i].y);
+
+        int[] triangles = { 0, 5, 6, 1, 5, 0, 2, 3, 4 };
+
+        // Add mesh renderer
+        MeshRenderer renderer = arrow.AddComponent<MeshRenderer>();
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
+        renderer.material.color = color;
+
+        // Create the mesh
+        MeshFilter meshFilter = arrow.AddComponent<MeshFilter>();
+        Mesh msh = new Mesh();
+        msh.vertices = vertices;
+        msh.triangles = triangles;
+        msh.RecalculateNormals();
+        msh.RecalculateBounds();
+        meshFilter.mesh = msh;
+
+        return arrow;
+    }
+
+    public static TextMesh DrawTextMesh(Vector2 position, float yPos, string text, int fontSize)
+    {
+        GameObject labelObject = new GameObject("Label");
+        labelObject.AddComponent<MeshRenderer>();
+        TextMesh textMesh = labelObject.AddComponent<TextMesh>();
+        textMesh.transform.position = new Vector3(position.x, yPos, position.y);
+        textMesh.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+        textMesh.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+        textMesh.color = Color.black;
+        textMesh.fontSize = fontSize;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.text = text;
+
+        return textMesh;
+    }
+
+    public static GameObject DrawRectangle(Vector2 position, float yPos, float width, float height, Color color)
+    {
+        GameObject rectangle = new GameObject("Rectangle");
+
+        // Create mesh vertices and triangles
+        Vector3 sourcePos = new Vector3(position.x, yPos, position.y);
+        Vector3[] vertices =
+        {
+            sourcePos + new Vector3(width / 2, 0f, height / 2),
+            sourcePos + new Vector3(- (width / 2), 0f, height / 2),
+            sourcePos + new Vector3(- (width / 2), 0f, - (height / 2)),
+            sourcePos + new Vector3(width / 2, 0f, - (height / 2)),
+        };
+
+        int[] triangles = { 0, 2, 1, 3, 2, 0};
+
+        // Add mesh renderer
+        MeshRenderer renderer = rectangle.AddComponent<MeshRenderer>();
+        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        renderer.receiveShadows = false;
+        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
+        renderer.material.color = color;
+
+        // Create the mesh
+        MeshFilter meshFilter = rectangle.AddComponent<MeshFilter>();
+        Mesh msh = new Mesh();
+        msh.vertices = vertices;
+        msh.triangles = triangles;
+        msh.RecalculateNormals();
+        msh.RecalculateBounds();
+        meshFilter.mesh = msh;
+
+        return rectangle;
+    }
 
 }

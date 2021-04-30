@@ -8,25 +8,37 @@ namespace ParriskGame
     public class ParriskGame : MonoBehaviour
     {
         public PolygonMapGenerator PMG;
-        public BaseMapCameraHandler CameraControls;
+        public InputManager InputManager;
+
+        // Rules
+        public int NumPlayers;
+        public int NumStartingTerritories;
 
         // Game elements
         public Map Map;
-        public int NumPlayers;
 
         public Player LocalPlayer;
         public List<Player> Players = new List<Player>();
         public Dictionary<Region, Territory> Territories = new Dictionary<Region, Territory>();
 
+        public List<List<TroopMovement>> TroopMovements = new List<List<TroopMovement>>(); // A list of all troop movement for every turn (index of list represents turn)
+
+        public int Turn;
+
         // State
         public GameState State;
 
+        // UI
+        public UI_ParriskGame UI;
+
         #region Initialization
 
-        public void InitGame(int numPlayers)
+        public void InitGame(int numPlayers, int numStartingTerritories)
         {
             State = GameState.Initializing;
             NumPlayers = numPlayers;
+            NumStartingTerritories = numStartingTerritories;
+            Turn = -1;
 
             MapGenerationSettings settings = new MapGenerationSettings(15, 10, 0.4f, 2f, 3, 12, MapType.BigOceans);
             PMG.GenerateMap(settings, OnMapGenerationDone);
@@ -61,28 +73,40 @@ namespace ParriskGame
             // Init starting regions
             foreach(Player p in Players)
             {
-                List<Region> startingCandidates = Map.LandRegions.Where(x => Territories[x].Player == null).ToList();
-                Region startingRegion = startingCandidates[Random.Range(0, startingCandidates.Count)];
-                Territory startingTerritory = Territories[startingRegion];
-                CaptureTerritory(p, startingTerritory);
-                AddTroops(startingTerritory, 5);
+                for (int i = 0; i < NumStartingTerritories; i++)
+                {
+                    List<Region> startingCandidates = Map.LandRegions.Where(x => Territories[x].Player == null).ToList();
+                    Region startingRegion = startingCandidates[Random.Range(0, startingCandidates.Count)];
+                    Territory startingTerritory = Territories[startingRegion];
+                    CaptureTerritory(p, startingTerritory);
+                    AddTroops(startingTerritory, 5);
+                }
             }
 
             // Init controls
-            CameraControls.Init(map);
+            InputManager.Init(this);
 
             State = GameState.Ready;
+            StartGame();
         }
 
         public void StartGame()
         {
+            StartTurn();
+        }
+
+        private void StartTurn()
+        {
+            Turn++;
+            TroopMovements.Add(new List<TroopMovement>());
+            foreach (Territory t in Territories.Values) t.ResetPlannedTroops();
             State = GameState.PlanningPhase;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            InitGame(8);
+            InitGame(8, 2);
         }
 
         #endregion
@@ -92,14 +116,7 @@ namespace ParriskGame
         // Update is called once per frame
         void Update()
         {
-            switch(State)
-            {
-                case GameState.PlanningPhase:
-                    break;
-
-                case GameState.CombatPhase:
-                    break;
-            }
+            
         }
 
         #endregion
@@ -117,6 +134,25 @@ namespace ParriskGame
         public void AddTroops(Territory t, int troops)
         {
             t.AddTroops(troops);
+        }
+
+        public void AddTroopMovement(TroopMovement tm)
+        {
+            TroopMovements[Turn].Add(tm);
+            tm.SourceTerritory.PlanTroops(tm.NumTroops);
+        }
+
+        public void EditTroopMovement(TroopMovement tm, int numTroopsNew)
+        {
+            int numTroopsBefore = tm.NumTroops;
+            tm.NumTroops = numTroopsNew;
+            tm.SourceTerritory.PlanTroops(numTroopsNew - numTroopsBefore);
+        }
+
+        public void RemoveTroopMovement(TroopMovement tm)
+        {
+            TroopMovements[Turn].Remove(tm);
+            tm.SourceTerritory.PlanTroops(-tm.NumTroops);
         }
 
         #endregion

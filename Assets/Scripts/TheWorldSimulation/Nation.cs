@@ -44,7 +44,7 @@ public class Nation
         Clusters = PolygonMapFunctions.FindClusters(Regions);
         foreach (List<Region> cluster in Clusters)
         {
-            List<GameObject> clusterBorders = MeshGenerator.CreatePolygonGroupBorder(cluster.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultShorelineBorderWidth, SecondaryColor, onOutside: false, height: 0.0002f);
+            List<GameObject> clusterBorders = MeshGenerator.CreatePolygonGroupBorder(cluster.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultShorelineBorderWidth, SecondaryColor, onOutside: false, yPos: 0.0002f);
             foreach (GameObject clusterBorder in clusterBorders) Borders.Add(clusterBorder);
         }
 

@@ -52,10 +52,15 @@ public class PolygonMapGenerator : MonoBehaviour
 
     // Layers (y-height of different objects so they don't overlap
     public static float LAYER_REGION = 0f;
-    public static float LAYER_RIVER = 0.00001f;
-    public static float LAYER_SHORE = 0.00002f;
-    public static float LAYER_REGION_BORDER = 0.00003f;
+    public static float LAYER_REGION_BORDER = 0.00001f;
+    public static float LAYER_RIVER = 0.00002f;
+    public static float LAYER_SHORE = 0.00003f;
+    public static float LAYER_CONTINENT = 0.00003f;
     public static float LAYER_WATER_CONNECTION = 0.00004f;
+
+    public static float LAYER_OVERLAY1 = 0.00010f;
+    public static float LAYER_OVERLAY2 = 0.00011f;
+    public static float LAYER_OVERLAY3 = 0.00012f;
 
     // Graph construction values
     private int NumStartLines;
@@ -882,7 +887,7 @@ public class PolygonMapGenerator : MonoBehaviour
                         waterNeighbour.Region.SetColor(Color.red);
                         throw new Exception("No good nodes found, look for red polygons to see where");
                     }
-                    GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, Color.red, LAYER_WATER_CONNECTION, 0.001f);
+                    GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, new Color(0.2f, 0.2f, 0.2f), LAYER_WATER_CONNECTION, 0.001f);
                     waterConObject.transform.SetParent(Map.WaterConnectionContainer.transform);
                     WaterConnection waterConnection = waterConObject.AddComponent<WaterConnection>();
                     waterConnection.Init(polygon.Region, waterNeighbour.Region);

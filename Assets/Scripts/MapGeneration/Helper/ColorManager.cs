@@ -24,11 +24,11 @@ public static class ColorManager
         { new Color(0f, 0.51f, 0.78f), "Blue" },
         { new Color(0.57f, 0.12f, 0.71f), "Purple" },
         { new Color(0.94f, 0.2f, 0.9f), "Magenta" },
-        { new Color(0.98f, 0.75f, 0.83f), "Pink" },
-        { new Color(1f, 0.84f, 0.71f), "Apricot" },
+        //{ new Color(0.98f, 0.75f, 0.83f), "Pink" },
+        //{ new Color(1f, 0.84f, 0.71f), "Apricot" },
         //{ new Color(1f, 0.98f, 0.78f), "Beige" },
-        { new Color(0.66f, 1f, 0.76f), "Mint" },
-        { new Color(0.86f, 0.75f, 1f), "Lavender" },
+        //{ new Color(0.66f, 1f, 0.76f), "Mint" },
+        //{ new Color(0.86f, 0.75f, 1f), "Lavender" },
 
     };
 

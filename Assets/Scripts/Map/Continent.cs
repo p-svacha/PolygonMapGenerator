@@ -22,7 +22,7 @@ public class Continent : MonoBehaviour
         List<List<Region>> clusters = PolygonMapFunctions.FindClusters(regions);
         foreach (List<Region> cluster in clusters)
         {
-            List<GameObject> clusterBorders = MeshGenerator.CreatePolygonGroupBorder(cluster.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaulContinentBorderWidth, Color.black, onOutside: false, height: 0.0002f);
+            List<GameObject> clusterBorders = MeshGenerator.CreatePolygonGroupBorder(cluster.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaulContinentBorderWidth, Color.black, onOutside: false, yPos: PolygonMapGenerator.LAYER_CONTINENT);
             foreach (GameObject clusterBorder in clusterBorders) Borders.Add(clusterBorder);
         }
         foreach (GameObject border in Borders) border.transform.SetParent(transform);

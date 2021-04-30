@@ -19,7 +19,7 @@ public class Landmass : MonoBehaviour
         Size = regions.Count;
         Area = regions.Sum(x => x.Area);
 
-        Borders = MeshGenerator.CreatePolygonGroupBorder(regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultShorelineBorderWidth, Color.black, onOutside: true, height: 0.0001f);
+        Borders = MeshGenerator.CreatePolygonGroupBorder(regions.Select(x => x.Polygon).ToList(), PolygonMapGenerator.DefaultShorelineBorderWidth, Color.black, onOutside: true, yPos: PolygonMapGenerator.LAYER_SHORE);
         foreach (GameObject border in Borders) border.transform.SetParent(transform);
     }
 

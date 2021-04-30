@@ -11,7 +11,9 @@ namespace ParriskGame
 
         public string Name;
         public int Troops;
+        public int UnplannedTroops;
 
+        private const int TroopsLabelSize = 80;
         public TextMesh TroopsLabel;
         
 
@@ -20,23 +22,33 @@ namespace ParriskGame
             Region = region;
             Name = name;
 
-            // Init label
-            GameObject labelObject = new GameObject("Label");
-            labelObject.AddComponent<MeshRenderer>();
-            TroopsLabel = labelObject.AddComponent<TextMesh>();
-            TroopsLabel.transform.position = new Vector3(Region.CenterPoi.x, 0.01f, Region.CenterPoi.y);
-            TroopsLabel.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            TroopsLabel.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
-            TroopsLabel.color = Color.black;
-            TroopsLabel.fontSize = 100;
-            TroopsLabel.anchor = TextAnchor.MiddleCenter;
+            TroopsLabel = MeshGenerator.DrawTextMesh(Region.CenterPoi, 0.01f, "", TroopsLabelSize);
         }
         
 
-        public void AddTroops(int troops)
+        public void AddTroops(int numTroops)
         {
-            Troops += troops;
-            TroopsLabel.text = Troops.ToString();
+            Troops += numTroops;
+            UpdateLabel();
+        }
+
+        public void ResetPlannedTroops()
+        {
+            UnplannedTroops = Troops;
+            UpdateLabel();
+        }
+
+        public void PlanTroops(int numTroops)
+        {
+            UnplannedTroops -= numTroops;
+            UpdateLabel();
+        }
+
+        private void UpdateLabel()
+        {
+            if (Troops == 0) TroopsLabel.text = "";
+            else if (Troops == UnplannedTroops) TroopsLabel.text = Troops.ToString();
+            else TroopsLabel.text = UnplannedTroops + "/" + Troops;
         }
     }
 }
