@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,80 @@ public static class PolygonMapFunctions
 
     public static List<List<Region>> FindClusters(List<Region> regions, bool landConnectionsOnly = true)
     {
-        return FindClusters(regions.Select(x => x.Polygon).ToList()).Select(x => x.Select(y => y.Region).ToList()).ToList();
+        return FindClusters(regions.Select(x => x.Polygon).ToList(), landConnectionsOnly).Select(x => x.Select(y => y.Region).ToList()).ToList();
+    }
+
+    /// <summary>
+    /// Splits a list of borders into clusters, where in each cluster the borders are connected
+    /// </summary>
+    public static List<List<GraphConnection>> FindBorderClusters(List<GraphConnection> borders)
+    {
+        List<List<GraphConnection>> clusters = new List<List<GraphConnection>>();
+
+        List<GraphConnection> bordersWithoutCluster = new List<GraphConnection>();
+        bordersWithoutCluster.AddRange(borders);
+
+        while (bordersWithoutCluster.Count > 0)
+        {
+            List<GraphConnection> cluster = new List<GraphConnection>();
+            Queue<GraphConnection> bordersToAdd = new Queue<GraphConnection>();
+            bordersToAdd.Enqueue(bordersWithoutCluster[0]);
+            while (bordersToAdd.Count > 0)
+            {
+                GraphConnection borderToAdd = bordersToAdd.Dequeue();
+                cluster.Add(borderToAdd);
+                List<GraphConnection> connectedBorders = borderToAdd.Connections.Where(x => borders.Contains(x)).ToList();
+                foreach (GraphConnection connectedBorder in connectedBorders)
+                    if (!cluster.Contains(connectedBorder) && !bordersToAdd.Contains(connectedBorder))
+                        bordersToAdd.Enqueue(connectedBorder);
+            }
+            clusters.Add(cluster);
+            foreach (GraphConnection border in cluster) bordersWithoutCluster.Remove(border);
+        }
+
+        return clusters;
+    }
+
+    public static List<List<Border>> FindBorderClusters(List<Border> borders)
+    {
+        return FindBorderClusters(borders.Select(x => x.Connection).ToList()).Select(x => x.Select(y => y.Border).ToList()).ToList();
+    }
+
+    /// <summary>
+    /// Finds and returns the center position of a list of connected borders including the angle of the border.
+    /// </summary>
+    public static Tuple<Vector2, float> FindBorderCenter(List<Border> borders)
+    {
+        // Make a dictionary with how many times each border point appears
+        Dictionary<BorderPoint, int> bpOccurences = new Dictionary<BorderPoint, int>();
+        foreach(Border border in borders)
+        {
+            if (bpOccurences.ContainsKey(border.StartPoint)) bpOccurences[border.StartPoint]++;
+            else bpOccurences.Add(border.StartPoint, 1);
+            if (bpOccurences.ContainsKey(border.EndPoint)) bpOccurences[border.EndPoint]++;
+            else bpOccurences.Add(border.EndPoint, 1);
+        }
+
+        // Take a border point with only 1 occurence as start point
+        BorderPoint currentPoint = bpOccurences.Where(x => x.Value == 1).First().Key;
+        Border currentBorder = borders.Where(x => x.StartPoint == currentPoint || x.EndPoint == currentPoint).First();
+
+        // Find center position starting with startPoint
+        float currentDistance = 0f;
+        float targetDistance = borders.Sum(x => x.Length) / 2f;
+        while(currentDistance + currentBorder.Length < targetDistance)
+        {
+            currentDistance += currentBorder.Length;
+
+            currentPoint = currentBorder.StartPoint == currentPoint ? currentBorder.EndPoint : currentBorder.StartPoint;
+            currentBorder = currentPoint.Borders.Where(x => x != currentBorder && borders.Contains(x)).First();
+        }
+
+        float restDistance = targetDistance - currentDistance;
+        float factor = restDistance / currentBorder.Length;
+
+        if (currentPoint == currentBorder.StartPoint) return new Tuple<Vector2, float>(Vector2.Lerp(currentBorder.StartPoint.Position, currentBorder.EndPoint.Position, factor), currentBorder.Angle);
+        else return new Tuple<Vector2, float>(Vector2.Lerp(currentBorder.EndPoint.Position, currentBorder.StartPoint.Position, factor), currentBorder.Angle);
     }
 
     /// <summary>

@@ -50,9 +50,9 @@ namespace ParriskGame
             else
             {
                 AddQuickSelectionButton(1);
-                AddQuickSelectionButton((int)(maxTroops * 0.25f));
-                AddQuickSelectionButton((int)(maxTroops * 0.5f));
-                AddQuickSelectionButton((int)(maxTroops * 0.75f));
+                AddQuickSelectionButton(Mathf.RoundToInt(maxTroops * 0.25f));
+                AddQuickSelectionButton(Mathf.RoundToInt(maxTroops * 0.5f));
+                AddQuickSelectionButton(Mathf.RoundToInt(maxTroops * 0.75f));
                 AddQuickSelectionButton(maxTroops);
             }
         }

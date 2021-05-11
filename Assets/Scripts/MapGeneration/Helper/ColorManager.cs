@@ -67,9 +67,9 @@ public static class ColorManager
     {
         List<Color> candidates = DistinctColors.Keys.Where(x => !otherColors.Contains(x)).ToList();
         if (noGreyScale) {
-            candidates.Remove(new Color(0f, 0f, 0f));
-            candidates.Remove(new Color(0.5f, 0.5f, 0.5f));
-            candidates.Remove(new Color(1f, 1f, 1f));
+            candidates.Remove(GetColorByName("White"));
+            candidates.Remove(GetColorByName("Grey"));
+            candidates.Remove(GetColorByName("Black"));
         }
         if (candidates.Count == 0) return Color.red;
         return candidates[UnityEngine.Random.Range(0, candidates.Count)];

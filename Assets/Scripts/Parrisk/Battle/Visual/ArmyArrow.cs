@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace ParriskGame
 {
-    public class TroopMovementArrow : MonoBehaviour
+    public class ArmyArrow : MonoBehaviour
     {
-        public TroopMovement TroopMovement;
+        public Army TroopMovement;
         public Vector2 MidPoint;
         public TextMesh Label;
 
-        public void Init(TroopMovement tm, TextMesh label, Vector2 midPoint)
+        public void Init(Army tm, TextMesh label, Vector2 midPoint)
         {
             TroopMovement = tm;
             Label = label;

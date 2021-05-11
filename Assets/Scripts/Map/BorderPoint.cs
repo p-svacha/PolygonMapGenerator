@@ -17,6 +17,7 @@ public class BorderPoint : MonoBehaviour
     public int DistanceFromNearestOcean;
 
     public List<BorderPoint> ConnectedBorderPoints;
+    public List<Border> Borders;
     public List<Region> Regions;
 
     public void Init(Map map, GraphNode n)
@@ -31,6 +32,7 @@ public class BorderPoint : MonoBehaviour
         DistanceFromNearestOcean = n.DistanceFromNearestOcean;
 
         ConnectedBorderPoints = n.ConnectedNodes.Select(x => x.BorderPoint).ToList();
+        Borders = n.Connections.Select(x => x.Border).ToList();
         Regions = n.Polygons.Select(x => x.Region).ToList();
 
         RiverWidth = n.RiverWidth;

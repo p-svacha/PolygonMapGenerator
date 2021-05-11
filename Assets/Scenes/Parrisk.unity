@@ -365,9 +365,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a55f3a42a7c8604992fdce5148f4b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Game: {fileID: 1305800865}
+  ActiveTroopDialog: {fileID: 0}
   DragArrowStart: {x: 0, y: 0}
-  DragSourceRegion: {fileID: 0}
+  DragArrowEnd: {x: 0, y: 0}
   DragArrow: {fileID: 0}
+  EditedMovement: {fileID: 0}
 --- !u!1 &1089242677
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,9 +554,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7acd28b57afdaad4fa6a3dd3829414fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ArmyPrefab: {fileID: 5403300745384190280, guid: e4e81f38680b7cd47bcb4476cebc78fe,
+    type: 3}
   PMG: {fileID: 237134055}
   InputManager: {fileID: 998383204}
   NumPlayers: 0
+  NumStartingTerritories: 0
   Turn: 0
   State: 0
   UI: {fileID: 1950883562}

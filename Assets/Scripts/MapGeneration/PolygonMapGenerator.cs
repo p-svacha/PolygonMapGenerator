@@ -804,8 +804,8 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         foreach (GraphNode n in Nodes) n.BorderPoint.Init(Map, n);
-        foreach (GraphConnection c in InGraphConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
-        foreach (GraphConnection c in EdgeConnections) c.Border.Init(c.StartNode.BorderPoint, c.EndNode.BorderPoint, c.Polygons.Select(x => x.Region).ToList());
+        foreach (GraphConnection c in InGraphConnections) c.Border.Init(c);
+        foreach (GraphConnection c in EdgeConnections) c.Border.Init(c);
         foreach (GraphPolygon p in Polygons) p.Region.Init(p);
 
         // Add rivers
@@ -890,7 +890,7 @@ public class PolygonMapGenerator : MonoBehaviour
                     GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, new Color(0.2f, 0.2f, 0.2f), LAYER_WATER_CONNECTION, 0.001f);
                     waterConObject.transform.SetParent(Map.WaterConnectionContainer.transform);
                     WaterConnection waterConnection = waterConObject.AddComponent<WaterConnection>();
-                    waterConnection.Init(polygon.Region, waterNeighbour.Region);
+                    waterConnection.Init(polygon.Region, waterNeighbour.Region, closestNodes[0].BorderPoint, closestNodes[1].BorderPoint);
 
                     polygon.Region.WaterConnections.Add(waterConnection);
                     waterNeighbour.Region.WaterConnections.Add(waterConnection);

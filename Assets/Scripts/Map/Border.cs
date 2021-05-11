@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Border : MonoBehaviour
 {
+    public GraphConnection Connection;
+
     public BorderPoint StartPoint;
     public BorderPoint EndPoint;
 
@@ -19,15 +22,17 @@ public class Border : MonoBehaviour
     public const float BorderHeight = 0.05f;
     public const float BorderWidth = 0.01f;
 
-    public void Init(BorderPoint start, BorderPoint end, List<Region> regions)
+    public void Init(GraphConnection connection)
     {
-        StartPoint = start;
-        EndPoint = end;
-        Regions = regions;
+        Connection = connection;
 
-        Center = new Vector2((start.Position.x + end.Position.x) / 2, (start.Position.y + end.Position.y) / 2);
-        Length = Vector2.Distance(start.Position, end.Position);
-        Angle = Vector2.SignedAngle((end.Position - start.Position), new Vector2(1,0));
+        StartPoint = Connection.StartNode.BorderPoint;
+        EndPoint = Connection.EndNode.BorderPoint;
+        Regions = Connection.Polygons.Select(x => x.Region).ToList();
+
+        Center = new Vector2((StartPoint.Position.x + EndPoint.Position.x) / 2, (StartPoint.Position.y + EndPoint.Position.y) / 2);
+        Length = Vector2.Distance(StartPoint.Position, EndPoint.Position);
+        Angle = Vector2.SignedAngle((EndPoint.Position - StartPoint.Position), new Vector2(1,0));
 
         this.transform.position = new Vector3(Center.x, BorderHeight * 0.5f, Center.y);
         this.transform.rotation = Quaternion.Euler(0, Angle, 0);

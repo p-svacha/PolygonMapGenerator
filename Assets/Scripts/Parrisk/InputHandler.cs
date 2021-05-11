@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace ParriskGame
 {
-    public class InputManager : BaseMapCameraHandler
+    public class InputHandler : BaseMapCameraHandler
     {
-        private ParriskGame Game;
+        public ParriskGame Game;
 
         private InputState State;
 
-        // Troop movement
+        // Planning phase
         public UI_TroopMovementDialog ActiveTroopDialog;
         public Vector2 DragArrowStart;
         public Vector2 DragArrowEnd;
@@ -19,7 +19,10 @@ namespace ParriskGame
         public Territory DragTargetTerritory;
         public GameObject DragArrow;
 
-        public TroopMovementArrow EditedMovement;
+        public ArmyArrow EditedMovement;
+
+        // Combat phase
+
 
         public void Init(ParriskGame game)
         {
@@ -28,18 +31,35 @@ namespace ParriskGame
             State = InputState.Idle;
         }
 
+        #region Update
+
         public override void Update()
         {
             base.Update();
 
-            switch(State)
+            switch(Game.State)
             {
-                    // Click on existing movement
+                case GameState.PlanningPhase:
+                    UpdatePlanningPhase();
+                    break;
+
+                case GameState.CombatPhase:
+                    UpdateCombatPhase();
+                    break;
+            }
+        }
+
+        private void UpdatePlanningPhase()
+        {
+            switch (State)
+            {
+                
                 case InputState.Idle:
-                    if(Input.GetKeyDown(KeyCode.Mouse0))
+                    // Click on existing movement
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
-                        TroopMovementArrow hoveredMovement = GetHoveredTroopMovement();
-                        if(hoveredMovement != null)
+                        ArmyArrow hoveredMovement = GetHoveredTroopMovement();
+                        if (hoveredMovement != null)
                         {
                             EditedMovement = hoveredMovement;
                             ActiveTroopDialog = Instantiate(Game.UI.TroopMovementDialog);
@@ -50,17 +70,32 @@ namespace ParriskGame
                             State = InputState.AmountDialog;
                         }
                     }
+
+                    // Space ends planning phase
+                    else if(Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Game.EndPlanningPhase();
+                    }
                     break;
 
-                    // Dragging current arrow
+                // Dragging current arrow
                 case InputState.Dragging:
                     Destroy(DragArrow);
                     bool validDrag = CanCreateNewTroopMovement();
                     DragArrowEnd = GetMousePositionOnMap();
-                    DragArrow = MeshGenerator.DrawArrow(DragArrowStart, DragArrowEnd, validDrag ? Color.green : Color.red, width: 0.02f, arrowHeadWidth: 0.06f, arrowHeadLength: 0.15f, yPos: PolygonMapGenerator.LAYER_OVERLAY1);
+                    DragArrow = MeshGenerator.DrawArrow(DragArrowStart, DragArrowEnd, validDrag ? Color.red : Color.black, width: 0.02f, arrowHeadWidth: 0.06f, arrowHeadLength: 0.15f, yPos: PolygonMapGenerator.LAYER_OVERLAY1);
                     break;
             }
         }
+
+        private void UpdateCombatPhase()
+        {
+
+        }
+
+        #endregion
+
+        #region Mouse Triggers
 
         protected override void OnLeftMouseDragStart()
         {
@@ -102,6 +137,8 @@ namespace ParriskGame
             }
         }
 
+        #endregion
+
         public void OnNewTroopMovementDialogReturn(int numTroops)
         {
             Destroy(ActiveTroopDialog.gameObject);
@@ -119,11 +156,11 @@ namespace ParriskGame
                 TextMesh movementLabel = MeshGenerator.DrawTextMesh(midPos, PolygonMapGenerator.LAYER_OVERLAY3, numTroops.ToString(), 60);
                 movementLabel.transform.SetParent(DragArrow.transform);
 
-                TroopMovement newMovement = new TroopMovement(Game.Turn, DragSourceTerritory, DragTargetTerritory, DragSourceTerritory.Player, DragTargetTerritory.Player, numTroops);
-                Game.AddTroopMovement(newMovement);
+                Army newMovement = Game.AddArmy(DragSourceTerritory, DragTargetTerritory, numTroops);
 
-                TroopMovementArrow movementArrow = DragArrow.AddComponent<TroopMovementArrow>();
+                ArmyArrow movementArrow = DragArrow.AddComponent<ArmyArrow>();
                 movementArrow.Init(newMovement, movementLabel, midPos);
+                Game.ArmyArrows.Add(movementArrow);
             }
 
             State = InputState.Idle;
@@ -133,12 +170,12 @@ namespace ParriskGame
         {
             if(numTroopsNew == 0)
             {
-                Game.RemoveTroopMovement(EditedMovement.TroopMovement);
+                Game.RemoveArmy(EditedMovement.TroopMovement);
                 Destroy(EditedMovement.gameObject);
             }
             if(numTroopsNew != 0)
             {
-                Game.EditTroopMovement(EditedMovement.TroopMovement, numTroopsNew);
+                Game.EditArmy(EditedMovement.TroopMovement, numTroopsNew);
                 EditedMovement.Label.text = numTroopsNew.ToString();
             }
 
@@ -158,7 +195,7 @@ namespace ParriskGame
             return true;
         }
 
-        private TroopMovementArrow GetHoveredTroopMovement()
+        private ArmyArrow GetHoveredTroopMovement()
         {
             if (!IsHoveringUi())
             {
@@ -166,11 +203,11 @@ namespace ParriskGame
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    if (hit.transform.gameObject.GetComponent<TroopMovementArrow>() != null) 
-                        return hit.transform.gameObject.GetComponent<TroopMovementArrow>();
+                    if (hit.transform.gameObject.GetComponent<ArmyArrow>() != null) 
+                        return hit.transform.gameObject.GetComponent<ArmyArrow>();
 
-                    if (hit.transform.gameObject.GetComponentInParent<TroopMovementArrow>() != null) 
-                        return hit.transform.gameObject.GetComponentInParent<TroopMovementArrow>();
+                    if (hit.transform.gameObject.GetComponentInParent<ArmyArrow>() != null) 
+                        return hit.transform.gameObject.GetComponentInParent<ArmyArrow>();
                 }
             }
 
@@ -183,5 +220,10 @@ namespace ParriskGame
         Idle,
         Dragging,
         AmountDialog
+    }
+
+    public enum CombatPhaseState
+    {
+
     }
 }

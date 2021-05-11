@@ -230,6 +230,35 @@ public class Region : MonoBehaviour
 
     #region Getters
 
+    /// <summary>
+    /// Returns the middle point and angle of a border to an adjacent region. The angle always points to the direction of this region.
+    /// </summary>
+    public Tuple<Vector2, float> GetBorderCenterPositionTo(Region otherRegion)
+    {
+        if (!AdjacentRegions.Contains(otherRegion)) throw new Exception("Other region is not adjacent to this region");
+
+        // Find all borders between the two regions
+        List<Border> borders = Borders.Where(x => x.Regions.Contains(otherRegion)).ToList();
+
+        // Split borders into clusters and take longest cluster
+        List<List<Border>> clusters = PolygonMapFunctions.FindBorderClusters(borders);
+        List<Border> longestCluster = clusters.OrderByDescending(x => x.Sum(y => y.Length)).First();
+
+        // Find center of longest cluster
+        Tuple<Vector2, float> center = PolygonMapFunctions.FindBorderCenter(longestCluster);
+
+        // Swap angle if the border was reversed
+        Vector2 testPoint = center.Item1 + new Vector2(Mathf.Sin(Mathf.Deg2Rad * center.Item2) * 0.01f, Mathf.Cos(Mathf.Deg2Rad * center.Item2) * 0.01f);
+        if (!GeometryFunctions.IsPointInPolygon4(Polygon.Nodes.Select(x => x.Vertex).ToList(), testPoint)) center = new Tuple<Vector2, float>(center.Item1, center.Item2 + 180);
+
+        return center;
+    }
+
+    public WaterConnection GetWaterConnectionTo(Region otherRegion)
+    {
+        return WaterConnections.Where(x => x.FromRegion == otherRegion || x.ToRegion == otherRegion).First();
+    }
+
     public float MinWorldX { get { return BorderPoints.Min(x => x.Position.x); } }
     public float MinWorldY { get { return BorderPoints.Min(x => x.Position.y); } }
     public float MaxWorldX { get { return BorderPoints.Max(x => x.Position.x); } }

@@ -32,6 +32,12 @@ namespace ParriskGame
             UpdateLabel();
         }
 
+        public void SetTroops(int numTroops)
+        {
+            Troops = numTroops;
+            UpdateLabel();
+        }
+
         public void ResetPlannedTroops()
         {
             UnplannedTroops = Troops;
@@ -44,9 +50,15 @@ namespace ParriskGame
             UpdateLabel();
         }
 
+        public void EndPlanningPhase()
+        {
+            Troops = UnplannedTroops;
+            UpdateLabel();
+        }
+
         private void UpdateLabel()
         {
-            if (Troops == 0) TroopsLabel.text = "";
+            if (Player == null) TroopsLabel.text = "";
             else if (Troops == UnplannedTroops) TroopsLabel.text = Troops.ToString();
             else TroopsLabel.text = UnplannedTroops + "/" + Troops;
         }
