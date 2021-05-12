@@ -14,12 +14,20 @@ namespace ParriskGame
 
         public List<Territory> Territories = new List<Territory>();
 
+        public int TroopsToDistribute;
+
         public Player(ParriskGame game, string name, Color color, bool isNpc)
         {
             Game = game;
             Name = name;
             Color = color;
             IsNpc = isNpc;
+        }
+
+        public void CalculateTroopAmountToDistribute()
+        {
+            TroopsToDistribute = ParriskGame.BaseTroopsToDistribute;
+            TroopsToDistribute += Territories.Count;
         }
 
         #region AI
@@ -42,6 +50,15 @@ namespace ParriskGame
                         remainingTroops -= moveTroops;
                     }
                 }
+            }
+        }
+
+        public void DoNpcTroopDistribution()
+        {
+            while(TroopsToDistribute > 0)
+            {
+                Territory randomTerritory = Territories[Random.Range(0, Territories.Count)];
+                Game.DistributeTroop(randomTerritory);
             }
         }
 

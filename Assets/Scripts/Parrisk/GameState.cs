@@ -8,7 +8,10 @@ namespace ParriskGame
     {
         Initializing,
         Ready,
+        DistributionPhase,
         PlanningPhase,
-        CombatPhase
+        CombatPhase,
+        CombatPhaseEnded,
+        Ended
     }
 }

@@ -15,11 +15,13 @@ namespace ParriskGame
 
         // Rule contants
         public const float BaseOffenseStrength = 100;
-        public const float BaseDefenseStrength = 110;
+        public const float BaseDefenseStrength = 120;
+        public const int BaseTroopsToDistribute = 5;
 
         // Rules
         public int NumPlayers;
         public int NumStartingTerritories;
+        public int NumStartingArmies;
 
         // Game elements
         public Map Map;
@@ -51,15 +53,16 @@ namespace ParriskGame
         // Start is called before the first frame update
         void Start()
         {
-            InitGame(4, 6);
+            InitGame(8, 1, 10);
         }
 
-        public void InitGame(int numPlayers, int numStartingTerritories)
+        public void InitGame(int numPlayers, int numStartingTerritories, int numStartingArmies)
         {
             State = GameState.Initializing;
             NumPlayers = numPlayers;
             NumStartingTerritories = numStartingTerritories;
-            Turn = -1;
+            NumStartingArmies = numStartingArmies;
+            Turn = 0;
 
             MapGenerationSettings settings = new MapGenerationSettings(15, 10, 0.4f, 2f, 3, 12, MapType.BigOceans);
             PMG.GenerateMap(settings, OnMapGenerationDone);
@@ -100,7 +103,7 @@ namespace ParriskGame
                     Region startingRegion = startingCandidates[Random.Range(0, startingCandidates.Count)];
                     Territory startingTerritory = Territories[startingRegion];
                     CaptureTerritory(p, startingTerritory);
-                    AddTroops(startingTerritory, Random.Range(1, 21));
+                    AddTroops(startingTerritory, NumStartingArmies);
                 }
             }
 
@@ -117,21 +120,24 @@ namespace ParriskGame
 
         public void StartGame()
         {
-            StartTurn();
+            StartPlannningPhase();
         }
 
-        private void StartTurn()
+        private void StartPlannningPhase()
         {
-            Turn++;
+            Debug.Log("Planning Phase started");
+
             TroopMovements.Add(new List<Army>());
             Battles.Add(new List<Battle>());
             foreach (Territory t in Territories.Values) t.ResetPlannedTroops();
+            
             State = GameState.PlanningPhase;
         }
 
         public void EndPlanningPhase()
         {
             foreach (ArmyArrow armyArrow in ArmyArrows) Destroy(armyArrow.gameObject);
+            ArmyArrows.Clear();
             foreach (Player p in Players.Where(x => x.IsNpc)) p.DoNpcTroopsMovements();
             foreach (Territory t in Territories.Values) t.EndPlanningPhase();
             StartCombatPhase();
@@ -139,6 +145,7 @@ namespace ParriskGame
 
         private void StartCombatPhase()
         {
+            Debug.Log("Combat Phase started");
             // Border battles
             List<Army> borderFightArmies = new List<Army>();
             foreach(Army army in TroopMovements[Turn])
@@ -168,6 +175,7 @@ namespace ParriskGame
 
             Invoke(nameof(ResolveBorderBattles), ArmyApproachTime);
             Invoke(nameof(ResolveTerritoryBattles), ArmyApproachTime * 2);
+            Invoke(nameof(EndCombatPhase), ArmyApproachTime * 2);
 
             State = GameState.CombatPhase;
         }
@@ -249,6 +257,43 @@ namespace ParriskGame
             foreach (Territory t in Territories.Values) t.ResetPlannedTroops();
         }
 
+        private void EndCombatPhase()
+        {
+            // Remove dead players
+            List<Player> deadPlayers = new List<Player>();
+            foreach(Player p in Players)
+            {
+                if (p.Territories.Count == 0) deadPlayers.Add(p);
+            }
+            foreach(Player p in deadPlayers)
+            {
+                Players.Remove(p);
+                Debug.Log(p.Name + " died :(");
+                if(Players.Count == 1)
+                {
+                    Debug.Log(Players.First().Name + " won the game :)");
+                    State = GameState.Ended;
+                }
+            }
+            State = GameState.CombatPhaseEnded;
+            StartDistributionPhase();
+        }
+
+        public void StartDistributionPhase()
+        {
+            Debug.Log("Distribution Phase started");
+            Turn++;
+            foreach (Player p in Players) p.CalculateTroopAmountToDistribute();
+            State = GameState.DistributionPhase;
+        }
+
+        public void EndDistributionPhase()
+        {
+            foreach (Player p in Players.Where(x => x.IsNpc)) p.DoNpcTroopDistribution();
+            foreach (Territory t in Territories.Values) t.LockInDistributedTroops();
+            StartPlannningPhase();
+        }
+
         #endregion
 
         #region Game Commands
@@ -258,7 +303,8 @@ namespace ParriskGame
         /// </summary>
         public void CaptureTerritory(Player p, Territory t)
         {
-            if (t.Player != null) t.Player.Territories.Remove(t);
+            Player oldOwner = t.Player;
+            if (oldOwner != null) t.Player.Territories.Remove(t);
             t.Player = p;
             p.Territories.Add(t);
             t.Region.SetColor(p.Color);
@@ -270,6 +316,20 @@ namespace ParriskGame
         public void AddTroops(Territory t, int troops)
         {
             t.AddTroops(troops);
+        }
+
+        public void DistributeTroop(Territory t)
+        {
+            if (t.Player.TroopsToDistribute <= 0) throw new System.Exception("Player of this territory has no troops left to distribute.");
+            t.DistributeTroop();
+            t.Player.TroopsToDistribute--;
+        }
+
+        public void UndistributeTroop(Territory t)
+        {
+            if (t.DistributedTroops <= 0) throw new System.Exception("Territory has no distributed troops to undistribute.");
+            t.UndistributeTroop();
+            t.Player.TroopsToDistribute++;
         }
 
         /// <summary>

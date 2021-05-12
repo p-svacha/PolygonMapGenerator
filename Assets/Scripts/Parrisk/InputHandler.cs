@@ -39,13 +39,44 @@ namespace ParriskGame
 
             switch(Game.State)
             {
+                case GameState.DistributionPhase:
+                    UpdateDistributionPhase();
+                    break;
+
                 case GameState.PlanningPhase:
                     UpdatePlanningPhase();
                     break;
 
-                case GameState.CombatPhase:
-                    UpdateCombatPhase();
+                case GameState.CombatPhaseEnded:
+                    UpdateCombatPhaseEnded();
                     break;
+            }
+        }
+
+        private void UpdateDistributionPhase()
+        {
+            // Left click adds a troop to the hovered territory
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Region hoveredRegion = GetHoveredRegion();
+                if(hoveredRegion != null && Game.Territories[hoveredRegion].Player == Game.LocalPlayer && Game.LocalPlayer.TroopsToDistribute > 0)
+                {
+                    Game.DistributeTroop(Game.Territories[hoveredRegion]);
+                } 
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                Region hoveredRegion = GetHoveredRegion();
+                if (hoveredRegion != null && Game.Territories[hoveredRegion].Player == Game.LocalPlayer && Game.Territories[hoveredRegion].DistributedTroops > 0)
+                {
+                    Game.UndistributeTroop(Game.Territories[hoveredRegion]);
+                }
+            }
+
+            // Space ends distribution phase
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Game.EndDistributionPhase();
             }
         }
 
@@ -88,9 +119,13 @@ namespace ParriskGame
             }
         }
 
-        private void UpdateCombatPhase()
+        private void UpdateCombatPhaseEnded()
         {
-
+            // Space ends combat phase 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Game.StartDistributionPhase();
+            }
         }
 
         #endregion
@@ -171,6 +206,7 @@ namespace ParriskGame
             if(numTroopsNew == 0)
             {
                 Game.RemoveArmy(EditedMovement.TroopMovement);
+                Game.ArmyArrows.Remove(EditedMovement);
                 Destroy(EditedMovement.gameObject);
             }
             if(numTroopsNew != 0)

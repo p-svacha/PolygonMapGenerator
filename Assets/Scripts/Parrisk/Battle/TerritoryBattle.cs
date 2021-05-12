@@ -89,7 +89,6 @@ namespace ParriskGame
 
         public override void ResolveBattle()
         {
-            Debug.Log("start");
             // Calculate amount of troops for each player
             Dictionary<Player, int> remainingTroops = new Dictionary<Player, int>();
             foreach (Army army in Armies)
@@ -103,7 +102,6 @@ namespace ParriskGame
                 if (!remainingTroops.ContainsKey(Territories[0].Player)) remainingTroops.Add(Territories[0].Player, Territories[0].Troops);
                 else remainingTroops[Territories[0].Player] += Territories[0].Troops;
             }
-            Debug.Log("addtroops done");
 
             List<Player> remainingPlayers = remainingTroops.Where(x => x.Value > 0).Select(x => x.Key).ToList();
 
@@ -119,7 +117,7 @@ namespace ParriskGame
                 if (Territories[0].Player != null && p == Territories[0].Player) totalStrength += (Territories[0].Troops * ParriskGame.BaseDefenseStrength);
                 float strength = totalStrength / totalTroops;
                 playerStrength.Add(p, strength);
-                Debug.Log("Player " + p.Name + " Strength: " + strength);
+                //Debug.Log("Player " + p.Name + " Strength: " + strength);
             }
 
             // Fight until only one player has armies left
@@ -148,7 +146,6 @@ namespace ParriskGame
                 }
                 remainingPlayers = remainingTroops.Where(x => x.Value > 0).Select(x => x.Key).ToList();
             }
-            Debug.Log("fighting done");
 
             // Set post-battle values
             Winner = remainingPlayers[0];

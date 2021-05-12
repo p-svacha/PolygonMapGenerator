@@ -11,7 +11,8 @@ namespace ParriskGame
 
         public string Name;
         public int Troops;
-        public int UnplannedTroops;
+        public int UnplannedTroops; // Amount of troops that can still be moved during planning phase
+        public int DistributedTroops; // Amount of troops that will be added at the end of distribution phase
 
         private const int TroopsLabelSize = 80;
         public TextMesh TroopsLabel;
@@ -50,6 +51,25 @@ namespace ParriskGame
             UpdateLabel();
         }
 
+        public void DistributeTroop()
+        {
+            DistributedTroops++;
+            UpdateLabel();
+        }
+
+        public void UndistributeTroop()
+        {
+            DistributedTroops--;
+            UpdateLabel();
+        }
+
+        public void LockInDistributedTroops()
+        {
+            Troops += DistributedTroops;
+            DistributedTroops = 0;
+            UpdateLabel();
+        }
+
         public void EndPlanningPhase()
         {
             Troops = UnplannedTroops;
@@ -59,6 +79,7 @@ namespace ParriskGame
         private void UpdateLabel()
         {
             if (Player == null) TroopsLabel.text = "";
+            if (DistributedTroops != 0) TroopsLabel.text = Troops.ToString() + "+" + DistributedTroops.ToString();
             else if (Troops == UnplannedTroops) TroopsLabel.text = Troops.ToString();
             else TroopsLabel.text = UnplannedTroops + "/" + Troops;
         }
