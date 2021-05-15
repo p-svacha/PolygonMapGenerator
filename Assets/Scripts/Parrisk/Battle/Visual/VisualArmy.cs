@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ParriskGame
@@ -13,19 +14,27 @@ namespace ParriskGame
 
         public Army Army;
 
-        public Vector3 SourcePosition;
-        public Vector3 TargetPosition;
+        // Moving
+        public List<Vector3> WalkPath = new List<Vector3>();
+        private float WalkPathLength;
+        private int CurrentPathPointIndex;
+        private float LastPathPointDistance;
+        private float NextPathPointDistance;
         private float TimeElapsed;
         public float TimeTarget;
 
         private bool ReachedTarget;
 
-        public void Init(Army army, Vector2 sourcePosition, Vector2 targetPosition, float time)
+        public void Init(Army army, List<Vector2> walkPath, float time)
         {
             Army = army;
             Army.VisualArmy = this;
-            SourcePosition = new Vector3(sourcePosition.x, 0f, sourcePosition.y);
-            TargetPosition = new Vector3(targetPosition.x, 0f, targetPosition.y);
+            foreach (Vector2 pathPoint in walkPath) WalkPath.Add(new Vector3(pathPoint.x, 0f, pathPoint.y));
+            WalkPathLength = 0f;
+            for(int i = 0; i < WalkPath.Count - 1; i++) WalkPathLength += Vector3.Distance(WalkPath[i], WalkPath[i + 1]);
+            CurrentPathPointIndex = 0;
+            LastPathPointDistance = 0f;
+            NextPathPointDistance = Vector3.Distance(WalkPath[CurrentPathPointIndex], WalkPath[CurrentPathPointIndex + 1]);
             TimeTarget = time;
             TimeElapsed = 0f;
             GetComponent<MeshRenderer>().material.color = army.SourcePlayer.Color;
@@ -37,16 +46,28 @@ namespace ParriskGame
             TimeElapsed += Time.deltaTime;
             if(ReachedTarget)
             {
-                // Fight
+                
             }
-            else
+            else // Move
             {
-                if(TimeElapsed >= TimeTarget)
+                if (TimeElapsed >= TimeTarget)
                 {
-                    transform.position = TargetPosition;
+                    transform.position = WalkPath.Last();
                     ReachedTarget = true;
                 }
-                else transform.position = Vector3.Lerp(SourcePosition, TargetPosition, TimeElapsed / TimeTarget);
+                else
+                {
+                    float relativeDistance = TimeElapsed / TimeTarget;
+                    float absDistance = relativeDistance * WalkPathLength;
+                    if(absDistance >= NextPathPointDistance)
+                    {
+                        CurrentPathPointIndex++;
+                        LastPathPointDistance = NextPathPointDistance;
+                        NextPathPointDistance += Vector3.Distance(WalkPath[CurrentPathPointIndex], WalkPath[CurrentPathPointIndex + 1]);
+                    }
+                    float relPositionPathPoints = (absDistance - LastPathPointDistance) / (NextPathPointDistance - LastPathPointDistance);
+                    transform.position = Vector3.Lerp(WalkPath[CurrentPathPointIndex], WalkPath[CurrentPathPointIndex + 1], relPositionPathPoints);
+                }
             }
         }
     }

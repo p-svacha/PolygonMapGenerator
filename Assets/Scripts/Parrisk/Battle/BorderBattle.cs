@@ -19,40 +19,46 @@ namespace ParriskGame
             if (armies.Count != 2) throw new System.Exception("Border battles can only be fought with exactly 2 armies attack each other");
             Type = BattleType.BorderBattle;
 
-            Vector2 fightPosition;
-            float fightAngleArmy0;
-            float fightAngleArmy1;
-            float approachDistance = ParriskGame.ArmyApproachDistance;
+            List<Vector2> army0Path = new List<Vector2>();
+            List<Vector2> army1Path = new List<Vector2>();
+            army0Path.Add(Armies[0].SourceTerritory.Region.CenterPoi);
+            army1Path.Add(Armies[1].SourceTerritory.Region.CenterPoi);
             if (Armies[0].IsWaterArmy)
             {
                 IsWaterBattle = true;
                 WaterConnection wc = Armies[0].SourceTerritory.Region.GetWaterConnectionTo(Armies[0].TargetTerritory.Region);
                 System.Tuple<Vector2, float> center = new System.Tuple<Vector2, float>(wc.Center, wc.FromRegion == Armies[0].SourceTerritory.Region ? wc.Angle - 90 : wc.Angle + 90);
-                fightPosition = center.Item1;
-                fightAngleArmy0 = center.Item2;
-                fightAngleArmy1 = center.Item2 + 180;
-                approachDistance = wc.Length / 2f;
+                Vector2 fightPosition = center.Item1;
+                float fightAngleArmy0 = center.Item2;
+                float fightAngleArmy1 = center.Item2 + 180;
+                float approachDistance = wc.Length / 2f;
+
+                float xSource0 = Mathf.Sin(Mathf.Deg2Rad * fightAngleArmy0) * approachDistance;
+                float ySource0 = Mathf.Cos(Mathf.Deg2Rad * fightAngleArmy0) * approachDistance;
+                Vector2 coastPos0 = fightPosition + new Vector2(xSource0, ySource0);
+                army0Path.Add(coastPos0);
+                army0Path.Add(fightPosition);
+
+                float xSource1 = Mathf.Sin(Mathf.Deg2Rad * fightAngleArmy1) * approachDistance;
+                float ySource1 = Mathf.Cos(Mathf.Deg2Rad * fightAngleArmy1) * approachDistance;
+                Vector2 coastPos1 = fightPosition + new Vector2(xSource1, ySource1);
+                army1Path.Add(coastPos1);
+                army1Path.Add(fightPosition);
             }
             else
             {
                 IsWaterBattle = false;
                 System.Tuple<Vector2, float> center = Armies[0].SourceTerritory.Region.GetBorderCenterPositionTo(Armies[0].TargetTerritory.Region);
-                fightPosition = center.Item1;
-                fightAngleArmy0 = center.Item2;
-                fightAngleArmy1 = center.Item2 + 180;
+                Vector2 fightPosition = center.Item1;
+                army0Path.Add(fightPosition);
+                army1Path.Add(fightPosition);
             }
 
             VisualArmy army0 = GameObject.Instantiate(armyPrefab);
-            float xSource0 = Mathf.Sin(Mathf.Deg2Rad * fightAngleArmy0) * approachDistance;
-            float ySource0 = Mathf.Cos(Mathf.Deg2Rad * fightAngleArmy0) * approachDistance;
-            Vector2 sourcePos0 = fightPosition + new Vector2(xSource0, ySource0);
-            army0.Init(Armies[0], sourcePos0, fightPosition, ParriskGame.ArmyApproachTime);
+            army0.Init(Armies[0], army0Path, ParriskGame.ArmyApproachTime);
 
             VisualArmy army1 = GameObject.Instantiate(armyPrefab);
-            float xSource1 = Mathf.Sin(Mathf.Deg2Rad * fightAngleArmy1) * approachDistance;
-            float ySource1 = Mathf.Cos(Mathf.Deg2Rad * fightAngleArmy1) * approachDistance;
-            Vector2 sourcePos1 = fightPosition + new Vector2(xSource1, ySource1);
-            army1.Init(Armies[1], sourcePos1, fightPosition, ParriskGame.ArmyApproachTime);
+            army1.Init(Armies[1], army1Path, ParriskGame.ArmyApproachTime);
         }
 
         public override void ResolveBattle()

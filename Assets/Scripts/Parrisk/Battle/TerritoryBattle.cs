@@ -18,35 +18,37 @@ namespace ParriskGame
 
             foreach (Army army in Armies)
             {
-                Vector2 borderCenter;
-                float sourceAngle;
-                float targetAngle;
-                float approachDistance = ParriskGame.ArmyApproachDistance;
+                List<Vector2> walkPath = new List<Vector2>();
+                Vector2 sourcePos = army.SourceTerritory.Region.CenterPoi;
+                walkPath.Add(sourcePos);
                 if (army.IsWaterArmy)
                 {
                     WaterConnection wc = army.SourceTerritory.Region.GetWaterConnectionTo(army.TargetTerritory.Region);
                     System.Tuple<Vector2, float> center = new System.Tuple<Vector2, float>(wc.Center, wc.FromRegion == army.SourceTerritory.Region ? wc.Angle - 90 : wc.Angle + 90);
-                    borderCenter = center.Item1;
-                    sourceAngle = center.Item2;
-                    targetAngle = center.Item2 + 180;
-                    approachDistance = wc.Length / 2f;
+                    Vector2 borderCenter = center.Item1;
+                    float sourceAngle = center.Item2;
+                    float targetAngle = center.Item2 + 180;
+                    float approachDistance = wc.Length / 2f;
+                    float xSource = Mathf.Sin(Mathf.Deg2Rad * sourceAngle) * approachDistance;
+                    float ySource = Mathf.Cos(Mathf.Deg2Rad * sourceAngle) * approachDistance;
+                    Vector2 coastPosSource = borderCenter + new Vector2(xSource, ySource);
+                    float xTarget = Mathf.Sin(Mathf.Deg2Rad * targetAngle) * approachDistance;
+                    float yTarget = Mathf.Cos(Mathf.Deg2Rad * targetAngle) * approachDistance;
+                    Vector2 coastPosTarget = borderCenter + new Vector2(xTarget, yTarget);
+                    walkPath.Add(coastPosSource);
+                    walkPath.Add(coastPosTarget);
                 }
                 else
                 {
                     System.Tuple<Vector2, float> center = army.SourceTerritory.Region.GetBorderCenterPositionTo(army.TargetTerritory.Region);
-                    borderCenter = center.Item1;
-                    sourceAngle = center.Item2;
-                    targetAngle = center.Item2 + 180;
+                    Vector2 borderCenter = center.Item1;
+                    walkPath.Add(borderCenter);
                 }
+                Vector2 targetPos = army.TargetTerritory.Region.CenterPoi;
+                walkPath.Add(targetPos);
 
                 VisualArmy visualArmy = GameObject.Instantiate(armyPrefab);
-                float xSource = Mathf.Sin(Mathf.Deg2Rad * sourceAngle) * approachDistance;
-                float ySource = Mathf.Cos(Mathf.Deg2Rad * sourceAngle) * approachDistance;
-                Vector2 sourcePos = borderCenter + new Vector2(xSource, ySource);
-                float xTarget = Mathf.Sin(Mathf.Deg2Rad * targetAngle) * approachDistance;
-                float yTarget = Mathf.Cos(Mathf.Deg2Rad * targetAngle) * approachDistance;
-                Vector2 targetPos = borderCenter + new Vector2(xTarget, yTarget);
-                visualArmy.Init(army, sourcePos, targetPos, ParriskGame.ArmyApproachTime * 2);
+                visualArmy.Init(army, walkPath, ParriskGame.ArmyApproachTime * 2);
             }
         }
 
@@ -61,30 +63,31 @@ namespace ParriskGame
 
 
             // Visual
-            Vector2 borderCenter;
-            float targetAngle;
-            float approachDistance = ParriskGame.ArmyApproachDistance;
+            List<Vector2> walkPath = new List<Vector2>();
             if (army.IsWaterArmy)
             {
                 WaterConnection wc = army.SourceTerritory.Region.GetWaterConnectionTo(army.TargetTerritory.Region);
                 System.Tuple<Vector2, float> center = new System.Tuple<Vector2, float>(wc.Center, wc.FromRegion == army.SourceTerritory.Region ? wc.Angle - 90 : wc.Angle + 90);
-                borderCenter = center.Item1;
-                targetAngle = center.Item2 + 180;
-                approachDistance = wc.Length / 2f;
+                Vector2 borderCenter = center.Item1;
+                float targetAngle = center.Item2 + 180;
+                float approachDistance = wc.Length / 2f;
+                float xTarget = Mathf.Sin(Mathf.Deg2Rad * targetAngle) * approachDistance;
+                float yTarget = Mathf.Cos(Mathf.Deg2Rad * targetAngle) * approachDistance;
+                Vector2 coastPos = borderCenter + new Vector2(xTarget, yTarget);
+                walkPath.Add(borderCenter);
+                walkPath.Add(coastPos);
             }
             else
             {
                 System.Tuple<Vector2, float> center = army.SourceTerritory.Region.GetBorderCenterPositionTo(army.TargetTerritory.Region);
-                borderCenter = center.Item1;
-                targetAngle = center.Item2 + 180;
+                Vector2 borderCenter = center.Item1;
+                walkPath.Add(borderCenter);
             }
+            Vector2 targetPos = army.TargetTerritory.Region.CenterPoi;
+            walkPath.Add(targetPos);
 
             VisualArmy visualArmy = GameObject.Instantiate(armyPrefab);
-            Vector2 sourcePos = borderCenter;
-            float xTarget = Mathf.Sin(Mathf.Deg2Rad * targetAngle) * approachDistance;
-            float yTarget = Mathf.Cos(Mathf.Deg2Rad * targetAngle) * approachDistance;
-            Vector2 targetPos = borderCenter + new Vector2(xTarget, yTarget);
-            visualArmy.Init(army, sourcePos, targetPos, ParriskGame.ArmyApproachTime);
+            visualArmy.Init(army, walkPath, ParriskGame.ArmyApproachTime);
         }
 
         public override void ResolveBattle()

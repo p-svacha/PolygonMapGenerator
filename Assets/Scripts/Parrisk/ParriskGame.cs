@@ -42,8 +42,7 @@ namespace ParriskGame
         public List<ArmyArrow> ArmyArrows = new List<ArmyArrow>();
 
         // Animation Times
-        public const float ArmyApproachTime = 5f;
-        public const float ArmyApproachDistance = 0.2f;
+        public const float ArmyApproachTime = 10f;
 
         // UI
         public UI_ParriskGame UI;
