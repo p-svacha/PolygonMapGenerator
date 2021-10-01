@@ -41,12 +41,6 @@ namespace ElectionTactics
             BackButton.onClick.AddListener(() => UI.SelectTab(Tab.DistrictList));
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         public void Init(District d)
         {
             ClearAllPanels();

@@ -33,18 +33,18 @@ namespace ElectionTactics
                 MarginText.text = "";
             }
 
-            GetComponent<Button>().onClick.AddListener(() => { d.Region.SetBlinking(false); UI.SelectDistrict(d); });
+            GetComponent<Button>().onClick.AddListener(() => { d.Region.SetAnimatedHighlight(false); UI.SelectDistrict(d); });
         }
 
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            District.Region.SetBlinking(true);
+            District.Region.SetAnimatedHighlight(true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            District.Region.SetBlinking(false);
+            District.Region.SetAnimatedHighlight(false);
         }
     }
 }

@@ -121,12 +121,19 @@ public class WindowGraph : MonoBehaviour
 
     #region Public methods
 
+    /// <summary>
+    /// Instantly destroys the whole graph
+    /// </summary>
     public void ClearGraph()
     {
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
         Bars.Clear();
         BarLabels.Clear();
     }
+
+    /// <summary>
+    /// Instantly displays a bar graph with the given attributes
+    /// </summary>
     public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool zeroed = false)
     {
         GraphWidth = GraphContainer.rect.width;
@@ -159,6 +166,10 @@ public class WindowGraph : MonoBehaviour
             BarLabels.Add(DrawText(zeroed ? "" : dataPoints[i].Value.ToString("0.0") + "%", new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
         }
     }
+    
+    /// <summary>
+    /// Displays an empty bar graph and initializes an animation that can either be instantly started with startAnimation = true or by calling StartInitAnimation()
+    /// </summary>
     public void InitAnimatedBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, float animationTime, bool startAnimation)
     {
         ShowBarGraph(dataPoints, yMax, yStep, barSpacing, axisColor, axisStepColor, font, zeroed: true);
@@ -168,11 +179,18 @@ public class WindowGraph : MonoBehaviour
         AnimationDelay = 0f;
         if (startAnimation) StartInitAnimation();
     }
+
+    /// <summary>
+    /// Starts the animation that has been previously initialized with InitAnimatedGraph()
+    /// </summary>
     public void StartInitAnimation()
     {
         AnimationType = GraphAnimationType.Init;
     }
 
+    /// <summary>
+    /// Updates the values of an already initialized graph with an animation
+    /// </summary>
     public void UpdateAnimatedBarGraph(List<GraphDataPoint> dataPoints, float yMax, float animationTime)
     {
         SourceDataPoints = DataPoints;

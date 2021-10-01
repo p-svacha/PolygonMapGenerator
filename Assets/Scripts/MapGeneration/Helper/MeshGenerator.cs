@@ -19,6 +19,23 @@ public class MeshGenerator
         {
             vertices[i] = new Vector3(vertices2D[i].x, layer, vertices2D[i].y);
             if(PMG != null) uvs[i] = new Vector2(vertices2D[i].x / PMG.GenerationSettings.Width, vertices2D[i].y / PMG.GenerationSettings.Height);
+
+
+            // tangent calc
+            Vector2 beforeVertex = vertices2D[i == 0 ? vertices2D.Count - 1 : i - 1];
+            Vector2 thisVertex = vertices2D[i];
+            Vector2 afterVertex = vertices2D[i == vertices2D.Count - 1 ? 0 : i + 1];
+
+            Vector2 targetPoint = GeometryFunctions.GetOffsetIntersection(beforeVertex, thisVertex, afterVertex, 1f, 1f, false);
+
+            Vector2 tangent = targetPoint - thisVertex;
+            /*
+            float angle = Mathf.Abs(Vector2.Angle((beforeVertex - thisVertex).normalized, (afterVertex - thisVertex).normalized));
+            float factor = (180 - angle) * 0.005f;
+            tangent *= (1 + factor);
+            */
+
+            tangents[i] = new Vector4(tangent.x, 0, tangent.y, 0);
         }
 
         // Create the mesh

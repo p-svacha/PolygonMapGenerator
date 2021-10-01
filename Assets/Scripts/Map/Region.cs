@@ -68,6 +68,7 @@ public class Region : MonoBehaviour
     private bool IsHighlighted;
     private Color HighlightColor; // HighlightColor overrides Color if IsHighlighted is true
     public bool IsBlinking;
+    public bool IsAnimatedHighlighted;
     private bool ShowRegionBorders;
     public GameObject Border;
 
@@ -184,11 +185,18 @@ public class Region : MonoBehaviour
         Border.SetActive(ShowRegionBorders);
 
         GetComponent<MeshRenderer>().material.SetFloat("_Blink", IsBlinking ? 1 : 0);
+        GetComponent<MeshRenderer>().material.SetFloat("_AnimatedHighlight", IsAnimatedHighlighted ? 1 : 0);
     }
 
     public void SetBlinking(bool b)
     {
         IsBlinking = b;
+        UpdateDisplay();
+    }
+
+    public void SetAnimatedHighlight(bool b)
+    {
+        IsAnimatedHighlighted = b;
         UpdateDisplay();
     }
 

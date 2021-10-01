@@ -59,7 +59,7 @@ namespace ParriskGame
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 Region hoveredRegion = GetHoveredRegion();
-                if(hoveredRegion != null && Game.Territories[hoveredRegion].Player == Game.LocalPlayer && Game.LocalPlayer.TroopsToDistribute > 0)
+                if(hoveredRegion != null && Game.Territories[hoveredRegion] != null && Game.Territories[hoveredRegion].Player == Game.LocalPlayer && Game.LocalPlayer.TroopsToDistribute > 0)
                 {
                     Game.DistributeTroop(Game.Territories[hoveredRegion]);
                 } 

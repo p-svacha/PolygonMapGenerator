@@ -14,24 +14,24 @@ namespace ElectionTactics
         public int ConditionValue;
 
         private const int MinElectionWins = 5;
-        private const int MaxElectionWins = 10;
+        private const int MaxElectionWins = 8;
         private const int StepElectionWins = 1;
 
-        private const int MinSeatWins = 100;
-        private const int MaxSeatWins = 500;
+        private const int MinSeatWins = 50;
+        private const int MaxSeatWins = 100;
         private const int StepSeatWins = 10;
 
-        private const int MinDistrictWins = 40;
-        private const int MaxDistrictWins = 100;
+        private const int MinDistrictWins = 20;
+        private const int MaxDistrictWins = 40;
         private const int StepDistrictWins = 5;
 
-        private const int MinTotalVotes = 1000000;
-        private const int MaxTotalVotes = 5000000;
-        private const int StepTotalVotes = 100000;
+        private const int MinTotalVotes = 2000000;
+        private const int MaxTotalVotes = 10000000;
+        private const int StepTotalVotes = 1000000;
 
-        private const int MinYear = 2040;
-        private const int MaxYear = 2100;
-        private const int StepYear = 4;
+        private const int MinYear = 2010;
+        private const int MaxYear = 2020;
+        private const int StepYear = 1;
         
 
         public WinCondition(ElectionTacticsGame game) : base(game)

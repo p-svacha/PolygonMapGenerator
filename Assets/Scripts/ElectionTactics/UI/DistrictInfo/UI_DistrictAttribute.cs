@@ -27,7 +27,7 @@ namespace ElectionTactics
         public void Init(UI_ElectionTactics ui, GeographyTrait gt)
         {
             HoverAction = () => { UI.MapControls.ShowGeographyOverlay(gt.Type); };
-            Init(ui, gt.FullName, gt.BaseName, "");
+            Init(ui, gt.FullName, gt.BaseName, gt.Description);
         }
         public void Init(UI_ElectionTactics ui, EconomyTrait et)
         {

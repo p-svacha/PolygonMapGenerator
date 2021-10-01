@@ -16,6 +16,8 @@ namespace ElectionTactics
         LowVoterTurnout,
         Rebellious,
         Stable,
-        Revolutionary
+        Revolutionary,
+        Predictable,
+        Unpredictable
     }
 }

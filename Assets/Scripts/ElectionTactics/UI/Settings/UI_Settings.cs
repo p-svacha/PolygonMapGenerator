@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ElectionTactics
 {
     public class UI_Settings : MonoBehaviour
     {
-        // Start is called before the first frame update
+        public Toggle DebugMode;
+
         void Start()
         {
-
+            OnSettingChanged();
+            DebugMode.onValueChanged.AddListener(x => OnSettingChanged());
         }
 
-        // Update is called once per frame
-        void Update()
+        public void OnSettingChanged()
         {
-
+            GlobalSettings.Update(
+                debugMode: DebugMode.isOn
+                );
         }
     }
 }

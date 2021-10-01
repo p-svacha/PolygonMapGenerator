@@ -18,7 +18,7 @@ namespace ElectionTactics
             {
                 case MentalityType.Undecided:
                     Name = "Undecided";
-                    Description = "Parties have a very low base chance of being voted for.";
+                    Description = "Parties have a very high\nbase chance of being voted for.";
                     break;
 
                 case MentalityType.Decided:
@@ -48,12 +48,12 @@ namespace ElectionTactics
 
                 case MentalityType.HighVoterTurnout:
                     Name = "High Voter Turnout";
-                    Description = "A high voter turnout leads to consistent results and a high count of total votes.";
+                    Description = "A big portion of the population in this district will cast their vote.";
                     break;
 
                 case MentalityType.LowVoterTurnout:
                     Name = "Low Voter Turnout";
-                    Description = "A low voter turnout leads to inconsistent results and a low count of total votes.";
+                    Description = "A low portion of the population in this district will cast their vote.";
                     break;
 
                 case MentalityType.Rebellious:
@@ -71,6 +71,16 @@ namespace ElectionTactics
                     Description = "The party that won the last election will be excluded for the next one";
                     break;
 
+                case MentalityType.Predictable:
+                    Name = "Predictable";
+                    Description = "Election results reflect the popularity of the parties very well which will lead to very consistent and non-random results.";
+                    break;
+
+                case MentalityType.Unpredictable:
+                    Name = "Unpredictable";
+                    Description = "Election results reflect the popularity of the parties poorly which can lead to inconsistent and random results.";
+                    break;
+
                 default:
                     throw new System.Exception("MentalityType not handled for Mentality Name & Description");
             }
@@ -86,6 +96,11 @@ namespace ElectionTactics
                     return !d.MentalityTypes.Contains(MentalityType.Undecided);
                 case MentalityType.Undecided:
                     return !d.MentalityTypes.Contains(MentalityType.Decided);
+
+                case MentalityType.Predictable:
+                    return !d.MentalityTypes.Contains(MentalityType.Unpredictable);
+                case MentalityType.Unpredictable:
+                    return !d.MentalityTypes.Contains(MentalityType.Predictable);
 
                 case MentalityType.Religious:
                     return (d.Religion != Religion.None && !d.MentalityTypes.Contains(MentalityType.Secular));
@@ -109,7 +124,7 @@ namespace ElectionTactics
                 case MentalityType.Revolutionary:
                     return (!d.MentalityTypes.Contains(MentalityType.Rebellious) && !d.MentalityTypes.Contains(MentalityType.Stable));
             }
-            throw new System.Exception("MentalityType not handled in CanAdoptMentality()");
+            throw new System.Exception("MentalityType " + Type + " not handled in CanAdoptMentality()");
         }
     }
 }

@@ -138,20 +138,19 @@ namespace ElectionTactics
             TabButtons[ActiveTab].SetSelected(true);
             TabPanels[ActiveTab].SetActive(true);
 
-            switch(tab)
+            if(tab != Tab.DistrictInfo) UnselectDistrict();
+
+            switch (tab)
             {
                 case Tab.Policies:
-                    UnselectDistrict();
                     PolicySelection.Init(Game.PlayerParty);
                     break;
 
                 case Tab.DistrictList:
-                    UnselectDistrict();
                     DistrictList.Init(this, Game.Districts.Values.OrderByDescending(x => x.Population).ToList());
                     break;
 
                 case Tab.Parliament:
-                    UnselectDistrict();
                     Parliament.Init(Game, Game.Parties);
                     break;
             }
@@ -167,7 +166,7 @@ namespace ElectionTactics
             {
                 UnselectDistrict();
                 SelectedDistrict = d;
-                SelectedDistrict.Region.SetBlinking(true);
+                SelectedDistrict.Region.SetAnimatedHighlight(true);
                 SelectTab(Tab.DistrictInfo);
                 DistrictInfo.Init(d);
             }
@@ -185,7 +184,7 @@ namespace ElectionTactics
         {
             if(SelectedDistrict != null)
             {
-                SelectedDistrict.Region.SetBlinking(false);
+                SelectedDistrict.Region.SetAnimatedHighlight(false);
                 SelectedDistrict = null;
             }
         }

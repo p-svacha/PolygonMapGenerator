@@ -224,10 +224,10 @@ namespace ElectionTactics
 
         private District AddDistrict(Region r)
         {
-            Density density = GetDensityForRegion(r);
-            AgeGroup ageGroup = GetAgeGroupForRegion(r);
-            Language language = GetLanguageForRegion(r);
-            Religion religion = GetReligionForRegion(r);
+            Density density = GetDensityForNewRegion(r);
+            AgeGroup ageGroup = GetAgeGroupForNewRegion(r);
+            Language language = GetLanguageForNewRegion(r);
+            Religion religion = GetReligionForNewRegion(r);
             District newDistrict = new District(this, r, density, ageGroup, language, religion);
             UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
             label.Init(newDistrict);
@@ -276,18 +276,18 @@ namespace ElectionTactics
             }
         }
 
-        private Density GetDensityForRegion(Region region) // Denisty is weighted random rural > mixed > urban
+        private Density GetDensityForNewRegion(Region region) // Denisty is weighted random rural > mixed > urban
         {
             float rng = UnityEngine.Random.value;
             if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
             else if (rng < 0.25f + 0.33f) return Density.Mixed; // Mixed - 33% chance
             else return Density.Rural; // Rural  - 42 % chance
         }
-        private AgeGroup GetAgeGroupForRegion(Region region) // Age group is fully random
+        private AgeGroup GetAgeGroupForNewRegion(Region region) // Age group is fully random
         {
             return GetRandomAgeGroup();
         }
-        private Language GetLanguageForRegion(Region region) // Languages can spread over land borders
+        private Language GetLanguageForNewRegion(Region region) // Languages can spread over land borders
         {
             List<Language> languageChances = new List<Language>();
             languageChances.Add(GetRandomLanguage());
@@ -297,7 +297,7 @@ namespace ElectionTactics
             }
             return languageChances[UnityEngine.Random.Range(0, languageChances.Count)];
         }
-        private Religion GetReligionForRegion(Region region) // Religion can spread over land and water
+        private Religion GetReligionForNewRegion(Region region) // Religion can spread over land and water
         {
             List<Religion> religionChances = new List<Religion>();
             foreach (Region r in region.Neighbours)
@@ -466,13 +466,13 @@ namespace ElectionTactics
             UI.Parliament.CurrentElectionGraph.ClearGraph();
             UI.Parliament.ModifierSliderContainer.ClearContainer();
 
-            if (CurElectionDistrict != null) CurElectionDistrict.Region.SetBlinking(false);
+            if (CurElectionDistrict != null) CurElectionDistrict.Region.SetAnimatedHighlight(false);
 
             if (CurElectionDistrictIndex < ElectionOrder.Count)
             {
                 // Update current district
                 CurElectionDistrict = ElectionOrder[CurElectionDistrictIndex];
-                CurElectionDistrict.Region.SetBlinking(true);
+                CurElectionDistrict.Region.SetAnimatedHighlight(true);
 
                 // Update current election graph header
                 if (CurElectionDistrict.ElectionResults.Count > 0)

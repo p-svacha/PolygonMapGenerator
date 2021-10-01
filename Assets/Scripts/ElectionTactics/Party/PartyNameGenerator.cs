@@ -53,10 +53,15 @@ namespace ElectionTactics
             "Populist",
             "Federalist",
             "Conservationist",
-            "Internationalist",
+            "International",
             "Marxist",
             "Neofascist",
-            "Free"
+            "Free",
+            "Individualist",
+            "Collectivist",
+            "Queer",
+            "Imperialist",
+            "Maoist"
         };
 
         private static List<string> PartyTypeNouns = new List<string>() // T
@@ -94,7 +99,10 @@ namespace ElectionTactics
             "Occupation",
             "Rebel",
             "Anarchy",
-            "Senior"
+            "Senior",
+            "Junior",
+            "Oligarch",
+            "Monarch"
         };
 
         private static List<string> PartyNouns = new List<string>() // P
@@ -119,7 +127,8 @@ namespace ElectionTactics
             "Council",
             "Tigers",
             "Panthers",
-            "Lions"
+            "Lions",
+            "Democrats"
         };
 
         private static Dictionary<char, List<string>> ListDict = new Dictionary<char, List<string>>()
@@ -150,7 +159,7 @@ namespace ElectionTactics
             new Color(0.10f, 0.40f, 0.90f), // 2 - Blue
             new Color(0.80f, 0.00f, 0.00f), // 3 - Red
             new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
-            new Color(0.00f, 0.00f, 0.00f), // 5 - Black
+            new Color(0.10f, 0.10f, 0.10f), // 5 - Black
             new Color(0.75f, 0.50f, 0.16f), // 6 - Orange
             new Color(0.80f, 0.00f, 0.80f), // 7 - Purple
             new Color(0.66f, 0.32f, 0.10f), // 8 - Brown

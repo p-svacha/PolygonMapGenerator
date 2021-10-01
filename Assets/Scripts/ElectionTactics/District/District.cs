@@ -35,16 +35,24 @@ namespace ElectionTactics
         public const int RequiredPopulationPerSeat = 40000;
         public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
-        public int Population;  // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
-        public int Seats;       // How many seats this district has in the parliament
-        public int Voters;      // How many people cast a vote
+        public int Population;     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
+        public int Seats;          // How many seats this district has in the parliament
+        public int Voters;         // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
+        public float VoterTurnout; // Value between 0 and 1 of how many people went to vote. This value is only relevant for the vote victory and is not used for calculation of the actual votes.
 
-        public const int LowVoterTurnoutMinVoters = 100;
-        public const int LowVoterTurnoutMaxVoters = 150;
-        public const int MediumVoterTurnoutMinVoters = 200;
-        public const int MediumVoterTurnoutMaxVoters = 300;
-        public const int HighVoterTurnoutMinVoters = 400;
-        public const int HighVoterTurnoutMaxVoters = 500;
+        public const int NumVotersUnpredictableMin = 150;
+        public const int NumVotersUnpredictableMax = 200;
+        public const int NumVotersDefaultMin = 450;
+        public const int NumVotersDefaultMax = 550;
+        public const int NumVotersPredictableMin = 1900;
+        public const int NumVotersPredictableMax = 2100;
+
+        public const float VoterTurnoutLowMin = 0.3f;
+        public const float VoterTurnoutLowMax = 0.4f;
+        public const float VoterTurnoutDefaultMin = 0.6f;
+        public const float VoterTurnoutDefaultMax = 0.7f;
+        public const float VoterTurnoutHighMin = 0.9f;
+        public const float VoterTurnoutHighMax = 1f;
 
         public const int BasePopularity = 20;
         public const int UndecidedBasePopularity = 40;
@@ -113,19 +121,24 @@ namespace ElectionTactics
             Seats = Mathf.Max(MinSeats, tmpSeats);
 
             // Voter calculation
-            if (MentalityTypes.Contains(MentalityType.HighVoterTurnout)) Voters = Random.Range(HighVoterTurnoutMinVoters, HighVoterTurnoutMaxVoters + 1);
-            else if (MentalityTypes.Contains(MentalityType.LowVoterTurnout)) Voters = Random.Range(LowVoterTurnoutMinVoters, LowVoterTurnoutMaxVoters + 1);
-            else Voters = Random.Range(MediumVoterTurnoutMinVoters, MediumVoterTurnoutMaxVoters + 1);
+            if (MentalityTypes.Contains(MentalityType.Predictable)) Voters = Random.Range(NumVotersPredictableMin, NumVotersPredictableMax + 1);
+            else if (MentalityTypes.Contains(MentalityType.Unpredictable)) Voters = Random.Range(NumVotersUnpredictableMin, NumVotersUnpredictableMax + 1);
+            else Voters = Random.Range(NumVotersDefaultMin, NumVotersDefaultMax + 1);
+
+            // Voter turnour
+            if (MentalityTypes.Contains(MentalityType.LowVoterTurnout)) VoterTurnout = Random.Range(VoterTurnoutLowMin, VoterTurnoutLowMax);
+            else if (MentalityTypes.Contains(MentalityType.HighVoterTurnout)) VoterTurnout = Random.Range(VoterTurnoutHighMin, VoterTurnoutHighMax);
+            else VoterTurnout = Random.Range(VoterTurnoutDefaultMin, VoterTurnoutDefaultMax);
         }
 
         private void SetGeographyTraits()
         {
             // Coastal
-            if (Region.OceanCoastRatio > 0.7f)
+            if (Region.OceanCoastRatio > 0.6f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 3));
-            else if (Region.OceanCoastRatio > 0.4f)
+            else if (Region.OceanCoastRatio > 0.3f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 2));
-            else if (Region.OceanCoastRatio > 0.1f)
+            else if (Region.OceanCoastRatio > 0.05f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 1));
 
             // Landlocked
@@ -233,7 +246,7 @@ namespace ElectionTactics
                 else if (m.Type == ModifierType.Exclusion) partyPoints[m.Party] = 0;
             }
 
-            // Cast votes
+            // Cast "calculation" votes
             for (int i = 0; i < Voters; i++)
             {
                 Party votedParty = GetSingleVoterResult(partyPoints);
@@ -254,10 +267,10 @@ namespace ElectionTactics
             }
             Party winner = voterShares.First(x => x.Value == voterShares.Max(y => y.Value)).Key;
 
-            // Adjust amount of voters to the size of the district
+            // Calculate number of "game" votes based on voter turnout
             foreach(Party p in parties)
             {
-                partyVotes[p] *= Population / HighVoterTurnoutMaxVoters; // This defines that the absolutely highest possible amount of voters is equal to the population 
+                partyVotes[p] = (int)((Population * VoterTurnout) * voterShares[p] / 100f);
             }
 
             // Create result
@@ -269,7 +282,8 @@ namespace ElectionTactics
                 Votes = partyVotes,
                 VoteShare = voterShares,
                 Winner = winner,
-                Modifiers = electionModifiers
+                Modifiers = electionModifiers,
+                PartyPoints = partyPoints
             };
 
             ElectionResults.Add(result);
