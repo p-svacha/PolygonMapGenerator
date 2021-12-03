@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class PostGameScreen : MonoBehaviour
+    public class UI_PostGameScreen : MonoBehaviour
     {
         public GameObject Container;
         public Text TitleText;

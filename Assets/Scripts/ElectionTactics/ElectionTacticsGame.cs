@@ -80,6 +80,7 @@ namespace ElectionTactics
 
         private void StartGame()
         {
+            UI.LoadingScreen.gameObject.SetActive(true);
             MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
 
@@ -94,6 +95,7 @@ namespace ElectionTactics
 
         private void OnMapGenerationDone(Map map)
         {
+            UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
             Map = map;
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapDrawMode.Basic);

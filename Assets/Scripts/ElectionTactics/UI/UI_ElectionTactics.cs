@@ -11,7 +11,9 @@ namespace ElectionTactics
         public ElectionTacticsGame Game;
         public Font Font;
 
-        public PostGameScreen PostGameScreen;
+        [Header("Screens")]
+        public UI_LoadingScreen LoadingScreen;
+        public UI_PostGameScreen PostGameScreen;
         
         [Header ("Map Controls")]
         public MapControls MapControls;
