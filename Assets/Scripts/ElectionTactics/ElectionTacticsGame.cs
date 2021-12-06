@@ -16,8 +16,12 @@ namespace ElectionTactics
 
         public GameState State;
 
-        public Dictionary<Region, District> Districts = new Dictionary<Region, District>();
+        // Constitution
         public Constitution Constitution;
+
+        // Districts
+        public Dictionary<Region, District> VisualDistricts = new Dictionary<Region, District>();
+        private Dictionary<Region, District> AllDistricts = new Dictionary<Region, District>(); // Contains districts that will be added after the election animation
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -43,31 +47,12 @@ namespace ElectionTactics
         private const int MaxAIPolicyPointsPerCycle = 7;
         private const int NumOpponents = 3;
         private const int MaxPolicyValue = 8;
-        private const int ElectionsToWin = 5;
 
         // General Election
         public int ElectionCycle;
         public int Year;
-        private float HeaderSlideTime = 1f;
-
-        private float DistrictPanTime = 2f;
-        private float PostDistrictPanTime = 1f; // Length of pause after moving to a district
-
-        private float ModifierSlideTime = 1f; // Length of slide animation per modifier
-        private float PostModifierSlideTime = 1.5f; // Length of pause after a modifier
-
-        private float GraphAnimationTime = 6f;
-        private float PostGraphPauseTime = 2f;
-        private float ListAnimationTime = 1f;
-        private float PostListAnimationTime = 1f;
-
-        private const float SpeedModifier = 0.75f;
-
-        private List<District> ElectionOrder;
-        private int CurElectionDistrictIndex;
-        private District CurElectionDistrict;
-        private int CurModifierIndex;
-
+        private List<GeneralElectionResult> ElectionResults = new List<GeneralElectionResult>();
+        public ElectionAnimationHandler ElectionAnimationHandler;
 
         #region Initialization
 
@@ -83,14 +68,7 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(true);
             MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
-
-            HeaderSlideTime *= SpeedModifier;
-            DistrictPanTime *= SpeedModifier;
-            PostDistrictPanTime *= SpeedModifier;
-            GraphAnimationTime *= SpeedModifier;
-            PostGraphPauseTime *= SpeedModifier;
-            ListAnimationTime *= SpeedModifier;
-            PostListAnimationTime *= SpeedModifier;
+            ElectionAnimationHandler = new ElectionAnimationHandler(this);
         }
 
         private void OnMapGenerationDone(Map map)
@@ -110,11 +88,12 @@ namespace ElectionTactics
             UI.Constitution.Init(Constitution);
 
             UI.SelectTab(Tab.Parliament);
-            StartElectionCycle();
-            CameraHandler.FocusDistricts(Districts.Values.ToList());
+            StartNextElectionCycle();
+            UpdateVisualDistricts();
+            CameraHandler.FocusDistricts(VisualDistricts.Values.ToList());
             UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
 
-            State = GameState.Running;
+            State = GameState.PreparationPhase;
         }
 
         private void InitGeograhyTraits()
@@ -165,44 +144,53 @@ namespace ElectionTactics
         {
             switch(State)
             {
-                case GameState.Running:
-                if (Input.GetMouseButtonDown(0)) // Click
-                {
-                    bool uiClick = EventSystem.current.IsPointerOverGameObject();
-
-                    if (!uiClick)
+                case GameState.PreparationPhase:
+                    if (Input.GetMouseButtonDown(0)) // Click
                     {
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit hit;
-                        if (Physics.Raycast(ray, out hit, 100))
+                        bool uiClick = EventSystem.current.IsPointerOverGameObject();
+
+                        if (!uiClick)
                         {
-                            Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
-                            if (Districts.ContainsKey(mouseRegion)) UI.SelectDistrict(Districts[mouseRegion]);
-                            else UI.SelectDistrict(null);
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            RaycastHit hit;
+                            if (Physics.Raycast(ray, out hit, 100))
+                            {
+                                Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
+                                if (VisualDistricts.ContainsKey(mouseRegion)) UI.SelectDistrict(VisualDistricts[mouseRegion]);
+                                else UI.SelectDistrict(null);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
+
+                case GameState.Election:
+                    ElectionAnimationHandler.Update();
+                    break;
             }
         }
 
-        private void StartElectionCycle()
+        /// <summary>
+        /// Server side function. Handles everything related to starting a new election cycle:
+        /// - Incrementing year/cycle
+        /// - Adding new district
+        /// - Distributing policy and campaign points to players for the next phase
+        /// </summary>
+        private void StartNextElectionCycle()
         {
-            // Start next cycle
+            // Go to next year
             ElectionCycle++;
             Year++;
+
+            // Add new district
             AddRandomDistrict();
+
+            // Add policy points to all players
             AddPolicyPoints(PlayerParty, PlayerPolicyPointsPerCycle);
             foreach (Party p in OpponentParties)
             {
                 int addedPolicyPoints = UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1);
                 AddPolicyPoints(p, addedPolicyPoints);
             }
-
-            State = GameState.Running;
-            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
-            UI.SelectTab(Tab.Parliament);
-            UI.UpdateHeaderValues();
         }
 
         /// <summary>
@@ -224,7 +212,10 @@ namespace ElectionTactics
 
         #region Map Evolution
 
-        private District AddDistrict(Region r)
+        /// <summary>
+        /// Creates a new district. To make it visual use UpdateVisualDistricts().
+        /// </summary>
+        private District CreateTempDistrict(Region r)
         {
             Density density = GetDensityForNewRegion(r);
             AgeGroup ageGroup = GetAgeGroupForNewRegion(r);
@@ -232,11 +223,12 @@ namespace ElectionTactics
             Religion religion = GetReligionForNewRegion(r);
             District newDistrict = new District(this, r, density, ageGroup, language, religion);
             UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
+            label.gameObject.SetActive(false);
             label.Init(newDistrict);
             newDistrict.MapLabel = label;
-            newDistrict.OrderId = Districts.Count;
+            newDistrict.OrderId = AllDistricts.Count;
 
-            Districts.Add(r, newDistrict);
+            AllDistricts.Add(r, newDistrict);
             UI.MapControls.UpdateMapDisplay();
 
             UpdateDistrictAges();
@@ -245,12 +237,25 @@ namespace ElectionTactics
             return newDistrict;
         }
 
+        /// <summary>
+        /// Synchronizes the visual districts with all districts.
+        /// </summary>
+        public void UpdateVisualDistricts()
+        {
+            VisualDistricts.Clear();
+            foreach (KeyValuePair<Region, District> kvp in AllDistricts)
+            {
+                VisualDistricts.Add(kvp.Key, kvp.Value);
+                kvp.Value.MapLabel.gameObject.SetActive(true);
+            }
+        }
+
         public void AddRandomDistrict()
         {
-            if (Districts.Count == 0)
+            if (AllDistricts.Count == 0)
             {
                 Region randomRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
-                AddDistrict(randomRegion);
+                CreateTempDistrict(randomRegion);
                 return;
             }
             else
@@ -258,9 +263,9 @@ namespace ElectionTactics
                 // 1. Find regions which have the highest ratio of (neighbouring active districts : neighbouring inactive districts)
                 List<Region> candidates = new List<Region>();
                 float highestRatio = 0;
-                foreach(Region r in Map.LandRegions.Where(x => !Districts.Keys.Contains(x)))
+                foreach(Region r in Map.LandRegions.Where(x => !AllDistricts.Keys.Contains(x)))
                 {
-                    int activeNeighbours = r.Neighbours.Where(x => Districts.Keys.Contains(x)).Count();
+                    int activeNeighbours = r.Neighbours.Where(x => AllDistricts.Keys.Contains(x)).Count();
                     int totalNeighbours = r.Neighbours.Count;
                     float ratio = 1f * activeNeighbours / totalNeighbours;
                     if (ratio == highestRatio) candidates.Add(r);
@@ -274,7 +279,7 @@ namespace ElectionTactics
 
                 // 2. Chose random candidate and calculate attributes
                 Region chosenRegion = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-                District addedDistrict = AddDistrict(chosenRegion);
+                CreateTempDistrict(chosenRegion);
             }
         }
 
@@ -295,7 +300,7 @@ namespace ElectionTactics
             languageChances.Add(GetRandomLanguage());
             foreach(Region r in region.LandNeighbours)
             {
-                if (Districts.ContainsKey(r)) languageChances.Add(Districts[r].Language);
+                if (VisualDistricts.ContainsKey(r)) languageChances.Add(VisualDistricts[r].Language);
             }
             return languageChances[UnityEngine.Random.Range(0, languageChances.Count)];
         }
@@ -305,7 +310,7 @@ namespace ElectionTactics
             foreach (Region r in region.Neighbours)
             {
                 Religion religion;
-                if (Districts.ContainsKey(r)) religion = Districts[r].Religion;
+                if (VisualDistricts.ContainsKey(r)) religion = VisualDistricts[r].Religion;
                 else religion = GetRandomReligion();
 
                 religionChances.Add(religion);
@@ -325,7 +330,7 @@ namespace ElectionTactics
 
         private void UpdateActivePolicies()
         {
-            foreach (District d in Districts.Values)
+            foreach (District d in AllDistricts.Values)
             {
                 foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
                 {
@@ -377,7 +382,7 @@ namespace ElectionTactics
 
         private void UpdateDistrictAges()
         {
-            foreach(District d in Districts.Values)
+            foreach(District d in AllDistricts.Values)
             {
                 GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.Core);
                 if (coreTrait != null) d.Geography.Remove(coreTrait);
@@ -388,7 +393,7 @@ namespace ElectionTactics
                 else if (d.OrderId < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
                 else if (d.OrderId < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
 
-                int numDistricts = Districts.Count;
+                int numDistricts = AllDistricts.Count;
                 if(numDistricts - d.OrderId - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
                 else if(numDistricts - d.OrderId - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
                 else if(numDistricts - d.OrderId - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
@@ -402,7 +407,7 @@ namespace ElectionTactics
     public void AddPolicyPoints(Party p, int amount)
         {
             p.PolicyPoints += amount;
-            UI.UpdateHeaderValues();
+            UI.SidePanelHeader.UpdateValues(this);
         }
 
         public void IncreasePolicy(Policy p)
@@ -410,14 +415,14 @@ namespace ElectionTactics
             if (p.Party.PolicyPoints == 0 || p.Value == p.MaxValue) return;
             p.Party.PolicyPoints--;
             p.IncreaseValue();
-            UI.UpdateHeaderValues();
+            UI.SidePanelHeader.UpdateValues(this);
         }
         public void DecreasePolicy(Policy p)
         {
             if (p.Value == p.LockedValue) return;
             p.Party.PolicyPoints++;
             p.DecreaseValue();
-            UI.UpdateHeaderValues();
+            UI.SidePanelHeader.UpdateValues(this);
         }
 
         public void AddModifier(District d, Modifier mod)
@@ -430,151 +435,65 @@ namespace ElectionTactics
 
         #region Election
 
-        public void RunGeneralElection()
+        /// <summary>
+        /// This is a server-side function. Concludes the preparation phase and handles everything that happens:
+        /// - AI actions
+        /// - Locking player actions
+        /// - Election result
+        /// - Updating party values (seats, total seats, etc.)
+        /// - Handling district effects
+        /// - Starting next election cycle
+        /// </summary>
+        public void ConcludePreparationPhase()
         {
-            if (State == GameState.GeneralElection) return;
-            State = GameState.GeneralElection;
+            if (State != GameState.PreparationPhase) return;
+            State = GameState.Election;
 
             // AI policies
             foreach (Party p in Parties.Where(p => p != PlayerParty))
                 p.AI.DistributePolicyPoints();
 
-            // Set UI
-            UI.SelectTab(Tab.Parliament);
-            UI.Parliament.StandingsContainer.SetActive(false);
-            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
-
             // Lock policies
-            foreach(Party party in Parties)
+            foreach (Party party in Parties)
                 foreach (Policy policy in party.Policies) policy.LockValue();
 
             // Reset seats
-            foreach(Party p in Parties)
+            foreach (Party p in Parties) p.Seats = 0;
+
+            // Election result
+            List<DistrictElectionResult> districtResults = new List<DistrictElectionResult>();
+            foreach (District district in VisualDistricts.Values)
             {
-                p.Seats = 0;
-                UI.Parliament.ParliamentPartyList.Init(Parties, Parties.Select(x => x.Seats.ToString()).ToList(), dynamic: true);
+                DistrictElectionResult districtResult = district.RunElection(Parties);
+
+                districtResult.Winner.Seats += district.Seats;
+                districtResult.Winner.TotalSeatsWon += district.Seats;
+                districtResult.Winner.TotalDistrictsWon++;
+                foreach (Party p in Parties) p.TotalVotes += districtResult.Votes[p];
+                districtResults.Add(districtResult);
             }
 
-            ElectionOrder = Districts.Values.OrderBy(x => x.Population).ToList();
-            CurElectionDistrictIndex = 0;
+            GeneralElectionResult electionResult = new GeneralElectionResult(ElectionCycle, Year, districtResults);
+            ElectionResults.Add(electionResult);
 
-            UI.SlideOutHeader(HeaderSlideTime);
-            Invoke(nameof(MoveToNextElectionDistrict), HeaderSlideTime);
-        }
-
-        private void MoveToNextElectionDistrict()
-        {
-            UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
-            UI.Parliament.CurrentElectionGraph.ClearGraph();
-            UI.Parliament.ModifierSliderContainer.ClearContainer();
-
-            if (CurElectionDistrict != null) CurElectionDistrict.Region.SetAnimatedHighlight(false);
-
-            if (CurElectionDistrictIndex < ElectionOrder.Count)
-            {
-                // Update current district
-                CurElectionDistrict = ElectionOrder[CurElectionDistrictIndex];
-                CurElectionDistrict.Region.SetAnimatedHighlight(true);
-
-                // Update current election graph header
-                if (CurElectionDistrict.ElectionResults.Count > 0)
-                {
-                    UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
-                    UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
-                    UI.Parliament.CurrentElectionMarginText.text = (CurElectionDistrict.CurrentMargin > 0 ? "+" : "") + CurElectionDistrict.CurrentMargin.ToString("0.0") + " %";
-                    UI.Parliament.LastElectionWinnerKnob.color = CurElectionDistrict.CurrentWinnerParty.Color;
-                }
-                else
-                {
-                    UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(false);
-                    UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(false);
-                }
-
-                // Get election results
-                ElectionResult result = CurElectionDistrict.RunElection(PlayerParty, Parties);
-                result.Winner.Seats += CurElectionDistrict.Seats;
-                result.Winner.TotalSeatsWon += CurElectionDistrict.Seats;
-                result.Winner.TotalDistrictsWon++;
-                foreach (Party p in Parties) p.TotalVotes += result.Votes[p];
-
-                List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
-                foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
-                    dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
-                int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-
-                // Update current election graph
-                UI.Parliament.CurrentElectionContainer.SetActive(true);
-                UI.Parliament.CurrentElectionTitle.text = CurElectionDistrict.Name;
-                UI.Parliament.CurrentElectionSeatsText.text = CurElectionDistrict.Seats.ToString();
-                UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
-                UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, UI.Font, GraphAnimationTime, startAnimation: false);
-                
-                CameraHandler.MoveToFocusDistricts(new List<District>() { CurElectionDistrict }, DistrictPanTime);
-                Invoke(nameof(RunCurrentDistrictElection), DistrictPanTime + PostDistrictPanTime);
-            }
-            else
-            {
-                UI.Parliament.CurrentElectionContainer.SetActive(false);
-                Invoke(nameof(EndElection), PostDistrictPanTime);
-            }
-        }
-
-        private void RunCurrentDistrictElection()
-        {
-            CurModifierIndex = 0;
-
-            float totalModifierDelay = CurElectionDistrict.Modifiers.Count * (ModifierSlideTime + PostModifierSlideTime);
-
-            for(int i = 0; i < CurElectionDistrict.Modifiers.Count; i++)
-            {
-                float delay = i * (ModifierSlideTime + PostModifierSlideTime);
-                Invoke(nameof(SlideInNextModifier), delay);
-            }            
-
-            CurElectionDistrictIndex++;
-            Invoke(nameof(StartGraphAnimation), totalModifierDelay);
-            Invoke(nameof(UpdatePartyList), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime);
-            Invoke(nameof(UnhighlightPartyList), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + 0.1f);
-            Invoke(nameof(MoveToNextElectionDistrict), totalModifierDelay + GraphAnimationTime + PostGraphPauseTime + ListAnimationTime + PostListAnimationTime);
-        }
-
-        private void UpdatePartyList()
-        {
-            UI.Parliament.ParliamentPartyList.HighlightParty(CurElectionDistrict.CurrentWinnerParty);
-            UI.Parliament.ParliamentPartyList.MovePositions(Parties, ListAnimationTime);
-        }
-
-        private void UnhighlightPartyList()
-        {
-            UI.Parliament.ParliamentPartyList.UnhighlightParty(CurElectionDistrict.CurrentWinnerParty);
-        }
-
-        private void StartGraphAnimation()
-        {
-            UI.Parliament.CurrentElectionGraph.StartInitAnimation();
-        }
-
-        private void SlideInNextModifier()
-        {
-            UI.Parliament.ModifierSliderContainer.SlideInModifier(CurElectionDistrict.Modifiers[CurModifierIndex], ModifierSlideTime);
-            CurModifierIndex++;
-        }
-
-        private void EndElection()
-        {
-            // District actions
-            foreach (District d in Districts.Values) d.OnElectionEnd();
-
-            // Distribute Game points
             List<Party> winnerParties = Parties.Where(x => x.Seats == Parties.Max(y => y.Seats)).ToList();
             foreach (Party p in winnerParties) p.TotalElectionsWon++;
 
+            // District effects
+            foreach (District d in VisualDistricts.Values) d.OnElectionEnd();
+
+            // Handle next election start
+            StartNextElectionCycle();
+
+            ElectionAnimationHandler.StartAnimation(electionResult);
+        }
+
+        public void OnElectionAnimationDone()
+        {
             // Check win condition
             if (HandleWinConditions()) return;
 
-            StartElectionCycle();
-            CameraHandler.MoveToFocusDistricts(Districts.Values.ToList(), DistrictPanTime);
-            UI.SlideInHeader(DistrictPanTime);
+            State = GameState.PreparationPhase;
         }
 
         #endregion

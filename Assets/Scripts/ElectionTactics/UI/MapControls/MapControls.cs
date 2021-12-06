@@ -41,7 +41,7 @@ namespace ElectionTactics
             ModeButtons.Add(MapDisplayMode.Language, LanguageOverlayButton);
             ModeButtons.Add(MapDisplayMode.Religion, ReligionOverlayButton);
 
-            NoOverlayLegend.Add(ColorManager.Colors.ActiveDistrictColor, "District");
+            NoOverlayLegend.Add(ColorManager.Colors.InactiveDistrictColor, "District");
             ImpactLegend.Add(ColorManager.Colors.HighImpactColor, "High");
             ImpactLegend.Add(ColorManager.Colors.MediumImpactColor, "Medium");
             ImpactLegend.Add(ColorManager.Colors.LowImpactColor, "Low");
@@ -65,14 +65,14 @@ namespace ElectionTactics
             // Change tab button color
             if (ActiveTabButton != null) ActiveTabButton.Background.color = ColorManager.Colors.UiMainColor;
             ActiveTabButton = ModeButtons[mode];
-            ActiveTabButton.Background.color = ColorManager.Colors.UiHeaderColor;
+            ActiveTabButton.Background.color = ColorManager.Colors.UiMainColor;
 
             // Clear legend
             for (int i = 1; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);
             Legend.Clear();
 
             // Show region borders in active districts only
-            foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.Districts.ContainsKey(r));
+            foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.VisualDistricts.ContainsKey(r));
 
             DisplayMode = mode;
             switch(mode)
@@ -82,7 +82,7 @@ namespace ElectionTactics
                     foreach (KeyValuePair<Color, string> kvp in NoOverlayLegend) Legend.Add(kvp.Key, kvp.Value);
                     foreach(Region r in Map.LandRegions)
                     {
-                        if (Game.Districts.ContainsKey(r)) r.SetColor(ColorManager.Colors.ActiveDistrictColor);
+                        if (Game.VisualDistricts.ContainsKey(r)) r.SetColor(ColorManager.Colors.NoImpactColor);
                         else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
                     }
                     break;
@@ -93,16 +93,9 @@ namespace ElectionTactics
                     foreach(Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
                     foreach (Region r in Map.LandRegions) 
                     {
-                        if (Game.Districts.ContainsKey(r))
+                        if (Game.VisualDistricts.ContainsKey(r))
                         {
-                            Party displayedParty = null;
-                            if(Game.State == GameState.GeneralElection)
-                            {
-                                if (Game.Districts[r].GetLatestElectionResult() != null && Game.Districts[r].GetLatestElectionResult().ElectionCycle == Game.ElectionCycle)
-                                    displayedParty = Game.Districts[r].CurrentWinnerParty;
-                            }
-                            else displayedParty = Game.Districts[r].CurrentWinnerParty;
-
+                            Party displayedParty = Game.VisualDistricts[r].CurrentWinnerParty;
                             if (displayedParty != null) r.SetColor(displayedParty.Color);
                             else r.SetColor(ColorManager.Colors.NoImpactColor);
                         }
@@ -114,9 +107,9 @@ namespace ElectionTactics
                     LegendTitleText.text = "Age Groups";
                     foreach (Region r in Map.LandRegions)
                     {
-                        if (Game.Districts.ContainsKey(r))
+                        if (Game.VisualDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.Districts[r].AgeGroup);
+                            string label = EnumHelper.GetDescription(Game.VisualDistricts[r].AgeGroup);
                             HandleLegendEntry(r, label);
                         }
                         else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
@@ -127,9 +120,9 @@ namespace ElectionTactics
                     LegendTitleText.text = "Languages";
                     foreach (Region r in Map.LandRegions)
                     {
-                        if (Game.Districts.ContainsKey(r))
+                        if (Game.VisualDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.Districts[r].Language);
+                            string label = EnumHelper.GetDescription(Game.VisualDistricts[r].Language);
                             HandleLegendEntry(r, label);
                         }
                         else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
@@ -140,9 +133,9 @@ namespace ElectionTactics
                     LegendTitleText.text = "Religions";
                     foreach (Region r in Map.LandRegions)
                     {
-                        if (Game.Districts.ContainsKey(r))
+                        if (Game.VisualDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.Districts[r].Religion);
+                            string label = EnumHelper.GetDescription(Game.VisualDistricts[r].Religion);
                             HandleLegendEntry(r, label);
                         }
                         else r.SetColor(ColorManager.Colors.InactiveDistrictColor);
@@ -185,9 +178,9 @@ namespace ElectionTactics
         public void ShowGeographyOverlay(GeographyTraitType t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 GeographyTrait trait = d.Geography.FirstOrDefault(x => x.Type == t);
                 if(trait == null) r.SetColor(ColorManager.Colors.NoImpactColor);
                 else if(trait.Category == 3) r.SetColor(ColorManager.Colors.HighImpactColor);
@@ -198,9 +191,9 @@ namespace ElectionTactics
         public void ShowEconomyOverlay(EconomyTrait t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 if (t == d.Economy1) r.SetColor(ColorManager.Colors.HighImpactColor);
                 else if (t == d.Economy2) r.SetColor(ColorManager.Colors.MediumImpactColor);
                 else if (t == d.Economy3) r.SetColor(ColorManager.Colors.LowImpactColor);
@@ -210,9 +203,9 @@ namespace ElectionTactics
         public void ShowDensityOverlay(Density t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 if (d.Density == t) r.SetColor(ColorManager.Colors.MediumImpactColor);
                 else r.SetColor(ColorManager.Colors.NoImpactColor);
             }
@@ -220,9 +213,9 @@ namespace ElectionTactics
         public void ShowAgeOverlay(AgeGroup t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 if (d.AgeGroup == t) r.SetColor(ColorManager.Colors.MediumImpactColor);
                 else r.SetColor(ColorManager.Colors.NoImpactColor);
             }
@@ -230,9 +223,9 @@ namespace ElectionTactics
         public void ShowLanguageOverlay(Language t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 if (d.Language == t) r.SetColor(ColorManager.Colors.MediumImpactColor);
                 else r.SetColor(ColorManager.Colors.NoImpactColor);
             }
@@ -240,9 +233,9 @@ namespace ElectionTactics
         public void ShowReligionOverlay(Religion t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.Districts.ContainsKey(x)))
+            foreach (Region r in Map.LandRegions.Where(x => Game.VisualDistricts.ContainsKey(x)))
             {
-                District d = Game.Districts[r];
+                District d = Game.VisualDistricts[r];
                 if (d.Religion == t) r.SetColor(ColorManager.Colors.MediumImpactColor);
                 else r.SetColor(ColorManager.Colors.NoImpactColor);
             }

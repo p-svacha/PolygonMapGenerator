@@ -15,10 +15,10 @@ namespace ElectionTactics
         public Button LastYearButton;
         public WindowGraph ElectionGraph;
 
-        public List<ElectionResult> ElectionResults;
+        public List<DistrictElectionResult> ElectionResults;
         public int CurrentIndex;
 
-        public void Init(List<ElectionResult> results)
+        public void Init(List<DistrictElectionResult> results)
         {
             ElectionResults = results;
             CurrentIndex = results.Count - 1;
@@ -27,7 +27,7 @@ namespace ElectionTactics
 
         private void DisplayGraph(bool fullRefesh = true)
         {
-            ElectionResult result = ElectionResults[CurrentIndex];
+            DistrictElectionResult result = ElectionResults[CurrentIndex];
             YearText.text = result.Year.ToString();
             if (result != null)
             {

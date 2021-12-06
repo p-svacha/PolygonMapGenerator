@@ -19,13 +19,10 @@ namespace ElectionTactics
         public MapControls MapControls;
         public UI_DistrictLabel DistrictLabelPrefab;
 
-        [Header ("Header")]
-        public Image Header;
-        public Image ElectionPanel;
-        public Button ElectionButton;
-        public Text YearText;
-        public Text PPText;
-        public Text CPText;
+        [Header("Side Panel Elements")]
+        public UI_SidePanelHeader SidePanelHeader;
+        public UI_SidePanelFooter SidePanelFooter;
+        public UI_ElectionControls ElectionControls;
 
         [Header("Tab Buttons")]
         public TabButton DistrictTabButton;
@@ -41,7 +38,7 @@ namespace ElectionTactics
         public Dictionary<Tab, GameObject> TabPanels = new Dictionary<Tab, GameObject>(); // Which tab is connected to which object
         public Dictionary<Tab, TabButton> TabButtons = new Dictionary<Tab, TabButton>(); // Which tab is part of which button
 
-        [Header("Side Panel")]
+        [Header("Side Panel Tabs")]
         public Image SidePanel;
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
@@ -55,23 +52,10 @@ namespace ElectionTactics
         
         public District SelectedDistrict;
 
-        // Header Animation
-        private bool IsHeaderMoving;
-        private Vector2 HeaderSourcePos;
-        private Vector2 HeaderTargetPos;
-        private float HeaderSlideTime;
-        private float HeaderSlideDelay;
 
         void Start()
         {
-            // Colors
-            Header.color = ColorManager.Colors.UiHeaderColor;
-            ElectionPanel.color = ColorManager.Colors.UiSpecialColor;
-            SidePanel.color = ColorManager.Colors.UiMainColor;
-
             // Listeners
-            ElectionButton.onClick.AddListener(() => Game.RunGeneralElection());
-
             TabPanels.Add(Tab.DistrictList, DistrictList.gameObject);
             TabButtons.Add(Tab.DistrictList, DistrictTabButton);
             DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList));
@@ -106,26 +90,17 @@ namespace ElectionTactics
             TabPanels.Add(Tab.Settings, Settings.gameObject);
             TabButtons.Add(Tab.Settings, SettingsTabButton);
             SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings));
+
+            // Element initialization
+            ElectionControls.Init(Game);
+            SidePanelFooter.Init(Game);
         }
 
         #region Update
 
         private void Update()
         {
-            if(IsHeaderMoving)
-            {
-                if(HeaderSlideDelay >= HeaderSlideTime)
-                {
-                    IsHeaderMoving = false;
-                    Header.GetComponent<RectTransform>().anchoredPosition = HeaderTargetPos;
-                }
-                else
-                {
-                    float r = HeaderSlideDelay / HeaderSlideTime;
-                    Header.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(HeaderSourcePos, HeaderTargetPos, r);
-                    HeaderSlideDelay += Time.deltaTime;
-                }
-            }
+
         }
 
         #endregion
@@ -149,7 +124,7 @@ namespace ElectionTactics
                     break;
 
                 case Tab.DistrictList:
-                    DistrictList.Init(this, Game.Districts.Values.OrderByDescending(x => x.Population).ToList());
+                    DistrictList.Init(this, Game.VisualDistricts.Values.OrderByDescending(x => x.Population).ToList());
                     break;
 
                 case Tab.Parliament:
@@ -191,29 +166,7 @@ namespace ElectionTactics
             }
         }
 
-        public void SlideOutHeader(float time)
-        {
-            HeaderSlideTime = time;
-            HeaderSlideDelay = 0f;
-            IsHeaderMoving = true;
-            HeaderSourcePos = Header.GetComponent<RectTransform>().anchoredPosition;
-            HeaderTargetPos = new Vector2(0, 60);
-        }
-        public void SlideInHeader(float time)
-        {
-            HeaderSlideTime = time;
-            HeaderSlideDelay = 0f;
-            IsHeaderMoving = true;
-            HeaderSourcePos = Header.GetComponent<RectTransform>().anchoredPosition;
-            HeaderTargetPos = new Vector2(0, 0);
-        }
-
-        public void UpdateHeaderValues()
-        {
-            YearText.text = Game.Year.ToString();
-            PPText.text = Game.PlayerParty.PolicyPoints.ToString();
-            CPText.text = Game.PlayerParty.CampaignPoints.ToString();
-        }
+        
     }
 
     public enum Tab

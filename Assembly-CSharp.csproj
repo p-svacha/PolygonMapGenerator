@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\GraphAnimationType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Party\PartyNameGenerator.cs" />
+    <Compile Include="Assets\Scripts\Helper\UIElement.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Constitution\ConstitutionChapter.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\PriorityQueue.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Assets\Scripts\Parrisk\Battle\BorderBattle.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\EconomyPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\SidePanel\UI_SidePanelFooter.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\GameState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Parliament\UI_PartyList.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\ContinentNoise.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\ArmyArrow.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\SidePanel\UI_SidePanelHeader.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\LanguagePolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Election\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\MeshGenerator.cs" />
@@ -161,6 +165,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\ColorManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Resources\IconManager.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\LoadingScreen\UI_LoadingScreen.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Graph\WindowGraph.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WindNoise.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
@@ -180,6 +185,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Settings\UI_Settings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\MentalityType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\TextureGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Election\GeneralElectionResult.cs" />
     <Compile Include="Assets\Scripts\Map\Border.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\CenterlineLabler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\District\Mentality.cs" />
@@ -188,6 +194,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\Policy.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RiverInfo.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\MenuUI.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\UI\ElectionControls\UI_ElectionControls.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\VPoint.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Policy\DensityPolicy.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvent.cs" />
@@ -208,7 +215,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPath.cs" />
     <Compile Include="Assets\Scripts\Parrisk\InputHandler.cs" />
     <Compile Include="Assets\Scripts\Map\WaterConnection.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Election\ElectionResult.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Election\DistrictElectionResult.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Tooltip\TooltipTarget.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\MapControls\LegendEntry.cs" />
     <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
@@ -218,7 +225,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\UI\Modifiers\UI_ModifierSlider.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\UI\LoadingScreen\UI_LoadingScreen.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Election\ElectionAnimationSpeed.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

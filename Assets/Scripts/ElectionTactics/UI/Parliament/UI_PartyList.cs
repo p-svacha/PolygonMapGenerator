@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace ElectionTactics
         public GameObject ListContainer;
         public UI_PartyListElement PartyListElementPrefab;
 
-        private List<UI_PartyListElement> ListElements = new List<UI_PartyListElement>();
+        private Dictionary<Party, UI_PartyListElement> ListElements = new Dictionary<Party, UI_PartyListElement>();
         private Dictionary<UI_PartyListElement, Vector2> SourcePositions = new Dictionary<UI_PartyListElement, Vector2>();
         private Dictionary<UI_PartyListElement, Vector2> TargetPositions = new Dictionary<UI_PartyListElement, Vector2>();
         List<Party> Parties;
@@ -19,6 +20,8 @@ namespace ElectionTactics
         private bool IsAnimating;
         private float AnimationTime;
         private float CurrentAnimationTime;
+        private float AnimationSpeedModifier;
+        private Action AnimationCallback;
 
         void Update()
         {
@@ -26,55 +29,67 @@ namespace ElectionTactics
             {
                 UpdatePartyPosition(Parties);
                 IsAnimating = false;
+                if (AnimationCallback != null) AnimationCallback();
             }
             else if (IsAnimating)
             {
                 float r = CurrentAnimationTime / AnimationTime;
-                foreach (UI_PartyListElement elem in ListElements)
+                foreach (UI_PartyListElement elem in ListElements.Values)
                 {
                     elem.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(SourcePositions[elem], TargetPositions[elem], r);
                 }
-                CurrentAnimationTime += Time.deltaTime;
+                CurrentAnimationTime += Time.deltaTime * AnimationSpeedModifier;
             }
         }
 
-        public void Init(List<Party> parties, List<string> values, bool dynamic)
+        public void SetAnimationSpeedModifier(float speed)
+        {
+            AnimationSpeedModifier = speed;
+        }
+
+        public void Init(Dictionary<Party, int> values, bool dynamic)
         {
             ListElements.Clear();
-            Parties = parties;
+            IsAnimating = false;
+            Parties = values.Keys.ToList();
             Dynamic = dynamic;
 
             for (int i = 0; i < ListContainer.transform.childCount; i++) Destroy(ListContainer.transform.GetChild(i).gameObject);
 
-            for(int i = 0; i < parties.Count; i++)
+            foreach(KeyValuePair<Party, int> entry in values)
             {
                 UI_PartyListElement elem = Instantiate(PartyListElementPrefab, ListContainer.transform, false);
-                elem.Init(parties[i], values[i]);
-                ListElements.Add(elem);
+                elem.Init(entry.Key, entry.Value.ToString());
+                ListElements.Add(entry.Key, elem);
             }
 
-            CalculateTargetPositions(parties);
-            UpdatePartyPosition(parties);
+            CalculateTargetPositions(values);
+            UpdatePartyPosition(Parties);
         }
 
-        public void MovePositions(List<Party> parties, float time)
+
+        /// <summary>
+        /// Starts an animation that reorders the parties according to the given values. Callback gets executed when the animation is done.
+        /// </summary>
+        public void MovePositionsAnimated(Dictionary<Party, int> values, float time, Action callback = null)
         {
-            foreach (UI_PartyListElement elem in ListElements) elem.UpdateValues();
-            CalculateTargetPositions(parties);
+            foreach (KeyValuePair<Party, int> value in values) ListElements[value.Key].UpdateValue(value.Value.ToString());
+            CalculateTargetPositions(values);
             AnimationTime = time;
             CurrentAnimationTime = 0f;
             IsAnimating = true;
+            AnimationCallback = callback;
         }
 
         public void HighlightParty(Party p)
         {
-            UI_PartyListElement elem = ListElements.First(x => x.Party == p);
+            UI_PartyListElement elem = ListElements[p];
             elem.Background.color = ColorManager.Colors.UiMainColorLighter2;
             elem.transform.SetAsLastSibling();
         }
         public void UnhighlightParty(Party p)
         {
-            ListElements.First(x => x.Party == p).Background.color = ColorManager.Colors.UiMainColorLighter1;
+            ListElements[p].Background.color = ColorManager.Colors.UiMainColorLighter1;
         }
 
 
@@ -86,17 +101,17 @@ namespace ElectionTactics
             }
         }
 
-        private void CalculateTargetPositions(List<Party> parties)
+        private void CalculateTargetPositions(Dictionary<Party, int> values)
         {
             SourcePositions.Clear();
             TargetPositions.Clear();
 
             int counter = 0;
-            List<Party> sortedList = Dynamic ? parties.OrderByDescending(x => x.Seats).ToList() : parties;
-            foreach (Party p in sortedList)
+            Dictionary<Party, int> sortedValues = Dynamic ? values.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value) : values;
+            foreach (KeyValuePair<Party, int> entry in sortedValues)
             {
                 float y = -(counter * 70);
-                UI_PartyListElement elem = ListElements.First(x => x.Party == p);
+                UI_PartyListElement elem = ListElements[entry.Key];
                 SourcePositions.Add(elem, elem.GetComponent<RectTransform>().anchoredPosition);
                 TargetPositions.Add(elem, new Vector2(0, y));
                 counter++;

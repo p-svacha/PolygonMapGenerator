@@ -8,7 +8,6 @@ namespace ElectionTactics
     {
         [Header("Map Colors")]
         public Color WaterColor;
-        public Color ActiveDistrictColor;
         public Color InactiveDistrictColor;
         public Color SelectedDistrictColor;
 
@@ -20,7 +19,6 @@ namespace ElectionTactics
         public List<Color> LegendColors;
 
         [Header("UI")]
-        public Color UiHeaderColor;
         public Color UiMainColor;
         public Color UiMainColorLighter1;
         public Color UiMainColorLighter2;

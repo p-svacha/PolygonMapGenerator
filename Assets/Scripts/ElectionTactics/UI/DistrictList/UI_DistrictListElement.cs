@@ -25,7 +25,8 @@ namespace ElectionTactics
             {
                 PartyIcon.gameObject.SetActive(true);
                 PartyIcon.color = d.CurrentWinnerParty.Color;
-                MarginText.text = (d.CurrentMargin > 0 ? "+" : "") + d.CurrentMargin.ToString("0.0") + " %";
+                float margin = d.GetLatestElectionResult().GetMargin(UI.Game.PlayerParty);
+                MarginText.text = (margin > 0 ? "+" : "") + margin.ToString("0.0") + " %";
             }
             else
             {

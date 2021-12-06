@@ -87,3 +87,11 @@ Election Tactics
 	- Add popular vote display
 
 
+Priority List
+-------------
+1. Controls during election
+	- 1x Speed / 2x Speed / 4x Speed
+	- Conclude District (jumps to end of graph animation)
+	- Conclude Election (jumps to zoomed out map)
+
+

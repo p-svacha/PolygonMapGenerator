@@ -40,7 +40,9 @@ namespace ElectionTactics
         {
             // Parlialment party list
             Parties = parties;
-            ParliamentPartyList.Init(parties.OrderByDescending(x => x.Seats).ToList(), Parties.OrderByDescending(x => x.Seats).Select(x => x.Seats.ToString()).ToList(), dynamic: true);
+            Dictionary<Party, int> listValues = new Dictionary<Party, int>();
+            foreach (Party p in parties.OrderByDescending(x => x.Seats)) listValues.Add(p, p.Seats);
+            ParliamentPartyList.Init(listValues, dynamic: true);
             
             // Standings party list
             StandingsContainer.SetActive(true);
@@ -54,10 +56,25 @@ namespace ElectionTactics
 
         private void UpdateList(int value)
         {
-            if(value == STANDINGS_ELECTIONS) StandingsPartyList.Init(Parties.OrderByDescending(x => x.TotalElectionsWon).ToList(), Parties.OrderByDescending(x => x.TotalElectionsWon).Select(x => x.TotalElectionsWon.ToString()).ToList(), dynamic: false);
-            else if(value == STANDINGS_SEATS) StandingsPartyList.Init(Parties.OrderByDescending(x => x.TotalSeatsWon).ToList(), (Parties.OrderByDescending(x => x.TotalSeatsWon).Select(x => x.TotalSeatsWon.ToString()).ToList()), dynamic: false);
-            else if(value == STANDINGS_DISTRICTS) StandingsPartyList.Init(Parties.OrderByDescending(x => x.TotalDistrictsWon).ToList(), Parties.OrderByDescending(x => x.TotalDistrictsWon).Select(x => x.TotalDistrictsWon.ToString()).ToList(), dynamic: false);
-            else if(value == STANDINGS_VOTES) StandingsPartyList.Init(Parties.OrderByDescending(x => x.TotalVotes).ToList(), Parties.OrderByDescending(x => x.TotalVotes).Select(x => x.TotalVotes.ToString("N0")).ToList(), dynamic: false);
+            Dictionary<Party, int> listValues = new Dictionary<Party, int>();
+
+            if (value == STANDINGS_ELECTIONS)
+                foreach (Party p in Parties.OrderByDescending(x => x.TotalElectionsWon))
+                    listValues.Add(p, p.TotalElectionsWon);
+
+            if (value == STANDINGS_SEATS)
+                foreach (Party p in Parties.OrderByDescending(x => x.Seats))
+                    listValues.Add(p, p.Seats);
+
+            if (value == STANDINGS_DISTRICTS)
+                foreach (Party p in Parties.OrderByDescending(x => x.TotalDistrictsWon))
+                    listValues.Add(p, p.TotalDistrictsWon);
+
+            if (value == STANDINGS_VOTES)
+                foreach (Party p in Parties.OrderByDescending(x => x.TotalVotes))
+                    listValues.Add(p, p.TotalVotes);
+
+            StandingsPartyList.Init(listValues, dynamic: false);
         }
 
     }

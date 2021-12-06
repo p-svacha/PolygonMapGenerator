@@ -25,11 +25,9 @@ namespace ElectionTactics
         public List<MentalityType> MentalityTypes = new List<MentalityType>();
 
         // Election
-        public List<ElectionResult> ElectionResults = new List<ElectionResult>();
+        public List<DistrictElectionResult> ElectionResults = new List<DistrictElectionResult>();
         public Party CurrentWinnerParty;
-        public float PlayerPartyShare;
         public float CurrentWinnerShare;
-        public float CurrentMargin;
 
         public const int MinSeats = 1;
         public const int RequiredPopulationPerSeat = 40000;
@@ -224,7 +222,7 @@ namespace ElectionTactics
         /// Each party has x base points. On top of that points are added for policies that match the district traits, modifiers and mentality.
         /// There will always be a single winner party.
         /// </summary>
-        public ElectionResult RunElection(Party playerParty, List<Party> parties)
+        public DistrictElectionResult RunElection(List<Party> parties)
         {
             // Get party popularities
             Dictionary<Party, float> voterShares = new Dictionary<Party, float>();
@@ -274,10 +272,11 @@ namespace ElectionTactics
             }
 
             // Create result
-            ElectionResult result = new ElectionResult()
+            DistrictElectionResult result = new DistrictElectionResult()
             {
                 ElectionCycle = Game.ElectionCycle,
                 Year = Game.Year,
+                Seats = Seats,
                 District = this,
                 Votes = partyVotes,
                 VoteShare = voterShares,
@@ -289,13 +288,6 @@ namespace ElectionTactics
             ElectionResults.Add(result);
             CurrentWinnerParty = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Key;
             CurrentWinnerShare = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Value;
-            PlayerPartyShare = result.VoteShare.First(x => x.Key == playerParty).Value;
-            if (CurrentWinnerParty == playerParty)
-            {
-                float secondHighest = result.VoteShare.Values.OrderByDescending(x => x).ToList()[1];
-                CurrentMargin = CurrentWinnerShare - secondHighest;
-            }
-            else CurrentMargin = PlayerPartyShare - CurrentWinnerShare;
 
             return result;
         }
@@ -359,9 +351,12 @@ namespace ElectionTactics
             throw new System.Exception("Geography traits with a category outside 1,2,3 is not allowed.");
         }
 
-        public ElectionResult GetLatestElectionResult()
+        /// <summary>
+        /// Returns the latest election result. With the offset value earlier election result can be gotten; offset = 1 returns the penultimate result.
+        /// </summary>
+        public DistrictElectionResult GetLatestElectionResult(int offset = 0)
         {
-            if (ElectionResults.Count > 0) return ElectionResults[ElectionResults.Count - 1];
+            if (ElectionResults.Count > offset) return ElectionResults[ElectionResults.Count - 1 - offset];
             else return null;
         }
 

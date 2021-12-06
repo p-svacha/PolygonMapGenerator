@@ -21,9 +21,9 @@ namespace ElectionTactics
             Background.color = ColorManager.Colors.UiMainColorLighter1;
         }
 
-        public void UpdateValues()
+        public void UpdateValue(string value)
         {
-            ValueText.text = Party.Seats.ToString();
+            ValueText.text = value;
         }
     }
 }

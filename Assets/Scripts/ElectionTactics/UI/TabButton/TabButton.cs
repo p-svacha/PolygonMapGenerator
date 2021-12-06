@@ -10,9 +10,16 @@ namespace ElectionTactics
         public Image Background;
         public Button Button;
 
+        void Start()
+        {
+            ColorBlock colors = Button.colors;
+            colors.highlightedColor = ColorManager.Colors.UiSpecialColor;
+            Button.colors = colors;
+        }
+
         public void SetSelected(bool active)
         {
-            Background.color = active ? ColorManager.Colors.UiSpecialColor : ColorManager.Colors.UiHeaderColor;
+            Button.GetComponent<Image>().color = active ? ColorManager.Colors.UiSpecialColor : ColorManager.Colors.TextColor;
         }
     }
 }

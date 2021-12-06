@@ -38,6 +38,8 @@ public class WindowGraph : MonoBehaviour
     private GraphAnimationType AnimationType;
     private float AnimationTime;
     private float AnimationDelay;
+    private float AnimationSpeedModifier;
+    private System.Action AnimationCallback;
 
     private List<GraphDataPoint> SourceDataPoints;
     private List<GraphDataPoint> TargetDataPoints;
@@ -62,6 +64,7 @@ public class WindowGraph : MonoBehaviour
 
                 ShowBarGraph(DataPoints, YMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
                 AnimationType = GraphAnimationType.None;
+                if (AnimationCallback != null) AnimationCallback();
             }
             else
             {
@@ -114,7 +117,7 @@ public class WindowGraph : MonoBehaviour
                         break;
                 }
 
-                AnimationDelay += Time.deltaTime;
+                AnimationDelay += Time.deltaTime * AnimationSpeedModifier;
             }
         }
     }
@@ -129,6 +132,7 @@ public class WindowGraph : MonoBehaviour
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
         Bars.Clear();
         BarLabels.Clear();
+        AnimationType = GraphAnimationType.None;
     }
 
     /// <summary>
@@ -177,15 +181,16 @@ public class WindowGraph : MonoBehaviour
         MaxBarHeight = (MaxValue / yMax) * (GraphHeight - YMarginTop);
         AnimationTime = animationTime;
         AnimationDelay = 0f;
-        if (startAnimation) StartInitAnimation();
+        if (startAnimation) StartAnimation();
     }
 
     /// <summary>
-    /// Starts the animation that has been previously initialized with InitAnimatedGraph()
+    /// Starts the animation that has been previously initialized with InitAnimatedGraph(). Callback gets executed when the animation is done.
     /// </summary>
-    public void StartInitAnimation()
+    public void StartAnimation(System.Action callback = null)
     {
         AnimationType = GraphAnimationType.Init;
+        AnimationCallback = callback;
     }
 
     /// <summary>
@@ -200,6 +205,14 @@ public class WindowGraph : MonoBehaviour
         AnimationTime = animationTime;
         AnimationDelay = 0f;
         AnimationType = GraphAnimationType.Update;
+    }
+
+    /// <summary>
+    /// Modifies the speed of the animation.
+    /// </summary>
+    public void SetAnimationSpeedModifier(float speed)
+    {
+        AnimationSpeedModifier = speed;
     }
 
     #endregion

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace ElectionTactics
         private Vector3 MoveTargetPosition;
         private float MoveTime;
         private float MoveDelay;
+        private float MoveSpeedModifier = 1f;
+        private Action OnMoveDoneCallback;
 
         private void Start()
         {
@@ -29,13 +32,19 @@ namespace ElectionTactics
                 {
                     transform.position = MoveTargetPosition;
                     IsMoving = false;
+                    if(OnMoveDoneCallback != null) OnMoveDoneCallback();
                 }
                 else
                 {
                     transform.position = Vector3.Lerp(MoveStartPosition, MoveTargetPosition, MoveDelay / MoveTime);
-                    MoveDelay += Time.deltaTime;
+                    MoveDelay += Time.deltaTime * MoveSpeedModifier;
                 }
             }
+        }
+
+        public void SetMoveSpeedModifier(float speed)
+        {
+            MoveSpeedModifier = speed;
         }
 
         public void FocusDistricts(List<District> districts)
@@ -45,10 +54,10 @@ namespace ElectionTactics
             transform.position = targetPos;
         }
 
-        public void MoveToFocusDistricts(List<District> districts, float time)
+        public void MoveToFocusDistricts(List<District> districts, float time, Action callback = null)
         {
             Vector3 targetPos = GetTargetPosition(districts);
-            InitMovement(targetPos, time);
+            InitMovement(targetPos, time, callback);
         }
 
         private Vector3 GetTargetPosition(List<District> districts)
@@ -64,14 +73,14 @@ namespace ElectionTactics
             return new Vector3(minX + (width / 2) + Offset.x * altitude, altitude, minY + (height / 2) + Offset.y * altitude);
         }
 
-        private void InitMovement(Vector3 targetPosition, float time)
+        private void InitMovement(Vector3 targetPosition, float time, Action callback)
         {
-            if (IsMoving) return;
             IsMoving = true;
             MoveStartPosition = transform.position;
             MoveTargetPosition = targetPosition;
             MoveTime = time;
             MoveDelay = 0f;
+            OnMoveDoneCallback = callback;
         }
 
     }
