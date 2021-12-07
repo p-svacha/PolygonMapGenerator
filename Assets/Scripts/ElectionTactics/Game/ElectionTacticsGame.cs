@@ -59,8 +59,10 @@ namespace ElectionTactics
         // Start is called before the first frame update
         void Start()
         {
+            /*
             StartGame();
             State = GameState.Loading;
+            */
         }
 
         private void StartGame()
