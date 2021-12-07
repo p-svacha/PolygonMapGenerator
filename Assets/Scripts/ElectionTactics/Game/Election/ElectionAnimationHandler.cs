@@ -200,7 +200,7 @@ namespace ElectionTactics
                 {
                     Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
-                    float margin = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.PlayerParty);
+                    float margin = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
                     Game.UI.Parliament.CurrentElectionMarginText.text = (margin > 0 ? "+" : "") + margin.ToString("0.0") + " %";
                     Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.Winner.Color;
                 }

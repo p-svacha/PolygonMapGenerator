@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class UI_GameSetupPlayer : MonoBehaviour
+    public class UI_LobbySlot : MonoBehaviour
     {
         [Header("Active Form")]
         public GameObject ActivePanel;
@@ -16,29 +16,29 @@ namespace ElectionTactics
         public GameObject InactivePanel;
         public Button AddPlayerButton;
 
-        public bool IsActive;
+        public LobbySlotType Type;
 
         // Start is called before the first frame update
         void Start()
         {
             RemovePlayerButton.onClick.AddListener(SetInactive);
-            AddPlayerButton.onClick.AddListener(() => SetActive(PartyNameGenerator.GetRandomPartyName(), canRemove: true));
+            AddPlayerButton.onClick.AddListener(() => SetActive(PartyNameGenerator.GetRandomPartyName(), LobbySlotType.Bot, canRemove: true));
         }
 
-        public void SetActive(string playerName, bool canRemove)
+        public void SetActive(string playerName, LobbySlotType type, bool canRemove)
         {
             InactivePanel.SetActive(false);
             ActivePanel.SetActive(true);
             PlayerText.text = playerName;
             RemovePlayerButton.gameObject.SetActive(canRemove);
-            IsActive = true;
+            Type = type;
         }
 
         public void SetInactive()
         {
             InactivePanel.SetActive(true);
             ActivePanel.SetActive(false);
-            IsActive = false;
+            Type = LobbySlotType.Free;
         }
     }
 }

@@ -6,6 +6,7 @@ namespace ElectionTactics
 {
     public enum GameState
     {
+        Inactive,
         Loading,
         PreparationPhase,
         Election

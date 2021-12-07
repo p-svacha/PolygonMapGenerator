@@ -9,6 +9,8 @@ namespace ElectionTactics
 {
     public class ElectionTacticsGame : MonoBehaviour
     {
+        private GameSettings GameSettings;
+
         public PolygonMapGenerator PMG;
         public Map Map;
         public CameraHandler CameraHandler;
@@ -25,8 +27,7 @@ namespace ElectionTactics
 
         // Parties
         public List<Party> Parties = new List<Party>();
-        public Party PlayerParty;
-        public List<Party> OpponentParties = new List<Party>();
+        public Party LocalPlayerParty;
         public Party WinnerParty;
 
         // Traits
@@ -45,7 +46,7 @@ namespace ElectionTactics
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MinAIPolicyPointsPerCycle = 4;
         private const int MaxAIPolicyPointsPerCycle = 7;
-        private const int NumOpponents = 3;
+        // private const int NumOpponents = 3; // Defined by game settings
         private const int MaxPolicyValue = 8;
 
         // General Election
@@ -56,17 +57,16 @@ namespace ElectionTactics
 
         #region Initialization
 
-        // Start is called before the first frame update
         void Start()
         {
-            /*
-            StartGame();
-            State = GameState.Loading;
-            */
+            State = GameState.Inactive;
         }
 
-        private void StartGame()
+        public void StarNewGame(GameSettings gameSettings)
         {
+            if (State != GameState.Inactive) return;
+            State = GameState.Loading;
+            GameSettings = gameSettings;
             UI.LoadingScreen.gameObject.SetActive(true);
             MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
@@ -121,19 +121,17 @@ namespace ElectionTactics
         private void CreateParties()
         {
             List<Color> takenColors = new List<Color>();
-            Color color = PartyNameGenerator.GetPartyColor(name, takenColors);
-            PlayerParty = new Party(this, "Player Party", color, isAi: false);
-            takenColors.Add(color);
-            Parties.Add(PlayerParty);
-            
-            for(int i = 0; i < NumOpponents; i++)
+
+            foreach(UI_LobbySlot slot in GameSettings.Slots)
             {
-                string name = PartyNameGenerator.GetRandomPartyName(maxLength: 35);
-                color = PartyNameGenerator.GetPartyColor(name, takenColors);
-                takenColors.Add(color);
-                Party p = new Party(this, name, color, isAi: true);
-                Parties.Add(p);
-                OpponentParties.Add(p);
+                if (slot.Type == LobbySlotType.Free) continue;
+                string partyName = slot.PlayerText.text;
+                Color partyColor = PartyNameGenerator.GetPartyColor(name, takenColors);
+                Party party = new Party(this, partyName, partyColor, isAi: slot.Type == LobbySlotType.Bot);
+                if (slot.Type == LobbySlotType.LocalPlayer) LocalPlayerParty = party;
+
+                takenColors.Add(partyColor);
+                Parties.Add(party);
             }
         }
 
@@ -187,8 +185,8 @@ namespace ElectionTactics
             AddRandomDistrict();
 
             // Add policy points to all players
-            AddPolicyPoints(PlayerParty, PlayerPolicyPointsPerCycle);
-            foreach (Party p in OpponentParties)
+            AddPolicyPoints(LocalPlayerParty, PlayerPolicyPointsPerCycle);
+            foreach (Party p in Parties.Where(x => x.AI != null))
             {
                 int addedPolicyPoints = UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1);
                 AddPolicyPoints(p, addedPolicyPoints);
@@ -452,7 +450,7 @@ namespace ElectionTactics
             State = GameState.Election;
 
             // AI policies
-            foreach (Party p in Parties.Where(p => p != PlayerParty))
+            foreach (Party p in Parties.Where(p => p != LocalPlayerParty))
                 p.AI.DistributePolicyPoints();
 
             // Lock policies

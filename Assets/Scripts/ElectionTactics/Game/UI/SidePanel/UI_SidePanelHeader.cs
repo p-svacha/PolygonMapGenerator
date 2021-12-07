@@ -15,8 +15,8 @@ namespace ElectionTactics
         public void UpdateValues(ElectionTacticsGame game)
         {
             YearText.text = game.Year.ToString();
-            PPText.text = game.PlayerParty.PolicyPoints.ToString();
-            CPText.text = game.PlayerParty.CampaignPoints.ToString();
+            PPText.text = game.LocalPlayerParty.PolicyPoints.ToString();
+            CPText.text = game.LocalPlayerParty.CampaignPoints.ToString();
         }
     }
 }

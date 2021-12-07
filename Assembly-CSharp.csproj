@@ -57,179 +57,182 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphAnimationType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyNameGenerator.cs" />
-    <Compile Include="Assets\Scripts\Helper\UIElement.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\ConstitutionChapter.cs" />
-    <Compile Include="Assets\Scripts\PolygonLabels\PriorityQueue.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\PrefabManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\WinCondition.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\Battle\BorderBattle.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\EconomyPolicy.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelFooter.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyList.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\ContinentNoise.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneCircleEvent.cs" />
-    <Compile Include="Assets\Scripts\EnumHelper.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierListElement.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPolygon.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictAttribute.cs" />
     <Compile Include="Assets\Scripts\Parrisk\UI\UI_ParriskGame.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSiteEvent.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictElectionGraph.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_Parliament.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Campaigns\UI_Campaigns.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyListElement.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Religion.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\UI_DistrictLabel.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\District.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Army.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\LandTopologyNoise.cs" />
-    <Compile Include="Assets\Scripts\FlagGeneration\FlagGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\CameraHandler.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\AgeGroupPolicy.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualArmy.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\ModifierType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\PolygonMapGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Constitution\UI_Constitution.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\RidgedMultifractalNoise.cs" />
-    <Compile Include="Assets\Scripts\PolygonLabels\PolygonCenterFinder.cs" />
     <Compile Include="Assets\Scripts\Map\MapDisplaySettings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Tooltip\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Parrisk\ParriskGame.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTrait.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\TemperatureNoise.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\WorldSimulation.cs" />
     <Compile Include="Assets\Scripts\Map\BorderType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\BaseMapCameraHandler.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\ArmyArrow.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelHeader.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
-    <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationSpeed.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPoint.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
-    <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
-    <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\LanguagePolicy.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\MeshGenerator.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\UI_ElectionTactics.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\Structures\VEdge.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphEdge.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Events\UI_Events.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\Noise.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEventHandler.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictListElement.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\Party.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\ContinentCreator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\ParabolaMath.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WaterTopologyNoise.cs" />
     <Compile Include="Assets\Scripts\Map\RegionType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\UI_MainMenu.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_WaterBodyInfo.cs" />
-    <Compile Include="Assets\Scripts\NameGeneration\MarkovInputDataType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\DistrictSeatDistribution.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\PostGame\UI_PostGameScreen.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Language.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Player\Player.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Policies\UI_PolicySelection.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
     <Compile Include="Assets\Scripts\Map\River.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\TopologyCreator.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Properties\AssemblyInfo.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyAI.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\BiomeCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\ConstitutionVoting\UI_Voting.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\ColorManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\IconManager.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\LoadingScreen\UI_LoadingScreen.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\WindNoise.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\PolicyType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\MapControls.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Battle.cs" />
     <Compile Include="Assets\Scripts\Map\Continent.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\Noise\NoiseTester.cs" />
-    <Compile Include="Assets\Scripts\Map\BorderPointType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Settings\GlobalSettings.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Policies\PolicyControl.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\ElectionTacticsGame.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraph.cs" />
     <Compile Include="Assets\Scripts\Parrisk\UI\UI_TroopMovementDialog.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\ReligionPolicy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Settings\UI_Settings.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\MentalityType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\TextureGenerator.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
-    <Compile Include="Assets\Scripts\Map\Border.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\CenterlineLabler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\Battle\TerritoryBattle.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\Structures\MinHeap.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Policy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_Lobby.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RiverInfo.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\MenuUI.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\ElectionControls\UI_ElectionControls.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\VPoint.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\DensityPolicy.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvent.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\MenuNavigator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\GeographyPolicy.cs" />
     <Compile Include="Assets\Scripts\Map\Region.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\WaterCreator.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E01_NewNationEmerge.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Impact.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Impact.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\MapGenerationState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSliderContainer.cs" />
+    <Compile Include="Assets\Scripts\Map\Landmass.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\LegendEntry.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictList.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyNameGenerator.cs" />
+    <Compile Include="Assets\Scripts\Helper\UIElement.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
+    <Compile Include="Assets\Scripts\PolygonLabels\PriorityQueue.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\PrefabManager.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Battle\BorderBattle.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_LobbySlot.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\EconomyPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelFooter.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\ContinentNoise.cs" />
+    <Compile Include="Assets\Scripts\EnumHelper.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictElectionGraph.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\District.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\LandTopologyNoise.cs" />
+    <Compile Include="Assets\Scripts\FlagGeneration\FlagGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\AgeGroupPolicy.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualArmy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\ModifierType.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\RidgedMultifractalNoise.cs" />
+    <Compile Include="Assets\Scripts\PolygonLabels\PolygonCenterFinder.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\TemperatureNoise.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\ArmyArrow.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelHeader.cs" />
+    <Compile Include="Assets\Scripts\Map\WaterBody.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationSpeed.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
+    <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
+    <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\UI_ElectionTactics.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\VEdge.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictListElement.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\Party.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
+    <Compile Include="Assets\Scripts\NameGeneration\MarkovInputDataType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphDataPoint.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\DistrictSeatDistribution.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Language.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyAI.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\ColorManager.cs" />
+    <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\WindNoise.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\MapControls.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\Noise\NoiseTester.cs" />
+    <Compile Include="Assets\Scripts\Map\BorderPointType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Settings\GlobalSettings.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Policies\PolicyControl.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraph.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\MentalityType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
+    <Compile Include="Assets\Scripts\Map\Border.cs" />
+    <Compile Include="Assets\Scripts\Parrisk\Battle\TerritoryBattle.cs" />
+    <Compile Include="Assets\Scripts\VoronoiLib\Structures\MinHeap.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\ElectionControls\UI_ElectionControls.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\DensityPolicy.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\AgeGroup.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Density.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\PrecipitationNoise.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\Constitution.cs" />
-    <Compile Include="Assets\Scripts\Map\Landmass.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPath.cs" />
     <Compile Include="Assets\Scripts\Parrisk\InputHandler.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPath.cs" />
     <Compile Include="Assets\Scripts\Map\WaterConnection.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\DistrictElectionResult.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Tooltip\TooltipTarget.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\LegendEntry.cs" />
-    <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
-    <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictList.cs" />
-    <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\UI_MainMenu.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\GameSetup\UI_GameSetup.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\GameSetup\UI_GameSetupPlayer.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\MenuNavigator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbySlotType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbyType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -486,17 +489,17 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>C:\Program Files\2020.3.2f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Burst.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.Unsafe.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>Library\PackageCache\com.unity.collections@1.0.0-pre.5\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.5.4\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
@@ -852,17 +855,11 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>C:\Program Files\2020.3.2f1\Editor\Data\NetStandard\compat\2.0.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Universal.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
@@ -873,29 +870,23 @@
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Mathematics.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Searcher.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Netcode.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Netcode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
@@ -909,32 +900,44 @@
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Netcode.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.Netcode.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Collections">
-      <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Netcode.Runtime">
-      <HintPath>Library\ScriptAssemblies\Unity.Netcode.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst">
-      <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
+    <Reference Include="Unity.ShaderGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Netcode.Components">
       <HintPath>Library\ScriptAssemblies\Unity.Netcode.Components.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Netcode.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Netcode.Editor.dll</HintPath>
+    <Reference Include="Unity.Burst">
+      <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Burst.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+    <Reference Include="Unity.RenderPipelines.Universal.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

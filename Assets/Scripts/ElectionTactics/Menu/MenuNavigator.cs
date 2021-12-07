@@ -8,8 +8,9 @@ namespace ElectionTactics
 {
     public class MenuNavigator : MonoBehaviour
     {
+        public ElectionTacticsGame Game;
         public UI_MainMenu MainMenuScreen;
-        public UI_GameSetup GameSetupScreen;
+        public UI_Lobby LobbyScreen;
 
         void Start()
         {
@@ -20,8 +21,9 @@ namespace ElectionTactics
 
             // Initialize menu screens
             MainMenuScreen.Init(this);
-            GameSetupScreen.Init(this);
+            LobbyScreen.Init(this);
             MainMenuScreen.gameObject.SetActive(true);
+            LobbyScreen.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -37,21 +39,37 @@ namespace ElectionTactics
 
         #region Menu Actions
 
+        public void CreateSingleplayerGame()
+        {
+            string playerName = MainMenuScreen.PlayerNameText.text;
+            LobbyScreen.InitSingleplayerGame(playerName);
+            SwitchToLobbyScreen();
+        }
+
         public void HostGame()
         {
             NetworkManager.Singleton.ConnectionApprovalCallback += HandleApprovalCheck;
             NetworkManager.Singleton.StartHost();
-            string playerName = MainMenuScreen.PlayerNameText.text;
-            GameSetupScreen.CreateNewMultiplayerGame(playerName);
-
-            MainMenuScreen.gameObject.SetActive(false);
-            GameSetupScreen.gameObject.SetActive(true);
         }
 
         public void JoinGame()
         {
             NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(MainMenuScreen.PlayerNameText.text);
             NetworkManager.Singleton.StartClient();
+        }
+
+        private void SwitchToLobbyScreen()
+        {
+            MainMenuScreen.gameObject.SetActive(false);
+            LobbyScreen.gameObject.SetActive(true);
+        }
+
+        public void StartGame(GameSettings gameSettings)
+        {
+            MainMenuScreen.gameObject.SetActive(false);
+            LobbyScreen.gameObject.SetActive(false);
+
+            Game.StarNewGame(gameSettings);
         }
 
         #endregion
@@ -78,9 +96,9 @@ namespace ElectionTactics
             callback(false, null, approveConnection, null, null);
             Debug.Log("NETWORK: Incoming connection, Approval: " + approveConnection);
 
-            if (approveConnection)
+            if (approveConnection && clientId != NetworkManager.Singleton.LocalClientId)
             {
-                GameSetupScreen.AddHumanPlayer(connectedPlayerName);
+                LobbyScreen.AddHumanPlayer(connectedPlayerName);
             }
         }
 
@@ -91,9 +109,22 @@ namespace ElectionTactics
         {
             if (clientId == NetworkManager.Singleton.LocalClientId) // We ourselves just joined
             {
-                Debug.Log("NETWORK: We connected to the server");
+                string playerName = MainMenuScreen.PlayerNameText.text;
+                Debug.Log("NETWORK: We (" + playerName + ") connected to the server");
+
+                if (NetworkManager.Singleton.IsHost) // Host
+                {
+                    LobbyScreen.InitHostMultiplayerGame(playerName);
+                    SwitchToLobbyScreen();
+                }
+                else // Client
+                {
+                    LobbyScreen.InitJoinMultiplayerGame();
+                    SwitchToLobbyScreen();
+                }
             }
-            else
+
+            else // We are the server and someone joined
             {
                 Debug.Log("NETWORK: Client Connected");
             }

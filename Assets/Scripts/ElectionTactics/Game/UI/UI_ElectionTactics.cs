@@ -120,7 +120,7 @@ namespace ElectionTactics
             switch (tab)
             {
                 case Tab.Policies:
-                    PolicySelection.Init(Game.PlayerParty);
+                    PolicySelection.Init(Game.LocalPlayerParty);
                     break;
 
                 case Tab.DistrictList:
