@@ -9,9 +9,9 @@ namespace ElectionTactics
     /// </summary>
     public class GameSettings
     {
-        public List<UI_LobbySlot> Slots;
+        public List<LobbySlot> Slots;
 
-        public GameSettings(List<UI_LobbySlot> lobbySlots)
+        public GameSettings(List<LobbySlot> lobbySlots)
         {
             Slots = lobbySlots;
         }

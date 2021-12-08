@@ -60,6 +60,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\ConstitutionChapter.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\WinCondition.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbySlotType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyList.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneCircleEvent.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierListElement.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPoint.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameType.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\LanguagePolicy.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
@@ -182,16 +184,20 @@
     <Compile Include="Assets\Scripts\Map\MapDrawMode.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\UI_ElectionTactics.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\VEdge.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Network\NetworkConnectionData.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictListElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\Party.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Network\NetworkPlayer.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovInputDataType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\MapGenerationSettings.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Network\ET_NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\DistrictSeatDistribution.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Language.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
@@ -218,6 +224,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\ElectionControls\UI_ElectionControls.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\DensityPolicy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbySlot.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\AgeGroup.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Density.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\PrecipitationNoise.cs" />
@@ -230,9 +237,6 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbySlotType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbyType.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/ElectionTactics.unity
+    guid: 50e10914f95f2324e94e44e36771da30
   m_configObjects: {}

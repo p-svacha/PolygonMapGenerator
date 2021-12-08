@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,29 +17,37 @@ namespace ElectionTactics
         public GameObject InactivePanel;
         public Button AddPlayerButton;
 
-        public LobbySlotType Type;
+        public LobbySlot Slot;
 
-        // Start is called before the first frame update
         void Start()
         {
             RemovePlayerButton.onClick.AddListener(SetInactive);
-            AddPlayerButton.onClick.AddListener(() => SetActive(PartyNameGenerator.GetRandomPartyName(), LobbySlotType.Bot, canRemove: true));
+            AddPlayerButton.onClick.AddListener(() => SetActive(PartyNameGenerator.GetRandomPartyName(), LobbySlotType.Bot));
         }
 
-        public void SetActive(string playerName, LobbySlotType type, bool canRemove)
+        public void Init(LobbySlot slot)
         {
+            Slot = slot;
+            SetInactive();
+        }
+
+        public void SetActive(string playerName, LobbySlotType type)
+        {
+            Slot.SetActive(playerName, type);
+
             InactivePanel.SetActive(false);
             ActivePanel.SetActive(true);
             PlayerText.text = playerName;
+            bool canRemove = Slot.SlotType != LobbySlotType.LocalPlayer && (Slot.LobbyType == GameType.Singleplayer || NetworkManager.Singleton.IsHost);
             RemovePlayerButton.gameObject.SetActive(canRemove);
-            Type = type;
         }
 
         public void SetInactive()
         {
+            Slot.SetInactive();
+
             InactivePanel.SetActive(true);
             ActivePanel.SetActive(false);
-            Type = LobbySlotType.Free;
         }
     }
 }

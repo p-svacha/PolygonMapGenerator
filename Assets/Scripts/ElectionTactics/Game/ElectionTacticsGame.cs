@@ -9,7 +9,8 @@ namespace ElectionTactics
 {
     public class ElectionTacticsGame : MonoBehaviour
     {
-        private GameSettings GameSettings;
+        private GameSettings GameSettings;  // Static rules of the game (only server needs this to initialize the game)
+        private GameType GameType;          // Singleplayer, Host, Client
 
         public PolygonMapGenerator PMG;
         public Map Map;
@@ -62,15 +63,22 @@ namespace ElectionTactics
             State = GameState.Inactive;
         }
 
-        public void StarNewGame(GameSettings gameSettings)
+        public void InitNewGame(GameSettings gameSettings, GameType type)
         {
             if (State != GameState.Inactive) return;
             State = GameState.Loading;
-            GameSettings = gameSettings;
             UI.LoadingScreen.gameObject.SetActive(true);
+            GameSettings = gameSettings;
+            GameType = type;
             MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
-            ElectionAnimationHandler = new ElectionAnimationHandler(this);
+        }
+
+        public void InitJoinGame()
+        {
+            State = GameState.Loading;
+            UI.LoadingScreen.gameObject.SetActive(true);
+            GameType = GameType.MultiplayerClient;
         }
 
         private void OnMapGenerationDone(Map map)
@@ -95,8 +103,28 @@ namespace ElectionTactics
             CameraHandler.FocusDistricts(VisualDistricts.Values.ToList());
             UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
 
+            ElectionAnimationHandler = new ElectionAnimationHandler(this);
+
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc();
             State = GameState.PreparationPhase;
         }
+
+        public void StartGameAsClient(Map map)
+        {
+            UI.LoadingScreen.gameObject.SetActive(false);
+
+            ElectionAnimationHandler = new ElectionAnimationHandler(this);
+
+            Year = 1999;
+
+            Map = map;
+            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapDrawMode.Basic);
+
+            UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
+            UI.SelectTab(Tab.Parliament);
+            State = GameState.PreparationPhase;
+        }
+
 
         private void InitGeograhyTraits()
         {
@@ -122,13 +150,13 @@ namespace ElectionTactics
         {
             List<Color> takenColors = new List<Color>();
 
-            foreach(UI_LobbySlot slot in GameSettings.Slots)
+            foreach(LobbySlot slot in GameSettings.Slots)
             {
-                if (slot.Type == LobbySlotType.Free) continue;
-                string partyName = slot.PlayerText.text;
+                if (slot.SlotType == LobbySlotType.Free) continue;
+                string partyName = slot.Name;
                 Color partyColor = PartyNameGenerator.GetPartyColor(name, takenColors);
-                Party party = new Party(this, partyName, partyColor, isAi: slot.Type == LobbySlotType.Bot);
-                if (slot.Type == LobbySlotType.LocalPlayer) LocalPlayerParty = party;
+                Party party = new Party(this, partyName, partyColor, isAi: slot.SlotType == LobbySlotType.Bot);
+                if (slot.SlotType == LobbySlotType.LocalPlayer) LocalPlayerParty = party;
 
                 takenColors.Add(partyColor);
                 Parties.Add(party);

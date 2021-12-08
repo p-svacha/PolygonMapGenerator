@@ -8,6 +8,9 @@ namespace ElectionTactics
 {
     public class UI_PartyList : MonoBehaviour
     {
+        private float ListElementHeight;
+        private const float PADDING = 10f;
+
         public GameObject ListContainer;
         public UI_PartyListElement PartyListElementPrefab;
 
@@ -50,6 +53,7 @@ namespace ElectionTactics
         public void Init(Dictionary<Party, int> values, bool dynamic)
         {
             ListElements.Clear();
+            ListElementHeight = PartyListElementPrefab.GetComponent<RectTransform>().sizeDelta.y;
             IsAnimating = false;
             Parties = values.Keys.ToList();
             Dynamic = dynamic;
@@ -110,7 +114,7 @@ namespace ElectionTactics
             Dictionary<Party, int> sortedValues = Dynamic ? values.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value) : values;
             foreach (KeyValuePair<Party, int> entry in sortedValues)
             {
-                float y = -(counter * 70);
+                float y = -(counter * (ListElementHeight + PADDING));
                 UI_PartyListElement elem = ListElements[entry.Key];
                 SourcePositions.Add(elem, elem.GetComponent<RectTransform>().anchoredPosition);
                 TargetPositions.Add(elem, new Vector2(0, y));

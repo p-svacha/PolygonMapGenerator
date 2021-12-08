@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,12 +31,12 @@ namespace ElectionTactics
 
         private void HostGame()
         {
-            MenuNavigator.HostGame();
+            ET_NetworkManager.Singleton.HostGame();
         }
 
         private void JoinGame()
         {
-            MenuNavigator.JoinGame();
+            ET_NetworkManager.Singleton.JoinGame();
         }
     }
 

@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 1227770651015869554}
   - component: {fileID: -4653103621500742229}
   m_Layer: 5
-  m_Name: PlayerListElement
+  m_Name: LobbySlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
