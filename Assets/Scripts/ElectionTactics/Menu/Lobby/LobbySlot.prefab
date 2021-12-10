@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6753759028117343791}
   - component: {fileID: 4896470768265691679}
   m_Layer: 5
-  m_Name: Active
+  m_Name: ActivePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -289,8 +289,12 @@ MonoBehaviour:
   ActivePanel: {fileID: 628371373815199575}
   PlayerText: {fileID: 5721724407559629570}
   RemovePlayerButton: {fileID: 1762493043230540514}
-  InactivePanel: {fileID: 8932153792703902698}
+  AddPlayerPanel: {fileID: 8932153792703902698}
   AddPlayerButton: {fileID: 4872653445234283937}
+  Lobby: {fileID: 0}
+  Slot:
+    SlotType: 0
+    Name: 
 --- !u!1 &8502696283669734954
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +429,7 @@ GameObject:
   - component: {fileID: 673444255782628851}
   - component: {fileID: 4872653445234283937}
   m_Layer: 5
-  m_Name: Inactive
+  m_Name: AddPlayerPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,4 +615,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Party Name
+  m_Text: ~~~~~~~

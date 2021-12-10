@@ -157,7 +157,7 @@ namespace ElectionTactics
 
             foreach(LobbySlot slot in GameSettings.Slots)
             {
-                if (slot.SlotType == LobbySlotType.Free) continue;
+                if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
                 string partyName = slot.Name;
                 Color partyColor = PartyNameGenerator.GetPartyColor(name, takenColors);
                 Party party = new Party(this, partyName, partyColor, isAi: slot.SlotType == LobbySlotType.Bot);

@@ -9,6 +9,7 @@ namespace ElectionTactics
         Free,
         LocalPlayer,
         Human,
-        Bot
+        Bot,
+        Inactive
     }
 }

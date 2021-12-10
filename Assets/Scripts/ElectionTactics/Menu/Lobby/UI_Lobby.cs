@@ -25,56 +25,78 @@ namespace ElectionTactics
             {
                 LobbySlot slot = new LobbySlot(Type, LobbySlotType.Free);
                 Slots.Add(slot);
-                uiSlot.Init(slot);
+                uiSlot.Init(this, slot);
             }
         }
 
         public void InitSingleplayerGame(string playerName)
         {
             Type = GameType.Singleplayer;
-            InitSlots();
+            foreach (UI_LobbySlot slot in UiSlots) slot.SetInactive();
             FillNextFreeSlot(playerName, LobbySlotType.LocalPlayer);
+            OrganizeSlots();
         }
 
         public void InitHostMultiplayerGame(string playerName)
         {
             Type = GameType.MultiplayerHost;
-            InitSlots();
+            foreach (UI_LobbySlot slot in UiSlots) slot.SetInactive();
             FillNextFreeSlot(playerName, LobbySlotType.LocalPlayer);
-        }
-
-        
-        public void FillNextFreeSlot(string name, LobbySlotType slotType)
-        {
-            foreach(UI_LobbySlot uiSlot in UiSlots)
-            {
-                if (uiSlot.Slot.SlotType == LobbySlotType.Free)
-                {
-                    uiSlot.SetActive(name, slotType);
-                    break;
-                }
-                
-            }
+            OrganizeSlots();
         }
 
         public void InitJoinMultiplayerGame()
         {
             Type = GameType.MultiplayerClient;
-            InitSlots();
             StartGameButtonText.text = "Waiting";
             StartGameButton.enabled = false;
         }
 
-        private void InitSlots()
+        /// <summary>
+        /// Is run on server when a player joins
+        /// </summary>
+        public void PlayerJoined(NetworkConnectionData connectionData)
         {
-            foreach (LobbySlot slot in Slots) slot.LobbyType = Type;
+            FillNextFreeSlot(connectionData.Name, LobbySlotType.Human);
+            OrganizeSlots();
+            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
         }
 
-        private void InitGame()
+        public void AddBot()
         {
-            GameSettings gameSettings = new GameSettings(Slots);
-            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.InitGameServerRpc();
-            MenuNavigator.InitGame(gameSettings);
+            FillNextFreeSlot(PartyNameGenerator.GetRandomPartyName(), LobbySlotType.Bot);
+            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
+            else OrganizeSlots();
+        }
+        public void RemovePlayer(UI_LobbySlot slot)
+        {
+            slot.SetInactive();
+            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
+            else OrganizeSlots();
+        }
+
+        public void FillNextFreeSlot(string name, LobbySlotType slotType)
+        {
+            foreach(UI_LobbySlot uiSlot in UiSlots)
+            {
+                if (uiSlot.Slot.SlotType == LobbySlotType.Free || uiSlot.Slot.SlotType == LobbySlotType.Inactive)
+                {
+                    uiSlot.SetActive(name, slotType);
+                    break;
+                }
+            }
+        }
+
+        private void OrganizeSlots()
+        {
+            List<UI_LobbySlot> filledSlots = UiSlots.Where(x => x.Slot.SlotType != LobbySlotType.Free && x.Slot.SlotType != LobbySlotType.Inactive).ToList();
+
+            for(int i = 0; i < UiSlots.Count; i++)
+            {
+                if (i < filledSlots.Count) UiSlots[i].SetActive(filledSlots[i].Slot.Name, filledSlots[i].Slot.SlotType);
+                else if (i == filledSlots.Count && Type != GameType.MultiplayerClient) UiSlots[i].SetAddPlayer();
+                else UiSlots[i].SetInactive();
+            }
         }
 
         public void SetSlotsFromServer(byte[] data)
@@ -85,8 +107,16 @@ namespace ElectionTactics
 
             foreach(LobbySlot slot in slots)
             {
-                if (slot.SlotType != LobbySlotType.Free) FillNextFreeSlot(slot.Name, slot.SlotType);
+                if (slot.SlotType != LobbySlotType.Free && slot.SlotType != LobbySlotType.Inactive) FillNextFreeSlot(slot.Name, slot.SlotType);
             }
+            OrganizeSlots();
+        }
+
+        private void InitGame()
+        {
+            GameSettings gameSettings = new GameSettings(Slots);
+            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.InitGameServerRpc();
+            MenuNavigator.InitGame(gameSettings);
         }
     }
 }

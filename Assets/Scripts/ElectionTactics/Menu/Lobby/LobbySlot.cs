@@ -7,13 +7,11 @@ namespace ElectionTactics
     [System.Serializable]
     public class LobbySlot
     {
-        public GameType LobbyType;
         public LobbySlotType SlotType;
         public string Name;
 
         public LobbySlot(GameType lobbyType, LobbySlotType slotType)
         {
-            LobbyType = lobbyType;
             SlotType = slotType;
             Name = "";
         }
@@ -24,10 +22,16 @@ namespace ElectionTactics
             SlotType = type;
         }
 
-        public void SetInactive()
+        public void SetAddPlayer()
         {
             Name = "";
             SlotType = LobbySlotType.Free;
+        }
+
+        public void SetInactive()
+        {
+            Name = "";
+            SlotType = LobbySlotType.Inactive;
         }
     }
 }

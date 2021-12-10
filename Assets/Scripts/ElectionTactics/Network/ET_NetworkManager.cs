@@ -106,8 +106,6 @@ namespace ElectionTactics
                     // Join existing game
                     MenuNavigator.Lobby.InitJoinMultiplayerGame();
                     MenuNavigator.SwitchToLobbyScreen();
-
-                    NetworkPlayer.Server.UpdateLobbyServerRpc();
                 }
             }
 
@@ -118,7 +116,7 @@ namespace ElectionTactics
                 NetworkConnectionData connectionData = ConnectionData[clientId];
                 connectedClient.PlayerObject.GetComponent<NetworkPlayer>().Init(connectionData);
 
-                MenuNavigator.Lobby.FillNextFreeSlot(connectionData.Name, LobbySlotType.Human);
+                MenuNavigator.Lobby.PlayerJoined(connectionData);
 
                 Debug.Log("NETWORK: Client Connected\n" + connectionData.ToString());
             }
