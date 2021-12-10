@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\BorderPoint.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\MapHasher.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameType.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\LanguagePolicy.cs" />
@@ -237,6 +238,8 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
+    <Compile Include="Assets\Scripts\Helper\SerializableTypes\SerializableVector2.cs" />
+    <Compile Include="Assets\Scripts\Helper\SerializableTypes\SerializeableVector3.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

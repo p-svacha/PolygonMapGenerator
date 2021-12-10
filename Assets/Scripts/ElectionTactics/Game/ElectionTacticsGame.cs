@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -16,6 +17,7 @@ namespace ElectionTactics
         public Map Map;
         public CameraHandler CameraHandler;
         public UI_ElectionTactics UI;
+        public MenuNavigator MenuNavigator;
 
         public GameState State;
 
@@ -70,7 +72,9 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(true);
             GameSettings = gameSettings;
             GameType = type;
-            MapGenerationSettings settings = new MapGenerationSettings(10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+            MapGenerationSettings settings = new MapGenerationSettings(seed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc(seed);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
@@ -78,7 +82,14 @@ namespace ElectionTactics
         {
             State = GameState.Loading;
             UI.LoadingScreen.gameObject.SetActive(true);
+            GameSettings = new GameSettings(MenuNavigator.Lobby.Slots);
             GameType = GameType.MultiplayerClient;
+        }
+
+        public void StartGameAsClient(int seed)
+        {
+            MapGenerationSettings settings = new MapGenerationSettings(seed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
         private void OnMapGenerationDone(Map map)
@@ -91,7 +102,6 @@ namespace ElectionTactics
 
             InitGeograhyTraits();
             InitMentalities();
-
             CreateParties();
             
             Constitution = new Constitution(this);
@@ -105,26 +115,21 @@ namespace ElectionTactics
 
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
 
-            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc();
             State = GameState.PreparationPhase;
         }
 
-        public void StartGameAsClient(Map map)
+        /*
+        private void OnMapGenerationDoneClient(Map map)
         {
             UI.LoadingScreen.gameObject.SetActive(false);
-
-            ElectionAnimationHandler = new ElectionAnimationHandler(this);
-
             Year = 1999;
-
             Map = map;
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapDrawMode.Basic);
-
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
-            UI.SelectTab(Tab.Parliament);
+            ElectionAnimationHandler = new ElectionAnimationHandler(this);
             State = GameState.PreparationPhase;
         }
-
+        */
 
         private void InitGeograhyTraits()
         {

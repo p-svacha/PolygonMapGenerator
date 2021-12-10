@@ -176,7 +176,7 @@ public class UI_MapEditor : MonoBehaviour
         int minContinentSize = int.Parse(MinContinentSizeText.text);
         int maxContinentSize = int.Parse(MaxContinentSizeText.text);
         float continentSizeFactor = ContinentSizeSlider.value;
-        MapGenerationSettings settings = new MapGenerationSettings(width, height, minRegionArea, maxRegionArea, minContinentSize, maxContinentSize, CurrentMapType, continentSizeFactor);
+        MapGenerationSettings settings = new MapGenerationSettings(MapGenerationSettings.RandomSeed(), width, height, minRegionArea, maxRegionArea, minContinentSize, maxContinentSize, CurrentMapType, continentSizeFactor);
         PMG.GenerateMap(settings, callback: OnMapGenerationDone);
     }
 

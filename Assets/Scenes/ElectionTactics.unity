@@ -5914,30 +5914,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PMG: {fileID: 106487532}
-  Map:
-    RootObject: {fileID: 0}
-    BorderPointContainer: {fileID: 0}
-    BorderContainer: {fileID: 0}
-    RegionContainer: {fileID: 0}
-    RiverContainer: {fileID: 0}
-    ContinentContainer: {fileID: 0}
-    WaterConnectionContainer: {fileID: 0}
-    Borders: []
-    BorderPoints: []
-    EdgeBorders: []
-    Regions: []
-    Landmasses: []
-    WaterBodies: []
-    Continents: []
-    Rivers: []
-    WaterConnections: []
-    DrawMode: 0
-    IsShowingRegionBorders: 0
-    IsShowingShorelineBorders: 0
-    IsShowingContinentBorders: 0
-    IsShowingWaterConnections: 0
   CameraHandler: {fileID: 664389566}
   UI: {fileID: 1387644463}
+  MenuNavigator: {fileID: 407366627}
   State: 0
   ActiveGeographyTraits: 
   ActiveEconomyTraits: 

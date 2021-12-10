@@ -63,7 +63,7 @@ namespace ParriskGame
             NumStartingArmies = numStartingArmies;
             Turn = 0;
 
-            MapGenerationSettings settings = new MapGenerationSettings(15, 10, 0.4f, 2f, 3, 12, MapType.BigOceans);
+            MapGenerationSettings settings = new MapGenerationSettings(MapGenerationSettings.RandomSeed(), 15, 10, 0.4f, 2f, 3, 12, MapType.BigOceans);
             PMG.GenerateMap(settings, OnMapGenerationDone);
         }
 

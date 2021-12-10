@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Threading;
-
 using static GeometryFunctions;
 using MapGeneration.ContinentCreation;
+using MapGeneration;
+using System.Text;
 
 public class PolygonMapGenerator : MonoBehaviour
 {
@@ -102,8 +103,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
         Reset();
 
-        Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-        //seed = -663403863;
+        Seed = settings.Seed;
         Debug.Log("Generating " + GenerationSettings.Width + "/" + GenerationSettings.Height + GenerationSettings.MapType.ToString() + " map with region sizes between " + GenerationSettings.MinPolygonArea + " and " + GenerationSettings.MaxPolygonArea + ".");
         Debug.Log("SEED: " + Seed);
         UnityEngine.Random.InitState(Seed);
@@ -556,7 +556,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
     }
 
-    private void AddNode(GraphNode n, bool isEdgeNode = false, bool isCornerNode = false)
+    public void AddNode(GraphNode n, bool isEdgeNode = false, bool isCornerNode = false)
     {
         Nodes.Add(n);
         if (isEdgeNode) EdgeNodes.Add(n);
@@ -729,8 +729,13 @@ public class PolygonMapGenerator : MonoBehaviour
         SwitchState(MapGenerationState.FindWaterNeighbours);
     }
 
-    private void DrawMap()
+    public Map DrawMap()
     {
+        // Validate
+        foreach (GraphPolygon p in Polygons)
+            foreach (GraphNode n in p.Nodes)
+                if (!Nodes.Contains(n)) Debug.Log("################################ Node " + n.ToString() + " not found!");
+
         Map = new Map(GenerationSettings);
 
         // Init all gameobjects
@@ -896,6 +901,7 @@ public class PolygonMapGenerator : MonoBehaviour
         }
 
         Callback?.Invoke(Map);
+        return Map;
     }
 
     private void FindAllPolygons()

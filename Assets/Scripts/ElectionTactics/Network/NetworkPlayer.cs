@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -52,18 +51,15 @@ namespace ElectionTactics
 
         #region Start Game
         [ServerRpc]
-        public void StartGameServerRpc()
+        public void StartGameServerRpc(int seed)
         {
-            byte[] mapData = ET_NetworkManager.Serialize(ET_NetworkManager.Singleton.Game.Map);
-            StartGameClientRpc(mapData);
+            StartGameClientRpc(seed);
         }
         [ClientRpc]
-        private void StartGameClientRpc(byte[] mapData)
+        private void StartGameClientRpc(int seed)
         {
             if (IsHost) return;
-
-            Map map = (Map) ET_NetworkManager.Deserialize(mapData);
-            if (!IsHost) ET_NetworkManager.Singleton.Game.StartGameAsClient(map);
+            ET_NetworkManager.Singleton.Game.StartGameAsClient(seed);
         }
         #endregion
 

@@ -38,7 +38,7 @@ public class MenuUI : MonoBehaviour
 
     private void StartMapGeneration(int size)
     {
-        MapGenerationSettings settings = new MapGenerationSettings(size, size, 0.08f, 1.5f, 5, 30, MapType.Island);
+        MapGenerationSettings settings = new MapGenerationSettings(MapGenerationSettings.RandomSeed(), size, size, 0.08f, 1.5f, 5, 30, MapType.Island);
         PMG.GenerateMap(settings, OnMapGenerationDone);
 
         LoadingScreen.gameObject.SetActive(true);

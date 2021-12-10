@@ -146,11 +146,12 @@ namespace ElectionTactics
         public static byte[] Serialize(object obj)
         {
             BinaryFormatter bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 bf.Serialize(ms, obj);
                 return ms.ToArray();
             }
+
         }
 
         public static object Deserialize(byte[] arrBytes)
@@ -164,10 +165,6 @@ namespace ElectionTactics
                 return obj;
             }
         }
-
-        #endregion
-
-        #region Game commands
 
         #endregion
 
