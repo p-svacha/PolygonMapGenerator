@@ -34,13 +34,14 @@ namespace ElectionTactics
             SetInactive();
         }
 
-        public void SetActive(string playerName, LobbySlotType type)
+        public void SetActive(string playerName, Color c, LobbySlotType type)
         {
-            Slot.SetActive(playerName, type);
+            Slot.SetActive(playerName, c, type);
 
             AddPlayerPanel.SetActive(false);
             ActivePanel.SetActive(true);
             PlayerText.text = playerName;
+            PlayerText.color = c;
             bool canRemove = Slot.SlotType != LobbySlotType.LocalPlayer && (Lobby.Type == GameType.Singleplayer || NetworkManager.Singleton.IsHost);
             RemovePlayerButton.gameObject.SetActive(canRemove);
         }

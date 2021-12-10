@@ -9,17 +9,23 @@ namespace ElectionTactics
     {
         public LobbySlotType SlotType;
         public string Name;
+        private float ColorR;
+        private float ColorG;
+        private float ColorB;
 
-        public LobbySlot(GameType lobbyType, LobbySlotType slotType)
+        public LobbySlot(LobbySlotType slotType)
         {
             SlotType = slotType;
             Name = "";
         }
 
-        public void SetActive(string name, LobbySlotType type)
+        public void SetActive(string name, Color c, LobbySlotType type)
         {
             Name = name;
             SlotType = type;
+            ColorR = c.r;
+            ColorG = c.g;
+            ColorB = c.b;
         }
 
         public void SetAddPlayer()
@@ -32,6 +38,11 @@ namespace ElectionTactics
         {
             Name = "";
             SlotType = LobbySlotType.Inactive;
+        }
+
+        public Color GetColor()
+        {
+            return new Color(ColorR, ColorG, ColorB);
         }
     }
 }

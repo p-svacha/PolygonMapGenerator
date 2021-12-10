@@ -102,34 +102,22 @@ namespace ElectionTactics
 
             InitGeograhyTraits();
             InitMentalities();
-            CreateParties();
-            
-            Constitution = new Constitution(this);
-            UI.Constitution.Init(Constitution);
+            InitParties();
+
+            if (GameType != GameType.MultiplayerClient)
+            {
+                Constitution = new Constitution(this);
+                UI.Constitution.Init(Constitution);
+                StartNextElectionCycle();
+            }
 
             UI.SelectTab(Tab.Parliament);
-            StartNextElectionCycle();
             UpdateVisualDistricts();
             CameraHandler.FocusDistricts(VisualDistricts.Values.ToList());
-            UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
-
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
 
             State = GameState.PreparationPhase;
         }
-
-        /*
-        private void OnMapGenerationDoneClient(Map map)
-        {
-            UI.LoadingScreen.gameObject.SetActive(false);
-            Year = 1999;
-            Map = map;
-            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapDrawMode.Basic);
-            UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
-            ElectionAnimationHandler = new ElectionAnimationHandler(this);
-            State = GameState.PreparationPhase;
-        }
-        */
 
         private void InitGeograhyTraits()
         {
@@ -151,19 +139,13 @@ namespace ElectionTactics
             }
         }
 
-        private void CreateParties()
+        private void InitParties()
         {
-            List<Color> takenColors = new List<Color>();
-
             foreach(LobbySlot slot in GameSettings.Slots)
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
-                string partyName = slot.Name;
-                Color partyColor = PartyNameGenerator.GetPartyColor(name, takenColors);
-                Party party = new Party(this, partyName, partyColor, isAi: slot.SlotType == LobbySlotType.Bot);
+                Party party = new Party(this, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
                 if (slot.SlotType == LobbySlotType.LocalPlayer) LocalPlayerParty = party;
-
-                takenColors.Add(partyColor);
                 Parties.Add(party);
             }
         }
@@ -262,7 +244,6 @@ namespace ElectionTactics
             newDistrict.OrderId = AllDistricts.Count;
 
             AllDistricts.Add(r, newDistrict);
-            UI.MapControls.UpdateMapDisplay();
 
             UpdateDistrictAges();
             UpdateActivePolicies();
@@ -281,6 +262,7 @@ namespace ElectionTactics
                 VisualDistricts.Add(kvp.Key, kvp.Value);
                 kvp.Value.MapLabel.gameObject.SetActive(true);
             }
+            UI.MapControls.UpdateMapDisplay();
         }
 
         public void AddRandomDistrict()

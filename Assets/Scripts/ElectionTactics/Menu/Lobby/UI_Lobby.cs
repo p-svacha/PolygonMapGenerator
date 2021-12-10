@@ -16,6 +16,7 @@ namespace ElectionTactics
         public Text StartGameButtonText;
 
         public GameType Type;
+        List<Color> UsedColors = new List<Color>();
 
         public void Init(MenuNavigator nav)
         {
@@ -23,7 +24,7 @@ namespace ElectionTactics
             StartGameButton.onClick.AddListener(InitGame);
             foreach (UI_LobbySlot uiSlot in UiSlots)
             {
-                LobbySlot slot = new LobbySlot(Type, LobbySlotType.Free);
+                LobbySlot slot = new LobbySlot(LobbySlotType.Free);
                 Slots.Add(slot);
                 uiSlot.Init(this, slot);
             }
@@ -33,15 +34,25 @@ namespace ElectionTactics
         {
             Type = GameType.Singleplayer;
             foreach (UI_LobbySlot slot in UiSlots) slot.SetInactive();
-            FillNextFreeSlot(playerName, LobbySlotType.LocalPlayer);
+
+            UsedColors.Clear();
+            Color partyColor = PartyNameGenerator.GetPartyColor(playerName, UsedColors);
+            UsedColors.Add(partyColor);
+            FillNextFreeSlot(playerName, partyColor, LobbySlotType.LocalPlayer);
+
             OrganizeSlots();
-        }
+        }   
 
         public void InitHostMultiplayerGame(string playerName)
         {
             Type = GameType.MultiplayerHost;
             foreach (UI_LobbySlot slot in UiSlots) slot.SetInactive();
-            FillNextFreeSlot(playerName, LobbySlotType.LocalPlayer);
+
+            UsedColors.Clear();
+            Color partyColor = PartyNameGenerator.GetPartyColor(playerName, UsedColors);
+            UsedColors.Add(partyColor);
+            FillNextFreeSlot(playerName, partyColor, LobbySlotType.LocalPlayer);
+
             OrganizeSlots();
         }
 
@@ -57,14 +68,21 @@ namespace ElectionTactics
         /// </summary>
         public void PlayerJoined(NetworkConnectionData connectionData)
         {
-            FillNextFreeSlot(connectionData.Name, LobbySlotType.Human);
+            Color playerColor = PartyNameGenerator.GetPartyColor(connectionData.Name, UsedColors);
+            UsedColors.Add(playerColor);
+            FillNextFreeSlot(connectionData.Name, playerColor, LobbySlotType.Human);
+
             OrganizeSlots();
             if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
         }
 
         public void AddBot()
         {
-            FillNextFreeSlot(PartyNameGenerator.GetRandomPartyName(), LobbySlotType.Bot);
+            string botName = PartyNameGenerator.GetRandomPartyName();
+            Color botColor = PartyNameGenerator.GetPartyColor(botName, UsedColors);
+            UsedColors.Add(botColor);
+            FillNextFreeSlot(botName, botColor, LobbySlotType.Bot);
+
             if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
             else OrganizeSlots();
         }
@@ -75,13 +93,13 @@ namespace ElectionTactics
             else OrganizeSlots();
         }
 
-        public void FillNextFreeSlot(string name, LobbySlotType slotType)
+        public void FillNextFreeSlot(string name, Color c, LobbySlotType slotType)
         {
             foreach(UI_LobbySlot uiSlot in UiSlots)
             {
                 if (uiSlot.Slot.SlotType == LobbySlotType.Free || uiSlot.Slot.SlotType == LobbySlotType.Inactive)
                 {
-                    uiSlot.SetActive(name, slotType);
+                    uiSlot.SetActive(name, c, slotType);
                     break;
                 }
             }
@@ -93,7 +111,7 @@ namespace ElectionTactics
 
             for(int i = 0; i < UiSlots.Count; i++)
             {
-                if (i < filledSlots.Count) UiSlots[i].SetActive(filledSlots[i].Slot.Name, filledSlots[i].Slot.SlotType);
+                if (i < filledSlots.Count) UiSlots[i].SetActive(filledSlots[i].Slot.Name, filledSlots[i].Slot.GetColor(), filledSlots[i].Slot.SlotType);
                 else if (i == filledSlots.Count && Type != GameType.MultiplayerClient) UiSlots[i].SetAddPlayer();
                 else UiSlots[i].SetInactive();
             }
@@ -107,7 +125,7 @@ namespace ElectionTactics
 
             foreach(LobbySlot slot in slots)
             {
-                if (slot.SlotType != LobbySlotType.Free && slot.SlotType != LobbySlotType.Inactive) FillNextFreeSlot(slot.Name, slot.SlotType);
+                if (slot.SlotType != LobbySlotType.Free && slot.SlotType != LobbySlotType.Inactive) FillNextFreeSlot(slot.Name, slot.GetColor(), slot.SlotType);
             }
             OrganizeSlots();
         }
