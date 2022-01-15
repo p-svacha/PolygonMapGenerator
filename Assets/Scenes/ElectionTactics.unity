@@ -5918,12 +5918,14 @@ MonoBehaviour:
   UI: {fileID: 1387644463}
   MenuNavigator: {fileID: 407366627}
   State: 0
+  GeographyTraits: []
   ActiveGeographyTraits: 
   ActiveEconomyTraits: 
   ActiveDensityTraits: 
   ActiveAgeGroupTraits: 
   ActiveLanguageTraits: 
   ActiveReligionTraits: 
+  Mentalities: []
   ElectionCycle: 0
   Year: 0
 --- !u!4 &631248566
@@ -13339,6 +13341,25 @@ MonoBehaviour:
   Campaigns: {fileID: 1160460141}
   Voting: {fileID: 581513187}
   Settings: {fileID: 1056232022}
+  IsDistrictSelected: 0
+  SelectedDistrict:
+    Name: 
+    OrderId: 0
+    Geography: []
+    Language: 0
+    Religion: 0
+    Density: 0
+    AgeGroup: 0
+    Economy1: 0
+    Economy2: 0
+    Economy3: 0
+    Mentalities: []
+    MentalityTypes: 
+    Population: 0
+    Seats: 0
+    Voters: 0
+    VoterTurnout: 0
+    Modifiers: []
 --- !u!1 &1407756785
 GameObject:
   m_ObjectHideFlags: 0
@@ -14904,6 +14925,49 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1559518085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559518087}
+  - component: {fileID: 1559518086}
+  m_Layer: 0
+  m_Name: ConsoleToGUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1559518086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559518085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecce12fb91fa5de43b88acbe8491cabb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1559518087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559518085}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.6773252, y: 0.05447972, z: 3.855829}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1589382549
 GameObject:
   m_ObjectHideFlags: 0

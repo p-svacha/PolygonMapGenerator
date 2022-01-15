@@ -7,6 +7,7 @@ namespace ElectionTactics
 {
     public class District
     {
+        public Random.State Seed; // Random value that was used to create this district. Value can be used to exactly recreate the district.
         public ElectionTacticsGame Game;
         public string Name;
         public int OrderId;
@@ -66,22 +67,26 @@ namespace ElectionTactics
         public List<Modifier> Modifiers = new List<Modifier>();
 
         // Visual
+        public bool IsVisible { get; private set; }
         public UI_DistrictLabel MapLabel;
 
         #region Initialization
 
-        public District(ElectionTacticsGame game, Region r, Density density, AgeGroup ageGroup, Language language, Religion religion)
+        public District(Random.State seed, ElectionTacticsGame game, Region r, string name)
         {
+            Seed = seed;
             Game = game;
             Region = r;
-            Name = MarkovChainWordGenerator.GetRandomName(11);
+            Name = name;
+
+            Random.state = seed;
 
             SetGeographyTraits();
 
-            Density = density;
-            AgeGroup = ageGroup;
-            Language = language;
-            Religion = religion;
+            Density = GetDensityForNewRegion();
+            AgeGroup = GetAgeGroupForNewRegion();
+            Language = GetLanguageForNewRegion();
+            Religion = GetReligionForNewRegion();
 
             Economy1 = ElectionTacticsGame.GetRandomEconomyTrait();
             Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
@@ -92,7 +97,7 @@ namespace ElectionTactics
             int numMentalities = Random.Range(1, 4);
             while (Mentalities.Count < numMentalities)
             {
-                Mentality m = Game.GetMentalityFor(this);
+                Mentality m = Game.GetRandomAdoptableMentality(this);
                 Mentalities.Add(m);
                 MentalityTypes.Add(m.Type);
             }
@@ -210,6 +215,41 @@ namespace ElectionTactics
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 2));
             else if (Region.LakeCoastRatio > 0.1f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 1));
+        }
+
+        private Density GetDensityForNewRegion() // Denisty is weighted random rural > mixed > urban
+        {
+            float rng = UnityEngine.Random.value;
+            if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
+            else if (rng < 0.25f + 0.33f) return Density.Mixed; // Mixed - 33% chance
+            else return Density.Rural; // Rural  - 42 % chance
+        }
+        private AgeGroup GetAgeGroupForNewRegion() // Age group is fully random
+        {
+            return ElectionTacticsGame.GetRandomAgeGroup();
+        }
+        private Language GetLanguageForNewRegion() // Languages can spread over land borders
+        {
+            List<Language> languageChances = new List<Language>();
+            languageChances.Add(ElectionTacticsGame.GetRandomLanguage());
+            foreach (Region r in Region.LandNeighbours)
+            {
+                if (Game.VisibleDistricts.ContainsKey(r)) languageChances.Add(Game.VisibleDistricts[r].Language);
+            }
+            return languageChances[Random.Range(0, languageChances.Count)];
+        }
+        private Religion GetReligionForNewRegion() // Religion can spread over land and water
+        {
+            List<Religion> religionChances = new List<Religion>();
+            foreach (Region r in Region.Neighbours)
+            {
+                Religion religion;
+                if (Game.VisibleDistricts.ContainsKey(r)) religion = Game.VisibleDistricts[r].Religion;
+                else religion = ElectionTacticsGame.GetRandomReligion();
+
+                religionChances.Add(religion);
+            }
+            return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
         }
 
         #endregion
@@ -385,6 +425,16 @@ namespace ElectionTactics
         private bool HasMentality(MentalityType t)
         {
             return MentalityTypes.Contains(t);
+        }
+
+        #endregion
+
+        #region Visual
+
+        public void SetVisible(bool v)
+        {
+            IsVisible = v;
+            MapLabel.gameObject.SetActive(v);
         }
 
         #endregion

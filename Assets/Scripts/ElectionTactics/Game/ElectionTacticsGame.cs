@@ -25,8 +25,7 @@ namespace ElectionTactics
         public Constitution Constitution;
 
         // Districts
-        public Dictionary<Region, District> VisualDistricts = new Dictionary<Region, District>();
-        private Dictionary<Region, District> AllDistricts = new Dictionary<Region, District>(); // Contains districts that will be added after the election animation
+        public Dictionary<Region, District> Districts = new Dictionary<Region, District>();   // Contains districts that will be added after the election animation
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -106,14 +105,15 @@ namespace ElectionTactics
 
             if (GameType != GameType.MultiplayerClient)
             {
+                MarkovChainWordGenerator.Init();
                 Constitution = new Constitution(this);
                 UI.Constitution.Init(Constitution);
-                StartNextElectionCycle();
+                StartNextElectionCycle(); // Start first cycle
+                SetAllDistrictsVisible();
+                CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
             }
 
             UI.SelectTab(Tab.Parliament);
-            UpdateVisualDistricts();
-            CameraHandler.FocusDistricts(VisualDistricts.Values.ToList());
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
 
             State = GameState.PreparationPhase;
@@ -171,7 +171,7 @@ namespace ElectionTactics
                             if (Physics.Raycast(ray, out hit, 100))
                             {
                                 Region mouseRegion = hit.transform.gameObject.GetComponent<Region>();
-                                if (VisualDistricts.ContainsKey(mouseRegion)) UI.SelectDistrict(VisualDistricts[mouseRegion]);
+                                if (VisibleDistricts.ContainsKey(mouseRegion)) UI.SelectDistrict(VisibleDistricts[mouseRegion]);
                                 else UI.SelectDistrict(null);
                             }
                         }
@@ -185,7 +185,7 @@ namespace ElectionTactics
         }
 
         /// <summary>
-        /// Server side function. Handles everything related to starting a new election cycle:
+        /// Serverside function. Handles everything related to starting a new election cycle:
         /// - Incrementing year/cycle
         /// - Adding new district
         /// - Distributing policy and campaign points to players for the next phase
@@ -206,6 +206,19 @@ namespace ElectionTactics
                 int addedPolicyPoints = UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1);
                 AddPolicyPoints(p, addedPolicyPoints);
             }
+
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.InitCycleServerRpc();
+        }
+
+        /// <summary>
+        /// Clientside function to start an election cycle. All data comes from the server.
+        /// </summary>
+        public void StartNextElectionCycleClient(UnityEngine.Random.State districtSeed, string districtName, int regionId)
+        {
+            CreateDistrict(districtSeed, districtName, Map.Regions.First(x => x.Id == regionId));
+            UI.MapControls.RefreshMapDisplay();
+            SetAllDistrictsVisible();
+            CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
         }
 
         /// <summary>
@@ -228,49 +241,48 @@ namespace ElectionTactics
         #region Map Evolution
 
         /// <summary>
-        /// Creates a new district. To make it visual use UpdateVisualDistricts().
+        /// Server-side function. Creates a new random district in the given region.
         /// </summary>
-        private District CreateTempDistrict(Region r)
+        private District CreateDistrict(Region r)
         {
-            Density density = GetDensityForNewRegion(r);
-            AgeGroup ageGroup = GetAgeGroupForNewRegion(r);
-            Language language = GetLanguageForNewRegion(r);
-            Religion religion = GetReligionForNewRegion(r);
-            District newDistrict = new District(this, r, density, ageGroup, language, religion);
+            string name = MarkovChainWordGenerator.GenerateWord("Province", 4);
+            UnityEngine.Random.State seed = UnityEngine.Random.state;
+            return CreateDistrict(seed, name, r);
+        }
+
+        /// <summary>
+        /// Creates an invisible district given the seed, name and region on the map. To make it visible call SetAllDistrictsVisible().
+        /// </summary>
+        public District CreateDistrict(UnityEngine.Random.State seed, string name, Region r)
+        {
+            District newDistrict = new District(seed, this, r, name);
             UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
             label.gameObject.SetActive(false);
             label.Init(newDistrict);
             newDistrict.MapLabel = label;
-            newDistrict.OrderId = AllDistricts.Count;
+            newDistrict.OrderId = Districts.Count;
+            newDistrict.SetVisible(false);
 
-            AllDistricts.Add(r, newDistrict);
+            Districts.Add(r, newDistrict);
 
             UpdateDistrictAges();
             UpdateActivePolicies();
-            
+
             return newDistrict;
         }
 
-        /// <summary>
-        /// Synchronizes the visual districts with all districts.
-        /// </summary>
-        public void UpdateVisualDistricts()
+        public void SetAllDistrictsVisible()
         {
-            VisualDistricts.Clear();
-            foreach (KeyValuePair<Region, District> kvp in AllDistricts)
-            {
-                VisualDistricts.Add(kvp.Key, kvp.Value);
-                kvp.Value.MapLabel.gameObject.SetActive(true);
-            }
-            UI.MapControls.UpdateMapDisplay();
+            foreach (District d in Districts.Values) d.SetVisible(true);
+            UI.MapControls.RefreshMapDisplay();
         }
 
         public void AddRandomDistrict()
         {
-            if (AllDistricts.Count == 0)
+            if (Districts.Count == 0)
             {
                 Region randomRegion = Map.LandRegions[UnityEngine.Random.Range(0, Map.LandRegions.Count)];
-                CreateTempDistrict(randomRegion);
+                CreateDistrict(randomRegion);
                 return;
             }
             else
@@ -278,9 +290,9 @@ namespace ElectionTactics
                 // 1. Find regions which have the highest ratio of (neighbouring active districts : neighbouring inactive districts)
                 List<Region> candidates = new List<Region>();
                 float highestRatio = 0;
-                foreach(Region r in Map.LandRegions.Where(x => !AllDistricts.Keys.Contains(x)))
+                foreach(Region r in Map.LandRegions.Where(x => !Districts.Keys.Contains(x)))
                 {
-                    int activeNeighbours = r.Neighbours.Where(x => AllDistricts.Keys.Contains(x)).Count();
+                    int activeNeighbours = r.Neighbours.Where(x => Districts.Keys.Contains(x)).Count();
                     int totalNeighbours = r.Neighbours.Count;
                     float ratio = 1f * activeNeighbours / totalNeighbours;
                     if (ratio == highestRatio) candidates.Add(r);
@@ -294,46 +306,11 @@ namespace ElectionTactics
 
                 // 2. Chose random candidate and calculate attributes
                 Region chosenRegion = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-                CreateTempDistrict(chosenRegion);
+                CreateDistrict(chosenRegion);
             }
         }
 
-        private Density GetDensityForNewRegion(Region region) // Denisty is weighted random rural > mixed > urban
-        {
-            float rng = UnityEngine.Random.value;
-            if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
-            else if (rng < 0.25f + 0.33f) return Density.Mixed; // Mixed - 33% chance
-            else return Density.Rural; // Rural  - 42 % chance
-        }
-        private AgeGroup GetAgeGroupForNewRegion(Region region) // Age group is fully random
-        {
-            return GetRandomAgeGroup();
-        }
-        private Language GetLanguageForNewRegion(Region region) // Languages can spread over land borders
-        {
-            List<Language> languageChances = new List<Language>();
-            languageChances.Add(GetRandomLanguage());
-            foreach(Region r in region.LandNeighbours)
-            {
-                if (VisualDistricts.ContainsKey(r)) languageChances.Add(VisualDistricts[r].Language);
-            }
-            return languageChances[UnityEngine.Random.Range(0, languageChances.Count)];
-        }
-        private Religion GetReligionForNewRegion(Region region) // Religion can spread over land and water
-        {
-            List<Religion> religionChances = new List<Religion>();
-            foreach (Region r in region.Neighbours)
-            {
-                Religion religion;
-                if (VisualDistricts.ContainsKey(r)) religion = VisualDistricts[r].Religion;
-                else religion = GetRandomReligion();
-
-                religionChances.Add(religion);
-            }
-            return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
-        }
-
-        public Mentality GetMentalityFor(District d)
+        public Mentality GetRandomAdoptableMentality(District d)
         {
             List<Mentality> candidates = new List<Mentality>();
             foreach (Mentality m in Mentalities)
@@ -345,7 +322,7 @@ namespace ElectionTactics
 
         private void UpdateActivePolicies()
         {
-            foreach (District d in AllDistricts.Values)
+            foreach (District d in Districts.Values)
             {
                 foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
                 {
@@ -397,7 +374,7 @@ namespace ElectionTactics
 
         private void UpdateDistrictAges()
         {
-            foreach(District d in AllDistricts.Values)
+            foreach(District d in Districts.Values)
             {
                 GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.Core);
                 if (coreTrait != null) d.Geography.Remove(coreTrait);
@@ -408,7 +385,7 @@ namespace ElectionTactics
                 else if (d.OrderId < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
                 else if (d.OrderId < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
 
-                int numDistricts = AllDistricts.Count;
+                int numDistricts = Districts.Count;
                 if(numDistricts - d.OrderId - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
                 else if(numDistricts - d.OrderId - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
                 else if(numDistricts - d.OrderId - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
@@ -477,7 +454,7 @@ namespace ElectionTactics
 
             // Election result
             List<DistrictElectionResult> districtResults = new List<DistrictElectionResult>();
-            foreach (District district in VisualDistricts.Values)
+            foreach (District district in VisibleDistricts.Values)
             {
                 DistrictElectionResult districtResult = district.RunElection(Parties);
 
@@ -495,7 +472,7 @@ namespace ElectionTactics
             foreach (Party p in winnerParties) p.TotalElectionsWon++;
 
             // District effects
-            foreach (District d in VisualDistricts.Values) d.OnElectionEnd();
+            foreach (District d in VisibleDistricts.Values) d.OnElectionEnd();
 
             // Handle next election start
             StartNextElectionCycle();
@@ -549,6 +526,9 @@ namespace ElectionTactics
         {
             return GeographyTraits.First(x => x.Type == type && x.Category == category);
         }
+
+        public Dictionary<Region, District> VisibleDistricts { get { return Districts.Where(x => x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
+        public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
 
         #endregion
     }

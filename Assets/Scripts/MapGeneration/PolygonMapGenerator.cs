@@ -74,8 +74,6 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private Queue<Action> Actions = new Queue<Action>();
 
-    private Thread NameGeneratorThread;
-
     // Performance analysis
     public DateTime StartCreation;
     public DateTime StateTimeStamp;
@@ -88,9 +86,6 @@ public class PolygonMapGenerator : MonoBehaviour
     void Start()
     {
         GenerationState = MapGenerationState.Waiting;
-        MarkovChainWordGenerator.Init();
-        NameGeneratorThread = new Thread(() => MarkovChainWordGenerator.GenerateWords("Province", 4));
-        NameGeneratorThread.Start();
     }
 
     public void GenerateMap(MapGenerationSettings settings, Action<Map> callback = null)

@@ -86,6 +86,17 @@ public static class MarkovChainWordGenerator
         return word.Substring(1, word.Length - 2); // Remove word start and end char
     }
 
+    public static List<string> GenerateWords(string wordType, int nGramLength, int amount)
+    {
+        List<string> words = new List<string>();
+        while(words.Count < amount)
+        {
+            string word = GenerateWord(wordType, nGramLength);
+            if (!words.Contains(word)) words.Add(word);
+        }
+        return words;
+    }
+
     public static void GenerateWords(string wordType, int nGramLength)
     {
         while(GeneratedWords.Count < TargetNumWords)
@@ -100,9 +111,9 @@ public static class MarkovChainWordGenerator
         List<string> duplicates = new List<string>();
         InputWords.Add(category, new List<string>());
 
-        string line;
-        System.IO.StreamReader file = new System.IO.StreamReader("Assets/Scripts/NameGeneration/InputData/" + category + ".txt", System.Text.Encoding.GetEncoding("iso-8859-1"));
-        while ((line = file.ReadLine()) != null)
+        TextAsset mytxtData = (TextAsset)Resources.Load("NameGeneration/Province");
+        string[] lines = mytxtData.text.Split('\n');
+        foreach(string line in lines)
         {
             if (!InputWords[category].Contains(line))
             {
@@ -114,7 +125,6 @@ public static class MarkovChainWordGenerator
             }
             else duplicates.Add(line);
         }
-        file.Close();
 
         if (duplicates.Count > 0)
         {

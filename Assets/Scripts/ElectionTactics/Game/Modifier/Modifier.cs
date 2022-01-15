@@ -7,11 +7,12 @@ namespace ElectionTactics
     /// <summary>
     /// Modifiers are temporary effects that apply to a party in a specific district.
     /// </summary>
+    [System.Serializable]
     public class Modifier
     {
         public ModifierType Type;
-        public District District;
-        public Party Party;
+        [System.NonSerialized] public District District;
+        [System.NonSerialized] public Party Party;
         public int TotalLength;
         public int RemainingLength;
         public string Description;

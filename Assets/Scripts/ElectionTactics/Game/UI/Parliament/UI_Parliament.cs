@@ -46,7 +46,8 @@ namespace ElectionTactics
             
             // Standings party list
             StandingsContainer.SetActive(true);
-            if(game.Constitution.WinCondition.Type == WinConditionType.TotalElectionsWon) StandingsDropdown.value = STANDINGS_ELECTIONS;
+            if(game.Constitution == null) StandingsDropdown.value = STANDINGS_ELECTIONS;
+            else if(game.Constitution.WinCondition.Type == WinConditionType.TotalElectionsWon) StandingsDropdown.value = STANDINGS_ELECTIONS;
             else if(game.Constitution.WinCondition.Type == WinConditionType.TotalSeatsWon) StandingsDropdown.value = STANDINGS_SEATS;
             else if(game.Constitution.WinCondition.Type == WinConditionType.TotalDistrictsWon) StandingsDropdown.value = STANDINGS_DISTRICTS;
             else if(game.Constitution.WinCondition.Type == WinConditionType.TotalVotes) StandingsDropdown.value = STANDINGS_VOTES;

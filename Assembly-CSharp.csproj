@@ -238,8 +238,7 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
-    <Compile Include="Assets\Scripts\Helper\SerializableTypes\SerializableVector2.cs" />
-    <Compile Include="Assets\Scripts\Helper\SerializableTypes\SerializeableVector3.cs" />
+    <Compile Include="Assets\Scripts\Helper\ConsoleToGUI.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -272,7 +271,7 @@
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-     <None Include="Assets\Scripts\NameGeneration\InputData\Province.txt" />
+     <None Include="Assets\Resources\NameGeneration\Province.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\2020.3.2f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

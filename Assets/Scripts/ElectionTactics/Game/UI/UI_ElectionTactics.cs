@@ -49,7 +49,8 @@ namespace ElectionTactics
         public UI_Campaigns Campaigns;
         public UI_Voting Voting;
         public UI_Settings Settings;
-        
+
+        public bool IsDistrictSelected;
         public District SelectedDistrict;
 
 
@@ -124,7 +125,7 @@ namespace ElectionTactics
                     break;
 
                 case Tab.DistrictList:
-                    DistrictList.Init(this, Game.VisualDistricts.Values.OrderByDescending(x => x.Population).ToList());
+                    DistrictList.Init(this, Game.VisibleDistricts.Values.OrderByDescending(x => x.Population).ToList());
                     break;
 
                 case Tab.Parliament:
@@ -138,6 +139,7 @@ namespace ElectionTactics
             if (SelectedDistrict == d && SelectedDistrict != null) // Clicking the already selected district or clicking away from district unselects it
             {
                 SelectTab(Tab.DistrictList);
+                IsDistrictSelected = false;
             }
             else if (d != null) // Clicking on a district
             {
@@ -146,10 +148,12 @@ namespace ElectionTactics
                 SelectedDistrict.Region.SetAnimatedHighlight(true);
                 SelectTab(Tab.DistrictInfo);
                 DistrictInfo.Init(d);
+                IsDistrictSelected = true;
             }
-            else if(d == null && SelectedDistrict != null) // Clicking away when a dsitrict has been selected before
+            else if(d == null && SelectedDistrict != null) // Clicking away when a district has been selected before
             {
                 SelectTab(Tab.DistrictList);
+                IsDistrictSelected = false;
             }
             else // Click away when nothing has been selected
             {
@@ -159,10 +163,11 @@ namespace ElectionTactics
 
         private void UnselectDistrict()
         {
-            if(SelectedDistrict != null)
+            if(IsDistrictSelected)
             {
                 SelectedDistrict.Region.SetAnimatedHighlight(false);
                 SelectedDistrict = null;
+                IsDistrictSelected = false;
             }
         }
 

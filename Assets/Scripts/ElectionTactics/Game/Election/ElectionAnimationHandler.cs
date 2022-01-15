@@ -289,7 +289,7 @@ namespace ElectionTactics
             Game.UI.Parliament.CurrentElectionContainer.SetActive(false);
 
             // Show new districts
-            Game.UpdateVisualDistricts();
+            Game.SetAllDistrictsVisible();
 
             // Change UI controls
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
@@ -298,7 +298,7 @@ namespace ElectionTactics
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);
 
-            Game.CameraHandler.MoveToFocusDistricts(Game.VisualDistricts.Values.ToList(), DistrictPanTime, OnCameraZoomOutAfterElectionDone);
+            Game.CameraHandler.MoveToFocusDistricts(Game.VisibleDistricts.Values.ToList(), DistrictPanTime, OnCameraZoomOutAfterElectionDone);
         }
 
         private void OnCameraZoomOutAfterElectionDone()

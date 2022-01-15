@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
@@ -63,6 +65,23 @@ namespace ElectionTactics
         }
         #endregion
 
+        #region Update Districts
+        [ServerRpc]
+        public void InitCycleServerRpc()
+        {
+            Debug.Log("sent district data");
+            KeyValuePair<Region, District> newDistrict = ET_NetworkManager.Singleton.Game.InvisibleDistricts.First();
+            InitCycleClientRpc(ET_NetworkManager.Serialize(newDistrict.Value.Seed), newDistrict.Value.Name, newDistrict.Key.Id);
+        }
+        [ClientRpc]
+        private void InitCycleClientRpc(byte[] newDistrictSeed, string newDistrictName, int newDistrictRegionId)
+        {
+            if (IsHost) return;
+            Debug.Log("received district data");
+            Random.State districtSeed = (Random.State)ET_NetworkManager.Deserialize(newDistrictSeed);
+            ET_NetworkManager.Singleton.Game.StartNextElectionCycleClient(districtSeed, newDistrictName, newDistrictRegionId);
+        }
+        #endregion
 
     }
 }

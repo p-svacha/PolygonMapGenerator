@@ -10,6 +10,7 @@ public class Region : MonoBehaviour
     public GraphPolygon Polygon;
 
     // Attributes
+    public int Id;
     public string Name;
     public float Area;
     public float Jaggedness;
@@ -77,6 +78,7 @@ public class Region : MonoBehaviour
 
     public void Init(GraphPolygon p)
     {
+        Id = p.Id;
         Polygon = p;
         BorderPoints = p.Nodes.Select(x => x.BorderPoint).ToList();
         Borders = p.Connections.Select(x => x.Border).ToList();

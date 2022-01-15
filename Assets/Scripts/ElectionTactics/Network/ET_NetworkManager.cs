@@ -141,6 +141,9 @@ namespace ElectionTactics
 
         #region Serialize / Deserialize
 
+        /// <summary>
+        /// Serializes any serializable object with the default built-in serialization. Do only use this on very small objects!
+        /// </summary>
         public static byte[] Serialize(object obj)
         {
             BinaryFormatter bf = new BinaryFormatter();
