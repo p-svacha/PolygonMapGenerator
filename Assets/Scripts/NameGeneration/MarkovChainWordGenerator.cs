@@ -60,48 +60,54 @@ public static class MarkovChainWordGenerator
         Random = new System.Random();
     }
 
-    public static string GenerateWord(string wordType, int nGramLength)
+    public static string GenerateWord(string wordType, int nGramLength, int maxLength)
     {
-        string word = WordStartChar + "";
+        string word = "";
 
-        while (!word.EndsWith(WordEndChar + ""))
+        while (word == "" || word.Length > maxLength + 2)
         {
-            //Debug.Log(word);
-            if (word.Length < (nGramLength - 1))
+
+            word = WordStartChar + "";
+
+            while (!word.EndsWith(WordEndChar + ""))
             {
-                int startIndex = 0;
-                int length = word.Length;
-                string nGram = PickRandomNGramStartingWith(wordType, word.Substring(startIndex, length), nGramLength);
-                word += nGram[word.Length];
-            }
-            else
-            {
-                int startIndex = word.Length - (nGramLength - 1);
-                int length = nGramLength - 1;
-                string nGram = PickRandomNGramStartingWith(wordType, word.Substring(startIndex, length), nGramLength);
-                word += nGram[nGramLength - 1];
+                //Debug.Log(word);
+                if (word.Length < (nGramLength - 1))
+                {
+                    int startIndex = 0;
+                    int length = word.Length;
+                    string nGram = PickRandomNGramStartingWith(wordType, word.Substring(startIndex, length), nGramLength);
+                    word += nGram[word.Length];
+                }
+                else
+                {
+                    int startIndex = word.Length - (nGramLength - 1);
+                    int length = nGramLength - 1;
+                    string nGram = PickRandomNGramStartingWith(wordType, word.Substring(startIndex, length), nGramLength);
+                    word += nGram[nGramLength - 1];
+                }
             }
         }
 
         return word.Substring(1, word.Length - 2); // Remove word start and end char
     }
 
-    public static List<string> GenerateWords(string wordType, int nGramLength, int amount)
+    public static List<string> GenerateWords(string wordType, int nGramLength, int maxLength, int amount)
     {
         List<string> words = new List<string>();
         while(words.Count < amount)
         {
-            string word = GenerateWord(wordType, nGramLength);
+            string word = GenerateWord(wordType, nGramLength, maxLength);
             if (!words.Contains(word)) words.Add(word);
         }
         return words;
     }
 
-    public static void GenerateWords(string wordType, int nGramLength)
+    public static void GenerateWords(string wordType, int nGramLength, int maxLength)
     {
         while(GeneratedWords.Count < TargetNumWords)
         {
-            GeneratedWords.Add(GenerateWord(wordType, nGramLength));
+            GeneratedWords.Add(GenerateWord(wordType, nGramLength, maxLength));
         }
         Debug.Log(GeneratedWords.Count + " Words generated");
     }

@@ -100,6 +100,8 @@ public class UI_MapEditor : MonoBehaviour
 
     void Start()
     {
+        MarkovChainWordGenerator.Init();
+
         GenerateButton.onClick.AddListener(GenerateButton_OnClick);
 
         foreach (MapType mapType in Enum.GetValues(typeof(MapType))) MapTypeDropdown.options.Add(new Dropdown.OptionData(mapType.ToString()));
@@ -413,7 +415,7 @@ public class UI_MapEditor : MonoBehaviour
     private void CreateNation()
     {
         Nation newNation = new Nation();
-        newNation.Name = MarkovChainWordGenerator.GetRandomName(10);
+        newNation.Name = MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
         newNation.PrimaryColor = ColorManager.GetRandomColor();
         newNation.SecondaryColor = ColorManager.GetRandomColor(new List<Color>() { newNation.PrimaryColor });
         foreach (Region r in SelectedRegions)

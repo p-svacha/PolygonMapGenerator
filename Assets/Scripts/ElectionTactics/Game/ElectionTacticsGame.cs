@@ -245,7 +245,7 @@ namespace ElectionTactics
         /// </summary>
         private District CreateDistrict(Region r)
         {
-            string name = MarkovChainWordGenerator.GenerateWord("Province", 4);
+            string name = GetRandomDistrictName();
             UnityEngine.Random.State seed = UnityEngine.Random.state;
             return CreateDistrict(seed, name, r);
         }
@@ -516,6 +516,10 @@ namespace ElectionTactics
         {
             Array values = Enum.GetValues(typeof(AgeGroup));
             return (AgeGroup)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+        }
+        public static string GetRandomDistrictName()
+        {
+            return MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
         }
 
         #endregion

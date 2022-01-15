@@ -86,7 +86,7 @@ namespace ElectionTactics
         {
             if(State != LastState)
             {
-                Debug.Log("--> " + State.ToString());
+                Debug.Log("Changing animation state : " + LastState.ToString() + " --> " + State.ToString());
                 LastState = State;
             }
             
