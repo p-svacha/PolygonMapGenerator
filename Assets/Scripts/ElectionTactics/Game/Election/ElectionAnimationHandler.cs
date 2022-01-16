@@ -294,6 +294,7 @@ namespace ElectionTactics
             // Change UI controls
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.Slide(new Vector2(0, 0), UiControlsSlideTime);
+            Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractable);
             Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.Political);
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);

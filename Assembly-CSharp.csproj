@@ -129,6 +129,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\Helper\TextureGenerator.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\CenterlineLabler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality.cs" />
+    <Compile Include="Assets\Scripts\Helper\ConsoleToGUI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Policy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_Lobby.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RiverInfo.cs" />
@@ -238,7 +239,6 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
-    <Compile Include="Assets\Scripts\Helper\ConsoleToGUI.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

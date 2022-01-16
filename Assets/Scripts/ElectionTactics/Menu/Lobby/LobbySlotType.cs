@@ -7,7 +7,6 @@ namespace ElectionTactics
     public enum LobbySlotType
     {
         Free,
-        LocalPlayer,
         Human,
         Bot,
         Inactive

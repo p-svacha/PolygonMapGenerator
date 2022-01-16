@@ -38,7 +38,7 @@ namespace ElectionTactics
             UsedColors.Clear();
             Color partyColor = PartyNameGenerator.GetPartyColor(playerName, UsedColors);
             UsedColors.Add(partyColor);
-            FillNextFreeSlot(playerName, partyColor, LobbySlotType.LocalPlayer);
+            FillNextFreeSlot(playerName, partyColor, LobbySlotType.Human);
 
             OrganizeSlots();
         }   
@@ -51,7 +51,7 @@ namespace ElectionTactics
             UsedColors.Clear();
             Color partyColor = PartyNameGenerator.GetPartyColor(playerName, UsedColors);
             UsedColors.Add(partyColor);
-            FillNextFreeSlot(playerName, partyColor, LobbySlotType.LocalPlayer);
+            FillNextFreeSlot(playerName, partyColor, LobbySlotType.Human, NetworkPlayer.LocalClientId);
 
             OrganizeSlots();
         }
@@ -70,7 +70,7 @@ namespace ElectionTactics
         {
             Color playerColor = PartyNameGenerator.GetPartyColor(connectionData.Name, UsedColors);
             UsedColors.Add(playerColor);
-            FillNextFreeSlot(connectionData.Name, playerColor, LobbySlotType.Human);
+            FillNextFreeSlot(connectionData.Name, playerColor, LobbySlotType.Human, connectionData.ClientId);
 
             OrganizeSlots();
             if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbyServerRpc();
@@ -93,13 +93,13 @@ namespace ElectionTactics
             else OrganizeSlots();
         }
 
-        public void FillNextFreeSlot(string name, Color c, LobbySlotType slotType)
+        public void FillNextFreeSlot(string name, Color c, LobbySlotType slotType, ulong clientId = 0)
         {
             foreach(UI_LobbySlot uiSlot in UiSlots)
             {
                 if (uiSlot.Slot.SlotType == LobbySlotType.Free || uiSlot.Slot.SlotType == LobbySlotType.Inactive)
                 {
-                    uiSlot.SetActive(name, c, slotType);
+                    uiSlot.SetActive(name, c, slotType, clientId);
                     break;
                 }
             }
@@ -111,7 +111,7 @@ namespace ElectionTactics
 
             for(int i = 0; i < UiSlots.Count; i++)
             {
-                if (i < filledSlots.Count) UiSlots[i].SetActive(filledSlots[i].Slot.Name, filledSlots[i].Slot.GetColor(), filledSlots[i].Slot.SlotType);
+                if (i < filledSlots.Count) UiSlots[i].SetActive(filledSlots[i].Slot.Name, filledSlots[i].Slot.GetColor(), filledSlots[i].Slot.SlotType, filledSlots[i].Slot.ClientId);
                 else if (i == filledSlots.Count && Type != GameType.MultiplayerClient) UiSlots[i].SetAddPlayer();
                 else UiSlots[i].SetInactive();
             }
@@ -125,7 +125,7 @@ namespace ElectionTactics
 
             foreach(LobbySlot slot in slots)
             {
-                if (slot.SlotType != LobbySlotType.Free && slot.SlotType != LobbySlotType.Inactive) FillNextFreeSlot(slot.Name, slot.GetColor(), slot.SlotType);
+                if (slot.SlotType != LobbySlotType.Free && slot.SlotType != LobbySlotType.Inactive) FillNextFreeSlot(slot.Name, slot.GetColor(), slot.SlotType, slot.ClientId);
             }
             OrganizeSlots();
         }

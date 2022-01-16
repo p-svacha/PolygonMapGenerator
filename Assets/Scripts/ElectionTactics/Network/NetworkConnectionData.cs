@@ -10,16 +10,18 @@ namespace ElectionTactics
     [Serializable]
     public class NetworkConnectionData
     {
+        public ulong ClientId; 
         public string Name;
 
-        public NetworkConnectionData(string name)
+        public NetworkConnectionData(string name, ulong clientId = 0)
         {
             Name = name;
+            ClientId = clientId;
         }
 
         public override string ToString()
         {
-            return "Name: " + Name;
+            return "Name: " + Name + ", ClientId: " + ClientId;
         }
     }
 }

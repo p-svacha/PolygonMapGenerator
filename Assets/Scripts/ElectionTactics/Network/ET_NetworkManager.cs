@@ -68,6 +68,7 @@ namespace ElectionTactics
             if (clientId != NetworkManager.Singleton.LocalClientId)
             {
                 data = (NetworkConnectionData) Deserialize(connectionData);
+                data.ClientId = clientId;
             }
 
             bool approveConnection = true;
@@ -95,7 +96,7 @@ namespace ElectionTactics
                 {
                     // Set data of host network player object
                     NetworkClient connectedClient = NetworkManager.Singleton.ConnectedClients[clientId];
-                    connectedClient.PlayerObject.GetComponent<NetworkPlayer>().Init(new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameText.text));
+                    connectedClient.PlayerObject.GetComponent<NetworkPlayer>().Init(new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameText.text, clientId));
 
                     // Host new game
                     MenuNavigator.Lobby.InitHostMultiplayerGame(playerName);

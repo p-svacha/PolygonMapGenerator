@@ -5,33 +5,33 @@ A Unity project that creates 2d polygonial maps. What this means is that accordi
 The map editor can be used to create the maps and try different parameters. The following screenshots show some features of the map editor.
 <br/>
 <div style="height:470px">
-    <div style="width:33%;float:left">
-        basic FractalNoise map
+    <div style="width:30%;float:left">
+        *basic FractalNoise map*
         <br/>
         <img src="Screenshots/example_map_1.png" height="200" />
     </div>
-    <div style="width:33%;float:left">
-        FractalNoise map showing biomes
+    <div style="width:30%;float:left">
+        *FractalNoise map showing biomes*
         <br/>
         <img src="Screenshots/example_map_2.png" height="200" />
     </div>
-    <div style="width:33%;float:left">
-        Island map showing continents
+    <div style="width:30%;float:left">
+        *Island map showing continents*
         <br/>
         <img src="Screenshots/example_map_3.png" height="200" />
     </div>
-        <div style="width:33%;float:left">
-        regional map with water connections
+        <div style="width:30%;float:left">
+        *regional map with water connections*
         <br/>
         <img src="Screenshots/example_map_4.png" height="200" />
     </div>
-    <div style="width:33%;float:left">
-        Dynamic polygon labels
+    <div style="width:30%;float:left">
+        *Dynamic polygon labels*
         <br/>
         <img src="Screenshots/example_map_5.png" height="200" />
     </div>
-    <div style="width:33%;float:left">
-        Parrisk map
+    <div style="width:30%;float:left">
+        *Parrisk map*
         <br/>
         <img src="Screenshots/example_map_6.png" height="200" />
     </div>

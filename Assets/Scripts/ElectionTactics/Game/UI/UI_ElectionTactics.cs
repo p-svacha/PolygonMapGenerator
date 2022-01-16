@@ -54,8 +54,10 @@ namespace ElectionTactics
         public District SelectedDistrict;
 
 
-        void Start()
+        public void Init(ElectionTacticsGame game)
         {
+            Game = game;
+
             // Listeners
             TabPanels.Add(Tab.DistrictList, DistrictList.gameObject);
             TabButtons.Add(Tab.DistrictList, DistrictTabButton);
@@ -94,7 +96,6 @@ namespace ElectionTactics
 
             // Element initialization
             ElectionControls.Init(Game);
-            SidePanelFooter.Init(Game);
         }
 
         #region Update

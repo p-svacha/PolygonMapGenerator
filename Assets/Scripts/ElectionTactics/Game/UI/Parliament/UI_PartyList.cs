@@ -88,12 +88,12 @@ namespace ElectionTactics
         public void HighlightParty(Party p)
         {
             UI_PartyListElement elem = ListElements[p];
-            elem.Background.color = ColorManager.Colors.UiMainColorLighter2;
+            elem.Background.color = ColorManager.Singleton.UiMainLighter2;
             elem.transform.SetAsLastSibling();
         }
         public void UnhighlightParty(Party p)
         {
-            ListElements[p].Background.color = ColorManager.Colors.UiMainColorLighter1;
+            ListElements[p].Background.color = ColorManager.Singleton.UiMainLighter1;
         }
 
 

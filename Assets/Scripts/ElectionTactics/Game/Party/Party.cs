@@ -8,31 +8,42 @@ namespace ElectionTactics {
     {
         public ElectionTacticsGame Game;
 
+        // Static attributes
+        public int Id;
         public string Name;
         public string Acronym;
         public Color Color;
+        public bool IsHuman;
         public PartyAI AI;
 
+        // Win conditions
         public int TotalElectionsWon;
         public int TotalSeatsWon;
         public int TotalDistrictsWon;
         public int TotalVotes;
 
+        // Game variables
         public List<Policy> Policies = new List<Policy>();
-
         public int PolicyPoints;
         public int CampaignPoints;
         public int Seats;
+        public bool IsReady;
 
-        public Party(ElectionTacticsGame game, string name, Color c, bool isAi)
+        public Party(ElectionTacticsGame game, int id, string name, Color c, bool isAi)
         {
+            Id = id;
             Game = game;
             Name = name;
             Acronym = "";
             string[] words = name.Split(' ');
             foreach (string w in words) Acronym += (w[0] + "").ToUpper(); 
             Color = c;
-            if (isAi) AI = new PartyAI(this);
+            IsHuman = !isAi;
+            if (isAi)
+            {
+                AI = new PartyAI(this);
+                IsReady = true;
+            }
         }
 
         public void AddPolicy(Policy p)

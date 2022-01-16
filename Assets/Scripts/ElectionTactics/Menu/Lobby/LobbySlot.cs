@@ -9,6 +9,7 @@ namespace ElectionTactics
     {
         public LobbySlotType SlotType;
         public string Name;
+        public ulong ClientId;
         private float ColorR;
         private float ColorG;
         private float ColorB;
@@ -19,13 +20,14 @@ namespace ElectionTactics
             Name = "";
         }
 
-        public void SetActive(string name, Color c, LobbySlotType type)
+        public void SetActive(string name, Color c, LobbySlotType type, ulong clientId)
         {
             Name = name;
             SlotType = type;
             ColorR = c.r;
             ColorG = c.g;
             ColorB = c.b;
+            ClientId = clientId;
         }
 
         public void SetAddPlayer()

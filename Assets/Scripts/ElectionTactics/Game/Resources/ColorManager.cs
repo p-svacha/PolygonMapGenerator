@@ -19,13 +19,14 @@ namespace ElectionTactics
         public List<Color> LegendColors;
 
         [Header("UI")]
-        public Color UiMainColor;
-        public Color UiMainColorLighter1;
-        public Color UiMainColorLighter2;
-        public Color UiSpecialColor;
-        public Color TextColor;
+        public Color UiMain;
+        public Color UiMainLighter1;
+        public Color UiMainLighter2;
+        public Color UiInteractable;
+        public Color UiInteractableDisabled;
+        public Color UiText;
 
-        public static ColorManager Colors
+        public static ColorManager Singleton
         {
             get
             {

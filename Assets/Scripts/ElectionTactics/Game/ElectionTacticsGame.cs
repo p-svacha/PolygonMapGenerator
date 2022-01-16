@@ -11,7 +11,7 @@ namespace ElectionTactics
     public class ElectionTacticsGame : MonoBehaviour
     {
         private GameSettings GameSettings;  // Static rules of the game (only server needs this to initialize the game)
-        private GameType GameType;          // Singleplayer, Host, Client
+        public GameType GameType;           // Singleplayer, Host, Client
 
         public PolygonMapGenerator PMG;
         public Map Map;
@@ -48,8 +48,13 @@ namespace ElectionTactics
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MinAIPolicyPointsPerCycle = 4;
         private const int MaxAIPolicyPointsPerCycle = 7;
-        // private const int NumOpponents = 3; // Defined by game settings
         private const int MaxPolicyValue = 8;
+        private const int BaseTimePerTurn = 50; // Time in seconds that players in multiplayer have time for their turn
+        private const int CumulativeTimePerTurn = 10; // Additional time players have that increases each turn by this amount
+
+        // Global game values
+        public float TurnTime;      // How much time players have this turn for their actions
+        public float RemainingTime; // How much time is remaining this turn
 
         // General Election
         public int ElectionCycle;
@@ -64,11 +69,13 @@ namespace ElectionTactics
             State = GameState.Inactive;
         }
 
+        /// <summary>
+        /// Creating a new singleplayer game or multiplayer game as host
+        /// </summary>
         public void InitNewGame(GameSettings gameSettings, GameType type)
         {
             if (State != GameState.Inactive) return;
-            State = GameState.Loading;
-            UI.LoadingScreen.gameObject.SetActive(true);
+            InitGame();
             GameSettings = gameSettings;
             GameType = type;
             int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
@@ -77,12 +84,24 @@ namespace ElectionTactics
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
+        /// <summary>
+        /// Joining a new game as a client
+        /// </summary>
         public void InitJoinGame()
         {
-            State = GameState.Loading;
-            UI.LoadingScreen.gameObject.SetActive(true);
+            InitGame();
             GameSettings = new GameSettings(MenuNavigator.Lobby.Slots);
             GameType = GameType.MultiplayerClient;
+        }
+
+        /// <summary>
+        /// Initialization independent of single/multiplayer
+        /// </summary>
+        private void InitGame()
+        {
+            State = GameState.Loading;
+            UI.Init(this);
+            UI.LoadingScreen.gameObject.SetActive(true);
         }
 
         public void StartGameAsClient(int seed)
@@ -102,6 +121,7 @@ namespace ElectionTactics
             InitGeograhyTraits();
             InitMentalities();
             InitParties();
+            UI.SidePanelFooter.Init(this);
 
             if (GameType != GameType.MultiplayerClient)
             {
@@ -111,12 +131,11 @@ namespace ElectionTactics
                 StartNextElectionCycle(); // Start first cycle
                 SetAllDistrictsVisible();
                 CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
+                State = GameState.PreparationPhase;
             }
 
             UI.SelectTab(Tab.Parliament);
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
-
-            State = GameState.PreparationPhase;
         }
 
         private void InitGeograhyTraits()
@@ -141,13 +160,15 @@ namespace ElectionTactics
 
         private void InitParties()
         {
+            int id = 0;
             foreach(LobbySlot slot in GameSettings.Slots)
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
-                Party party = new Party(this, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
-                if (slot.SlotType == LobbySlotType.LocalPlayer) LocalPlayerParty = party;
+                Party party = new Party(this, id++, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
+                if (slot.ClientId == NetworkPlayer.LocalClientId) LocalPlayerParty = party;
                 Parties.Add(party);
             }
+            Debug.Log("Local player id is " + LocalPlayerParty.Id);
         }
 
         #endregion
@@ -157,10 +178,27 @@ namespace ElectionTactics
         // Update is called once per frame
         void Update()
         {
+            // Timer
+            if(GameType != GameType.Singleplayer && (State == GameState.PreparationPhase || State == GameState.Election))
+            {
+                UI.SidePanelFooter.UpdateButton();
+
+                if (!LocalPlayerParty.IsReady)
+                {
+                    RemainingTime -= Time.deltaTime;
+                    if (RemainingTime <= 0)
+                    {
+                        RemainingTime = 0f;
+                        EndTurn();
+                    }
+                }
+            }
+
             switch(State)
             {
                 case GameState.PreparationPhase:
-                    if (Input.GetMouseButtonDown(0)) // Click
+                    // Mouse click
+                    if (Input.GetMouseButtonDown(0))
                     {
                         bool uiClick = EventSystem.current.IsPointerOverGameObject();
 
@@ -182,6 +220,12 @@ namespace ElectionTactics
                     ElectionAnimationHandler.Update();
                     break;
             }
+        }
+
+        private void ResetTurnTimer()
+        {
+            TurnTime = BaseTimePerTurn + ElectionCycle * CumulativeTimePerTurn;
+            RemainingTime = TurnTime;
         }
 
         /// <summary>
@@ -207,7 +251,16 @@ namespace ElectionTactics
                 AddPolicyPoints(p, addedPolicyPoints);
             }
 
+            // Mark all human players as not ready for next turn
+            foreach (Party p in Parties.Where(x => x.IsHuman)) p.IsReady = false;
+
+            // Reset countdown
+            ResetTurnTimer();
+
+            // If host, send new data to clients
             if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.InitCycleServerRpc();
+
+            
         }
 
         /// <summary>
@@ -215,10 +268,53 @@ namespace ElectionTactics
         /// </summary>
         public void StartNextElectionCycleClient(UnityEngine.Random.State districtSeed, string districtName, int regionId)
         {
+            // Go to next year
+            ElectionCycle++;
+            Year++;
+
+            // Add new district
             CreateDistrict(districtSeed, districtName, Map.Regions.First(x => x.Id == regionId));
-            UI.MapControls.RefreshMapDisplay();
             SetAllDistrictsVisible();
             CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
+
+            // Mark all human players as not ready for next turn
+            foreach (Party p in Parties.Where(x => x.IsHuman)) p.IsReady = false;
+
+            ResetTurnTimer();
+            State = GameState.PreparationPhase;
+        }
+
+        /// <summary>
+        /// Clientside function that gets executed when the "End Turn" button is pressed.
+        /// </summary>
+        public void EndTurn()
+        {
+            UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractableDisabled);
+
+            if (GameType == GameType.Singleplayer) ConcludePreparationPhase();
+            else // Multiplayer
+            {
+                if (LocalPlayerParty.IsReady) return;
+                LocalPlayerParty.IsReady = true;
+                RemainingTime = 0f;
+                NetworkPlayer.Server.EndTurnServerRpc(LocalPlayerParty.Id);
+            }
+        }
+
+        /// <summary>
+        /// That gets executed on all clients (including host) whenever a player hits the "End Turn" button. When all players are ready, the preparation phase concludes.
+        /// </summary>
+        public void OnPlayerReady(int playerId)
+        {
+            Party party = Parties.First(x => x.Id == playerId);
+            Debug.Log("Player " + party.Name + " (" + party.Id + ") is ready.");
+            party.IsReady = true;
+
+            if(GameType == GameType.MultiplayerHost)
+            {
+                if (Parties.Where(x => x.IsHuman).All(x => x.IsReady)) ConcludePreparationPhase();
+            }
+            
         }
 
         /// <summary>
@@ -436,13 +532,13 @@ namespace ElectionTactics
         /// - Handling district effects
         /// - Starting next election cycle
         /// </summary>
-        public void ConcludePreparationPhase()
+        private void ConcludePreparationPhase()
         {
             if (State != GameState.PreparationPhase) return;
             State = GameState.Election;
 
             // AI policies
-            foreach (Party p in Parties.Where(p => p != LocalPlayerParty))
+            foreach (Party p in Parties.Where(p => !p.IsHuman))
                 p.AI.DistributePolicyPoints();
 
             // Lock policies
