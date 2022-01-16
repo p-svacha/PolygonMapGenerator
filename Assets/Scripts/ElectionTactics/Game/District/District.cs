@@ -261,6 +261,7 @@ namespace ElectionTactics
         /// A specified amount of single voters will vote, whereas their vote will be decided by weighted random based on party points.
         /// Each party has x base points. On top of that points are added for policies that match the district traits, modifiers and mentality.
         /// There will always be a single winner party.
+        /// This function only returns a result, but does not yet add it to the district/game. To add it call AddElectionResult().
         /// </summary>
         public DistrictElectionResult RunElection(List<Party> parties)
         {
@@ -312,22 +313,18 @@ namespace ElectionTactics
             }
 
             // Create result
-            DistrictElectionResult result = new DistrictElectionResult()
-            {
-                ElectionCycle = Game.ElectionCycle,
-                Year = Game.Year,
-                Seats = Seats,
-                District = this,
-                Votes = partyVotes,
-                VoteShare = voterShares,
-                Winner = winner,
-                Modifiers = electionModifiers,
-                PartyPoints = partyPoints
-            };
-
-            ElectionResults.Add(result);
-            CurrentWinnerParty = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Key;
-            CurrentWinnerShare = result.VoteShare.First(x => x.Value == result.VoteShare.Max(y => y.Value)).Value;
+            DistrictElectionResult result = new DistrictElectionResult
+            (
+                Game.ElectionCycle,
+                Game.Year,
+                Seats,
+                this,
+                partyPoints,
+                partyVotes,
+                voterShares,
+                winner,
+                electionModifiers
+            );
 
             return result;
         }

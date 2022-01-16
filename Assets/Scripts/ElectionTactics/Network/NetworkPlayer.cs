@@ -21,7 +21,7 @@ namespace ElectionTactics
         {
             get
             {
-                if(NetworkManager.Singleton.IsHost) return NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<NetworkPlayer>();
+                if (NetworkManager.Singleton.IsHost) return NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.GetComponent<NetworkPlayer>();
                 else return NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<NetworkPlayer>();
             }
         }
@@ -61,35 +61,37 @@ namespace ElectionTactics
         }
         #endregion
 
-        #region Start Game
+        #region Generate Map
         [ServerRpc]
-        public void StartGameServerRpc(int seed)
+        public void GenerateMapServerRpc(int seed)
         {
-            StartGameClientRpc(seed);
+            GenerateMapClientRpc(seed);
         }
         [ClientRpc]
-        private void StartGameClientRpc(int seed)
+        private void GenerateMapClientRpc(int seed)
         {
             if (IsHost) return;
             ET_NetworkManager.Singleton.Game.StartGameAsClient(seed);
         }
         #endregion
 
-        #region Update Districts
+        #region Start Game
         [ServerRpc]
-        public void InitCycleServerRpc()
+        public void StartGameServerRpc()
         {
-            KeyValuePair<Region, District> newDistrict = ET_NetworkManager.Singleton.Game.InvisibleDistricts.First();
-            InitCycleClientRpc(ET_NetworkManager.Serialize(newDistrict.Value.Seed), newDistrict.Value.Name, newDistrict.Key.Id);
+            KeyValuePair<Region, District> firstDistrict = ET_NetworkManager.Singleton.Game.InvisibleDistricts.First();
+            StartGameClientRpc(ET_NetworkManager.Serialize(firstDistrict.Value.Seed), firstDistrict.Value.Name, firstDistrict.Key.Id);
         }
         [ClientRpc]
-        private void InitCycleClientRpc(byte[] newDistrictSeed, string newDistrictName, int newDistrictRegionId)
+        private void StartGameClientRpc(byte[] newDistrictSeed, string newDistrictName, int newDistrictRegionId)
         {
             if (IsHost) return;
             Random.State districtSeed = (Random.State)ET_NetworkManager.Deserialize(newDistrictSeed);
-            ET_NetworkManager.Singleton.Game.StartNextElectionCycleClient(districtSeed, newDistrictName, newDistrictRegionId);
+            ET_NetworkManager.Singleton.Game.StartGameClient(districtSeed, newDistrictName, newDistrictRegionId);
         }
         #endregion
+
+        #region End Turn
         /// <summary>
         /// Call to the server from any client (including host) that a player has ended their turn.
         /// </summary>
@@ -103,8 +105,24 @@ namespace ElectionTactics
         {
             ET_NetworkManager.Singleton.Game.OnPlayerReady(playerId);
         }
-        #region End Turn
+        #endregion
 
+        #region End Preparation Phase
+        [ServerRpc]
+        public void ConcludePreparationPhaseServerRpc()
+        {
+            GeneralElectionResult electionResult = ET_NetworkManager.Singleton.Game.GetLatestElectionResult();
+            byte[] electionResultData = ET_NetworkManager.Serialize(electionResult);
+            ConcludePreparationPhaseClientRpc(electionResultData);
+        }
+        [ClientRpc]
+        public void ConcludePreparationPhaseClientRpc(byte[] electionResultData)
+        {
+            if (IsHost) return;
+            GeneralElectionResult electionResult = (GeneralElectionResult)ET_NetworkManager.Deserialize(electionResultData);
+            foreach (DistrictElectionResult districtResult in electionResult.DistrictResults) districtResult.InitReferences(ET_NetworkManager.Singleton.Game);
+            ET_NetworkManager.Singleton.Game.ConcludePreparationPhaseClient(electionResult);
+        }
         #endregion
 
     }

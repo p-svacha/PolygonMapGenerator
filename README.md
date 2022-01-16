@@ -6,32 +6,32 @@ The map editor can be used to create the maps and try different parameters. The 
 <br/>
 <div style="height:470px">
     <div style="width:30%;float:left">
-        *basic FractalNoise map*
+        basic FractalNoise map
         <br/>
         <img src="Screenshots/example_map_1.png" height="200" />
     </div>
     <div style="width:30%;float:left">
-        *FractalNoise map showing biomes*
+        FractalNoise map showing biomes
         <br/>
         <img src="Screenshots/example_map_2.png" height="200" />
     </div>
     <div style="width:30%;float:left">
-        *Island map showing continents*
+        Island map showing continents
         <br/>
         <img src="Screenshots/example_map_3.png" height="200" />
     </div>
         <div style="width:30%;float:left">
-        *regional map with water connections*
+        regional map with water connections
         <br/>
         <img src="Screenshots/example_map_4.png" height="200" />
     </div>
     <div style="width:30%;float:left">
-        *Dynamic polygon labels*
+        Dynamic polygon labels
         <br/>
         <img src="Screenshots/example_map_5.png" height="200" />
     </div>
     <div style="width:30%;float:left">
-        *Parrisk map*
+        Parrisk map
         <br/>
         <img src="Screenshots/example_map_6.png" height="200" />
     </div>
@@ -46,7 +46,7 @@ Levers of Democracy (working title: ElectionTactisc) is a strategy game where ea
 # Parrisk
 Parrisk is a game where you have to conquer all areas of a procedurally generated map. Each region contains an amount of unit and all players plan the movement of their units for the next turn at the same time.
 
-# GeoPolSim
-GeoPolSim (Geopolitical Simulator) is a project aiming to simulate a map view of a generated world over the course of history. See nations emerge, collapse, internal and external conflicts, disasters, unions and follow the fate of the world.
+# GeoPolSim (TheWorldGame)
+GeoPolSim (working title: TheWorldGame) is a project aiming to simulate a map view of a generated world over the course of history. See nations emerge, collapse, internal and external conflicts, disasters, unions and follow the fate of the world.
 
 

@@ -80,7 +80,7 @@ namespace ElectionTactics
             GameType = type;
             int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             MapGenerationSettings settings = new MapGenerationSettings(seed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
-            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc(seed);
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(seed);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
@@ -129,6 +129,7 @@ namespace ElectionTactics
                 Constitution = new Constitution(this);
                 UI.Constitution.Init(Constitution);
                 StartNextElectionCycle(); // Start first cycle
+                if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc(); // If host, set initial game data to clients
                 SetAllDistrictsVisible();
                 CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
                 State = GameState.PreparationPhase;
@@ -136,6 +137,27 @@ namespace ElectionTactics
 
             UI.SelectTab(Tab.Parliament);
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
+        }
+
+        /// <summary>
+        /// Clientside function to receive all relevant data to start the game. All data comes from the server.
+        /// </summary>
+        public void StartGameClient(UnityEngine.Random.State districtSeed, string districtName, int regionId)
+        {
+            // Go to next year
+            ElectionCycle++;
+            Year++;
+
+            // Add new district
+            CreateDistrict(districtSeed, districtName, Map.Regions.First(x => x.Id == regionId));
+            SetAllDistrictsVisible();
+            CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
+
+            // Mark all human players as not ready for next turn
+            foreach (Party p in Parties.Where(x => x.IsHuman)) p.IsReady = false;
+
+            ResetTurnTimer();
+            State = GameState.PreparationPhase;
         }
 
         private void InitGeograhyTraits()
@@ -256,32 +278,6 @@ namespace ElectionTactics
 
             // Reset countdown
             ResetTurnTimer();
-
-            // If host, send new data to clients
-            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.InitCycleServerRpc();
-
-            
-        }
-
-        /// <summary>
-        /// Clientside function to start an election cycle. All data comes from the server.
-        /// </summary>
-        public void StartNextElectionCycleClient(UnityEngine.Random.State districtSeed, string districtName, int regionId)
-        {
-            // Go to next year
-            ElectionCycle++;
-            Year++;
-
-            // Add new district
-            CreateDistrict(districtSeed, districtName, Map.Regions.First(x => x.Id == regionId));
-            SetAllDistrictsVisible();
-            CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
-
-            // Mark all human players as not ready for next turn
-            foreach (Party p in Parties.Where(x => x.IsHuman)) p.IsReady = false;
-
-            ResetTurnTimer();
-            State = GameState.PreparationPhase;
         }
 
         /// <summary>
@@ -291,7 +287,7 @@ namespace ElectionTactics
         {
             UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractableDisabled);
 
-            if (GameType == GameType.Singleplayer) ConcludePreparationPhase();
+            if (GameType == GameType.Singleplayer) ConcludePreparationPhaseServer();
             else // Multiplayer
             {
                 if (LocalPlayerParty.IsReady) return;
@@ -312,7 +308,7 @@ namespace ElectionTactics
 
             if(GameType == GameType.MultiplayerHost)
             {
-                if (Parties.Where(x => x.IsHuman).All(x => x.IsReady)) ConcludePreparationPhase();
+                if (Parties.Where(x => x.IsHuman).All(x => x.IsReady)) ConcludePreparationPhaseServer();
             }
             
         }
@@ -516,7 +512,7 @@ namespace ElectionTactics
         public void AddModifier(District d, Modifier mod)
         {
             d.Modifiers.Add(mod);
-            mod.District = d;
+            mod.SetDistrict(d);
         }
 
         #endregion
@@ -524,7 +520,7 @@ namespace ElectionTactics
         #region Election
 
         /// <summary>
-        /// This is a server-side function. Concludes the preparation phase and handles everything that happens:
+        /// This is a server-side function. Concludes the preparation phase when all players are ready and handles everything that happens:
         /// - AI actions
         /// - Locking player actions
         /// - Election result
@@ -532,8 +528,9 @@ namespace ElectionTactics
         /// - Handling district effects
         /// - Starting next election cycle
         /// </summary>
-        private void ConcludePreparationPhase()
+        private void ConcludePreparationPhaseServer()
         {
+            // Change state
             if (State != GameState.PreparationPhase) return;
             State = GameState.Election;
 
@@ -548,24 +545,15 @@ namespace ElectionTactics
             // Reset seats
             foreach (Party p in Parties) p.Seats = 0;
 
-            // Election result
+            // Create and apply election result
             List<DistrictElectionResult> districtResults = new List<DistrictElectionResult>();
             foreach (District district in VisibleDistricts.Values)
             {
                 DistrictElectionResult districtResult = district.RunElection(Parties);
-
-                districtResult.Winner.Seats += district.Seats;
-                districtResult.Winner.TotalSeatsWon += district.Seats;
-                districtResult.Winner.TotalDistrictsWon++;
-                foreach (Party p in Parties) p.TotalVotes += districtResult.Votes[p];
                 districtResults.Add(districtResult);
             }
-
             GeneralElectionResult electionResult = new GeneralElectionResult(ElectionCycle, Year, districtResults);
-            ElectionResults.Add(electionResult);
-
-            List<Party> winnerParties = Parties.Where(x => x.Seats == Parties.Max(y => y.Seats)).ToList();
-            foreach (Party p in winnerParties) p.TotalElectionsWon++;
+            electionResult.Apply(this);
 
             // District effects
             foreach (District d in VisibleDistricts.Values) d.OnElectionEnd();
@@ -574,12 +562,42 @@ namespace ElectionTactics
             StartNextElectionCycle();
 
             ElectionAnimationHandler.StartAnimation(electionResult);
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.ConcludePreparationPhaseServerRpc();
+        }
+
+        /// <summary>
+        /// Concludes the preparation phase for clients, receiving all relevant data from the server.
+        /// </summary>
+        public void ConcludePreparationPhaseClient(GeneralElectionResult electionResult)
+        {
+            // Change state
+            if (State != GameState.PreparationPhase) return;
+            State = GameState.Election;
+
+            // TODO: Set policy points for all players 
+
+            // Lock policies
+            foreach (Party party in Parties)
+                foreach (Policy policy in party.Policies) policy.LockValue();
+
+            // Reset seats
+            foreach (Party p in Parties) p.Seats = 0;
+
+            // Apply district results
+            electionResult.Apply(this);
+
+            ElectionAnimationHandler.StartAnimation(electionResult);
+        }
+
+        public void AddGeneralElectionResult(GeneralElectionResult electionResult)
+        {
+            ElectionResults.Add(electionResult);
         }
 
         public void OnElectionAnimationDone()
         {
             // Check win condition
-            if (HandleWinConditions()) return;
+            if (GameType != GameType.MultiplayerClient && HandleWinConditions()) return;
 
             State = GameState.PreparationPhase;
         }
@@ -629,6 +647,7 @@ namespace ElectionTactics
 
         public Dictionary<Region, District> VisibleDistricts { get { return Districts.Where(x => x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
+        public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
 
         #endregion
     }
