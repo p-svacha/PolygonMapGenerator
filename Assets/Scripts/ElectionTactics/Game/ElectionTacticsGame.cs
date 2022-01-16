@@ -187,7 +187,7 @@ namespace ElectionTactics
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
                 Party party = new Party(this, id++, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
-                if (slot.ClientId == NetworkPlayer.LocalClientId) LocalPlayerParty = party;
+                if (slot.SlotType == LobbySlotType.Human && slot.ClientId == NetworkPlayer.LocalClientId) LocalPlayerParty = party;
                 Parties.Add(party);
             }
             Debug.Log("Local player id is " + LocalPlayerParty.Id);

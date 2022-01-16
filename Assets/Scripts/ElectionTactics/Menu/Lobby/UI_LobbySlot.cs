@@ -42,7 +42,7 @@ namespace ElectionTactics
             ActivePanel.SetActive(true);
             PlayerText.text = playerName;
             PlayerText.color = c;
-            bool canRemove = Slot.ClientId != NetworkPlayer.LocalClientId && (Lobby.Type == GameType.Singleplayer || NetworkManager.Singleton.IsHost);
+            bool canRemove = Slot.SlotType == LobbySlotType.Bot && (Lobby.Type == GameType.Singleplayer || NetworkManager.Singleton.IsHost);
             RemovePlayerButton.gameObject.SetActive(canRemove);
         }
 

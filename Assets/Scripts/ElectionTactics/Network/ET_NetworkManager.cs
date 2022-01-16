@@ -90,7 +90,7 @@ namespace ElectionTactics
             if (clientId == NetworkManager.Singleton.LocalClientId) // We ourselves just joined
             {
                 string playerName = MenuNavigator.MainMenu.PlayerNameText.text;
-                Debug.Log("NETWORK: We (" + playerName + ") connected to the server");
+                Debug.Log("NETWORK: We (" + playerName + " / " + clientId + ") connected to the server");
 
                 if (NetworkManager.Singleton.IsHost) // Host
                 {

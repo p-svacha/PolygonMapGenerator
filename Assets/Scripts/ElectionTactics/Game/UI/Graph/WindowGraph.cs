@@ -38,7 +38,7 @@ public class WindowGraph : MonoBehaviour
     private GraphAnimationType AnimationType;
     private float AnimationTime;
     private float AnimationDelay;
-    private float AnimationSpeedModifier;
+    private float AnimationSpeedModifier = 1f;
     private System.Action AnimationCallback;
 
     private List<GraphDataPoint> SourceDataPoints;
@@ -113,7 +113,7 @@ public class WindowGraph : MonoBehaviour
 
                             tmpYMax = SourceYMax + (TargetYMax - SourceYMax) * r;
                         }
-                        ShowBarGraph(tmpDataPoints, tmpYMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
+                        ShowBarGraph(tmpDataPoints, tmpYMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font, stopAnimation: false);
                         break;
                 }
 
@@ -127,23 +127,23 @@ public class WindowGraph : MonoBehaviour
     /// <summary>
     /// Instantly destroys the whole graph
     /// </summary>
-    public void ClearGraph()
+    public void ClearGraph(bool stopAnimation = true)
     {
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
         Bars.Clear();
         BarLabels.Clear();
-        AnimationType = GraphAnimationType.None;
+        if(stopAnimation) AnimationType = GraphAnimationType.None;
     }
 
     /// <summary>
     /// Instantly displays a bar graph with the given attributes
     /// </summary>
-    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool zeroed = false)
+    public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool stopAnimation = true, bool zeroed = false)
     {
         GraphWidth = GraphContainer.rect.width;
         GraphHeight = GraphContainer.rect.height;
 
-        ClearGraph();
+        ClearGraph(stopAnimation);
         DataPoints = dataPoints;
 
         Font = font;
