@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public AgeGroup AgeGroup;
 
-        public AgeGroupPolicy(Party p, AgeGroup ageGroup, int maxValue) : base(p, maxValue)
+        public AgeGroupPolicy(int id, Party p, AgeGroup ageGroup, int maxValue) : base(id, p, maxValue)
         {
             AgeGroup = ageGroup;
             Name = EnumHelper.GetDescription(ageGroup);

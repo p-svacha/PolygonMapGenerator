@@ -206,6 +206,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\DistrictData.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyAI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\ColorManager.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\GlobalInputManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

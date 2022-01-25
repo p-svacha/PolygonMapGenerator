@@ -9,7 +9,7 @@ namespace ElectionTactics
         public Tooltip Tooltip;
         public Font GraphFont;
 
-        public static PrefabManager Prefabs
+        public static PrefabManager Singleton
         {
             get
             {

@@ -30,7 +30,6 @@ public static class MarkovChainWordGenerator
     /// </summary>
     public static Dictionary<string, List<string>> InputWords;
 
-    private static System.Random Random;
     public static int TargetNumWords = int.MaxValue;
     public static List<string> GeneratedWords = new List<string>();
 
@@ -56,8 +55,6 @@ public static class MarkovChainWordGenerator
                     break;
             }
         }
-
-        Random = new System.Random();
     }
 
     public static string GenerateWord(string wordType, int nGramLength, int maxLength)
@@ -180,7 +177,7 @@ public static class MarkovChainWordGenerator
 
         // Chose one random entry in the weighted array
         if (weightedArray.Length == 0) throw new Exception("No nGram found that starts with " + nGramStart);
-        string chosenNgram = weightedArray[Random.Next(weightedArray.Length)];
+        string chosenNgram = weightedArray[UnityEngine.Random.Range(0, weightedArray.Length)];
         //Debug.Log("Chosen nGram: " + chosenNgram + " (out of " + candidateNGrams.Count + " options)");
         return chosenNgram;
     }

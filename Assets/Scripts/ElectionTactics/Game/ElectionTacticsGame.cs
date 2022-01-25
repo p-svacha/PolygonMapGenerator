@@ -19,6 +19,7 @@ namespace ElectionTactics
         public UI_ElectionTactics UI;
         public MenuNavigator MenuNavigator;
 
+        private int StartGameSeed;
         public GameState State;
 
         // Constitution
@@ -49,7 +50,7 @@ namespace ElectionTactics
         private const int MinAIPolicyPointsPerCycle = 4;
         private const int MaxAIPolicyPointsPerCycle = 7;
         private const int MaxPolicyValue = 8;
-        private const int BaseTimePerTurn = 50; // Time in seconds that players in multiplayer have time for their turn
+        private const int BaseTimePerTurn = 300; // Time in seconds that players in multiplayer have time for their turn
         private const int CumulativeTimePerTurn = 10; // Additional time players have that increases each turn by this amount
 
         // Global game values
@@ -78,9 +79,10 @@ namespace ElectionTactics
             InitGame();
             GameSettings = gameSettings;
             GameType = type;
-            int seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-            MapGenerationSettings settings = new MapGenerationSettings(seed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
-            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(seed);
+            int mapSeed = GetRandomSeed();
+            StartGameSeed = GetRandomSeed();
+            MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(mapSeed, StartGameSeed);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
@@ -104,60 +106,49 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(true);
         }
 
-        public void StartGameAsClient(int seed)
+        public void StartGameAsClient(int mapSeed, int startGameSeed)
         {
-            MapGenerationSettings settings = new MapGenerationSettings(seed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            StartGameSeed = startGameSeed;
+            MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
         private void OnMapGenerationDone(Map map)
         {
+            Map = map;
+            StartGame(StartGameSeed);
+        }
+
+        /// <summary>
+        /// Sets up all traits, mentalities, parties, policies etc and starts the game. This happens after map generation for all clients.
+        /// </summary>
+        /// <param name="seed">Seed is used to synchronize in multiplayer</param>
+        public void StartGame(int seed)
+        {
+            UnityEngine.Random.InitState(seed);
+
             UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
-            Map = map;
+            
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapDrawMode.Basic);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             InitGeograhyTraits();
             InitMentalities();
             InitParties();
+            InitPolicies();
             UI.SidePanelFooter.Init(this);
 
-            if (GameType != GameType.MultiplayerClient)
-            {
-                MarkovChainWordGenerator.Init();
-                Constitution = new Constitution(this);
-                UI.Constitution.Init(Constitution);
-                StartNextElectionCycle(); // Start first cycle
-                if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.StartGameServerRpc(); // If host, set initial game data to clients
-                SetAllDistrictsVisible();
-                CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
-                State = GameState.PreparationPhase;
-            }
+            MarkovChainWordGenerator.Init();
+            Constitution = new Constitution(this);
+            UI.Constitution.Init(Constitution);
+            StartNextElectionCycle(); // Start first cycle
+            SetAllDistrictsVisible();
+            CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
+            State = GameState.PreparationPhase;
 
             UI.SelectTab(Tab.Parliament);
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
-        }
-
-        /// <summary>
-        /// Clientside function to receive all relevant data to start the game. All data comes from the server.
-        /// </summary>
-        public void StartGameClient(UnityEngine.Random.State districtSeed, string districtName, int regionId)
-        {
-            // Go to next year
-            ElectionCycle++;
-            Year++;
-
-            // Add new district
-            CreateDistrict(districtSeed, districtName, Map.Regions.First(x => x.Id == regionId));
-            SetAllDistrictsVisible();
-            CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
-
-            // Mark all human players as not ready for next turn
-            foreach (Party p in Parties.Where(x => x.IsHuman)) p.IsReady = false;
-
-            ResetTurnTimer();
-            State = GameState.PreparationPhase;
         }
 
         private void InitGeograhyTraits()
@@ -191,6 +182,45 @@ namespace ElectionTactics
                 Parties.Add(party);
             }
             Debug.Log("Local player id is " + LocalPlayerParty.Id);
+        }
+
+        /// <summary>
+        /// Creates all possible policies for all parties.
+        /// They are all initially inactive and get set to active once a district containing a trait matching that policy appears.
+        /// </summary>
+        private void InitPolicies()
+        {
+            int policyId = 0;
+
+            foreach (GeographyTraitType t in Enum.GetValues(typeof(GeographyTraitType)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MaxPolicyValue));
+            }
+
+            foreach (EconomyTrait t in Enum.GetValues(typeof(EconomyTrait)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, t, MaxPolicyValue));
+            }
+
+            foreach (Density t in Enum.GetValues(typeof(Density)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, t, MaxPolicyValue));
+            }
+
+            foreach (AgeGroup t in Enum.GetValues(typeof(AgeGroup)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, t, MaxPolicyValue));
+            }
+
+            foreach (Language t in Enum.GetValues(typeof(Language)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, t, MaxPolicyValue));
+            }
+
+            foreach (Religion t in Enum.GetValues(typeof(Religion)))
+            {
+                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, t, MaxPolicyValue));
+            }
         }
 
         #endregion
@@ -251,7 +281,7 @@ namespace ElectionTactics
         }
 
         /// <summary>
-        /// Serverside function. Handles everything related to starting a new election cycle:
+        /// Handles everything related to starting a new election cycle:
         /// - Incrementing year/cycle
         /// - Adding new district
         /// - Distributing policy and campaign points to players for the next phase
@@ -266,11 +296,10 @@ namespace ElectionTactics
             AddRandomDistrict();
 
             // Add policy points to all players
-            AddPolicyPoints(LocalPlayerParty, PlayerPolicyPointsPerCycle);
-            foreach (Party p in Parties.Where(x => x.AI != null))
+            foreach(Party p in Parties)
             {
-                int addedPolicyPoints = UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1);
-                AddPolicyPoints(p, addedPolicyPoints);
+                if(p.IsHuman) AddPolicyPoints(p, PlayerPolicyPointsPerCycle);
+                else AddPolicyPoints(p, UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1));
             }
 
             // Mark all human players as not ready for next turn
@@ -285,9 +314,11 @@ namespace ElectionTactics
         /// </summary>
         public void EndTurn()
         {
+            Debug.Log("Ending Turn");
+
             UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractableDisabled);
 
-            if (GameType == GameType.Singleplayer) ConcludePreparationPhaseServer();
+            if (GameType == GameType.Singleplayer) ConcludePreparationPhase(GetRandomSeed());
             else // Multiplayer
             {
                 if (LocalPlayerParty.IsReady) return;
@@ -302,7 +333,7 @@ namespace ElectionTactics
         /// </summary>
         public void OnPlayerReady(int playerId)
         {
-            Party party = Parties.First(x => x.Id == playerId);
+            Party party = GetParty(playerId);
             Debug.Log("Player " + party.Name + " (" + party.Id + ") is ready.");
             party.IsReady = true;
 
@@ -339,15 +370,16 @@ namespace ElectionTactics
         {
             string name = GetRandomDistrictName();
             UnityEngine.Random.State seed = UnityEngine.Random.state;
-            return CreateDistrict(seed, name, r);
+            return CreateDistrict(new DistrictData(r.Id, seed, name));
         }
 
         /// <summary>
         /// Creates an invisible district given the seed, name and region on the map. To make it visible call SetAllDistrictsVisible().
         /// </summary>
-        public District CreateDistrict(UnityEngine.Random.State seed, string name, Region r)
+        public District CreateDistrict(DistrictData data)
         {
-            District newDistrict = new District(seed, this, r, name);
+            Region region = Map.Regions.First(x => x.Id == data.RegionId);
+            District newDistrict = new District(data.Seed, this, region, data.Name);
             UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
             label.gameObject.SetActive(false);
             label.Init(newDistrict);
@@ -355,7 +387,7 @@ namespace ElectionTactics
             newDistrict.OrderId = Districts.Count;
             newDistrict.SetVisible(false);
 
-            Districts.Add(r, newDistrict);
+            Districts.Add(region, newDistrict);
 
             UpdateDistrictAges();
             UpdateActivePolicies();
@@ -414,6 +446,8 @@ namespace ElectionTactics
 
         private void UpdateActivePolicies()
         {
+            // TODO: Instead of creating new policies, just change the active flag
+
             foreach (District d in Districts.Values)
             {
                 foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
@@ -421,45 +455,45 @@ namespace ElectionTactics
                     if (!ActiveGeographyTraits.Contains(t))
                     {
                         ActiveGeographyTraits.Add(t);
-                        foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(p, t, MaxPolicyValue));
+                        foreach (Party p in Parties) p.GetPolicy(t).Activate();
                     }
                 }
 
                 if (!ActiveEconomyTraits.Contains(d.Economy1))
                 {
                     ActiveEconomyTraits.Add(d.Economy1);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy1, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Economy1).Activate();
                 }
                 if (!ActiveEconomyTraits.Contains(d.Economy2))
                 {
                     ActiveEconomyTraits.Add(d.Economy2);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy2, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Economy2).Activate();
                 }
                 if (!ActiveEconomyTraits.Contains(d.Economy3))
                 {
                     ActiveEconomyTraits.Add(d.Economy3);
-                    foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(p, d.Economy3, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Economy3).Activate();
                 }
 
                 if (!ActiveDensityTraits.Contains(d.Density))
                 {
                     ActiveDensityTraits.Add(d.Density);
-                    foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(p, d.Density, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Density).Activate();
                 }
                 if (!ActiveAgeGroupTraits.Contains(d.AgeGroup))
                 {
                     ActiveAgeGroupTraits.Add(d.AgeGroup);
-                    foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(p, d.AgeGroup, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.AgeGroup).Activate();
                 }
                 if (!ActiveLanguageTraits.Contains(d.Language))
                 {
                     ActiveLanguageTraits.Add(d.Language);
-                    foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(p, d.Language, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Language).Activate();
                 }
                 if (!ActiveReligionTraits.Contains(d.Religion) && d.Religion != Religion.None)
                 {
                     ActiveReligionTraits.Add(d.Religion);
-                    foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(p, d.Religion, MaxPolicyValue));
+                    foreach (Party p in Parties) p.GetPolicy(d.Religion).Activate();
                 }
             }
         }
@@ -487,25 +521,27 @@ namespace ElectionTactics
     #endregion
 
         #region Game Commands
-
-    public void AddPolicyPoints(Party p, int amount)
-        {
-            p.PolicyPoints += amount;
-            UI.SidePanelHeader.UpdateValues(this);
-        }
+        // This chapter contains all functions that players can trigger in their turn through their actions.
 
         public void IncreasePolicy(Policy p)
         {
-            if (p.Party.PolicyPoints == 0 || p.Value == p.MaxValue) return;
-            p.Party.PolicyPoints--;
-            p.IncreaseValue();
-            UI.SidePanelHeader.UpdateValues(this);
+            if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
+            else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
         }
+
         public void DecreasePolicy(Policy p)
         {
-            if (p.Value == p.LockedValue) return;
-            p.Party.PolicyPoints++;
-            p.DecreaseValue();
+            if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
+            else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
+        }
+
+        #endregion
+
+        #region Game Value Changes
+
+        public void AddPolicyPoints(Party p, int amount)
+        {
+            p.PolicyPoints += amount;
             UI.SidePanelHeader.UpdateValues(this);
         }
 
@@ -515,12 +551,47 @@ namespace ElectionTactics
             mod.SetDistrict(d);
         }
 
+        public void DoIncreasePolicy(int playerId, int policyId)
+        {
+            Party party = GetParty(playerId);
+            Policy policy = party.GetPolicy(policyId);
+
+            if (party.PolicyPoints == 0 || policy.Value == policy.MaxValue) return;
+            Debug.Log(party.Name + " increased " + policy.Name + " policy.");
+            
+            party.PolicyPoints--;
+            policy.IncreaseValue();
+            if(party == LocalPlayerParty) UI.SidePanelHeader.UpdateValues(this);
+        }
+        public void DoDecreasePolicy(int playerId, int policyId)
+        {
+            Party party = GetParty(playerId);
+            Policy policy = party.GetPolicy(policyId);
+
+            if (policy.Value == policy.LockedValue) return;
+            Debug.Log(party.Name + " decreased " + policy.Name + " policy.");
+
+            party.PolicyPoints++;
+            policy.DecreaseValue();
+            if (party == LocalPlayerParty) UI.SidePanelHeader.UpdateValues(this);
+        }
+
         #endregion
 
         #region Election
 
         /// <summary>
-        /// This is a server-side function. Concludes the preparation phase when all players are ready and handles everything that happens:
+        /// Only used in multiplayer, a seed is sended to all clients with a signal that the preparation phase ended.
+        /// </summary>
+        private void ConcludePreparationPhaseServer()
+        {
+            int seed = GetRandomSeed();
+            NetworkPlayer.Server.ConcludePreparationPhaseServerRpc(seed);
+        }
+
+        /// <summary>
+        /// This is a client-side function, a seed ensures that the outcome is the same for all clients.
+        /// Concludes the preparation phase when all players are ready and handles everything that happens:
         /// - AI actions
         /// - Locking player actions
         /// - Election result
@@ -528,8 +599,11 @@ namespace ElectionTactics
         /// - Handling district effects
         /// - Starting next election cycle
         /// </summary>
-        private void ConcludePreparationPhaseServer()
+        /// <param name="seed">Seed is used to synchronize in multiplayer</param>
+        public void ConcludePreparationPhase(int seed)
         {
+            UnityEngine.Random.InitState(seed);
+
             // Change state
             if (State != GameState.PreparationPhase) return;
             State = GameState.Election;
@@ -562,31 +636,6 @@ namespace ElectionTactics
             StartNextElectionCycle();
 
             ElectionAnimationHandler.StartAnimation(electionResult);
-            if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.ConcludePreparationPhaseServerRpc();
-        }
-
-        /// <summary>
-        /// Concludes the preparation phase for clients, receiving all relevant data from the server.
-        /// </summary>
-        public void ConcludePreparationPhaseClient(GeneralElectionResult electionResult)
-        {
-            // Change state
-            if (State != GameState.PreparationPhase) return;
-            State = GameState.Election;
-
-            // TODO: Set policy points for all players 
-
-            // Lock policies
-            foreach (Party party in Parties)
-                foreach (Policy policy in party.Policies) policy.LockValue();
-
-            // Reset seats
-            foreach (Party p in Parties) p.Seats = 0;
-
-            // Apply district results
-            electionResult.Apply(this);
-
-            ElectionAnimationHandler.StartAnimation(electionResult);
         }
 
         public void AddGeneralElectionResult(GeneralElectionResult electionResult)
@@ -594,6 +643,9 @@ namespace ElectionTactics
             ElectionResults.Add(electionResult);
         }
 
+        /// <summary>
+        /// Gets triggered when the election animation is done
+        /// </summary>
         public void OnElectionAnimationDone()
         {
             // Check win condition
@@ -635,6 +687,10 @@ namespace ElectionTactics
         {
             return MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
         }
+        public static int GetRandomSeed()
+        {
+            return UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        }
 
         #endregion
 
@@ -643,6 +699,11 @@ namespace ElectionTactics
         public GeographyTrait GetGeographyTrait(GeographyTraitType type, int category)
         {
             return GeographyTraits.First(x => x.Type == type && x.Category == category);
+        }
+
+        public Party GetParty(int partyId)
+        {
+            return Parties.First(x => x.Id == partyId);
         }
 
         public Dictionary<Region, District> VisibleDistricts { get { return Districts.Where(x => x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }

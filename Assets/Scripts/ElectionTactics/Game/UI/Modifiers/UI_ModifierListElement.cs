@@ -15,7 +15,7 @@ namespace ElectionTactics
 
         public void Init(Modifier m)
         {
-            TypeImage.sprite = IconManager.Icons.GetModifierIcon(m.Type);
+            TypeImage.sprite = IconManager.Singleton.GetModifierIcon(m.Type);
 
             PartyText.text = m.Party.Acronym;
             PartyText.color = m.Party.Color;

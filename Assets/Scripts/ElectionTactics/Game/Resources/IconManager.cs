@@ -13,12 +13,12 @@ namespace ElectionTactics
         public Sprite GetModifierIcon(ModifierType type)
         {
             if (type == ModifierType.Positive) return ModifierPositiveIcon;
-            if (type == ModifierType.Negative) return Icons.ModifierNegativeIcon;
-            if (type == ModifierType.Exclusion) return Icons.ModifierExclusionIcon;
+            if (type == ModifierType.Negative) return Singleton.ModifierNegativeIcon;
+            if (type == ModifierType.Exclusion) return Singleton.ModifierExclusionIcon;
             throw new System.Exception("Modifier image not found for type " + type.ToString());
         } 
 
-        public static IconManager Icons
+        public static IconManager Singleton
         {
             get
             {

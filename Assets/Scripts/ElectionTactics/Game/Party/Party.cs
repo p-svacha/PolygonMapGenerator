@@ -54,30 +54,64 @@ namespace ElectionTactics {
 
         #region Getters
 
+        public Policy GetPolicy(int id)
+        {
+            return Policies.First(x => x.Id == id);
+        }
+
+        public Policy GetPolicy(GeographyTraitType t)
+        {
+            return Policies.OfType<GeographyPolicy>().First(x => x.Trait == t);
+        }
         public int GetPolicyValueFor(GeographyTraitType t)
         {
-            return Policies.OfType<GeographyPolicy>().First(x => x.Trait == t).Value;
+           return GetPolicy(t).Value;
+        }
+
+        public Policy GetPolicy(EconomyTrait t)
+        {
+            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == t);
         }
         public int GetPolicyValueFor(EconomyTrait t)
         {
-            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == t).Value;
+            return GetPolicy(t).Value;
+        }
+
+        public Policy GetPolicy(Density d)
+        {
+            return Policies.OfType<DensityPolicy>().First(x => x.Density == d);
         }
         public int GetPolicyValueFor(Density d)
         {
-            return Policies.OfType<DensityPolicy>().First(x => x.Density == d).Value;
+            return GetPolicy(d).Value;
+        }
+
+        public Policy GetPolicy(AgeGroup a)
+        {
+            return Policies.OfType<AgeGroupPolicy>().First(x => x.AgeGroup == a);
         }
         public int GetPolicyValueFor(AgeGroup a)
         {
-            return Policies.OfType<AgeGroupPolicy>().First(x => x.AgeGroup == a).Value;
+            return GetPolicy(a).Value;
+        }
+
+        public Policy GetPolicy(Language l)
+        {
+            return Policies.OfType<LanguagePolicy>().First(x => x.Language == l);
         }
         public int GetPolicyValueFor(Language l)
         {
-            return Policies.OfType<LanguagePolicy>().First(x => x.Language == l).Value;
+            return GetPolicy(l).Value;
+        }
+        public Policy GetPolicy(Religion r)
+        {
+            if (r == Religion.None) return null;
+            return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r);
         }
         public int GetPolicyValueFor(Religion r)
         {
             if (r == Religion.None) return 0;
-            return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r).Value;
+            return GetPolicy(r).Value;
         }
 
         #endregion

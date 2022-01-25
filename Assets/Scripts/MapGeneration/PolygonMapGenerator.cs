@@ -880,7 +880,7 @@ public class PolygonMapGenerator : MonoBehaviour
                     {
                         polygon.Region.SetColor(Color.red);
                         waterNeighbour.Region.SetColor(Color.red);
-                        throw new Exception("No good nodes found, look for red polygons to see where");
+                        throw new Exception("TODO: fix this bug - No good nodes found, look for red polygons to see where");
                     }
                     GameObject waterConObject = MeshGenerator.DrawLine(closestNodes[0].Vertex, closestNodes[1].Vertex, 0.02f, new Color(0.2f, 0.2f, 0.2f), LAYER_WATER_CONNECTION, 0.001f);
                     waterConObject.transform.SetParent(Map.WaterConnectionContainer.transform);

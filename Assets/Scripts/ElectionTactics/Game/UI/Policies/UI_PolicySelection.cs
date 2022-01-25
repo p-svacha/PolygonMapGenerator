@@ -47,7 +47,7 @@ namespace ElectionTactics
                 for (int i = 1; i < container.transform.childCount; i++) Destroy(container.transform.GetChild(i).gameObject);
             }
 
-            foreach(Policy policy in p.Policies.OrderBy(x => x.OrderNum))
+            foreach(Policy policy in p.Policies.Where(x => x.IsActive).OrderBy(x => x.OrderNum))
             {
                 AddPolicyControl(policy);
             }

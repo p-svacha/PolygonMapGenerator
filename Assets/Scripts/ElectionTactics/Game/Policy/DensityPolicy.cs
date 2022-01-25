@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public Density Density;
 
-        public DensityPolicy(Party p, Density density, int maxValue) : base(p, maxValue)
+        public DensityPolicy(int id, Party p, Density density, int maxValue) : base(id, p, maxValue)
         {
             Density = density;
             Name = EnumHelper.GetDescription(density);

@@ -17,8 +17,8 @@ namespace ElectionTactics
         {
             while(Party.PolicyPoints > 0)
             {
-                Policy p = Party.Policies[Random.Range(0, Party.Policies.Count)];
-                Party.Game.IncreasePolicy(p);
+                Policy policy = Party.Policies[Random.Range(0, Party.Policies.Count)];
+                Party.Game.DoIncreasePolicy(Party.Id, policy.Id);
             }
         }
     }

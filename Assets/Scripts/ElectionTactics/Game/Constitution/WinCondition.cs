@@ -41,8 +41,8 @@ namespace ElectionTactics
 
         protected override void SetInitialRandomValues()
         {
-            Type = GetRandomType();
-            Time = GetRandomTime();
+            Type = WinConditionType.TotalElectionsWon; // GetRandomType();
+            Time = WinConditionTime.Value; // GetRandomTime();
             if (Time == WinConditionTime.Year) ConditionValue = GetRandomConditionValue(MinYear, MaxYear, StepYear);
             else
             {

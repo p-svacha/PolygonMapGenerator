@@ -63,31 +63,15 @@ namespace ElectionTactics
 
         #region Generate Map
         [ServerRpc]
-        public void GenerateMapServerRpc(int seed)
+        public void GenerateMapServerRpc(int mapSeed, int startGameSeed)
         {
-            GenerateMapClientRpc(seed);
+            GenerateMapClientRpc(mapSeed, startGameSeed);
         }
         [ClientRpc]
-        private void GenerateMapClientRpc(int seed)
+        private void GenerateMapClientRpc(int mapSeed, int startGameSeed)
         {
             if (IsHost) return;
-            ET_NetworkManager.Singleton.Game.StartGameAsClient(seed);
-        }
-        #endregion
-
-        #region Start Game
-        [ServerRpc]
-        public void StartGameServerRpc()
-        {
-            KeyValuePair<Region, District> firstDistrict = ET_NetworkManager.Singleton.Game.InvisibleDistricts.First();
-            StartGameClientRpc(ET_NetworkManager.Serialize(firstDistrict.Value.Seed), firstDistrict.Value.Name, firstDistrict.Key.Id);
-        }
-        [ClientRpc]
-        private void StartGameClientRpc(byte[] newDistrictSeed, string newDistrictName, int newDistrictRegionId)
-        {
-            if (IsHost) return;
-            Random.State districtSeed = (Random.State)ET_NetworkManager.Deserialize(newDistrictSeed);
-            ET_NetworkManager.Singleton.Game.StartGameClient(districtSeed, newDistrictName, newDistrictRegionId);
+            ET_NetworkManager.Singleton.Game.StartGameAsClient(mapSeed, startGameSeed);
         }
         #endregion
 
@@ -108,22 +92,31 @@ namespace ElectionTactics
         #endregion
 
         #region End Preparation Phase
+        // Election Result
         [ServerRpc]
-        public void ConcludePreparationPhaseServerRpc()
+        public void ConcludePreparationPhaseServerRpc(int seed)
         {
-            GeneralElectionResult electionResult = ET_NetworkManager.Singleton.Game.GetLatestElectionResult();
-            byte[] electionResultData = ET_NetworkManager.Serialize(electionResult);
-            ConcludePreparationPhaseClientRpc(electionResultData);
+            ConcludePreparationPhaseClientRpc(seed);
         }
         [ClientRpc]
-        public void ConcludePreparationPhaseClientRpc(byte[] electionResultData)
+        public void ConcludePreparationPhaseClientRpc(int seed)
         {
-            if (IsHost) return;
-            GeneralElectionResult electionResult = (GeneralElectionResult)ET_NetworkManager.Deserialize(electionResultData);
-            foreach (DistrictElectionResult districtResult in electionResult.DistrictResults) districtResult.InitReferences(ET_NetworkManager.Singleton.Game);
-            ET_NetworkManager.Singleton.Game.ConcludePreparationPhaseClient(electionResult);
+            ET_NetworkManager.Singleton.Game.ConcludePreparationPhase(seed);
         }
         #endregion
 
+        #region Change Policy
+        [ServerRpc]
+        public void ChangePolicyServerRpc(int playerId, int policyId, int value)
+        {
+            ChangePolicyClientRpc(playerId, policyId, value);
+        }
+        [ClientRpc]
+        public void ChangePolicyClientRpc(int playerId, int policyId, int value)
+        {
+            if (value == 1) ET_NetworkManager.Singleton.Game.DoIncreasePolicy(playerId, policyId);
+            else if(value == -1) ET_NetworkManager.Singleton.Game.DoDecreasePolicy(playerId, policyId);
+        }
+        #endregion
     }
 }

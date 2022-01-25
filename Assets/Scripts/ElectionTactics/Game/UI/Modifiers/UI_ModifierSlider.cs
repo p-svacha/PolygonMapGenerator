@@ -14,9 +14,9 @@ namespace ElectionTactics
 
         public void Init(Modifier m)
         {
-            if (m.Type == ModifierType.Positive) TypeImage.sprite = IconManager.Icons.ModifierPositiveIcon;
-            else if (m.Type == ModifierType.Negative) TypeImage.sprite = IconManager.Icons.ModifierNegativeIcon;
-            else if (m.Type == ModifierType.Exclusion) TypeImage.sprite = IconManager.Icons.ModifierExclusionIcon;
+            if (m.Type == ModifierType.Positive) TypeImage.sprite = IconManager.Singleton.ModifierPositiveIcon;
+            else if (m.Type == ModifierType.Negative) TypeImage.sprite = IconManager.Singleton.ModifierNegativeIcon;
+            else if (m.Type == ModifierType.Exclusion) TypeImage.sprite = IconManager.Singleton.ModifierExclusionIcon;
             else throw new System.Exception("Modifier Image not found for type " + m.Type.ToString());
 
             PartyText.text = m.Party.Acronym;
