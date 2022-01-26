@@ -46,7 +46,7 @@ namespace ElectionTactics
         }
         public void Init(UI_ElectionTactics ui, Religion r)
         {
-            HoverAction = () => { UI.MapControls.ShowReligionOverlay(r); };
+            if(r != Religion.None) HoverAction = () => { UI.MapControls.ShowReligionOverlay(r); };
             Init(ui, EnumHelper.GetDescription(r), EnumHelper.GetDescription(r), "");
         }
         public void Init(UI_ElectionTactics ui, Language l)

@@ -11,11 +11,11 @@ namespace ElectionTactics
         public string Title;
         public string Text;
 
-        public bool IsFocussed;
+        [HideInInspector] public bool IsFocussed;
         private float Delay = 1f;
-        public float CurrentDelay;
+        [HideInInspector] public float CurrentDelay;
 
-        public Tooltip Tooltip;
+        [HideInInspector] public Tooltip Tooltip;
 
         public void OnPointerEnter(PointerEventData eventData)
         {

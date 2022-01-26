@@ -114,6 +114,8 @@ namespace ElectionTactics {
             return GetPolicy(r).Value;
         }
 
+        public List<Policy> ActivePolicies { get { return Policies.Where(x => x.IsActive).ToList(); } }
+
         #endregion
     }
 }

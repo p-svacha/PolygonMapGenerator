@@ -531,7 +531,7 @@ namespace ElectionTactics
 
         public void DecreasePolicy(Policy p)
         {
-            if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
+            if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
         }
 

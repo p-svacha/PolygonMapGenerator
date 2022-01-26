@@ -12,10 +12,12 @@ namespace ElectionTactics
         public Color SelectedDistrictColor;
 
         [Header("Map Overlays")]
+        public Color VeryHighImpactColor;
         public Color HighImpactColor;
         public Color MediumImpactColor;
         public Color LowImpactColor;
         public Color NoImpactColor;
+        public Color NegativeImpactColor;
         public List<Color> LegendColors;
 
         [Header("UI")]

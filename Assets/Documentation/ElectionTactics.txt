@@ -87,11 +87,34 @@ Election Tactics
 	- Add popular vote display
 
 
-Priority List
--------------
-1. Controls during election
-	- 1x Speed / 2x Speed / 4x Speed
-	- Conclude District (jumps to end of graph animation)
-	- Conclude Election (jumps to zoomed out map)
+ToDo for Pre-Alpha 0.2
+----------------------------------
+add rules to setup screen for host
+	- don't allow to start with 1 player
+
+quit button in game settings
+
+map generation:
+- fix bug "no good nodes found" (seed 1210561134)
+- fix bug "couldn't find direction of river delta"
+
+remove title and --- from mouseover
+add descriptions for age group, density, language and religion
+
+add popularity and popularity breakdown on district info
+
+add go back button from lobby that also disconnects in mp
+
+Improve district labels on map:
+	- add amount of seats
+	- add last winner (with small % lbale with margin)
+	- maybe 4 small icons for religion/density/age/language
+	- maybe popularity
+
+new mentalities:
+[economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
+[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
+
+
 
 
