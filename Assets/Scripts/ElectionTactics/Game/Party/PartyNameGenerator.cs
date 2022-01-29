@@ -160,9 +160,11 @@ namespace ElectionTactics
             new Color(0.80f, 0.00f, 0.00f), // 3 - Red
             new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
             new Color(0.10f, 0.10f, 0.10f), // 5 - Black
-            new Color(0.75f, 0.50f, 0.16f), // 6 - Orange
+            new Color(0.85f, 0.60f, 0.16f), // 6 - Orange
             new Color(0.80f, 0.00f, 0.80f), // 7 - Purple
             new Color(0.66f, 0.32f, 0.10f), // 8 - Brown
+            new Color(0.00f, 0.80f, 0.90f), // 9 - Light Blue
+            new Color(0.00f, 0.90f, 0.00f), // 9 - Light Green
         };
 
 
@@ -205,7 +207,7 @@ namespace ElectionTactics
             else return GetRandomColor(alreadyTaken);
         }
 
-        private static Color GetRandomColor(List<Color> forbiddenColors)
+        public static Color GetRandomColor(List<Color> forbiddenColors)
         {
             Color c = Colors[Random.Range(0, Colors.Count)];
             while(forbiddenColors.Contains(c))

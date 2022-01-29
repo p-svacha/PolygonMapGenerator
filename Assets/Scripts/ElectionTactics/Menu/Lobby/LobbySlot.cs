@@ -7,6 +7,7 @@ namespace ElectionTactics
     [System.Serializable]
     public class LobbySlot
     {
+        public int Id;
         public LobbySlotType SlotType;
         public string Name;
         public ulong ClientId;
@@ -14,8 +15,9 @@ namespace ElectionTactics
         private float ColorG;
         private float ColorB;
 
-        public LobbySlot(LobbySlotType slotType)
+        public LobbySlot(int id, LobbySlotType slotType)
         {
+            Id = id;
             SlotType = slotType;
             Name = "";
         }
@@ -45,6 +47,13 @@ namespace ElectionTactics
         public Color GetColor()
         {
             return new Color(ColorR, ColorG, ColorB);
+        }
+
+        public void SetColor(Color c)
+        {
+            ColorR = c.r;
+            ColorG = c.g;
+            ColorB = c.b;
         }
     }
 }

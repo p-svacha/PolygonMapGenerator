@@ -34,16 +34,41 @@ namespace ElectionTactics
             }
         }
 
-        #region Update Lobby
+        #region Lobby
         [ServerRpc]
-        public void UpdateLobbyServerRpc()
+        public void UpdateLobbySlotsServerRpc()
         {
-            UpdateLobbyClientRpc(ET_NetworkManager.Serialize(ET_NetworkManager.Singleton.MenuNavigator.Lobby.Slots));
+            UpdateLobbySlotsClientRpc(ET_NetworkManager.Serialize(ET_NetworkManager.Singleton.MenuNavigator.Lobby.Slots));
         }
         [ClientRpc]
-        private void UpdateLobbyClientRpc(byte[] data)
+        private void UpdateLobbySlotsClientRpc(byte[] data)
         {
             ET_NetworkManager.Singleton.MenuNavigator.Lobby.SetSlotsFromServer(data);
+        }
+
+        [ServerRpc]
+        public void LobbyRuleChangedServerRpc(int ruleId, int value)
+        {
+            Debug.Log("Server: Rule " + ruleId + " changed to " + value);
+            LobbyRuleChangedClientRpc(ruleId, value);
+        }
+        [ClientRpc]
+        private void LobbyRuleChangedClientRpc(int ruleId, int value)
+        {
+            if (IsHost) return;
+            ET_NetworkManager.Singleton.MenuNavigator.Lobby.GetRuleChangeFromServer(ruleId, value);
+        }
+
+        [ServerRpc]
+        public void RequestColorChangeServerRpc(int slotId)
+        {
+            Color newColor = ET_NetworkManager.Singleton.MenuNavigator.Lobby.GetRandomNewColorFor(slotId);
+            RequestColorChangeClientRpc(slotId, newColor.r, newColor.g, newColor.b);
+        }
+        [ClientRpc]
+        private void RequestColorChangeClientRpc(int slotId, float r, float g, float b)
+        {
+            ET_NetworkManager.Singleton.MenuNavigator.Lobby.UpdatePlayerColor(slotId, new Color(r, g, b));
         }
         #endregion
 
@@ -61,7 +86,7 @@ namespace ElectionTactics
         }
         #endregion
 
-        #region Generate Map
+        #region Generate Map & Start Game
         [ServerRpc]
         public void GenerateMapServerRpc(int mapSeed, int startGameSeed)
         {

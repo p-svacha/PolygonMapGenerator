@@ -26,6 +26,7 @@ namespace ElectionTactics
 
         private void OnDestroy()
         {
+            Debug.Log("NETWORK: Network Manager gets destroyed");
             // Remove network hooks
             if (NetworkManager.Singleton != null)
             {
@@ -46,6 +47,16 @@ namespace ElectionTactics
             NetworkConnectionData connectionData = new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameText.text);
             NetworkManager.Singleton.NetworkConfig.ConnectionData = Serialize(connectionData);
             NetworkManager.Singleton.StartClient();
+        }
+
+        public void LeaveGame()
+        {
+            if (NetworkManager.Singleton.IsHost) // TODO: If the host leaves, they can't rehost without getting an error, so that doesn't work yet
+            {
+                Debug.Log("NETWORK: Server shut down.");
+                ConnectionData.Clear();
+            }
+            NetworkManager.Singleton.Shutdown();
         }
 
         #region Network Hooks
@@ -128,13 +139,15 @@ namespace ElectionTactics
         /// </summary>
         private void HandleClientDisconnected(ulong clientId)
         {
-            if (clientId == NetworkManager.Singleton.LocalClientId) // We ourselves just disconnected
+            if (clientId == NetworkManager.Singleton.LocalClientId) // We ourselves just disconnected - afaik this never gets executed
             {
                 Debug.Log("NETWORK: We disconnected from the server");
             }
-            else
+            else // We are the server and someone disconnected
             {
-                Debug.Log("NETWORK: Client Disconnected");
+                Debug.Log("NETWORK: Client Disconnected: " + ConnectionData[clientId].ToString());
+                MenuNavigator.Lobby.PlayerLeft(clientId);
+                ConnectionData.Remove(clientId);
             }
         }
 

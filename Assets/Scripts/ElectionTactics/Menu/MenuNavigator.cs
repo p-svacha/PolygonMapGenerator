@@ -52,6 +52,11 @@ namespace ElectionTactics
 
         #endregion
 
-        
+        public void SwitchToMainMenuScreen()
+        {
+            MainMenu.gameObject.SetActive(true);
+            Lobby.gameObject.SetActive(false);
+        }
+
     }
 }

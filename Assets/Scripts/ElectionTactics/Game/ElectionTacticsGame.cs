@@ -45,13 +45,31 @@ namespace ElectionTactics
 
         public List<Mentality> Mentalities = new List<Mentality>();
 
-        // Rules
+        #region Rules
+        // Base
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MinAIPolicyPointsPerCycle = 4;
         private const int MaxAIPolicyPointsPerCycle = 7;
         private const int MaxPolicyValue = 8;
-        private const int BaseTimePerTurn = 300; // Time in seconds that players in multiplayer have time for their turn
-        private const int CumulativeTimePerTurn = 10; // Additional time players have that increases each turn by this amount
+
+        // Turn Length
+        private int BaseTimePerTurn;       // Time in seconds that players in multiplayer have time for their turn
+        private int CumulativeTimePerTurn; // Additional time players have that increases each turn by this amount
+
+        private Dictionary<GameSettings.TurnLengthOptions, int> BaseTimes = new Dictionary<GameSettings.TurnLengthOptions, int>()
+        {
+            {GameSettings.TurnLengthOptions.Slow, 160 },
+            {GameSettings.TurnLengthOptions.Medium, 75 },
+            {GameSettings.TurnLengthOptions.Fast, 50 },
+        };
+        private Dictionary<GameSettings.TurnLengthOptions, int> CumulativeTimes = new Dictionary<GameSettings.TurnLengthOptions, int>()
+        {
+            {GameSettings.TurnLengthOptions.Slow, 20 },
+            {GameSettings.TurnLengthOptions.Medium, 15 },
+            {GameSettings.TurnLengthOptions.Fast, 10 },
+        };
+
+        #endregion
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions
@@ -77,7 +95,10 @@ namespace ElectionTactics
         {
             if (State != GameState.Inactive) return;
             InitGame();
+
             GameSettings = gameSettings;
+            ApplyGameSettings();
+
             GameType = type;
             int mapSeed = GetRandomSeed();
             StartGameSeed = GetRandomSeed();
@@ -92,8 +113,20 @@ namespace ElectionTactics
         public void InitJoinGame()
         {
             InitGame();
-            GameSettings = new GameSettings(MenuNavigator.Lobby.Slots);
+
+            GameSettings = new GameSettings(MenuNavigator.Lobby.Slots, MenuNavigator.Lobby.Rules.Select(x => x.value).ToList());
+            ApplyGameSettings();
+
             GameType = GameType.MultiplayerClient;
+        }
+
+        /// <summary>
+        /// Changes game rules variables according to the game settings
+        /// </summary>
+        private void ApplyGameSettings()
+        {
+            BaseTimePerTurn = BaseTimes[GameSettings.TurnLength];
+            CumulativeTimePerTurn = CumulativeTimes[GameSettings.TurnLength];
         }
 
         /// <summary>

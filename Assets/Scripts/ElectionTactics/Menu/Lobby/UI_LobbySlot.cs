@@ -11,6 +11,8 @@ namespace ElectionTactics
         [Header("Active Form")]
         public GameObject ActivePanel;
         public Text PlayerText;
+        public Button PlayerColorButton;
+        public Image PlayerColor;
         public Button RemovePlayerButton;
 
         [Header("Inactive Form")]
@@ -23,6 +25,7 @@ namespace ElectionTactics
 
         void Start()
         {
+            PlayerColorButton.onClick.AddListener(() => Lobby.ChangeSlotColor(this));
             RemovePlayerButton.onClick.AddListener(() => Lobby.RemovePlayer(this));
             AddPlayerButton.onClick.AddListener(() => Lobby.AddBot());
         }
@@ -42,6 +45,11 @@ namespace ElectionTactics
             ActivePanel.SetActive(true);
             PlayerText.text = playerName;
             PlayerText.color = c;
+
+            PlayerColor.color = c;
+            bool canChangeColor = Slot.ClientId == NetworkPlayer.LocalClientId;
+            PlayerColorButton.enabled = canChangeColor;
+
             bool canRemove = Slot.SlotType == LobbySlotType.Bot && (Lobby.Type == GameType.Singleplayer || NetworkManager.Singleton.IsHost);
             RemovePlayerButton.gameObject.SetActive(canRemove);
         }
@@ -60,6 +68,13 @@ namespace ElectionTactics
 
             AddPlayerPanel.SetActive(false);
             ActivePanel.SetActive(false);
+        }
+
+        public void SetColor(Color c)
+        {
+            PlayerText.color = c;
+            PlayerColor.color = c;
+            Slot.SetColor(c);
         }
     }
 }

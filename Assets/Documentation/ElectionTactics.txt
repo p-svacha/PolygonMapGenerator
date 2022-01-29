@@ -89,21 +89,16 @@ Election Tactics
 
 ToDo for Pre-Alpha 0.2
 ----------------------------------
-add rules to setup screen for host
-	- don't allow to start with 1 player
-
-quit button in game settings
+quit button in game settings and post game screen
 
 map generation:
 - fix bug "no good nodes found" (seed 1210561134)
-- fix bug "couldn't find direction of river delta"
+- fix bug "couldn't find direction of river delta" (seed 1821470981)
 
 remove title and --- from mouseover
 add descriptions for age group, density, language and religion
 
 add popularity and popularity breakdown on district info
-
-add go back button from lobby that also disconnects in mp
 
 Improve district labels on map:
 	- add amount of seats
@@ -116,6 +111,12 @@ mentality changes:
 	- add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
 	- add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
 	- fix rebellious mentality: atm 2 different get the malus instead of only winner with 8 players
+
+implement trust system as win condition:
+	- all parties start with 100 trust
+	- every district vote adds the amount of seats of that district as trust to the winning party and removes the amount as trust from all the other parties
+	- once a party reaches 0 trust, it is eliminated
+	- last party that has trust, wins
 
 
 
