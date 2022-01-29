@@ -112,7 +112,7 @@ public class MeshGenerator
         MeshRenderer renderer = border.AddComponent<MeshRenderer>();
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
-        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
+        renderer.material = MapDisplayResources.Singleton.DefaultMaterial;
         renderer.material.color = c;
         MeshFilter filter = border.AddComponent<MeshFilter>();
         filter.mesh = msh;
@@ -198,7 +198,7 @@ public class MeshGenerator
         MeshRenderer renderer = arrow.AddComponent<MeshRenderer>();
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
-        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
+        renderer.material = MapDisplayResources.Singleton.DefaultMaterial;
         renderer.material.color = color;
 
         // Create the mesh
@@ -249,7 +249,7 @@ public class MeshGenerator
         MeshRenderer renderer = rectangle.AddComponent<MeshRenderer>();
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
-        renderer.material = MapDisplaySettings.Settings.DefaultMaterial;
+        renderer.material = MapDisplayResources.Singleton.DefaultMaterial;
         renderer.material.color = color;
 
         // Create the mesh

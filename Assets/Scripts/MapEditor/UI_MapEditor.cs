@@ -39,8 +39,10 @@ public class UI_MapEditor : MonoBehaviour
     public Toggle ContinentBorderToggle;
     public Toggle WaterConnectionToggle;
     public Toggle ConnectionOverlayToggle;
-    public Dropdown DrawModeDropdown;
-    private MapDrawMode CurrentDrawMode;
+    public Dropdown ColorModeDropdown;
+    public Dropdown TextureModeDropdown;
+    private MapColorMode CurrentColorMode;
+    private MapTextureMode CurrentTextureMode;
 
     [Header("Map Information")]
     public GameObject MapInfoPanel;
@@ -85,8 +87,8 @@ public class UI_MapEditor : MonoBehaviour
     public Button CreateNationButton;
 
     // Interaction
-    public Region LastHoveredRegion;
-    public Region HoveredRegion;
+    [HideInInspector] public Region LastHoveredRegion;
+    [HideInInspector] public Region HoveredRegion;
 
     public List<Region> SelectedRegions = new List<Region>();
     public List<Region> SelectedRegionAdjacent = new List<Region>();
@@ -113,9 +115,14 @@ public class UI_MapEditor : MonoBehaviour
         ShorelineBorderToggle.onValueChanged.AddListener(ShorelineBorderToggle_OnValueChanged);
         ContinentBorderToggle.onValueChanged.AddListener(ContinentBorderToggle_OnValueChanged);
         WaterConnectionToggle.onValueChanged.AddListener(WaterConnectionToggle_OnValueChanged);
-        foreach (MapDrawMode drawMode in Enum.GetValues(typeof(MapDrawMode))) DrawModeDropdown.options.Add(new Dropdown.OptionData(drawMode.ToString()));
-        DrawModeDropdown.onValueChanged.AddListener(DrawModeDropdown_OnValueChanged);
-        DrawModeDropdown.value = 1; DrawModeDropdown.value = 0;
+
+        foreach (MapColorMode mode in Enum.GetValues(typeof(MapColorMode))) ColorModeDropdown.options.Add(new Dropdown.OptionData(mode.ToString()));
+        ColorModeDropdown.onValueChanged.AddListener(ColorModeDropdown_OnValueChanged);
+        ColorModeDropdown.value = 1; ColorModeDropdown.value = 0;
+
+        foreach (MapTextureMode mode in Enum.GetValues(typeof(MapTextureMode))) TextureModeDropdown.options.Add(new Dropdown.OptionData(mode.ToString()));
+        TextureModeDropdown.onValueChanged.AddListener(TextureModeDropdown_OnValueChanged);
+        TextureModeDropdown.value = 1; TextureModeDropdown.value = 0;
 
         TurnToLandButton.onClick.AddListener(TurnSelectedToRegionsToLand);
         TurnToWaterButton.onClick.AddListener(TurnSelectedRegionsToWater);
@@ -186,7 +193,7 @@ public class UI_MapEditor : MonoBehaviour
     {
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
         CurrentMap = map;
-        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, WaterConnectionToggle.isOn, CurrentDrawMode);
+        CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, WaterConnectionToggle.isOn, CurrentColorMode, CurrentTextureMode);
         CameraControls.Init(map);
 
         SetMapInformation(CurrentMap);
@@ -246,10 +253,16 @@ public class UI_MapEditor : MonoBehaviour
         if (CurrentMap != null) CurrentMap.ShowWaterConnections(enabled);
     }
 
-    private void DrawModeDropdown_OnValueChanged(int value)
+    private void ColorModeDropdown_OnValueChanged(int value)
     {
-        CurrentDrawMode = (MapDrawMode) Enum.Parse(typeof(MapDrawMode), DrawModeDropdown.options[value].text);
-        if(CurrentMap != null) CurrentMap.UpdateDrawMode(CurrentDrawMode);
+        CurrentColorMode = (MapColorMode) Enum.Parse(typeof(MapColorMode), ColorModeDropdown.options[value].text);
+        if(CurrentMap != null) CurrentMap.UpdateColorMode(CurrentColorMode);
+    }
+
+    private void TextureModeDropdown_OnValueChanged(int value)
+    {
+        CurrentTextureMode = (MapTextureMode)Enum.Parse(typeof(MapTextureMode), TextureModeDropdown.options[value].text);
+        if (CurrentMap != null) CurrentMap.UpdateTextureMode(CurrentTextureMode);
     }
 
     #endregion

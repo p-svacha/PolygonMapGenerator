@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 1089242679}
   - component: {fileID: 1089242678}
   m_Layer: 0
-  m_Name: DisplaySettings
+  m_Name: MapDisplayResources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,6 +414,7 @@ MonoBehaviour:
   TropicalColor: {r: 0.31078678, g: 0.6792453, b: 0.40977564, a: 0}
   SavannaColor: {r: 0.5832786, g: 0.8396226, b: 0.48713955, a: 0}
   DesertColor: {r: 1, g: 0.94378847, b: 0.7783019, a: 0}
+  DesertTexture: {fileID: 0}
   HighlightColor: {r: 0, g: 0, b: 0, a: 0}
   GreyedOutColor: {r: 0, g: 0, b: 0, a: 0}
   WaterBackgroundTexture: {fileID: 2800000, guid: 61def133d0dd05c4a90761375486e8c7,
@@ -560,8 +561,10 @@ MonoBehaviour:
   InputManager: {fileID: 998383204}
   NumPlayers: 0
   NumStartingTerritories: 0
+  NumStartingArmies: 0
   Turn: 0
   State: 0
+  ArmyArrows: []
   UI: {fileID: 1950883562}
 --- !u!4 &1305800866
 Transform:

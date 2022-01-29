@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -762,15 +762,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GenerationState: 0
   Seed: 0
-  Width: 0
-  Height: 0
-  MinPolygonArea: 0
-  MaxPolygonArea: 0
-  Island: 0
-  ShowRegionBorders: 0
-  LandColor: {r: 0, g: 0, b: 0, a: 0}
-  WaterColor: {r: 0, g: 0, b: 0, a: 0}
-  MapSize: 0
 --- !u!4 &257228129
 Transform:
   m_ObjectHideFlags: 0
@@ -1359,7 +1350,7 @@ GameObject:
   - component: {fileID: 448424037}
   - component: {fileID: 448424036}
   m_Layer: 0
-  m_Name: MaterialHandler
+  m_Name: MapDisplayResources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1380,8 +1371,21 @@ MonoBehaviour:
   DefaultMaterial: {fileID: 2100000, guid: cd7b118cb348e9d4b8b8151e9bdcada3, type: 2}
   LandColor: {r: 0.73915094, g: 0.9339623, b: 0.7004717, a: 1}
   WaterColor: {r: 0.28835887, g: 0.52588207, b: 0.754717, a: 1}
+  IceColor: {r: 0, g: 0, b: 0, a: 0}
+  TundraColor: {r: 0, g: 0, b: 0, a: 0}
+  TaigaColor: {r: 0, g: 0, b: 0, a: 0}
+  ShrublandColor: {r: 0, g: 0, b: 0, a: 0}
+  GrasslandColor: {r: 0, g: 0, b: 0, a: 0}
+  TemperateRainforestColor: {r: 0, g: 0, b: 0, a: 0}
+  TemperateColor: {r: 0, g: 0, b: 0, a: 0}
+  TropicalRainforestColor: {r: 0, g: 0, b: 0, a: 0}
+  TropicalColor: {r: 0, g: 0, b: 0, a: 0}
+  SavannaColor: {r: 0, g: 0, b: 0, a: 0}
+  DesertColor: {r: 0, g: 0, b: 0, a: 0}
+  DesertTexture: {fileID: 0}
   HighlightColor: {r: 0, g: 0, b: 0, a: 0}
   GreyedOutColor: {r: 0, g: 0, b: 0, a: 0}
+  WaterBackgroundTexture: {fileID: 0}
 --- !u!4 &448424037
 Transform:
   m_ObjectHideFlags: 0
@@ -1897,6 +1901,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &705507995
@@ -2573,6 +2578,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &969235252
 Canvas:
   m_ObjectHideFlags: 0
@@ -4214,7 +4220,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Settings.lighting
-  serializedVersion: 2
+  serializedVersion: 3
   m_GIWorkflowMode: 1
   m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 0
@@ -4236,7 +4242,7 @@ LightingSettings:
   m_MixedBakeMode: 2
   m_LightmapsBakeMode: 1
   m_FilterMode: 1
-  m_LightmapParameters: {fileID: 0}
+  m_LightmapParameters: {fileID: 15204, guid: 0000000000000000f000000000000000, type: 0}
   m_ExportTrainingData: 0
   m_TrainingDataDestination: TrainingData
   m_RealtimeResolution: 2
@@ -4253,7 +4259,7 @@ LightingSettings:
   m_PVREnvironmentReferencePointCount: 2048
   m_LightProbeSampleCountMultiplier: 4
   m_PVRBounces: 2
-  m_PVRRussianRouletteStartBounce: 2
+  m_PVRMinBounces: 1
   m_PVREnvironmentMIS: 0
   m_PVRFilteringMode: 2
   m_PVRDenoiserTypeDirect: 0

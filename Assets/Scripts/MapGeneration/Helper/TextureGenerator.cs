@@ -11,7 +11,7 @@ namespace MapGeneration
     {
         public static void GenerateSatelliteTexture(PolygonMapGenerator PMG)
         {
-            MapDisplaySettings MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MapDisplaySettings>();
+            MapDisplayResources MaterialHandler = GameObject.Find("MaterialHandler").GetComponent<MapDisplayResources>();
 
             // Land texture
             int perlinRange = 10000;

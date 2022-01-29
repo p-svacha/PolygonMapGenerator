@@ -28,7 +28,8 @@ public class Map
     public List<WaterConnection> WaterConnections;
 
     // Display
-    public MapDrawMode DrawMode;
+    public MapColorMode ColorMode;
+    public MapTextureMode TextureMode;
     public bool IsShowingRegionBorders;
     public bool IsShowingShorelineBorders;
     public bool IsShowingContinentBorders;
@@ -42,9 +43,10 @@ public class Map
     /// <summary>
     /// This function always has to be called after the map is received from the map generator
     /// </summary>
-    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, bool showContinentBorders, bool showWaterConnections, MapDrawMode drawMode)
+    public void InitializeMap(bool showRegionBorders, bool showShorelineBorders, bool showContinentBorders, bool showWaterConnections, MapColorMode drawMode, MapTextureMode textureMode)
     {
-        UpdateDrawMode(drawMode);
+        UpdateColorMode(drawMode);
+        UpdateTextureMode(textureMode);
         ShowRegionBorders(showRegionBorders);
         ShowShorelineBorders(showShorelineBorders);
         ShowContinentBorders(showContinentBorders);
@@ -52,38 +54,48 @@ public class Map
         FocusMapInEditor();
     }
 
-    public void UpdateDrawMode(MapDrawMode drawMode)
+    public void DestroyAllGameObjects()
     {
-        DrawMode = drawMode;
+        GameObject.Destroy(RootObject.gameObject);
+    }
 
-        switch(DrawMode)
+    #region Display
+
+    /// <summary>
+    /// Updates the colors of all regions according to the specified mode.
+    /// </summary>
+    public void UpdateColorMode(MapColorMode drawMode)
+    {
+        ColorMode = drawMode;
+
+        switch(ColorMode)
         {
-            case MapDrawMode.Basic:
-                foreach (Region r in Regions)
-                {
-                    r.SetTexture(null);
-
-                    if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
-                    else r.SetColor(MapDisplaySettings.Settings.LandColor);
-                }
-                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+            case MapColorMode.White:
+                foreach (Region r in Regions) r.SetColor(Color.white);
+                foreach (River r in Rivers) r.SetColor(Color.white);
                 break;
 
-            case MapDrawMode.Biomes:
+            case MapColorMode.Basic:
                 foreach (Region r in Regions)
                 {
-                    r.SetTexture(null);
-
-                    if (r.IsWater) r.SetColor(MapDisplaySettings.Settings.WaterColor);
-                    else r.SetColor(MapDisplaySettings.Settings.GetBiomeColor(r.Biome));
+                    if (r.IsWater) r.SetColor(MapDisplayResources.Singleton.WaterColor);
+                    else r.SetColor(MapDisplayResources.Singleton.LandColor);
                 }
-                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                foreach (River r in Rivers) r.SetColor(MapDisplayResources.Singleton.WaterColor);
                 break;
 
-            case MapDrawMode.Continents:
-                foreach (Region r in Regions) r.SetTexture(null);
-                foreach (Region r in WaterRegions) r.SetColor(MapDisplaySettings.Settings.WaterColor);
-                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+            case MapColorMode.Biomes:
+                foreach (Region r in Regions)
+                {
+                    if (r.IsWater) r.SetColor(MapDisplayResources.Singleton.WaterColor);
+                    else r.SetColor(MapDisplayResources.Singleton.GetBiomeColor(r.Biome));
+                }
+                foreach (River r in Rivers) r.SetColor(MapDisplayResources.Singleton.WaterColor);
+                break;
+
+            case MapColorMode.Continents:
+                foreach (Region r in WaterRegions) r.SetColor(MapDisplayResources.Singleton.WaterColor);
+                foreach (River r in Rivers) r.SetColor(MapDisplayResources.Singleton.WaterColor);
                 List<Color> continentColors = new List<Color>();
                 foreach(Continent continent in Continents)
                 {
@@ -93,7 +105,7 @@ public class Map
                 }
                 break;
 
-            case MapDrawMode.ParriskBoard:
+            case MapColorMode.ParriskBoard:
                 foreach (Region r in Regions)
                 {
                     if(r.IsOuterOcean)
@@ -103,18 +115,38 @@ public class Map
                     else if (r.IsWater)
                     {
                         r.SetColor(Color.white);
-                        r.SetTexture(MapDisplaySettings.Settings.WaterBackgroundTexture);
+                        r.SetTexture(MapDisplayResources.Singleton.WaterBackgroundTexture);
                     }
                     else r.SetColor(Color.white);
                 }
-                foreach (River r in Rivers) r.SetColor(MapDisplaySettings.Settings.WaterColor);
+                foreach (River r in Rivers) r.SetColor(MapDisplayResources.Singleton.WaterColor);
                 break;
         }
     }
 
-    public void DestroyAllGameObjects()
+    /// <summary>
+    /// Updates the textures of all regions according to the specified mode.
+    /// </summary>
+    public void UpdateTextureMode(MapTextureMode mode)
     {
-        GameObject.Destroy(RootObject.gameObject);
+        TextureMode = mode;
+
+        switch(TextureMode)
+        {
+            case MapTextureMode.None:
+                foreach (Region r in Regions) r.SetTexture(null);
+                foreach (River r in Rivers) r.SetTexture(null);
+                break;
+
+            case MapTextureMode.BiomeTextures:
+                foreach (Region r in Regions)
+                {
+                    if (r.IsWater) r.SetTexture(MapDisplayResources.Singleton.WaterTexture);
+                    else r.SetTexture(MapDisplayResources.Singleton.GetBiomeTexture(r.Biome));
+                }
+                foreach (River r in Rivers) r.SetColor(Color.white);
+                break;
+        }
     }
 
     public void ToggleHideBorders()
@@ -150,6 +182,8 @@ public class Map
         IsShowingWaterConnections = show;
         foreach (WaterConnection wc in WaterConnections) wc.SetVisible(show);
     }
+
+    #endregion
 
     public void FocusMapCentered()
     {

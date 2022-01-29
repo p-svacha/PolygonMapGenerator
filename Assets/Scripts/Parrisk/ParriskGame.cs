@@ -71,7 +71,7 @@ namespace ParriskGame
         {
             // Init map
             Map = map;
-            Map.InitializeMap(true, true, true, true, MapDrawMode.ParriskBoard);
+            Map.InitializeMap(true, true, true, true, MapColorMode.ParriskBoard, MapTextureMode.None);
             Map.FocusMapCentered();
 
             foreach(Region r in Map.LandRegions)

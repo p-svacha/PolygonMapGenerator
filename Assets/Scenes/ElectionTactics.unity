@@ -3628,7 +3628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &322222630
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3646,9 +3646,9 @@ RectTransform:
   m_Father: {fileID: 323681682}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -150}
   m_SizeDelta: {x: 100, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &323681681
@@ -5952,9 +5952,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &592913021
 MonoBehaviour:
@@ -18248,7 +18248,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1941528934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18428,7 +18428,7 @@ GameObject:
   - component: {fileID: 1956856453}
   - component: {fileID: 1956856452}
   m_Layer: 0
-  m_Name: DisplaySettings
+  m_Name: MapDisplayResources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18460,6 +18460,7 @@ MonoBehaviour:
   TropicalColor: {r: 0, g: 0, b: 0, a: 0}
   SavannaColor: {r: 0, g: 0, b: 0, a: 0}
   DesertColor: {r: 0, g: 0, b: 0, a: 0}
+  DesertTexture: {fileID: 0}
   HighlightColor: {r: 1, g: 0, b: 0, a: 0}
   GreyedOutColor: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
   WaterBackgroundTexture: {fileID: 0}
@@ -19142,7 +19143,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
