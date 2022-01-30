@@ -163,7 +163,7 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
             
-            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.BiomeTextures);
+            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.None);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
 
             InitGeograhyTraits();

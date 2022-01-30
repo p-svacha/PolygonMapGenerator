@@ -878,6 +878,9 @@ public class PolygonMapGenerator : MonoBehaviour
                     List<GraphNode> closestNodes = PolygonMapFunctions.GetClosestPolygonNodes(polygon, waterNeighbour, ignoreMultiNodes: true, shoreOnly: true);
                     if(closestNodes[0] == null || closestNodes[1] == null)
                     {
+                        // If no "good" connection can be drawn (one that doesn't go over land), then don't draw that connection and just continue
+                        // THIS IS JUST A TEMPORARY FIX AS THE WATER CONNECTIONS STILL EXISTS, LIKE THIS IT'S JUST NOT DRAWN ON THE MAP!
+                        continue;
                         polygon.Region.SetColor(Color.red);
                         waterNeighbour.Region.SetColor(Color.red);
                         throw new Exception("TODO: fix this bug - No good nodes found, look for red polygons to see where");

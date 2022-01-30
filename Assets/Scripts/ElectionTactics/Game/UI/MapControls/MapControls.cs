@@ -188,7 +188,6 @@ namespace ElectionTactics
             }
 
             Canvas.ForceUpdateCanvases();
-
         }
 
         private void HandleLegendEntry(Region r, string label)
@@ -212,7 +211,7 @@ namespace ElectionTactics
         private void ClearLegend()
         {
             PopularityLegend.gameObject.SetActive(false);
-            for (int i = 2; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);
+            for (int i = 3; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);
             Legend.Clear();
         }
 

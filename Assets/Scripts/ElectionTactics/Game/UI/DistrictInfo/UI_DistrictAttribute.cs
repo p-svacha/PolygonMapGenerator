@@ -32,27 +32,27 @@ namespace ElectionTactics
         public void Init(UI_ElectionTactics ui, EconomyTrait et)
         {
             HoverAction = () => { UI.MapControls.ShowEconomyOverlay(et); };
-            Init(ui, EnumHelper.GetDescription(et), EnumHelper.GetDescription(et), "");
+            Init(ui, EnumHelper.GetDescription(et), EnumHelper.GetDescription(et), "Economy sector");
         }
         public void Init(UI_ElectionTactics ui, Density d)
         {
             HoverAction = () => { UI.MapControls.ShowDensityOverlay(d); };
-            Init(ui, EnumHelper.GetDescription(d), EnumHelper.GetDescription(d), "");
+            Init(ui, EnumHelper.GetDescription(d), EnumHelper.GetDescription(d), "Describes how densely populated this district is");
         }
         public void Init(UI_ElectionTactics ui, AgeGroup age)
         {
             HoverAction = () => { UI.MapControls.ShowAgeOverlay(age); };
-            Init(ui, EnumHelper.GetDescription(age), EnumHelper.GetDescription(age), "");
+            Init(ui, EnumHelper.GetDescription(age), EnumHelper.GetDescription(age), "The most represented generation in this district");
         }
         public void Init(UI_ElectionTactics ui, Religion r)
         {
             if(r != Religion.None) HoverAction = () => { UI.MapControls.ShowReligionOverlay(r); };
-            Init(ui, EnumHelper.GetDescription(r), EnumHelper.GetDescription(r), "");
+            Init(ui, EnumHelper.GetDescription(r), EnumHelper.GetDescription(r), "The religion which most people follow in this district.");
         }
         public void Init(UI_ElectionTactics ui, Language l)
         {
             HoverAction = () => { UI.MapControls.ShowLanguageOverlay(l); };
-            Init(ui, EnumHelper.GetDescription(l), EnumHelper.GetDescription(l), "");
+            Init(ui, EnumHelper.GetDescription(l), EnumHelper.GetDescription(l), "The most spoken language within this district.");
         }
 
 

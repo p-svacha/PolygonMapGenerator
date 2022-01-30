@@ -20,6 +20,7 @@ public class UI_MapEditor : MonoBehaviour
 
     [Header("General Settings")]
     public Button GenerateButton;
+    public Text SeedText;
     public Text WidthText;
     public Text HeightText;
     public Text MinAreaText;
@@ -178,6 +179,7 @@ public class UI_MapEditor : MonoBehaviour
         Reset();
 
         // Generate new map
+        int seed = SeedText.text != "" ? int.Parse(SeedText.text) : MapGenerationSettings.RandomSeed();
         int width = int.Parse(WidthText.text);
         int height = int.Parse(HeightText.text);
         float minRegionArea = float.Parse(MinAreaText.text);
@@ -185,7 +187,7 @@ public class UI_MapEditor : MonoBehaviour
         int minContinentSize = int.Parse(MinContinentSizeText.text);
         int maxContinentSize = int.Parse(MaxContinentSizeText.text);
         float continentSizeFactor = ContinentSizeSlider.value;
-        MapGenerationSettings settings = new MapGenerationSettings(MapGenerationSettings.RandomSeed(), width, height, minRegionArea, maxRegionArea, minContinentSize, maxContinentSize, CurrentMapType, continentSizeFactor);
+        MapGenerationSettings settings = new MapGenerationSettings(seed, width, height, minRegionArea, maxRegionArea, minContinentSize, maxContinentSize, CurrentMapType, continentSizeFactor);
         PMG.GenerateMap(settings, callback: OnMapGenerationDone);
     }
 

@@ -1,3 +1,8 @@
+INVALID SEEDS
+-------------
+1561287060 with MapType == Regional
+
+
 1. Known issues in map generation
 
 - Sometimes SplitPolygon > FindPolygonsFromNode > FindPolygon leads to a stack overflow

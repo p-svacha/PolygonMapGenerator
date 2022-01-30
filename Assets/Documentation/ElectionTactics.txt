@@ -89,15 +89,6 @@ Election Tactics
 
 ToDo for Pre-Alpha 0.2
 ----------------------------------
-quit button in game settings and post game screen
-
-map generation:
-- fix bug "no good nodes found" (seed 1210561134)
-- fix bug "couldn't find direction of river delta" (seed 1821470981)
-
-remove title and --- from mouseover
-add descriptions for age group, density, language and religion
-
 add popularity and popularity breakdown on district info
 
 Improve district labels on map:

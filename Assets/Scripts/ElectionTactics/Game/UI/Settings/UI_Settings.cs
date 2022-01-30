@@ -7,12 +7,15 @@ namespace ElectionTactics
 {
     public class UI_Settings : MonoBehaviour
     {
+        [Header("Elements")]
         public Toggle DebugMode;
+        public Button QuitToDesktopButton;
 
         void Start()
         {
             OnSettingChanged();
             DebugMode.onValueChanged.AddListener(x => OnSettingChanged());
+            QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
         }
 
         public void OnSettingChanged()
