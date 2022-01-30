@@ -48,8 +48,8 @@ namespace ElectionTactics
         #region Rules
         // Base
         private const int PlayerPolicyPointsPerCycle = 3;
-        private const int MinAIPolicyPointsPerCycle = 4;
-        private const int MaxAIPolicyPointsPerCycle = 7;
+        private const int MinAIPolicyPointsPerCycle = 3;
+        private const int MaxAIPolicyPointsPerCycle = 6;
         private const int MaxPolicyValue = 8;
 
         // Turn Length

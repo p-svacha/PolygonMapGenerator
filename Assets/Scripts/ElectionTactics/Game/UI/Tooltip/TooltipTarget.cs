@@ -8,6 +8,7 @@ namespace ElectionTactics
 {
     public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        public TooltipType Type;
         public string Title;
         public string Text;
 
@@ -39,7 +40,7 @@ namespace ElectionTactics
         private void ShowTooltip()
         {
             Tooltip = Instantiate(PrefabManager.Singleton.Tooltip, GameObject.Find("Overlays").transform);
-            Tooltip.Initialize(Title, Text);
+            Tooltip.Initialize(Type, Title, Text);
         }
 
         private void HideTooltip()

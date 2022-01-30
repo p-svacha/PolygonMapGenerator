@@ -275,15 +275,12 @@ namespace ElectionTactics
                 partyVotes.Add(p, 0);
             }
 
-            // Apply modifiers
+            // Add modifiers to result
             List<Modifier> electionModifiers = new List<Modifier>(); // Copy is created so that the modifiers in the election result don't get changed later
             foreach (Modifier m in Modifiers) electionModifiers.Add(m);
-            foreach (Modifier m in electionModifiers)
-            {
-                if (m.Type == ModifierType.Positive) partyPoints[m.Party] += PositiveModifierImpact;
-                else if (m.Type == ModifierType.Negative) partyPoints[m.Party] -= NegativeModifierImpact;
-                else if (m.Type == ModifierType.Exclusion) partyPoints[m.Party] = 0;
-            }
+
+            // Exclude parties with exclusion modifiers
+            foreach(Modifier m in Modifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPoints[m.Party] = 0;
 
             // Cast "calculation" votes
             for (int i = 0; i < Voters; i++)
@@ -332,7 +329,7 @@ namespace ElectionTactics
         public void OnElectionEnd()
         {
             UpdateModifiers();
-            AddMentalityModifiers();
+            ApplyMentalityEndTurnEffects();
         }
 
         private Party GetSingleVoterResult(Dictionary<Party, int> partyPoints)
@@ -345,7 +342,7 @@ namespace ElectionTactics
                 tmpSum += kvp.Value;
                 if (rng < tmpSum) return kvp.Key;
             }
-            return null;
+            throw new System.Exception("Couldn't find single voter result: sum=" + sum + ", rng=" + rng);
         }
 
         /// <summary>
@@ -376,12 +373,22 @@ namespace ElectionTactics
         {
             Dictionary<string, int> factors = new Dictionary<string, int>();
 
+            // Base popularity
             int basePopularity = BasePopularity;
             if (HasMentality(MentalityType.Decided)) basePopularity = DecidedBasePopularity;
             else if (HasMentality(MentalityType.Undecided)) basePopularity = UndecidedBasePopularity;
             factors.Add("Base Popularity", basePopularity);
 
+            // Policies
             foreach (Policy policy in party.ActivePolicies) factors.Add(policy.Name + " Policy", GetPolicyImpact(policy));
+
+            // Positive & Negative Modifiers
+            foreach (Modifier m in Modifiers)
+            {
+                if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", PositiveModifierImpact);
+                else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -NegativeModifierImpact);
+            }
+
 
             return factors;
         }
@@ -546,7 +553,7 @@ namespace ElectionTactics
             Modifiers = Modifiers.Where(x => x.RemainingLength > 0).ToList();
         }
 
-        private void AddMentalityModifiers()
+        private void ApplyMentalityEndTurnEffects()
         {
             if (HasMentality(MentalityType.Stable) && CurrentWinnerParty != null)
                 Game.AddModifier(this, new Modifier(ModifierType.Positive, CurrentWinnerParty, 1, "Bonus for winning last election", "Stable Mentality"));

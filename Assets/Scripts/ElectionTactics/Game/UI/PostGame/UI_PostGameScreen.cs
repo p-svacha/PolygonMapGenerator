@@ -12,11 +12,15 @@ namespace ElectionTactics
         public Text TitleText;
         public Button QuitToDesktopButton;
 
+        void Start()
+        {
+            QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
+        }
+
         public void Init(ElectionTacticsGame game)
         {
             Container.SetActive(true);
             TitleText.text = "The " + game.WinnerParty.Name + " has won the game";
-            QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
         }
     }
 }

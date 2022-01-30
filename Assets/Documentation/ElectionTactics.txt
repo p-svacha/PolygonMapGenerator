@@ -89,11 +89,6 @@ Election Tactics
 
 ToDo for Pre-Alpha 0.2 - UI Improvements
 ----------------------------------
-Add modifiers to default popularity calculation
-
-Add simple tooltip with only text
-	- add that tooltip to icon buttons and icons
-
 Add mentality with negative impact for testing reasons
 
 Pre-Alpha 0.3 - Map Improvements
@@ -146,6 +141,13 @@ implement trust system as win condition:
 	- every district vote adds the amount of seats of that district as trust to the winning party and removes the amount as trust from all the other parties
 	- once a party reaches 0 trust, it is eliminated
 	- last party that has trust, wins
+
+Pre-Alpha 0.5 - Identity System
+---------------------------------
+Add a new system where each party can chose identites every x turns that greatly affect how they play, like:
+	- get one more policy point each turn
+	- geography/economy policies are worth more
+	- permanent bonus in [religion] districts
 
 
 

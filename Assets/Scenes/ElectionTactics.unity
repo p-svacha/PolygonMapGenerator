@@ -1234,6 +1234,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45257894}
   m_CullTransparentMesh: 0
+--- !u!114 &47704219 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3274687817668976705, guid: 05161e09129998f4ea1bce24a86d6be2,
+    type: 3}
+  m_PrefabInstance: {fileID: 645161699}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &50465028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3898,6 +3910,7 @@ GameObject:
   m_Component:
   - component: {fileID: 326582821}
   - component: {fileID: 326582822}
+  - component: {fileID: 326582823}
   m_Layer: 5
   m_Name: SettingsTab
   m_TagString: Untagged
@@ -3940,6 +3953,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 12449868}
   Button: {fileID: 2008721400}
+--- !u!114 &326582823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326582820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Settings
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &357808239
 GameObject:
   m_ObjectHideFlags: 0
@@ -4825,7 +4856,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.9056604, g: 0.77251124, b: 0.38020647, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -6072,6 +6103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 574115446}
   - component: {fileID: 574115447}
+  - component: {fileID: 574115448}
   m_Layer: 5
   m_Name: CampaignsTab
   m_TagString: Untagged
@@ -6114,6 +6146,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1684980337}
   Button: {fileID: 1667527446}
+--- !u!114 &574115448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574115445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Campaigns
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &581513185
 GameObject:
   m_ObjectHideFlags: 0
@@ -7750,6 +7800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 775074593}
   - component: {fileID: 775074594}
+  - component: {fileID: 775074595}
   m_Layer: 5
   m_Name: ConstitutionTab
   m_TagString: Untagged
@@ -7792,6 +7843,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 2129432095}
   Button: {fileID: 45257896}
+--- !u!114 &775074595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775074592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Constitution
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1001 &777376347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8023,6 +8092,7 @@ GameObject:
   m_Component:
   - component: {fileID: 795354714}
   - component: {fileID: 795354715}
+  - component: {fileID: 795354716}
   m_Layer: 5
   m_Name: EventsTab
   m_TagString: Untagged
@@ -8065,6 +8135,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1638187998}
   Button: {fileID: 321323329}
+--- !u!114 &795354716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795354713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Events
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1001 &802370046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8770,6 +8858,7 @@ GameObject:
   m_Component:
   - component: {fileID: 895998561}
   - component: {fileID: 895998562}
+  - component: {fileID: 895998563}
   m_Layer: 5
   m_Name: PoliciesTab
   m_TagString: Untagged
@@ -8812,6 +8901,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1938440212}
   Button: {fileID: 688068885}
+--- !u!114 &895998563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895998560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Policies
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &909988631
 GameObject:
   m_ObjectHideFlags: 0
@@ -9173,6 +9280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 933649860}
   - component: {fileID: 933649861}
+  - component: {fileID: 933649862}
   m_Layer: 5
   m_Name: VotingTab
   m_TagString: Untagged
@@ -9215,6 +9323,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 484570804}
   Button: {fileID: 433802009}
+--- !u!114 &933649862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933649859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Voting
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &947498990
 GameObject:
   m_ObjectHideFlags: 0
@@ -10524,6 +10650,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1054728081}
   - component: {fileID: 1054728082}
+  - component: {fileID: 1054728083}
   m_Layer: 5
   m_Name: DistrictTab
   m_TagString: Untagged
@@ -10566,6 +10693,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1682152626}
   Button: {fileID: 412217192}
+--- !u!114 &1054728083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054728080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Districts
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &1056232020
 GameObject:
   m_ObjectHideFlags: 0
@@ -11805,7 +11950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Container: {fileID: 1191579381}
   TitleText: {fileID: 832535347}
-  QuitToDesktopButton: {fileID: 0}
+  QuitToDesktopButton: {fileID: 47704219}
 --- !u!1 &1192882676
 GameObject:
   m_ObjectHideFlags: 0
@@ -12227,6 +12372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1239424341}
   - component: {fileID: 1239424342}
+  - component: {fileID: 1239424343}
   m_Layer: 5
   m_Name: ParliamentTab
   m_TagString: Untagged
@@ -12269,6 +12415,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 456706115}
   Button: {fileID: 1337760455}
+--- !u!114 &1239424343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239424340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Title: 
+  Text: Parliament
+  IsFocussed: 0
+  CurrentDelay: 0
+  Tooltip: {fileID: 0}
 --- !u!1 &1242848636
 GameObject:
   m_ObjectHideFlags: 0
@@ -13584,7 +13748,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Pre-Alpha 0.1
+  m_Text: Pre-Alpha 0.2
 --- !u!222 &1361930407
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20750,6 +20914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
   Title: Map Overlay
   Text: Change the map overlay to get easy visual feedback for a specific topic
   IsFocussed: 0
