@@ -87,9 +87,17 @@ Election Tactics
 	- Add popular vote display
 
 
-ToDo for Pre-Alpha 0.2
+ToDo for Pre-Alpha 0.2 - UI Improvements
 ----------------------------------
-add popularity and popularity breakdown on district info
+Add modifiers to default popularity calculation
+
+Add simple tooltip with only text
+	- add that tooltip to icon buttons and icons
+
+Add mentality with negative impact for testing reasons
+
+Pre-Alpha 0.3 - Map Improvements
+----------------------------------
 
 Improve district labels on map:
 	- add amount of seats
@@ -97,10 +105,40 @@ Improve district labels on map:
 	- maybe 4 small icons for religion/density/age/language
 	- maybe popularity
 
+Add party icons:
+	- add option to choose them in lobby
+	- display in parliament
+	- display in map legend
+	- display in district labels
+	- display in recent winner
+	- maybe display as texture in political overlay
+
+Add framework for repeating overlay textures on map:
+	- use to display biomes (very slight as background)
+	- use for party overlay with icons
+
+Add animated impact textures for map when overlay is active
+
+Add particle effects that appear over district:	
+	- happy smileys when doing something with positive effect (depending on impact)
+	- unhappy smileys when doing something negative
+
+Pre-Alpha 0.4 - Content Improvements
+----------------------------------
+geography changes:
+	- add biomes as traits and policies
+	- add flat/hilly/mountanous
+
+demography changes:
+	- maybe add more granular breakdown (distribute random 5% steps 20 times, then impact based on % of that age group: <= 10% no impact, 15% - 25% low impact, 30% - 40% medium impact, >= 45% high impact)
+	- maybe add more granular languaga breakdown (1 langugae (high impact), 2 languages (both medium impact), 2 languages (high and low), 3 langugaes (all low))
+
 mentality changes:
 	- add probabilities to mentalities for them to appear
 	- add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
 	- add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
+	- add new: growing population: population will increase each turn which may lead to more seats as the game goes on
+	- add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
 	- fix rebellious mentality: atm 2 different get the malus instead of only winner with 8 players
 
 implement trust system as win condition:

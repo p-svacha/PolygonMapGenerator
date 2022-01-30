@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ElectionTactics
@@ -13,11 +14,15 @@ namespace ElectionTactics
         public UI_DistrictAttribute AttributePrefab;
         public UI_ModifierListElement ModifierListElementPrefab;
 
+        private District CurrentDistrict;
+
         [Header("Header")]
         public Button BackButton;
         public Text TitleText;
         public Text PopulationText;
         public Text SeatsText;
+        public Text PopularityText;
+        public UI_PopularityBreakdown PopularityBreakdown;
 
         [Header("Traits")]
         public GameObject GeographyPanel;
@@ -39,16 +44,32 @@ namespace ElectionTactics
         void Start()
         {
             BackButton.onClick.AddListener(() => UI.SelectTab(Tab.DistrictList));
+
+            // Popularity breakdown triggers
+            EventTrigger popularityTrigger = PopularityText.gameObject.AddComponent<EventTrigger>();
+
+            EventTrigger.Entry mouseEnterEntry = new EventTrigger.Entry();
+            mouseEnterEntry.eventID = EventTriggerType.PointerEnter;
+            mouseEnterEntry.callback.AddListener((x) => { PopularityBreakdown.gameObject.SetActive(true); PopularityBreakdown.Init(CurrentDistrict, UI.Game.LocalPlayerParty); });
+            popularityTrigger.triggers.Add(mouseEnterEntry);
+
+            EventTrigger.Entry mouseExitEntry = new EventTrigger.Entry();
+            mouseExitEntry.eventID = EventTriggerType.PointerExit;
+            mouseExitEntry.callback.AddListener((x) => PopularityBreakdown.gameObject.SetActive(false));
+            popularityTrigger.triggers.Add(mouseExitEntry);
         }
 
         public void Init(District d)
         {
             ClearAllPanels();
 
+            CurrentDistrict = d;
+
             // Header
             TitleText.text = d.Name;
             PopulationText.text = d.Population.ToString("N0");
             SeatsText.text = d.Seats.ToString();
+            PopularityText.text = d.GetPartyPopularity(UI.Game.LocalPlayerParty).ToString();
 
             // Geography
             foreach (GeographyTrait gt in d.Geography)

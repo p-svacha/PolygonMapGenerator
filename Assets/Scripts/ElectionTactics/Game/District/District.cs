@@ -361,15 +361,29 @@ namespace ElectionTactics
 
         #region Popularity Calculations
 
+        /// <summary>
+        /// Returns the popularity a party has in this district
+        /// </summary>
         public int GetPartyPopularity(Party party)
         {
-            int points = BasePopularity;
-            if (HasMentality(MentalityType.Decided)) points = DecidedBasePopularity;
-            if (HasMentality(MentalityType.Undecided)) points = UndecidedBasePopularity;
+            return GetPartyPopularityBreakdown(party).Sum(x => x.Value);
+        }
 
-            foreach (Policy policy in party.ActivePolicies) points += GetPolicyImpact(policy);
+        /// <summary>
+        /// Returns all factors that affect the party popularity in this district. The sum all factors equals the absolute popularity.
+        /// </summary>
+        public Dictionary<string, int> GetPartyPopularityBreakdown(Party party)
+        {
+            Dictionary<string, int> factors = new Dictionary<string, int>();
 
-            return points;
+            int basePopularity = BasePopularity;
+            if (HasMentality(MentalityType.Decided)) basePopularity = DecidedBasePopularity;
+            else if (HasMentality(MentalityType.Undecided)) basePopularity = UndecidedBasePopularity;
+            factors.Add("Base Popularity", basePopularity);
+
+            foreach (Policy policy in party.ActivePolicies) factors.Add(policy.Name + " Policy", GetPolicyImpact(policy));
+
+            return factors;
         }
 
         /// <summary>
