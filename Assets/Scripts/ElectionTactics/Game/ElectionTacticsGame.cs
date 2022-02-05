@@ -65,8 +65,8 @@ namespace ElectionTactics
         private Dictionary<GameSettings.TurnLengthOptions, int> CumulativeTimes = new Dictionary<GameSettings.TurnLengthOptions, int>()
         {
             {GameSettings.TurnLengthOptions.Slow, 20 },
-            {GameSettings.TurnLengthOptions.Medium, 15 },
-            {GameSettings.TurnLengthOptions.Fast, 10 },
+            {GameSettings.TurnLengthOptions.Medium, 16 },
+            {GameSettings.TurnLengthOptions.Fast, 12 },
         };
 
         #endregion
@@ -682,7 +682,7 @@ namespace ElectionTactics
         public void OnElectionAnimationDone()
         {
             // Check win condition
-            if (GameType != GameType.MultiplayerClient && HandleWinConditions()) return;
+            if (HandleWinConditions()) return;
 
             State = GameState.PreparationPhase;
         }

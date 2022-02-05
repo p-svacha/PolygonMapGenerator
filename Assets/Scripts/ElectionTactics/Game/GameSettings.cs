@@ -16,9 +16,9 @@ namespace ElectionTactics
         // Rules Options
         public enum TurnLengthOptions
         {
-            [Description("Fast (60+10)")] Fast,
-            [Description("Medium (90+15)")] Medium,
-            [Description("Long (120+20)")] Slow,
+            Fast,
+            Medium,
+            Slow,
         }
 
         public GameSettings(List<LobbySlot> lobbySlots, List<int> Rules)

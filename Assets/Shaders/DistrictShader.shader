@@ -5,6 +5,10 @@ Shader "Custom/DistrictShader"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _OverlayTex("Overlay Texture", 2D) = "none" {}
+        _OverlayColor("Overlay Color", Color) = (0,0,0,0)
+        [Toggle]_OverlayAnimated("Animate Overlay Texture", Float) = 0
+        _OverlayAnimatonSpeed("Overlay Animation Speed", Range(0.05, 1)) = 0.1
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
 
@@ -31,9 +35,15 @@ Shader "Custom/DistrictShader"
 
         sampler2D _MainTex;
 
+        sampler2D _OverlayTex;
+        fixed4 _OverlayColor;
+        float _OverlayAnimated;
+        float _OverlayAnimatonSpeed;
+
         struct Input
         {
             float2 uv_MainTex;
+            float2 uv_OverlayTex;
             float3 worldPos;
         };
 
@@ -59,11 +69,15 @@ Shader "Custom/DistrictShader"
         {
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+
+            // Blink
             if (_Blink == 1.0f)
             {
                 float r = (0.5f + abs(sin(_Time.w * (1 / _BlinkDuration))));
                 c.rgb *= r;
             }
+
+            // Animated Highlight
             if (_AnimatedHighlight == 1.0f)
             {
                 float timeMod = (_Time.w % (1 / _AnimatedHighlightSpeed)) / (1 / _AnimatedHighlightSpeed);
@@ -74,6 +88,19 @@ Shader "Custom/DistrictShader"
                     c = _AnimatedHighlightColor.a * (_AnimatedHighlightColor)+(1 - _AnimatedHighlightColor.a) * c;
                 }
             }
+
+            // Overlay Texture
+            float2 realOverlayUv = IN.uv_OverlayTex;
+            if (_OverlayAnimated) 
+            {
+                realOverlayUv.y = IN.uv_OverlayTex.y - (_Time.w * _OverlayAnimatonSpeed);
+            }
+            fixed4 overlayColor = tex2D(_OverlayTex, realOverlayUv);
+            if (overlayColor.a == 1) 
+            {
+                c = (_OverlayColor * _OverlayColor.a) + ((1 - _OverlayColor.a) * c);
+            }
+
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;

@@ -840,6 +840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -982,8 +983,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 138.5, y: 123.5}
-  m_SizeDelta: {x: 400, y: 40}
+  m_AnchoredPosition: {x: 303.59033, y: 123.5}
+  m_SizeDelta: {x: 730.1807, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2351363683596531148
 MonoBehaviour:
@@ -1001,7 +1002,6 @@ MonoBehaviour:
   ValueContainer: {fileID: 2351363682851864907}
   MinusButton: {fileID: 2351363683796985283}
   PlusButton: {fileID: 2351363683429396584}
-  Value: 0
 --- !u!1 &2351363683796985281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,6 +1092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}

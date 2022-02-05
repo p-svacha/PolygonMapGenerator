@@ -4,13 +4,6 @@ Election Tactics
 1. To Do
 
 1.1 General Gameplay
-	- Add year display and year mechanics:
-		- Instead of "Election", the button sais "End Year"
-		- Each year you get 1 PP
-		- Each year you get 1 CP
-		- Each year there is 1 event
-		- Each year there is 1 constitution vote
-		- There is a general election every 4 years (can be changed through constitution)
 
 1.2 Constitution
 	- Add constitution tab in header
@@ -57,11 +50,6 @@ Election Tactics
 	- Add popularity view that shows absolute popularity through policies per district
 	- Add density view
 
-1.8 Save / Load games
-	- Make it possible to save games
-	- Make save states loadable
-	- One save state is enough to start (to avoid additional menu)
-
 1.9 Main menu
 	- Add main menu with options:
 		- Start new game
@@ -87,9 +75,15 @@ Election Tactics
 	- Add popular vote display
 
 
-ToDo for Pre-Alpha 0.2 - UI Improvements
+Feedback from 0.2 Playtest
 ----------------------------------
-Add mentality with negative impact for testing reasons
+make parliament tab clearer, what is what
+	- title of first chapter to seat distribution
+	- move or add standings as a static part at the left side of the screen
+		- show party icon and win condition value staticly
+		- add hover effect to see additional infos of party (name, maxed policies, identity)
+
+add bot difficulty rule to lobby
 
 Pre-Alpha 0.3 - Map Improvements
 ----------------------------------
@@ -142,12 +136,28 @@ implement trust system as win condition:
 	- once a party reaches 0 trust, it is eliminated
 	- last party that has trust, wins
 
-Pre-Alpha 0.5 - Identity System
+Pre-Alpha 0.5 - Tutorial
+---------------------------------
+Add tutorial to explain the game
+
+Pre-Alpha 0.6 - Identity System
 ---------------------------------
 Add a new system where each party can chose identites every x turns that greatly affect how they play, like:
 	- get one more policy point each turn
 	- geography/economy policies are worth more
 	- permanent bonus in [religion] districts
+
+
+Pre-Alpha 0.7 - Audio
+---------------------------------
+Add sound effects to various actions
+Add background music
+
+Alpha 1.0
+--------------------------------
+"Publish" the game and show it to other people
+
+
 
 
 

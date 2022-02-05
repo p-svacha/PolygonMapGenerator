@@ -41,7 +41,7 @@ namespace ElectionTactics
         #region Init
 
         /// <summary>
-        /// Gets executed once when game is started
+        /// Gets executed once when game program is started
         /// </summary>
         public void Init(MenuNavigator nav)
         {
@@ -127,7 +127,14 @@ namespace ElectionTactics
             FillNextFreeSlot(connectionData.Name, playerColor, LobbySlotType.Human, connectionData.ClientId);
 
             OrganizeSlots();
-            if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.UpdateLobbySlotsServerRpc();
+
+            // Send lobby data (slots and rules) to newly connected client
+            if (Type == GameType.MultiplayerHost)
+            {
+                NetworkPlayer.Server.UpdateLobbySlotsServerRpc();
+                for (int i = 0; i < Rules.Count; i++)
+                    if (Rules[i].value != 0) NetworkPlayer.Server.LobbyRuleChangedServerRpc(i, Rules[i].value);
+            }
         }
 
         /// <summary>

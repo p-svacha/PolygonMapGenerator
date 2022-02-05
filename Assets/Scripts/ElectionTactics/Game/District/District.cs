@@ -363,7 +363,9 @@ namespace ElectionTactics
         /// </summary>
         public int GetPartyPopularity(Party party)
         {
-            return GetPartyPopularityBreakdown(party).Sum(x => x.Value);
+            int popularity = GetPartyPopularityBreakdown(party).Sum(x => x.Value);
+            if (popularity < 0) popularity = 0;
+            return popularity;
         }
 
         /// <summary>
