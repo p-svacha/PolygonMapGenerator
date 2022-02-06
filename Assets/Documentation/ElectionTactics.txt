@@ -85,6 +85,8 @@ make parliament tab clearer, what is what
 
 add bot difficulty rule to lobby
 
+add mentality with negative effect for testing
+
 Pre-Alpha 0.3 - Map Improvements
 ----------------------------------
 
@@ -111,6 +113,13 @@ Add animated impact textures for map when overlay is active
 Add particle effects that appear over district:	
 	- happy smileys when doing something with positive effect (depending on impact)
 	- unhappy smileys when doing something negative
+
+Allow moving camera of map:
+	- Current camera will define boundaries of allowed movement (bounds and zoom)
+	- zooming in and moving within those boundaries should be allowed
+
+Try to make map edges nicer:
+	- Maybe add fog of war around active districts
 
 Pre-Alpha 0.4 - Content Improvements
 ----------------------------------

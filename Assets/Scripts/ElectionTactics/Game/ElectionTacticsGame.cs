@@ -17,6 +17,7 @@ namespace ElectionTactics
         public Map Map;
         public CameraHandler CameraHandler;
         public UI_ElectionTactics UI;
+        public VfxManager VfxManager;
         public MenuNavigator MenuNavigator;
 
         private int StartGameSeed;
@@ -165,6 +166,7 @@ namespace ElectionTactics
             
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.None);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
+            VfxManager.Init(this);
 
             InitGeograhyTraits();
             InitMentalities();
@@ -554,18 +556,26 @@ namespace ElectionTactics
     #endregion
 
         #region Game Commands
-        // This chapter contains all functions that players can trigger in their turn through their actions.
+        // This chapter contains all functions that local players can trigger in their turn through their actions.
 
         public void IncreasePolicy(Policy p)
         {
+            if (LocalPlayerParty.PolicyPoints == 0 || p.Value == p.MaxValue) return;
+
             if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
+
+            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, d.GetBaseImpact(p));
         }
 
         public void DecreasePolicy(Policy p)
         {
+            if (p.Value == p.LockedValue) return;
+
             if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
+
+            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, -d.GetBaseImpact(p));
         }
 
         #endregion

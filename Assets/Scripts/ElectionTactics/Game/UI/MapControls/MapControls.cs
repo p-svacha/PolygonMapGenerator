@@ -231,7 +231,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -242,7 +242,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -253,7 +253,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -264,7 +264,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -275,7 +275,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -286,22 +286,9 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
-        }
-
-        /// <summary>
-        /// Returns the fitting color for a popularity impact value.
-        /// </summary>
-        private Color GetImpactColor(int value)
-        {
-            if (value < 0) return ColorManager.Singleton.NegativeImpactColor;
-            if (value == 0) return ColorManager.Singleton.NoImpactColor;
-            if (value <= 3) return ColorManager.Singleton.LowImpactColor;
-            if (value <= 6) return ColorManager.Singleton.MediumImpactColor;
-            if (value <= 9) return ColorManager.Singleton.HighImpactColor;
-            else return ColorManager.Singleton.VeryHighImpactColor;
         }
 
         private void ShowOverlayLegend(string title)

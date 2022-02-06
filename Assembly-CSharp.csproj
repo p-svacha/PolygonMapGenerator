@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Map\Elements\BorderType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\BaseMapCameraHandler.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Tooltip\TooltipType.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\MapType.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\BorderPoint.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameState.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\ContinentNoise.cs" />
     <Compile Include="Assets\Scripts\EnumHelper.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_PopularityBreakdownEntry.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictElectionGraph.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\District.cs" />
@@ -224,6 +226,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\MentalityType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Border.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_PopularityBreakdown.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\TerritoryBattle.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\MinHeap.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\ElectionControls\UI_ElectionControls.cs" />
@@ -242,9 +245,7 @@
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_PopularityBreakdown.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_PopularityBreakdownEntry.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Tooltip\TooltipType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\VFX\VfxManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

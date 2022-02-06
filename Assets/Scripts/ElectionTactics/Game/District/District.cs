@@ -398,7 +398,7 @@ namespace ElectionTactics
         /// <summary>
         /// Returns the impact of a specific policy on the popularity of its party in this district.
         /// </summary>
-        public int GetPolicyImpact(Policy policy)
+        private int GetPolicyImpact(Policy policy)
         {
             switch (policy.Type)
             {

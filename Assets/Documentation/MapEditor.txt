@@ -1,7 +1,8 @@
 INVALID SEEDS
 -------------
 1561287060 with MapType == Regional
-
+-1871779113 default settings
+-487901131
 
 1. Known issues in map generation
 

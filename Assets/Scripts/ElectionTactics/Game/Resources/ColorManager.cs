@@ -28,6 +28,19 @@ namespace ElectionTactics
         public Color UiInteractableDisabled;
         public Color UiText;
 
+        /// <summary>
+        /// Returns the fitting color for a popularity impact value.
+        /// </summary>
+        public Color GetImpactColor(int value)
+        {
+            if (value < 0) return ColorManager.Singleton.NegativeImpactColor;
+            if (value == 0) return ColorManager.Singleton.NoImpactColor;
+            if (value <= 3) return ColorManager.Singleton.LowImpactColor;
+            if (value <= 6) return ColorManager.Singleton.MediumImpactColor;
+            if (value <= 9) return ColorManager.Singleton.HighImpactColor;
+            else return ColorManager.Singleton.VeryHighImpactColor;
+        }
+
         public static ColorManager Singleton
         {
             get
