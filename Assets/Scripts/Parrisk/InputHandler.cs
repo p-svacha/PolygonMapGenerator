@@ -26,8 +26,9 @@ namespace ParriskGame
 
         public void Init(ParriskGame game)
         {
+            base.Init();
             Game = game;
-            Init(game.Map);
+            SetZoomToFullMap(game.Map);
             State = InputState.Idle;
         }
 

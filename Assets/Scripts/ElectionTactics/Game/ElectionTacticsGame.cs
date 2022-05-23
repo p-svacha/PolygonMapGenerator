@@ -136,6 +136,7 @@ namespace ElectionTactics
         private void InitGame()
         {
             State = GameState.Loading;
+            CameraHandler.Init(this);
             UI.Init(this);
             UI.LoadingScreen.gameObject.SetActive(true);
         }

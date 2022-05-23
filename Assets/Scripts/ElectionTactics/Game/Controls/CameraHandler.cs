@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class CameraHandler : MonoBehaviour
+    public class CameraHandler : BaseMapCameraHandler
     {
-        private Vector2 Offset = new Vector2(0.4f, 0f);
+        ElectionTacticsGame Game;
 
         // Move
         public bool IsMoving { get; private set; }
@@ -19,12 +19,21 @@ namespace ElectionTactics
         private float MoveSpeedModifier = 1f;
         private Action OnMoveDoneCallback;
 
-        private void Start()
+        public void Init(ElectionTacticsGame game)
         {
+            base.Init();
+            Game = game;
             transform.rotation = Quaternion.Euler(90, 0, 0);
+            CenterOffset = new Vector2(0.4f, 0f);
         }
-        private void Update()
+
+        public override void Update()
         {
+            if (Game == null) return;
+
+            // Free Movement
+            if (Game.State == GameState.PreparationPhase) base.Update();
+
             // Camera Lerp
             if (IsMoving)
             {
@@ -49,9 +58,7 @@ namespace ElectionTactics
 
         public void FocusDistricts(List<District> districts)
         {
-            Debug.Log("Focussing " + districts.Count + " districts.");
-            Vector3 targetPos = GetTargetPosition(districts);
-            transform.position = targetPos;
+            SetBoundariesToRegions(districts.Select(x => x.Region).ToList(), focusDistricts: true);
         }
 
         public void MoveToFocusDistricts(List<District> districts, float time, Action callback = null)
@@ -70,7 +77,7 @@ namespace ElectionTactics
             float height = maxY - minY;
             float altitude = height > width ? height : width;
             altitude *= 1.2f;
-            return new Vector3(minX + (width / 2) + Offset.x * altitude, altitude, minY + (height / 2) + Offset.y * altitude);
+            return new Vector3(minX + (width / 2) + CenterOffset.x * altitude, altitude, minY + (height / 2) + CenterOffset.y * altitude);
         }
 
         private void InitMovement(Vector3 targetPosition, float time, Action callback)
