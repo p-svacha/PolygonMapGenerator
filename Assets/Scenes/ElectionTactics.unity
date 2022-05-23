@@ -8753,6 +8753,24 @@ MonoBehaviour:
     type: 3}
   ModifierExclusionIcon: {fileID: 21300000, guid: 8dc1b36c34c7bd24e9b2b07264a397ae,
     type: 3}
+  EnglishSprite: {fileID: 21300000, guid: 3956bced70cdd5842ad9f8f782f0731b, type: 3}
+  MandarinSprite: {fileID: 21300000, guid: 08b21f33fc9031b4b88c40c5ae2cff83, type: 3}
+  SpanishSprite: {fileID: 21300000, guid: 6ff752884388b364d9dc05e7b0978b06, type: 3}
+  FrenchSprite: {fileID: 21300000, guid: e09646edbdd2de5409b631942b1dbcf9, type: 3}
+  HindiSprite: {fileID: 21300000, guid: a57697738b3a711419261096d98ecca8, type: 3}
+  BengaliSprite: {fileID: 21300000, guid: abbdad8f58548e843aecf2acf7910b47, type: 3}
+  GermanSprite: {fileID: 21300000, guid: 6a1179571f85c0546947735f19ddd095, type: 3}
+  PortugueseSprite: {fileID: 21300000, guid: 6fbd689494bbd8f4da5959b55c38c6c6, type: 3}
+  RussianSprite: {fileID: 21300000, guid: 4f5b867877ac8a44eb112b7d3eae9e94, type: 3}
+  ArabicSprite: {fileID: 21300000, guid: 0926688d9a0f2f943b4e883c9c72d9f6, type: 3}
+  ChristianitySprite: {fileID: 21300000, guid: 74e158b337521f34286412be16544fb0, type: 3}
+  HinduismSprite: {fileID: 21300000, guid: 2178295e1319ebe4a9973f92c9dcf089, type: 3}
+  IslamSprite: {fileID: 21300000, guid: 5af2f8a2d9c170340b5255ce3f80f59a, type: 3}
+  JudaismSprite: {fileID: 21300000, guid: 0c5e088507a44dc42b828afe28db41cc, type: 3}
+  BuddhismSprite: {fileID: 21300000, guid: f716699f5757c6a4d9ebafa6b1d8d192, type: 3}
+  UrbanSprite: {fileID: 21300000, guid: 40777a8e226b58e4eb1fd49e4f32bb82, type: 3}
+  SuburbanSprite: {fileID: 21300000, guid: 8b387dc94ad160a4888b564e6cf527ee, type: 3}
+  RuralSprite: {fileID: 21300000, guid: d51bb66394a3e8c47b4a7e5e99fb20f0, type: 3}
 --- !u!224 &881483821 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6846848824771024173, guid: 48d137827e205d24e936651a73269c07,
@@ -14004,8 +14022,9 @@ MonoBehaviour:
   LoadingScreen: {fileID: 1188849782}
   PostGameScreen: {fileID: 1191579385}
   MapControls: {fileID: 1392872642}
-  DistrictLabelPrefab: {fileID: 6341336814828867959, guid: 0d2f790d3386c78438e8d52ebe8beafb,
+  DistrictLabelPrefab: {fileID: 5482418884265511720, guid: d1595fc4b40457e4a83a3d2c166954ef,
     type: 3}
+  OverlayContainer: {fileID: 2030859075}
   SidePanelHeader: {fileID: 857186343}
   SidePanelFooter: {fileID: 1817134363}
   ElectionControls: {fileID: 173065366}

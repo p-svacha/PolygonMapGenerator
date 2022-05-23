@@ -63,23 +63,11 @@ namespace ElectionTactics
 
         public void MoveToFocusDistricts(List<District> districts, float time, Action callback = null)
         {
-            Vector3 targetPos = GetTargetPosition(districts);
+            SetBoundariesToRegions(districts.Select(x => x.Region).ToList(), focusDistricts: false);
+            Vector3 targetPos = GetCenterPosition(districts.Select(x => x.Region).ToList());
             InitMovement(targetPos, time, callback);
         }
-
-        private Vector3 GetTargetPosition(List<District> districts)
-        {
-            float minX = districts.Min(x => x.Region.MinWorldX);
-            float minY = districts.Min(x => x.Region.MinWorldY);
-            float maxX = districts.Max(x => x.Region.MaxWorldX);
-            float maxY = districts.Max(x => x.Region.MaxWorldY);
-            float width = maxX - minX;
-            float height = maxY - minY;
-            float altitude = height > width ? height : width;
-            altitude *= 1.2f;
-            return new Vector3(minX + (width / 2) + CenterOffset.x * altitude, altitude, minY + (height / 2) + CenterOffset.y * altitude);
-        }
-
+        
         private void InitMovement(Vector3 targetPosition, float time, Action callback)
         {
             IsMoving = true;

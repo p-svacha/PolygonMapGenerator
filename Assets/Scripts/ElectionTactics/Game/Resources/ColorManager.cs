@@ -41,6 +41,11 @@ namespace ElectionTactics
             else return ColorManager.Singleton.VeryHighImpactColor;
         }
 
+        public Color Lighter(Color c)
+        {
+            return new Color(c.r + 0.5f * (1f - c.r), c.g + 0.5f * (1f - c.g), c.b + 0.5f * (1f - c.b));
+        }
+
         public static ColorManager Singleton
         {
             get

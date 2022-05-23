@@ -17,8 +17,7 @@ namespace ElectionTactics
         Aerospace,
         Electronics,
         Textiles,
-        [Description("Fossil Fuels")]
-        FossilFuels,
+        [Description("Fossil Fuels")] FossilFuels,
         Renewables,
         Manufacturing
     }

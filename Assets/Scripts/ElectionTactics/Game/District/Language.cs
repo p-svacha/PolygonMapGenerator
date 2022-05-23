@@ -7,7 +7,7 @@ namespace ElectionTactics
     public enum Language
     {
         English,
-        Chinese,
+        Mandarin,
         Hindi,
         Spanish,
         French,
@@ -15,12 +15,6 @@ namespace ElectionTactics
         Bengali,
         Russian,
         Portuguese,
-        Indonesian,
         German,
-        Turkish,
-        Korean,
-        Italian,
-        Punjabi,
-        Polish
     }
 }

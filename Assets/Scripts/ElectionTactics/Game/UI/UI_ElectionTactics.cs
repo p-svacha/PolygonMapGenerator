@@ -18,6 +18,7 @@ namespace ElectionTactics
         [Header ("Map Controls")]
         public MapControls MapControls;
         public UI_DistrictLabel DistrictLabelPrefab;
+        public GameObject OverlayContainer;
 
         [Header("Side Panel Elements")]
         public UI_SidePanelHeader SidePanelHeader;

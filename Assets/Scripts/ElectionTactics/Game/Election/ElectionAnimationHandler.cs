@@ -162,7 +162,7 @@ namespace ElectionTactics
             Game.UI.ElectionControls.DoSetSpeed(ElectionAnimationSpeed.Normal);
 
             // Change map display to none (colors of winning parties will be set during animation)
-            Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay);
+            Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay, DistrictLabelMode.InElection);
 
             // Prepare election animation
             Game.UI.SelectTab(Tab.Parliament);
@@ -200,8 +200,7 @@ namespace ElectionTactics
                 {
                     Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
-                    float margin = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
-                    Game.UI.Parliament.CurrentElectionMarginText.text = (margin > 0 ? "+" : "") + margin.ToString("0.0") + " %";
+                    Game.UI.Parliament.CurrentElectionMarginText.text = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
                     Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.Winner.Color;
                 }
                 else
@@ -268,12 +267,21 @@ namespace ElectionTactics
         // Party list update
         private void InitUpdatePartyList()
         {
-            // Set color of district to winner party
-            CurrentDistrictResult.District.Region.SetColor(CurrentDistrictResult.Winner.Color);
+            SetColorOfCurrentDistrictResult();
 
             Game.UI.Parliament.ParliamentPartyList.HighlightParty(CurrentDistrictResult.Winner);
             Game.UI.Parliament.ParliamentPartyList.MovePositionsAnimated(TempSeats, ListAnimationTime, OnPartyListUpdateAnimationDone);
         }
+        /// <summary>
+        /// Updates the background color and the district label with the result of the district election we're currently at.
+        /// </summary>
+        private void SetColorOfCurrentDistrictResult()
+        {
+            CurrentDistrictResult.District.Region.SetColor(CurrentDistrictResult.Winner.Color);
+            CurrentDistrictResult.District.MapLabel.SetBackgroundColor(CurrentDistrictResult.Winner.Color);
+            CurrentDistrictResult.District.MapLabel.SetMargin(CurrentDistrictResult.GetMargin(Game.LocalPlayerParty));
+        }
+
         private void OnPartyListUpdateAnimationDone()
         {
             Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(CurrentDistrictResult.Winner);
@@ -295,7 +303,7 @@ namespace ElectionTactics
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractable);
-            Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.LastElection);
+            Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.LastElection, DistrictLabelMode.Default);
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);
 
@@ -329,8 +337,7 @@ namespace ElectionTactics
 
         public void ConcludeDistrict()
         {
-            // Update region color of current district
-            CurrentDistrictResult.District.Region.SetColor(CurrentDistrictResult.Winner.Color);
+            SetColorOfCurrentDistrictResult();
 
             // Update party list with result from current district
             Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true);

@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    [System.Serializable]
     public class DistrictElectionResult
     {
         public int ElectionCycle; // Cycle of the election
@@ -13,19 +12,19 @@ namespace ElectionTactics
         public int Seats;         // How many seats the district was worth at the time of the election
 
         public int DistrictId;
-        [System.NonSerialized] public District District; // Reference to the district
+        public District District; // Reference to the district
 
-        public Dictionary<int, int> PartyPointsById = new Dictionary<int, int>();
-        [System.NonSerialized] public Dictionary<Party, int> PartyPoints = new Dictionary<Party, int>();
+        public Dictionary<int, int> PartyPopularitiesById = new Dictionary<int, int>();
+        public Dictionary<Party, int> PartyPopularities = new Dictionary<Party, int>();
 
         public Dictionary<int, int> VotesById = new Dictionary<int, int>();
-        [System.NonSerialized] public Dictionary<Party, int> Votes = new Dictionary<Party, int>();
+        public Dictionary<Party, int> Votes = new Dictionary<Party, int>();
 
         public Dictionary<int, float> VoteShareById = new Dictionary<int, float>();
-        [System.NonSerialized] public Dictionary<Party, float> VoteShare = new Dictionary<Party, float>();
+        public Dictionary<Party, float> VoteShare = new Dictionary<Party, float>();
 
         public int WinnerPartyId;
-        [System.NonSerialized] public Party Winner;
+        public Party Winner;
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
@@ -36,8 +35,8 @@ namespace ElectionTactics
             Seats = seats;
             District = district;
             DistrictId = district.Region.Id;
-            PartyPoints = partyPoints;
-            PartyPointsById = partyPoints.ToDictionary(x => x.Key.Id, x => x.Value);
+            PartyPopularities = partyPoints;
+            PartyPopularitiesById = partyPoints.ToDictionary(x => x.Key.Id, x => x.Value);
             Votes = votes;
             VotesById = votes.ToDictionary(x => x.Key.Id, x => x.Value);
             VoteShare = voteShare;
@@ -53,25 +52,25 @@ namespace ElectionTactics
         public void InitReferences(ElectionTacticsGame game)
         {
             District = game.Districts.First(x => x.Key.Id == DistrictId).Value;
-            PartyPoints = PartyPointsById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
+            PartyPopularities = PartyPopularitiesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             Votes = VotesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             VoteShare = VoteShareById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             Winner = game.Parties.First(x => x.Id == WinnerPartyId);
         }
 
         /// <summary>
-        /// Returns the margin of the given party to the winner party. If the given party is the winner, then the margin to the second-placed party is returned.
+        /// Returns the margin of the given party to the winner party as a string. If the given party is the winner, then the margin to the second-placed party is returned.
         /// </summary>
-        public float GetMargin(Party p)
+        public string GetMargin(Party p)
         {
             float partyShare = VoteShare.First(x => x.Key == p).Value;
             float winnerShare = VoteShare.First(x => x.Value == VoteShare.Max(y => y.Value)).Value;
             if (Winner == p)
             {
                 float secondHighest = VoteShare.Values.OrderByDescending(x => x).ToList()[1];
-                return winnerShare - secondHighest;
+                return "+" + (winnerShare - secondHighest).ToString("0.0") + "%";
             }
-            else return partyShare - winnerShare;
+            else return (partyShare - winnerShare).ToString("0.0") + "%";
         }
 
         /// <summary>

@@ -29,6 +29,7 @@ namespace ElectionTactics
         private Dictionary<Color, string> Legend = new Dictionary<Color, string>();
 
         private MapDisplayMode DisplayMode;
+        private DistrictLabelMode DistrictLabelMode;
 
         // Specific Legends
         private Dictionary<Color, string> NoOverlayLegend = new Dictionary<Color, string>();
@@ -51,37 +52,41 @@ namespace ElectionTactics
             OverlayDropdown.onValueChanged.AddListener(OverlayDropdown_OnValueChanged);
         }
 
-        public void Init(ElectionTacticsGame game, MapDisplayMode mode)
+        public void Init(ElectionTacticsGame game, MapDisplayMode mapDisplayMode, DistrictLabelMode districtLabelMode)
         {
             Game = game;
             Map = game.Map;
-            SetMapDisplayMode(mode);
+            SetMapDisplayMode(mapDisplayMode, districtLabelMode);
         }
 
-        public void SetMapDisplayMode(MapDisplayMode mode)
+        public void SetMapDisplayMode(MapDisplayMode mapDisplayMode, DistrictLabelMode districtLabelMode)
         {
-            int newValue = (int)mode;
+            DistrictLabelMode = districtLabelMode;
+            int newValue = (int)mapDisplayMode;
             if (newValue == OverlayDropdown.value) RefreshMapDisplay();
-            else OverlayDropdown.value = (int)mode;
+            else OverlayDropdown.value = (int)mapDisplayMode;
         }
 
         public void OverlayDropdown_OnValueChanged(int value)
         {
-            DoSetMapDisplayMode((MapDisplayMode)value);
+            DoSetMapDisplayMode((MapDisplayMode)value, DistrictLabelMode);
         }
 
 
         #region Display Modes
 
-        private void DoSetMapDisplayMode(MapDisplayMode mode)
+        private void DoSetMapDisplayMode(MapDisplayMode mapDisplayMode, DistrictLabelMode districtLabelMode)
         {
             ClearLegend();
 
             // Show region borders in active districts only
             foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.VisibleDistricts.ContainsKey(r));
 
-            DisplayMode = mode;
-            switch(mode)
+            // Show district winners as district label background color
+            foreach (District d in Game.VisibleDistricts.Values) d.MapLabel.Refresh(districtLabelMode);
+
+            DisplayMode = mapDisplayMode;
+            switch(mapDisplayMode)
             {
                 case MapDisplayMode.NoOverlay:
                     LegendTitleText.text = "Districts";
@@ -217,7 +222,7 @@ namespace ElectionTactics
 
         public void RefreshMapDisplay()
         {
-            DoSetMapDisplayMode(DisplayMode);
+            DoSetMapDisplayMode(DisplayMode, DistrictLabelMode);
         }
 
         #endregion
@@ -322,5 +327,11 @@ namespace ElectionTactics
         Religion = 4,
         [Description("Age Group")] AgeGroup = 5,
         Density = 6,
+    }
+
+    public enum DistrictLabelMode
+    {
+        Default, // Current values are shown, background represents last election winner
+        InElection // Values before last election are shown, background is white
     }
 }

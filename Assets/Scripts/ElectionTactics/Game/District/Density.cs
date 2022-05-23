@@ -7,7 +7,7 @@ namespace ElectionTactics
     public enum Density
     {
         Urban,
-        Mixed,
+        Suburban,
         Rural
     }
 }

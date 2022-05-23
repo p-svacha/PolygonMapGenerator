@@ -43,7 +43,7 @@ namespace ElectionTactics
                         iconTooltipTitles.Add(m.Type.ToString());
                         iconTooltipTexts.Add(m.Description + "\n\nSource: " + m.Source);
                     }
-                    string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + " / " + result.PartyPoints[kvp.Key] : kvp.Key.Acronym; // Show party points when in debug mode
+                    string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + " / " + result.PartyPopularities[kvp.Key] : kvp.Key.Acronym; // Show party points when in debug mode
                     dataPoints.Add(new GraphDataPoint(label, kvp.Value, kvp.Key.Color, modifierIcons, iconTooltipTitles, iconTooltipTexts));
                 }
                 int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;

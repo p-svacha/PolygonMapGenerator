@@ -39,7 +39,7 @@ namespace ElectionTactics
 
         private void ShowTooltip()
         {
-            Tooltip = Instantiate(PrefabManager.Singleton.Tooltip, GameObject.Find("Overlays").transform);
+            Tooltip = Instantiate(PrefabManager.Singleton.Tooltip, GameObject.Find("UiOverlays").transform);
             Tooltip.Initialize(Type, Title, Text);
         }
 

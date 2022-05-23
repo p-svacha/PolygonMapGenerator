@@ -24,6 +24,11 @@ public static class GeometryFunctions
         return (x % m + m) % m;
     }
 
+    public static float Sigmoid(float value)
+    {
+        return (float)(1.0 / (1.0 + Math.Pow(Math.E, -value)));
+    }
+
     /// <summary>
     /// Returns true if line segment 'p1q1' and 'p2q2' intersect.
     /// </summary>

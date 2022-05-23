@@ -90,36 +90,30 @@ add mentality with negative effect for testing
 Pre-Alpha 0.3 - Map Improvements
 ----------------------------------
 
-Improve district labels on map:
+(/) Improve district labels on map:
 	- add amount of seats
 	- add last winner (with small % lbale with margin)
 	- maybe 4 small icons for religion/density/age/language
 	- maybe popularity
 
-Add party icons:
-	- add option to choose them in lobby
-	- display in parliament
-	- display in map legend
-	- display in district labels
-	- display in recent winner
-	- maybe display as texture in political overlay
-
-Add framework for repeating overlay textures on map:
+(/) Add framework for repeating overlay textures on map:
 	- use to display biomes (very slight as background)
 	- use for party overlay with icons
 
-Add animated impact textures for map when overlay is active
-
-Add particle effects that appear over district:	
+(/) Add particle effects that appear over district:	
 	- happy smileys when doing something with positive effect (depending on impact)
 	- unhappy smileys when doing something negative
 
-Allow moving camera of map:
+(/) Allow moving camera of map:
 	- Current camera will define boundaries of allowed movement (bounds and zoom)
 	- zooming in and moving within those boundaries should be allowed
 
-Try to make map edges nicer:
-	- Maybe add fog of war around active districts
+Add Democracy 4 like impact animations. 
+	- When hovering with mouse over a policy, slowly fade out all unaffected districts.
+	- Draw arrows with the impact to the affected ones.
+
+Add Textures to map to display economies.
+
 
 Pre-Alpha 0.4 - Content Improvements
 ----------------------------------

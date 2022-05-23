@@ -18,7 +18,7 @@ namespace ElectionTactics
                 case Density.Rural:
                     OrderNum = 0;
                     break;
-                case Density.Mixed:
+                case Density.Suburban:
                     OrderNum = 1;
                     break;
                 case Density.Urban:

@@ -166,7 +166,7 @@ namespace ElectionTactics
             Year = 1999;
             
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.None);
-            UI.MapControls.Init(this, MapDisplayMode.NoOverlay);
+            UI.MapControls.Init(this, MapDisplayMode.NoOverlay, DistrictLabelMode.Default);
             VfxManager.Init(this);
 
             InitGeograhyTraits();
@@ -416,7 +416,7 @@ namespace ElectionTactics
         {
             Region region = Map.Regions.First(x => x.Id == data.RegionId);
             District newDistrict = new District(data.Seed, this, region, data.Name);
-            UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab);
+            UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab, UI.OverlayContainer.transform);
             label.gameObject.SetActive(false);
             label.Init(newDistrict);
             newDistrict.MapLabel = label;
@@ -605,7 +605,11 @@ namespace ElectionTactics
             
             party.PolicyPoints--;
             policy.IncreaseValue();
-            if(party == LocalPlayerParty) UI.SidePanelHeader.UpdateValues(this);
+            if (party == LocalPlayerParty)
+            {
+                UI.SidePanelHeader.UpdateValues(this);
+                UI.MapControls.RefreshMapDisplay();
+            }
         }
         public void DoDecreasePolicy(int playerId, int policyId)
         {
@@ -617,7 +621,11 @@ namespace ElectionTactics
 
             party.PolicyPoints++;
             policy.DecreaseValue();
-            if (party == LocalPlayerParty) UI.SidePanelHeader.UpdateValues(this);
+            if (party == LocalPlayerParty)
+            {
+                UI.SidePanelHeader.UpdateValues(this);
+                UI.MapControls.RefreshMapDisplay();
+            }
         }
 
         #endregion

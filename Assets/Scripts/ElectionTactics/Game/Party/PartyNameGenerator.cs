@@ -128,7 +128,9 @@ namespace ElectionTactics
             "Tigers",
             "Panthers",
             "Lions",
-            "Democrats"
+            "Democrats",
+            "Guard",
+            "Generation"
         };
 
         private static Dictionary<char, List<string>> ListDict = new Dictionary<char, List<string>>()

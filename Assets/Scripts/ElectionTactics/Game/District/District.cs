@@ -106,7 +106,7 @@ namespace ElectionTactics
             Population = (int)(Region.Area * 1000000);
             float populationModifier = 0f;
             if (Density == Density.Urban) populationModifier = Random.Range(1.2f, 1.6f);
-            if (Density == Density.Mixed) populationModifier = Random.Range(0.8f, 1.2f);
+            if (Density == Density.Suburban) populationModifier = Random.Range(0.8f, 1.2f);
             if (Density == Density.Rural) populationModifier = Random.Range(0.4f, 0.8f);
             Population = (int)(Population * populationModifier);
             Population = (Population / 1000) * 1000;
@@ -221,7 +221,7 @@ namespace ElectionTactics
         {
             float rng = UnityEngine.Random.value;
             if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
-            else if (rng < 0.25f + 0.33f) return Density.Mixed; // Mixed - 33% chance
+            else if (rng < 0.25f + 0.33f) return Density.Suburban; // Mixed - 33% chance
             else return Density.Rural; // Rural  - 42 % chance
         }
         private AgeGroup GetAgeGroupForNewRegion() // Age group is fully random
@@ -267,11 +267,11 @@ namespace ElectionTactics
         {
             // Get party popularities
             Dictionary<Party, float> voterShares = new Dictionary<Party, float>();
-            Dictionary<Party, int> partyPoints = new Dictionary<Party, int>();
+            Dictionary<Party, int> partyPopularities = new Dictionary<Party, int>();
             Dictionary<Party, int> partyVotes = new Dictionary<Party, int>();
             foreach (Party p in parties)
             {
-                partyPoints.Add(p, GetPartyPopularity(p));
+                partyPopularities.Add(p, GetPartyPopularity(p));
                 partyVotes.Add(p, 0);
             }
 
@@ -280,12 +280,12 @@ namespace ElectionTactics
             foreach (Modifier m in Modifiers) electionModifiers.Add(m);
 
             // Exclude parties with exclusion modifiers
-            foreach(Modifier m in Modifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPoints[m.Party] = 0;
+            foreach(Modifier m in Modifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
 
             // Cast "calculation" votes
             for (int i = 0; i < Voters; i++)
             {
-                Party votedParty = GetSingleVoterResult(partyPoints);
+                Party votedParty = GetSingleVoterResult(partyPopularities);
                 partyVotes[votedParty]++;
             }
             foreach (Party p in parties)
@@ -316,7 +316,7 @@ namespace ElectionTactics
                 Game.Year,
                 Seats,
                 this,
-                partyPoints,
+                partyPopularities,
                 partyVotes,
                 voterShares,
                 winner,
@@ -385,7 +385,7 @@ namespace ElectionTactics
             foreach (Policy policy in party.ActivePolicies) factors.Add(policy.Name + " Policy", GetPolicyImpact(policy));
 
             // Positive & Negative Modifiers
-            foreach (Modifier m in Modifiers)
+            foreach (Modifier m in Modifiers.Where(x => x.Party == party))
             {
                 if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", PositiveModifierImpact);
                 else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -NegativeModifierImpact);
@@ -583,7 +583,6 @@ namespace ElectionTactics
         }
 
         #endregion
-
 
     }
 }

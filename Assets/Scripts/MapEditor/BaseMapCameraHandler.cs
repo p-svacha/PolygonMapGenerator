@@ -61,8 +61,21 @@ public class BaseMapCameraHandler : MonoBehaviour
 
         if (focusDistricts)
         {
-            transform.position = new Vector3(MinX + (width / 2) + CenterOffset.x * MaxCameraHeight, MaxCameraHeight, MinY + (height / 2) + CenterOffset.y * MaxCameraHeight);
+            transform.position = GetCenterPosition(regions);
         }
+    }
+
+    public Vector3 GetCenterPosition(List<Region> regions)
+    {
+        float minX = regions.Min(x => x.MinWorldX);
+        float minY = regions.Min(x => x.MinWorldY);
+        float maxX = regions.Max(x => x.MaxWorldX);
+        float maxY = regions.Max(x => x.MaxWorldY);
+        float width = maxX - minX;
+        float height = maxY - minY;
+        float altitude = height > width ? height : width;
+        altitude *= 1.2f;
+        return new Vector3(MinX + (width / 2) + CenterOffset.x * altitude, altitude, MinY + (height / 2) + CenterOffset.y * altitude);
     }
 
     public virtual void Update()
