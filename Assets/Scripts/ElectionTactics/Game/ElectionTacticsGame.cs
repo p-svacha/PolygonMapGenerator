@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -47,28 +48,12 @@ namespace ElectionTactics
         public List<Mentality> Mentalities = new List<Mentality>();
 
         #region Rules
+
         // Base
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MinAIPolicyPointsPerCycle = 3;
         private const int MaxAIPolicyPointsPerCycle = 6;
         private const int MaxPolicyValue = 8;
-
-        // Turn Length
-        private int BaseTimePerTurn;       // Time in seconds that players in multiplayer have time for their turn
-        private int CumulativeTimePerTurn; // Additional time players have that increases each turn by this amount
-
-        private Dictionary<GameSettings.TurnLengthOptions, int> BaseTimes = new Dictionary<GameSettings.TurnLengthOptions, int>()
-        {
-            {GameSettings.TurnLengthOptions.Slow, 160 },
-            {GameSettings.TurnLengthOptions.Medium, 75 },
-            {GameSettings.TurnLengthOptions.Fast, 50 },
-        };
-        private Dictionary<GameSettings.TurnLengthOptions, int> CumulativeTimes = new Dictionary<GameSettings.TurnLengthOptions, int>()
-        {
-            {GameSettings.TurnLengthOptions.Slow, 20 },
-            {GameSettings.TurnLengthOptions.Medium, 16 },
-            {GameSettings.TurnLengthOptions.Fast, 12 },
-        };
 
         #endregion
 
@@ -84,6 +69,18 @@ namespace ElectionTactics
 
         #region Initialization
 
+        private void Awake()
+        {
+            ResourceManager.ClearCache();
+
+            // Initialize Defs
+            DefDatabaseRegistry.ClearAllDatabases();
+            DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
+            DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
+            DefDatabaseRegistry.ResolveAllReferences();
+            DefDatabaseRegistry.OnLoadingDone();
+        }
+
         void Start()
         {
             State = GameState.Inactive;
@@ -98,7 +95,6 @@ namespace ElectionTactics
             InitGame();
 
             GameSettings = gameSettings;
-            ApplyGameSettings();
 
             GameType = type;
             int mapSeed = GetRandomSeed();
@@ -115,19 +111,9 @@ namespace ElectionTactics
         {
             InitGame();
 
-            GameSettings = new GameSettings(MenuNavigator.Lobby.Slots, MenuNavigator.Lobby.Rules.Select(x => x.value).ToList());
-            ApplyGameSettings();
+            GameSettings = new GameSettings();
 
             GameType = GameType.MultiplayerClient;
-        }
-
-        /// <summary>
-        /// Changes game rules variables according to the game settings
-        /// </summary>
-        private void ApplyGameSettings()
-        {
-            BaseTimePerTurn = BaseTimes[GameSettings.TurnLength];
-            CumulativeTimePerTurn = CumulativeTimes[GameSettings.TurnLength];
         }
 
         /// <summary>
@@ -312,7 +298,7 @@ namespace ElectionTactics
 
         private void ResetTurnTimer()
         {
-            TurnTime = BaseTimePerTurn + ElectionCycle * CumulativeTimePerTurn;
+            TurnTime = GameSettings.TurnLengthOption.BaseTurnTime + ElectionCycle * GameSettings.TurnLengthOption.TurnLengthIncreasePerTurn;
             RemainingTime = TurnTime;
         }
 
@@ -373,7 +359,7 @@ namespace ElectionTactics
             Debug.Log("Player " + party.Name + " (" + party.Id + ") is ready.");
             party.IsReady = true;
 
-            if(GameType == GameType.MultiplayerHost)
+            if (GameType == GameType.MultiplayerHost)
             {
                 if (Parties.Where(x => x.IsHuman).All(x => x.IsReady)) ConcludePreparationPhaseServer();
             }

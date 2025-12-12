@@ -64,7 +64,7 @@ namespace ElectionTactics
                     listValues.Add(p, p.TotalElectionsWon);
 
             if (value == STANDINGS_SEATS)
-                foreach (Party p in Parties.OrderByDescending(x => x.Seats))
+                foreach (Party p in Parties.OrderByDescending(x => x.TotalSeatsWon))
                     listValues.Add(p, p.Seats);
 
             if (value == STANDINGS_DISTRICTS)

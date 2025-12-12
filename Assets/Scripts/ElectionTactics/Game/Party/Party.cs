@@ -17,10 +17,15 @@ namespace ElectionTactics {
         public PartyAI AI;
 
         // Win conditions
-        public int TotalElectionsWon;
-        public int TotalSeatsWon;
-        public int TotalDistrictsWon;
-        public int TotalVotes;
+        public int TotalElectionsWon { get; set; }
+        public int TotalSeatsWon { get; set; }
+        public int TotalDistrictsWon { get; set; }
+        public int TotalVotes { get; set; }
+
+        /// <summary>
+        /// In the Battle Royale game mode each party has health. Once this reaches 0, the party is eliminated.
+        /// </summary>
+        public float BattleRoyaleHealth;
 
         // Game variables
         public List<Policy> Policies = new List<Policy>();

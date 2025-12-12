@@ -1,0 +1,48 @@
+﻿=== SOURCE DEF LISTS ===
+
+--- GameModeDefs.cs ---
+    public static List<GameModeDef> Defs => new List<GameModeDef>()
+    {
+        new GameModeDef()
+        {
+            DefName = "Classic",
+            Label = "Classic",
+            Description = "The classic gamemode where all parties compete until one has won 7 elections in total.",
+        },
+
+        new GameModeDef()
+        {
+            DefName = "BattleRoyale",
+            Label = "Battle Royale",
+            Description = "All parties start the game with 100 influence. Each election and seat will affect influence. A party is eliminated when influence goes below 0. The game ends when there is one party left."
+        }
+    };
+
+--- TurnLengthDefs.cs ---
+    public static List<TurnLengthDef> Defs => new List<TurnLengthDef>()
+    {
+        new TurnLengthDef()
+        {
+            DefName = "Slow",
+            Label = "slow",
+            BaseTurnTime = 160,
+            TurnLengthIncreasePerTurn = 20,
+        },
+
+        new TurnLengthDef()
+        {
+            DefName = "Medium",
+            Label = "medium",
+            BaseTurnTime = 75,
+            TurnLengthIncreasePerTurn = 16,
+        },
+
+        new TurnLengthDef()
+        {
+            DefName = "Fast",
+            Label = "fast",
+            BaseTurnTime = 50,
+            TurnLengthIncreasePerTurn = 12,
+        },
+    };
+

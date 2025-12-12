@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace ElectionTactics
 {
     public class UI_Lobby : MonoBehaviour
     {
+        public static UI_Lobby Instance;
+
         private MenuNavigator MenuNavigator;
 
         [Header("Elements")]
@@ -24,10 +27,17 @@ namespace ElectionTactics
         public Button BackButton;
         public Text BackButtonText;
 
-        public List<Dropdown> Rules;
-
         public GameType Type;
         List<Color> UsedColors = new List<Color>();
+
+        // Game settings
+        public TMP_Dropdown GameModeDropdown;
+        public TMP_Dropdown TurnLengthDropdown;
+        public Dictionary<int, TMP_Dropdown> GameSettingDropdowns { get; private set; }
+        public const int GAME_MODE = 0;
+        public const int TURN_LENGTH = 1;
+
+        public TextMeshProUGUI HoveredItemDescriptionText;
 
         private void Update()
         {
@@ -39,6 +49,16 @@ namespace ElectionTactics
         }
 
         #region Init
+
+        private void Awake()
+        {
+            Instance = this;
+
+            // Create settings dropdown map
+            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>();
+            GameSettingDropdowns.Add(GAME_MODE, GameModeDropdown);
+            GameSettingDropdowns.Add(TURN_LENGTH, TurnLengthDropdown);
+        }
 
         /// <summary>
         /// Gets executed once when game program is started
@@ -59,19 +79,16 @@ namespace ElectionTactics
                 UiSlots[i].Init(this, slot);
             }
 
-            // Rules
+            // Init game setting dropdowns
+            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.ClearOptions();
 
-            foreach (GameSettings.TurnLengthOptions option in Enum.GetValues(typeof(GameSettings.TurnLengthOptions))) Rules[0].options.Add(new Dropdown.OptionData(option.ToString()));
+            GameModeDropdown.AddOptions(DefDatabase<GameModeDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            TurnLengthDropdown.AddOptions(DefDatabase<TurnLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
 
-            foreach(Dropdown rule in Rules)
+            // Add listeners to all setting changes for multiplayer
+            foreach (var setting in GameSettingDropdowns)
             {
-                rule.value = 1; rule.value = 0;
-            }
-
-            for (int i = 0; i < Rules.Count; i++)
-            {
-                int j = i; // needed to to make sure call is made by value and not reference
-                Rules[j].onValueChanged.AddListener((x) => OnRuleChanged(j, x));
+                setting.Value.onValueChanged.AddListener((x) => OnRuleChanged(setting.Key, x));
             }
         }
 
@@ -102,7 +119,7 @@ namespace ElectionTactics
 
             StartGameButtonText.text = "Start";
             StartGameButton.enabled = true;
-            foreach (Dropdown rule in Rules) rule.enabled = true;
+            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.enabled = true;
         }
 
         public void InitJoinMultiplayerGame()
@@ -110,7 +127,7 @@ namespace ElectionTactics
             Type = GameType.MultiplayerClient;
             StartGameButtonText.text = "Waiting";
             StartGameButton.enabled = false;
-            foreach (Dropdown rule in Rules) rule.enabled = false;
+            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.enabled = false;
         }
 
         #endregion
@@ -132,8 +149,10 @@ namespace ElectionTactics
             if (Type == GameType.MultiplayerHost)
             {
                 NetworkPlayer.Server.UpdateLobbySlotsServerRpc();
-                for (int i = 0; i < Rules.Count; i++)
-                    if (Rules[i].value != 0) NetworkPlayer.Server.LobbyRuleChangedServerRpc(i, Rules[i].value);
+                foreach (var setting in GameSettingDropdowns)
+                {
+                    if (setting.Value.value != 0) NetworkPlayer.Server.LobbyRuleChangedServerRpc(setting.Key, setting.Value.value);
+                }
             }
         }
 
@@ -229,7 +248,7 @@ namespace ElectionTactics
 
         #endregion
 
-        #region Rules
+        #region Game Settings
 
         private void OnRuleChanged(int ruleId, int value)
         {
@@ -240,7 +259,25 @@ namespace ElectionTactics
         public void GetRuleChangeFromServer(int ruleId, int value)
         {
             Debug.Log("Client: Rule " + ruleId + " changed to " + value);
-            Rules[ruleId].value = value;
+            GameSettingDropdowns[ruleId].value = value;
+        }
+
+        public void OnHoveredGameSettingsOptionChanged(string key, string label)
+        {
+            if (label == "")
+            {
+                HoveredItemDescriptionText.text = "";
+                return;
+            }
+
+            switch (key)
+            {
+                case "GameMode":
+                    HoveredItemDescriptionText.text = DefDatabase<GameModeDef>.AllDefs.First(x => x.Label == label).Description;
+                    break;
+
+                default: throw new Exception("Key '" + key + "' not handled.");
+            }
         }
 
         #endregion
@@ -257,7 +294,7 @@ namespace ElectionTactics
             }
 
             // Start game
-            GameSettings gameSettings = new GameSettings(Slots, Rules.Select(x => x.value).ToList());
+            GameSettings gameSettings = new GameSettings();
             if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.InitGameServerRpc();
             MenuNavigator.InitGame(gameSettings);
         }
