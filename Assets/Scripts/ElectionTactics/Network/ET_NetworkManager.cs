@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
+using static Unity.Netcode.NetworkManager;
 
 namespace ElectionTactics
 {
@@ -72,24 +73,24 @@ namespace ElectionTactics
         /// <summary>
         /// Gets executed on the server when a client wants to connect with the given connection data.
         /// </summary>
-        private void HandleApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback)
+        private void HandleApprovalCheck(ConnectionApprovalRequest request, ConnectionApprovalResponse response)
         {
             // Get connection data of connected client (not if we as the host just joined ourselves)
             NetworkConnectionData data = null;
-            if (clientId != NetworkManager.Singleton.LocalClientId)
+            if (request.ClientNetworkId != NetworkManager.Singleton.LocalClientId)
             {
-                data = (NetworkConnectionData) Deserialize(connectionData);
-                data.ClientId = clientId;
+                data = (NetworkConnectionData) Deserialize(request.Payload);
+                data.ClientId = request.ClientNetworkId;
             }
 
             bool approveConnection = true;
 
-            callback(true, null, approveConnection, null, null);
+            response.Approved = approveConnection;
 
-            if (approveConnection && clientId != NetworkManager.Singleton.LocalClientId)
+            if (approveConnection && request.ClientNetworkId != NetworkManager.Singleton.LocalClientId)
             {
                 Debug.Log("NETWORK: Incoming client connection, Approval: " + approveConnection + "\n" + data.ToString());
-                ConnectionData.Add(clientId, data);
+                ConnectionData.Add(request.ClientNetworkId, data);
             }
         }
 

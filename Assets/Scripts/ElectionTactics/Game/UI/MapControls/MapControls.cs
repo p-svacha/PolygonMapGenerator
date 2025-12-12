@@ -101,7 +101,7 @@ namespace ElectionTactics
                 case MapDisplayMode.LastElection:
                     LegendTitleText.text = "Parties";
                     Legend.Add(ColorManager.Singleton.NoImpactColor, "None");
-                    foreach(Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
+                    foreach (Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
                     foreach (Region r in Map.LandRegions) 
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))

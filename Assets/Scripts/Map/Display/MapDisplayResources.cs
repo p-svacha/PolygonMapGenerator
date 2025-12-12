@@ -43,6 +43,7 @@ public class MapDisplayResources : MonoBehaviour
 
     [Header("Textures")]
     public Texture2D WaterBackgroundTexture;
+    public Texture2D MinorNoiseTexture;
 
     public static MapDisplayResources Singleton
     {

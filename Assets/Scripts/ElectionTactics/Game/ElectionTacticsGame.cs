@@ -165,7 +165,7 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
             
-            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.None);
+            Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.MinorNoise);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay, DistrictLabelMode.Default);
             VfxManager.Init(this);
 

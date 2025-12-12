@@ -14466,6 +14466,7 @@ MonoBehaviour:
   GreyedOutColor: {r: 0, g: 0, b: 0, a: 0}
   WaterBackgroundTexture: {fileID: 2800000, guid: 61def133d0dd05c4a90761375486e8c7,
     type: 3}
+  MinorNoiseTexture: {fileID: 2800000, guid: 2dccf5eef99d64146a44eed963616882, type: 3}
 --- !u!4 &1824807598
 Transform:
   m_ObjectHideFlags: 0

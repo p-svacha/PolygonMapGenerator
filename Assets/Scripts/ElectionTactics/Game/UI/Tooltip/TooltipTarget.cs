@@ -13,7 +13,7 @@ namespace ElectionTactics
         public string Text;
 
         [HideInInspector] public bool IsFocussed;
-        private float Delay = 1f;
+        private float Delay = 0.15f;
         [HideInInspector] public float CurrentDelay;
 
         [HideInInspector] public Tooltip Tooltip;

@@ -113,7 +113,7 @@ Add Democracy 4 like impact animations.
 	- Draw arrows with the impact to the affected ones.
 
 Add Textures to map to display economies.
-
+	
 
 Pre-Alpha 0.4 - Content Improvements
 ----------------------------------

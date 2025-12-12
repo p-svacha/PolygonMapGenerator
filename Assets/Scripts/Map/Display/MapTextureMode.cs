@@ -5,5 +5,6 @@ using UnityEngine;
 public enum MapTextureMode
 {
     None,
-    BiomeTextures
+    BiomeTextures,
+    MinorNoise
 }

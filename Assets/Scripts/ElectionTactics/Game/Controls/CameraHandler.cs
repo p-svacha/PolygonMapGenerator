@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ElectionTactics
 {
@@ -32,7 +33,7 @@ namespace ElectionTactics
             if (Game == null) return;
 
             // Free Movement
-            if (Game.State == GameState.PreparationPhase) base.Update();
+            if (Game.State == GameState.PreparationPhase && !EventSystem.current.IsPointerOverGameObject()) base.Update();
 
             // Camera Lerp
             if (IsMoving)

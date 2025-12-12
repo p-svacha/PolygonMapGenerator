@@ -104,6 +104,7 @@ public class UI_MapEditor : MonoBehaviour
     void Start()
     {
         MarkovChainWordGenerator.Init();
+        CameraControls.Init();
 
         GenerateButton.onClick.AddListener(GenerateButton_OnClick);
 
@@ -196,7 +197,6 @@ public class UI_MapEditor : MonoBehaviour
         if (CurrentMap != null) CurrentMap.DestroyAllGameObjects();
         CurrentMap = map;
         CurrentMap.InitializeMap(RegionBorderToggle.isOn, ShorelineBorderToggle.isOn, ContinentBorderToggle.isOn, WaterConnectionToggle.isOn, CurrentColorMode, CurrentTextureMode);
-        CameraControls.Init();
         CameraControls.SetZoomToFullMap(map);
 
         SetMapInformation(CurrentMap);

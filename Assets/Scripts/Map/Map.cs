@@ -146,6 +146,11 @@ public class Map
                 }
                 foreach (River r in Rivers) r.SetColor(Color.white);
                 break;
+
+            case MapTextureMode.MinorNoise:
+                foreach (Region r in Regions) r.SetTexture(MapDisplayResources.Singleton.MinorNoiseTexture);
+                foreach (River r in Rivers) r.SetTexture(MapDisplayResources.Singleton.MinorNoiseTexture);
+                break;
         }
     }
 
