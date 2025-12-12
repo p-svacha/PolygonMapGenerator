@@ -33,12 +33,12 @@ namespace ElectionTactics
         /// </summary>
         public Color GetImpactColor(int value)
         {
-            if (value < 0) return ColorManager.Singleton.NegativeImpactColor;
-            if (value == 0) return ColorManager.Singleton.NoImpactColor;
-            if (value <= 3) return ColorManager.Singleton.LowImpactColor;
-            if (value <= 6) return ColorManager.Singleton.MediumImpactColor;
-            if (value <= 9) return ColorManager.Singleton.HighImpactColor;
-            else return ColorManager.Singleton.VeryHighImpactColor;
+            if (value < 0) return ColorManager.Instance.NegativeImpactColor;
+            if (value == 0) return ColorManager.Instance.NoImpactColor;
+            if (value <= 3) return ColorManager.Instance.LowImpactColor;
+            if (value <= 6) return ColorManager.Instance.MediumImpactColor;
+            if (value <= 9) return ColorManager.Instance.HighImpactColor;
+            else return ColorManager.Instance.VeryHighImpactColor;
         }
 
         public Color Lighter(Color c)
@@ -46,7 +46,7 @@ namespace ElectionTactics
             return new Color(c.r + 0.5f * (1f - c.r), c.g + 0.5f * (1f - c.g), c.b + 0.5f * (1f - c.b));
         }
 
-        public static ColorManager Singleton
+        public static ColorManager Instance
         {
             get
             {

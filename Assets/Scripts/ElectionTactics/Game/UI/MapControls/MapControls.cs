@@ -38,13 +38,13 @@ namespace ElectionTactics
         private void Start()
         {
             // Create default legends
-            NoOverlayLegend.Add(ColorManager.Singleton.InactiveDistrictColor, "District");
-            ImpactLegend.Add(ColorManager.Singleton.VeryHighImpactColor, "Very High");
-            ImpactLegend.Add(ColorManager.Singleton.HighImpactColor, "High");
-            ImpactLegend.Add(ColorManager.Singleton.MediumImpactColor, "Medium");
-            ImpactLegend.Add(ColorManager.Singleton.LowImpactColor, "Low");
-            ImpactLegend.Add(ColorManager.Singleton.NoImpactColor, "None");
-            ImpactLegend.Add(ColorManager.Singleton.NegativeImpactColor, "Negative");
+            NoOverlayLegend.Add(ColorManager.Instance.InactiveDistrictColor, "District");
+            ImpactLegend.Add(ColorManager.Instance.VeryHighImpactColor, "Very High");
+            ImpactLegend.Add(ColorManager.Instance.HighImpactColor, "High");
+            ImpactLegend.Add(ColorManager.Instance.MediumImpactColor, "Medium");
+            ImpactLegend.Add(ColorManager.Instance.LowImpactColor, "Low");
+            ImpactLegend.Add(ColorManager.Instance.NoImpactColor, "None");
+            ImpactLegend.Add(ColorManager.Instance.NegativeImpactColor, "Negative");
 
             foreach(MapDisplayMode displayMode in Enum.GetValues(typeof(MapDisplayMode)))
                 OverlayDropdown.options.Add(new Dropdown.OptionData(EnumHelper.GetDescription<MapDisplayMode>(displayMode)));
@@ -93,14 +93,14 @@ namespace ElectionTactics
                     foreach (KeyValuePair<Color, string> kvp in NoOverlayLegend) Legend.Add(kvp.Key, kvp.Value);
                     foreach(Region r in Map.LandRegions)
                     {
-                        if (Game.VisibleDistricts.ContainsKey(r)) r.SetColor(ColorManager.Singleton.NoImpactColor);
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        if (Game.VisibleDistricts.ContainsKey(r)) r.SetColor(ColorManager.Instance.NoImpactColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
                 case MapDisplayMode.LastElection:
                     LegendTitleText.text = "Parties";
-                    Legend.Add(ColorManager.Singleton.NoImpactColor, "None");
+                    Legend.Add(ColorManager.Instance.NoImpactColor, "None");
                     foreach (Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
                     foreach (Region r in Map.LandRegions) 
                     {
@@ -108,9 +108,9 @@ namespace ElectionTactics
                         {
                             Party displayedParty = Game.VisibleDistricts[r].CurrentWinnerParty;
                             if (displayedParty != null) r.SetColor(displayedParty.Color);
-                            else r.SetColor(ColorManager.Singleton.NoImpactColor);
+                            else r.SetColor(ColorManager.Instance.NoImpactColor);
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
@@ -129,7 +129,7 @@ namespace ElectionTactics
                             Mathf.Clamp(f, 0f, 1f);
                             r.SetColor(new Color(1f - f, f, 0f));
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
@@ -142,7 +142,7 @@ namespace ElectionTactics
                             string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Language);
                             HandleLegendEntry(r, label);
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
@@ -155,7 +155,7 @@ namespace ElectionTactics
                             string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Religion);
                             HandleLegendEntry(r, label);
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
@@ -168,7 +168,7 @@ namespace ElectionTactics
                             string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].AgeGroup);
                             HandleLegendEntry(r, label);
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
 
@@ -181,7 +181,7 @@ namespace ElectionTactics
                             string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Density);
                             HandleLegendEntry(r, label);
                         }
-                        else r.SetColor(ColorManager.Singleton.InactiveDistrictColor);
+                        else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
                     break;
             }
@@ -199,7 +199,7 @@ namespace ElectionTactics
         {
             if (!Legend.ContainsValue(label))
             {
-                Color c = ColorManager.Singleton.LegendColors[Legend.Count];
+                Color c = ColorManager.Instance.LegendColors[Legend.Count];
                 Legend.Add(c, label);
                 r.SetColor(c);
             }
@@ -236,7 +236,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -247,7 +247,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -258,7 +258,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -269,7 +269,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -280,7 +280,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }
@@ -291,7 +291,7 @@ namespace ElectionTactics
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
                 int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Singleton.GetImpactColor(policyImpact);
+                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
                 r.SetColor(impactColor);
             }
         }

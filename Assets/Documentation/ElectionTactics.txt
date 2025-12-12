@@ -1,3 +1,17 @@
+BR Game mode:
+- Show current election cycle in right panel header
+- add tooltips to every thing in side panel header
+- Heal animation for election winner legitimacy bonus ("+3" moves from current election cycle to winner partys, then to their standings)
+- Eliminate parties below 0 health
+- Show eliminated parties still, but somehow different
+- legitimacy title tooltip
+
+- improve party name generator (less long, more variance, take real-world parties for inspiration)
+- move district traits to defs
+- add commonness to district traits
+- add more district traits that are directly usable by players (like linguistic, religous, etc.)
+
+
 Election Tactics
 ----------------
 

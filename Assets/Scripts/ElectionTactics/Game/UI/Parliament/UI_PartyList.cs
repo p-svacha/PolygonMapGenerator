@@ -6,13 +6,24 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
+    /// <summary>
+    /// UI element to display a dynamic party list that can change ordering of elements with an animation.
+    /// </summary>
     public class UI_PartyList : MonoBehaviour
     {
-        private float ListElementHeight;
-        private const float PADDING = 10f;
+        private float ListElementWidth; // read dynamically from prefab
+        private float ListElementHeight; // read dynamically from prefab
 
+        [Header("Elements")]
         public GameObject ListContainer;
         public UI_PartyListElement PartyListElementPrefab;
+
+        [Header("Settings")]
+        public float Spacing = 10f; // Between elements
+        public float Padding = 5f; // Towards edge of container
+        public bool UsePartyAcronyms;
+        public bool ListIsHorizontal;
+        public bool ResizeContainer; // If true, size of ListContainer is dynamically set according to the elements + PADDING on each side.
 
         private Dictionary<Party, UI_PartyListElement> ListElements = new Dictionary<Party, UI_PartyListElement>();
         private Dictionary<UI_PartyListElement, Vector2> SourcePositions = new Dictionary<UI_PartyListElement, Vector2>();
@@ -23,7 +34,7 @@ namespace ElectionTactics
         private bool IsAnimating;
         private float AnimationTime;
         private float CurrentAnimationTime;
-        private float AnimationSpeedModifier;
+        private float AnimationSpeedModifier = 1f;
         private Action AnimationCallback;
 
         void Update()
@@ -53,7 +64,12 @@ namespace ElectionTactics
         public void Init(Dictionary<Party, int> values, bool dynamic)
         {
             ListElements.Clear();
-            ListElementHeight = PartyListElementPrefab.GetComponent<RectTransform>().sizeDelta.y;
+
+            // Measure dimensions
+            RectTransform prefabRect = PartyListElementPrefab.GetComponent<RectTransform>();
+            ListElementHeight = prefabRect.sizeDelta.y;
+            ListElementWidth = prefabRect.sizeDelta.x;
+
             IsAnimating = false;
             Parties = values.Keys.ToList();
             Dynamic = dynamic;
@@ -63,12 +79,13 @@ namespace ElectionTactics
             foreach(KeyValuePair<Party, int> entry in values)
             {
                 UI_PartyListElement elem = Instantiate(PartyListElementPrefab, ListContainer.transform, false);
-                elem.Init(entry.Key, entry.Value.ToString());
+                elem.Init(entry.Key, entry.Value.ToString(), UsePartyAcronyms);
                 ListElements.Add(entry.Key, elem);
             }
 
             CalculateTargetPositions(values);
             UpdatePartyPosition(Parties);
+            UpdateContainerSize(values.Count);
         }
 
 
@@ -88,12 +105,12 @@ namespace ElectionTactics
         public void HighlightParty(Party p)
         {
             UI_PartyListElement elem = ListElements[p];
-            elem.Background.color = ColorManager.Singleton.UiMainLighter2;
+            elem.Background.color = ColorManager.Instance.UiMainLighter2;
             elem.transform.SetAsLastSibling();
         }
         public void UnhighlightParty(Party p)
         {
-            ListElements[p].Background.color = ColorManager.Singleton.UiMainLighter1;
+            ListElements[p].Background.color = ColorManager.Instance.UiMainLighter1;
         }
 
 
@@ -112,14 +129,61 @@ namespace ElectionTactics
 
             int counter = 0;
             Dictionary<Party, int> sortedValues = Dynamic ? values.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value) : values;
+
             foreach (KeyValuePair<Party, int> entry in sortedValues)
             {
-                float y = -(counter * (ListElementHeight + PADDING));
                 UI_PartyListElement elem = ListElements[entry.Key];
                 SourcePositions.Add(elem, elem.GetComponent<RectTransform>().anchoredPosition);
-                TargetPositions.Add(elem, new Vector2(0, y));
+
+                Vector2 targetPos;
+
+                if (ListIsHorizontal)
+                {
+                    // Horizontal: move right (+X)
+                    float x = counter * (ListElementWidth + Spacing);
+                    targetPos = new Vector2(x + Padding, Padding);
+                }
+                else
+                {
+                    // Vertical: move down (-Y)
+                    float y = -(counter * (ListElementHeight + Spacing));
+                    targetPos = new Vector2(Padding, y + Padding);
+                }
+
+                TargetPositions.Add(elem, targetPos);
                 counter++;
             }
+        }
+
+        private void UpdateContainerSize(int elementCount)
+        {
+            if (!ResizeContainer) return;
+
+            RectTransform containerRect = ListContainer.GetComponent<RectTransform>();
+            Vector2 newSize = containerRect.sizeDelta;
+
+            if (ListIsHorizontal)
+            {
+                float totalWidth = elementCount * ListElementWidth + (Mathf.Max(0, elementCount - 1) * Spacing);
+                newSize.x = totalWidth + 2 * Padding;
+                newSize.y = ListElementHeight + 2 * Padding;
+            }
+            else
+            {
+                float totalHeight = elementCount * ListElementHeight + (Mathf.Max(0, elementCount - 1) * Spacing);
+                newSize.x = ListElementWidth + 2 * Padding;
+                newSize.y = totalHeight + 2 * Padding;
+            }
+
+            containerRect.sizeDelta = newSize;
+        }
+
+        /// <summary>
+        /// Returns the screen position center of the element displaying the provided party.
+        /// </summary>
+        public Vector3 GetElementCenter(Party party)
+        {
+            return ListElements[party].transform.position + new Vector3(ListElementWidth * 0.5f, ListElementHeight * 0.5f, 0f);
         }
     }
 }

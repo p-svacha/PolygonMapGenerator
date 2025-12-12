@@ -27,12 +27,19 @@ namespace ElectionTactics
             // Add result to the game
             game.AddGeneralElectionResult(this);
 
+            // Save state before elections (used for election animation)
+            foreach (Party p in game.Parties) p.PreviousScore = p.GetGameScore();
+
             // Apply district election results
             foreach (DistrictElectionResult result in DistrictResults) result.Apply(game);
 
             // Award total election victory points
             List<Party> winnerParties = game.Parties.Where(x => x.Seats == game.Parties.Max(y => y.Seats)).ToList();
             foreach (Party p in winnerParties) p.TotalElectionsWon++;
+
+            // Add legitimacy bonus for winners (battle royale only)
+            int legitimacyBonus = ElectionTacticsGame.BR_BASE_HEAL_PER_ELECTION_WON + ElectionTacticsGame.Instance.ElectionCycle * ElectionTacticsGame.BR_HEAL_PER_ELECTION_WON_PER_TURN;
+            foreach (Party p in winnerParties) p.Legitimacy += legitimacyBonus;
         }
     }
 }

@@ -13,13 +13,13 @@ namespace ElectionTactics
         void Start()
         {
             ColorBlock colors = Button.colors;
-            colors.highlightedColor = ColorManager.Singleton.UiInteractable;
+            colors.highlightedColor = ColorManager.Instance.UiInteractable;
             Button.colors = colors;
         }
 
         public void SetSelected(bool active)
         {
-            Button.GetComponent<Image>().color = active ? ColorManager.Singleton.UiInteractable : ColorManager.Singleton.UiText;
+            Button.GetComponent<Image>().color = active ? ColorManager.Instance.UiInteractable : ColorManager.Instance.UiText;
         }
     }
 }

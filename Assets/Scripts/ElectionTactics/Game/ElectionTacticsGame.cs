@@ -11,7 +11,9 @@ namespace ElectionTactics
 {
     public class ElectionTacticsGame : MonoBehaviour
     {
-        private GameSettings GameSettings;  // Static rules of the game (only server needs this to initialize the game)
+        public static ElectionTacticsGame Instance;
+
+        public GameSettings GameSettings { get; private set; }
         public GameType GameType;           // Singleplayer, Host, Client
 
         public PolygonMapGenerator PMG;
@@ -47,15 +49,16 @@ namespace ElectionTactics
 
         public List<Mentality> Mentalities = new List<Mentality>();
 
-        #region Rules
-
-        // Base
+        // Constant Rules
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MinAIPolicyPointsPerCycle = 3;
         private const int MaxAIPolicyPointsPerCycle = 6;
         private const int MaxPolicyValue = 8;
 
-        #endregion
+        public const int BR_START_LEGITIMACY = 100;
+        public const int BR_DMG_PER_UNWON_SEAT = 1;
+        public const int BR_BASE_HEAL_PER_ELECTION_WON = 0; // Base healing amount from winning elections
+        public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 1; // The healing from won elections increases by this every election.
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions
@@ -71,6 +74,8 @@ namespace ElectionTactics
 
         private void Awake()
         {
+            Instance = this;
+
             ResourceManager.ClearCache();
 
             // Initialize Defs
@@ -161,6 +166,9 @@ namespace ElectionTactics
             InitPolicies();
             UI.SidePanelFooter.Init(this);
 
+            // Battle royale
+            foreach (Party party in Parties) party.Legitimacy = BR_START_LEGITIMACY;
+
             MarkovChainWordGenerator.Init();
             Constitution = new Constitution(this);
             UI.Constitution.Init(Constitution);
@@ -170,6 +178,7 @@ namespace ElectionTactics
             State = GameState.PreparationPhase;
 
             UI.SelectTab(Tab.Parliament);
+            UI.StandingsPanel.Init(GetCurrentStandings(), dynamic: true);
             ElectionAnimationHandler = new ElectionAnimationHandler(this);
         }
 
@@ -338,7 +347,7 @@ namespace ElectionTactics
         {
             Debug.Log("Ending Turn");
 
-            UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractableDisabled);
+            UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractableDisabled);
 
             if (GameType == GameType.Singleplayer) ConcludePreparationPhase(GetRandomSeed());
             else // Multiplayer
@@ -734,6 +743,8 @@ namespace ElectionTactics
 
         #region Getters
 
+        public bool IsBattleRoyale => GameSettings.GameMode == GameModeDefOf.BattleRoyale;
+
         public GeographyTrait GetGeographyTrait(GeographyTraitType type, int category)
         {
             return GeographyTraits.First(x => x.Type == type && x.Category == category);
@@ -747,6 +758,14 @@ namespace ElectionTactics
         public Dictionary<Region, District> VisibleDistricts { get { return Districts.Where(x => x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
+
+        /// <summary>
+        /// Returns the current standings as an ordered dictionary with the value representing the party score (varies by gamemode).
+        /// </summary>
+        public Dictionary<Party, int> GetCurrentStandings()
+        {
+            return Parties.OrderByDescending(p => p.GetGameScore()).ToDictionary(p => p, p => p.GetGameScore());
+        }
 
         #endregion
     }

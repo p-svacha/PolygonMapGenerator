@@ -73,7 +73,7 @@ namespace ElectionTactics
 
         public void SetBackgroundColor(Color c)
         {
-            c = ColorManager.Singleton.Lighter(c);
+            c = ColorManager.Instance.Lighter(c);
             Background.color = c;
             BackgroundTop.color = c;
             BackgroundBot.color = c;

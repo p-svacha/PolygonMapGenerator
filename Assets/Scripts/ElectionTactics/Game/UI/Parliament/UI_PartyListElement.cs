@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace ElectionTactics
 {
     public class UI_PartyListElement : MonoBehaviour
     {
         public Image Background;
-        public Text NameText;
-        public Text ValueText;
+        public TextMeshProUGUI NameText;
+        public TextMeshProUGUI ValueText;
         public Party Party;
 
-        public void Init(Party p, string value)
+        public void Init(Party p, string value, bool useAcronym)
         {
             Party = p;
-            NameText.text = p.Name;
+            NameText.text = useAcronym ? p.Acronym : p.Name;
             NameText.color = p.Color;
             ValueText.text = value;
-            Background.color = ColorManager.Singleton.UiMainLighter1;
+            Background.color = ColorManager.Instance.UiMainLighter1;
         }
 
         public void UpdateValue(string value)

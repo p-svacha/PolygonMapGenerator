@@ -8,6 +8,8 @@ namespace ElectionTactics
 {
     public class UI_ElectionTactics : MonoBehaviour
     {
+        public static UI_ElectionTactics Instance;
+
         public ElectionTacticsGame Game;
         public Font Font;
 
@@ -51,9 +53,16 @@ namespace ElectionTactics
         public UI_Voting Voting;
         public UI_Settings Settings;
 
+        [Header("Standings Panel")]
+        public UI_PartyList StandingsPanel;
+
         public bool IsDistrictSelected;
         public District SelectedDistrict;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void Init(ElectionTacticsGame game)
         {

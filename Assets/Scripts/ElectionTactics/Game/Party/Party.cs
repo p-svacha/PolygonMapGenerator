@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,9 +24,11 @@ namespace ElectionTactics {
         public int TotalVotes { get; set; }
 
         /// <summary>
-        /// In the Battle Royale game mode each party has health. Once this reaches 0, the party is eliminated.
+        /// Acts as the health in the battle royale game mode. Reaching a legitimacy of 0 means dropping out of the game.
         /// </summary>
-        public float BattleRoyaleHealth;
+        public int Legitimacy;
+
+        public int PreviousScore; // Score of party before the most recent elections.
 
         // Game variables
         public List<Policy> Policies = new List<Policy>();
@@ -120,6 +123,17 @@ namespace ElectionTactics {
         }
 
         public List<Policy> ActivePolicies { get { return Policies.Where(x => x.IsActive).ToList(); } }
+
+        /// <summary>
+        /// Returns the current game score of this party. Wgat the score exactly represents depends on the game mode.
+        /// </summary>
+        public int GetGameScore()
+        {
+            if (Game.GameSettings.GameMode == GameModeDefOf.Classic) return TotalElectionsWon;
+            else if (Game.GameSettings.GameMode == GameModeDefOf.BattleRoyale) return Legitimacy;
+
+            throw new Exception("Game Mode " + Game.GameSettings.GameMode.Label + " not handled for party game score.");
+        }
 
         #endregion
     }

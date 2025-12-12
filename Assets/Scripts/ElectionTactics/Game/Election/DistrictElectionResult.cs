@@ -25,6 +25,7 @@ namespace ElectionTactics
 
         public int WinnerPartyId;
         public Party Winner;
+        public List<Party> NonWinners => PartyPopularities.Keys.Where(p => p != Winner).ToList();
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
@@ -88,6 +89,9 @@ namespace ElectionTactics
             Winner.TotalSeatsWon += Seats;
             Winner.TotalDistrictsWon++;
             foreach (Party p in game.Parties) p.TotalVotes += Votes[p];
+
+            // Substract legitimacy for non-winners (battle royale only)
+            foreach (Party p in game.Parties.Where(p => p != Winner)) p.Legitimacy -= Seats;
         }
     }
 }

@@ -50,14 +50,9 @@ namespace ElectionTactics
 
         #region Init
 
-        private void Awake()
+        private void Start()
         {
             Instance = this;
-
-            // Create settings dropdown map
-            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>();
-            GameSettingDropdowns.Add(GAME_MODE, GameModeDropdown);
-            GameSettingDropdowns.Add(TURN_LENGTH, TurnLengthDropdown);
         }
 
         /// <summary>
@@ -66,6 +61,11 @@ namespace ElectionTactics
         public void Init(MenuNavigator nav)
         {
             MenuNavigator = nav;
+
+            // Create settings dropdown map
+            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>();
+            GameSettingDropdowns.Add(GAME_MODE, GameModeDropdown);
+            GameSettingDropdowns.Add(TURN_LENGTH, TurnLengthDropdown);
 
             // Buttons
             StartGameButton.onClick.AddListener(StartGameButton_OnClick);

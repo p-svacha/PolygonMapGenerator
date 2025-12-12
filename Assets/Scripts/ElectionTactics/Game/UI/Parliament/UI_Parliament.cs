@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ namespace ElectionTactics
 
         [Header("Standings")]
         public List<Party> Parties;
+        public TextMeshProUGUI StandingsTitle;
         public GameObject StandingsContainer;
         public Dropdown StandingsDropdown;
         public UI_PartyList StandingsPartyList;
@@ -33,9 +35,12 @@ namespace ElectionTactics
 
         private void Start()
         {
-            StandingsDropdown.onValueChanged.AddListener(UpdateList);
+            StandingsDropdown.onValueChanged.AddListener(UpdateStandings);
         }
 
+        /// <summary>
+        /// Gets called every time this tab is selected.
+        /// </summary>
         public void Init(ElectionTacticsGame game, List<Party> parties)
         {
             // Parlialment party list
@@ -52,11 +57,27 @@ namespace ElectionTactics
             else if(game.Constitution.WinCondition.Type == WinConditionType.TotalDistrictsWon) StandingsDropdown.value = STANDINGS_DISTRICTS;
             else if(game.Constitution.WinCondition.Type == WinConditionType.TotalVotes) StandingsDropdown.value = STANDINGS_VOTES;
 
-            UpdateList(StandingsDropdown.value);
+            UpdateStandings(StandingsDropdown.value);
         }
 
-        private void UpdateList(int value)
+        private void UpdateStandings(int value)
         {
+            if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.BattleRoyale)
+            {
+                StandingsTitle.text = "Legitimacy";
+                StandingsPartyList.Init(ElectionTacticsGame.Instance.GetCurrentStandings(), dynamic: false);
+            }
+            else if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.Classic)
+            {
+                StandingsTitle.text = "Elections Won";
+                StandingsPartyList.Init(ElectionTacticsGame.Instance.GetCurrentStandings(), dynamic: false);
+            }
+            else
+            {
+                throw new System.Exception("Game mode not handled in settings");
+            }
+
+            /* Old logic showing standings based on a dropdown
             Dictionary<Party, int> listValues = new Dictionary<Party, int>();
 
             if (value == STANDINGS_ELECTIONS)
@@ -76,6 +97,7 @@ namespace ElectionTactics
                     listValues.Add(p, p.TotalVotes);
 
             StandingsPartyList.Init(listValues, dynamic: false);
+            */
         }
 
     }

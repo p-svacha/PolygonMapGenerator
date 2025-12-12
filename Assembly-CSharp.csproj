@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameSettingDropdownOptionListener.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\GlobalInputManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\LoadingScreen\UI_LoadingScreen.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Continent.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\UI_ScoreToken.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\BorderType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\LobbySlot.cs" />
@@ -169,7 +171,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\GameUI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyNameGenerator.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\WorldSimulation.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationSpeed.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSite.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_WaterBodyInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Impact.cs" />
@@ -214,7 +216,6 @@
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\TurnLengthDefs.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\PostGame\UI_PostGameScreen.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\ElectionAnimationSpeed.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphAnimationType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPolygon.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameType.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\TerritoryBattle.cs" />
     <Compile Include="Assets\Scripts\Def\DefOf\DefOf.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ScoreTokenAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSliderContainer.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyList.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualArmy.cs" />

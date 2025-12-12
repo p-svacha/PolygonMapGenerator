@@ -28,7 +28,7 @@ namespace ElectionTactics
             system.GetComponent<ParticleSystemRenderer>().material.SetTexture("_MainTex", impact > 0 ? PopulartiyUpIcon : PopularityDownIcon);
 
             var main = system.main;
-            main.startColor = ColorManager.Singleton.GetImpactColor(impact);
+            main.startColor = ColorManager.Instance.GetImpactColor(impact);
             var emission = system.emission;
             emission.rateOverTime = district.Region.Area * 50;
             var shape = system.shape;

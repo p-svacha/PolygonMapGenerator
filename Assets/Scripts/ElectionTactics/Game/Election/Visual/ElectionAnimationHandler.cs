@@ -40,6 +40,7 @@ namespace ElectionTactics
 
         private GeneralElectionResult ElectionResult;
         private Dictionary<Party, int> TempSeats = new Dictionary<Party, int>();
+        private Dictionary<Party, int> TempStandingsScore = new Dictionary<Party, int>();
 
         private List<District> DistrictOrder;
         private int CurElectionDistrictIndex;
@@ -60,6 +61,7 @@ namespace ElectionTactics
         private float GraphAnimationTime = 6f;
         private float PostGraphPauseTime = 0.8f;
         private float ListAnimationTime = 1f;
+        private float ScoreTokenFlyingTime = 2f; // How long it takes for the damage tokens (i.e. "-5") to fly from the district label seat text to the standings panel 
         private float PostPartyListAnimationPauseTime = 1f;
 
         private float AnimationSpeedModifier = 1f;
@@ -135,7 +137,7 @@ namespace ElectionTactics
                     break;
 
                 case AnimationState.InitUpdatePartyList:
-                    InitUpdatePartyList();
+                    InitDistrictResultApplication();
                     State = AnimationState.UpdatePartyList;
                     break;
 
@@ -173,6 +175,10 @@ namespace ElectionTactics
             foreach (Party p in Game.Parties) TempSeats.Add(p, 0);
             Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true);
 
+            // Init visual standings
+            TempStandingsScore.Clear();
+            foreach (Party p in Game.Parties) TempStandingsScore.Add(p, p.PreviousScore);
+
             DistrictOrder = ElectionResult.DistrictResults.Select(x => x.District).OrderBy(x => x.Population).ToList();
             CurElectionDistrictIndex = -1;
         }
@@ -194,6 +200,10 @@ namespace ElectionTactics
                 CurrentDistrictResult = DistrictOrder[CurElectionDistrictIndex].GetLatestElectionResult();
                 CurrentDistrictResult.District.Region.SetAnimatedHighlight(true);
                 TempSeats[CurrentDistrictResult.Winner] += CurrentDistrictResult.Seats;
+                if (Game.IsBattleRoyale)
+                    foreach (Party p in CurrentDistrictResult.NonWinners)
+                        TempStandingsScore[p] -= CurrentDistrictResult.Seats;
+
 
                 // Prepare graph for next district
                 if (CurrentDistrictResult.District.ElectionResults.Count > 1)
@@ -264,13 +274,22 @@ namespace ElectionTactics
             InitWaitTime(PostGraphPauseTime, AnimationState.InitUpdatePartyList);
         }
 
-        // Party list update
-        private void InitUpdatePartyList()
+        /// <summary>
+        /// Gets called right when the district result is decided in the animation.
+        /// </summary>
+        private void InitDistrictResultApplication()
         {
             SetColorOfCurrentDistrictResult();
 
             Game.UI.Parliament.ParliamentPartyList.HighlightParty(CurrentDistrictResult.Winner);
-            Game.UI.Parliament.ParliamentPartyList.MovePositionsAnimated(TempSeats, ListAnimationTime, OnPartyListUpdateAnimationDone);
+            Game.UI.Parliament.ParliamentPartyList.MovePositionsAnimated(TempSeats, ListAnimationTime, callback: OnPartyListUpdateAnimationDone);
+
+            // Init flying damage tokens from district label towards standings panel
+            if (Game.IsBattleRoyale)
+            {
+                foreach (Party p in CurrentDistrictResult.NonWinners) ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District, p, -CurrentDistrictResult.Seats);
+                ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnDistrictResultTokensArrived);
+            }
         }
         /// <summary>
         /// Updates the background color and the district label with the result of the district election we're currently at.
@@ -285,6 +304,20 @@ namespace ElectionTactics
         private void OnPartyListUpdateAnimationDone()
         {
             Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(CurrentDistrictResult.Winner);
+
+            if (!Game.IsBattleRoyale) // In some game modes we wait for tokens to arrive and the standings panel to update first
+            {
+                InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitNextDistrict);
+            }
+        }
+
+        private void OnDistrictResultTokensArrived()
+        {
+            Game.UI.StandingsPanel.MovePositionsAnimated(TempStandingsScore, ListAnimationTime, callback: OnStandingsPanelUpdateAnimationDone);
+        }
+
+        private void OnStandingsPanelUpdateAnimationDone()
+        {
             InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitNextDistrict);
         }
 
@@ -302,12 +335,13 @@ namespace ElectionTactics
             // Change UI controls
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.Slide(new Vector2(0, 0), UiControlsSlideTime);
-            Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Singleton.UiInteractable);
+            Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractable);
             Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.LastElection, DistrictLabelMode.Default);
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);
 
-            Game.CameraHandler.MoveToFocusDistricts(Game.VisibleDistricts.Values.ToList(), DistrictPanTime, OnCameraZoomOutAfterElectionDone);
+            // Zoom out to show all districts
+            Game.CameraHandler.MoveToFocusDistricts(Game.VisibleDistricts.Values.ToList(), DistrictPanTime, callback: OnCameraZoomOutAfterElectionDone);
         }
 
         private void OnCameraZoomOutAfterElectionDone()
@@ -333,6 +367,8 @@ namespace ElectionTactics
             Game.UI.Parliament.ModifierSliderContainer.SetAnimationSpeedModifier(AnimationSpeedModifier);
             Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(AnimationSpeedModifier);
             Game.UI.Parliament.ParliamentPartyList.SetAnimationSpeedModifier(AnimationSpeedModifier);
+            Game.UI.StandingsPanel.SetAnimationSpeedModifier(AnimationSpeedModifier);
+            ScoreTokenAnimationHandler.Instance.SetAnimationSpeedModifier(AnimationSpeedModifier);
         }
 
         public void ConcludeDistrict()
