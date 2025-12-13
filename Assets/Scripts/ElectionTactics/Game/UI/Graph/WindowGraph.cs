@@ -62,6 +62,7 @@ public class WindowGraph : MonoBehaviour
                     DataPoints = TargetDataPoints;
                 }
 
+                // Final refresh to ensure pixel-perfect end state
                 ShowBarGraph(DataPoints, YMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font);
                 AnimationType = GraphAnimationType.None;
                 if (AnimationCallback != null) AnimationCallback();
@@ -103,23 +104,35 @@ public class WindowGraph : MonoBehaviour
                         break;
 
                     case GraphAnimationType.Update:
-                        List<GraphDataPoint> tmpDataPoints = new List<GraphDataPoint>();
-                        float tmpYMax = 0;
+                        float currentYMax = SourceYMax + (TargetYMax - SourceYMax) * r;
+
                         for(int i = 0; i < TargetDataPoints.Count; i++)
                         {
-                            // Check if the same data point exists in both source and target
-                            GraphDataPoint matchingSourceDataPoint = SourceDataPoints.FirstOrDefault(x => x.Label == TargetDataPoints[i].Label);
- 
-                            // Lerp value
-                            float value;
-                            if (matchingSourceDataPoint == null) value = TargetDataPoints[i].Value; // Show final value immediately if data point wasn't present before update
-                            else value = matchingSourceDataPoint.Value + (TargetDataPoints[i].Value - matchingSourceDataPoint.Value) * r;
-                            GraphDataPoint tmpDataPoint = new GraphDataPoint(TargetDataPoints[i].Label, value, TargetDataPoints[i].Color, TargetDataPoints[i].Icons, TargetDataPoints[i].IconTooltipTitles, TargetDataPoints[i].IconTooltipTexts);
-                            tmpDataPoints.Add(tmpDataPoint);
+                            // Calculate the value (height) of data point
+                            GraphDataPoint matchingSource = SourceDataPoints.FirstOrDefault(x => x.Label == TargetDataPoints[i].Label);
+                            float startVal = matchingSource != null ? matchingSource.Value : 0f; // Default to 0 if data point didnt exist before update
+                            float endVal = TargetDataPoints[i].Value;
 
-                            tmpYMax = SourceYMax + (TargetYMax - SourceYMax) * r;
+                            float currentVal = startVal + (endVal - startVal) * r;
+
+                            // Calculate visual properties
+                            float barHeight = (currentVal / currentYMax) * (GraphHeight - YMarginTop);
+                            float barX = (i + 1) * XStep;
+
+                            // 3. Apply updated values to existing objects
+                            if (i < Bars.Count)
+                            {
+                                // Update Bar
+                                RectTransform barRect = Bars[i].GetComponent<RectTransform>();
+                                barRect.anchoredPosition = new Vector2(barX, barHeight / 2);
+                                barRect.sizeDelta = new Vector2(BarWidth, barHeight);
+
+                                // Update Label
+                                RectTransform labelRect = BarLabels[i].GetComponent<RectTransform>();
+                                labelRect.anchoredPosition = new Vector2(barX, barHeight + FontSize);
+                                BarLabels[i].text = currentVal.ToString("0.0") + "%";
+                            }
                         }
-                        ShowBarGraph(tmpDataPoints, tmpYMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font, stopAnimation: false);
                         break;
                 }
 
@@ -159,7 +172,7 @@ public class WindowGraph : MonoBehaviour
         YMax = yMax;
         YStep = yStep;
         AxisWidth = Mathf.Min(GraphWidth, GraphHeight) * 0.01f;
-        FontSize = (int)(GraphHeight * 0.07f);
+        FontSize = (int)(GraphHeight * 0.06f);
         YMarginTop = GraphHeight * 0.05f;
         AxisColor = axisColor;
         AxisStepColor = axisStepColor;
@@ -211,6 +224,9 @@ public class WindowGraph : MonoBehaviour
         AnimationTime = animationTime;
         AnimationDelay = 0f;
         AnimationType = GraphAnimationType.Update;
+
+        // Create all objects needed for the animation once here
+        ShowBarGraph(TargetDataPoints, TargetYMax, YStep, BarSpacing, AxisColor, AxisStepColor, Font, stopAnimation: false);
     }
 
     /// <summary>

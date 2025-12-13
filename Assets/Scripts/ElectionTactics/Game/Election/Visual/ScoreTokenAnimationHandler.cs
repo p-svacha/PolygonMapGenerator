@@ -33,9 +33,7 @@ namespace ElectionTactics
 
             if (CurrentAnimationTime >= AnimationTime)
             {
-                IsAnimating = false;
-                foreach(UI_ScoreToken token in Tokens) GameObject.Destroy(token.gameObject);
-                Tokens.Clear();
+                StopAnimation();
                 if (Callback != null) Callback();
             }
             else
@@ -49,7 +47,7 @@ namespace ElectionTactics
 
         public void AddTokenToNextAnimation(Vector2 startPosition, Party party, int value)
         {
-            if (IsAnimating) throw new Exception("Can't add new tokens mid-animation");
+            if (IsAnimating) StopAnimation();
 
             UI_ScoreToken token = GameObject.Instantiate(ScoreTokenPrefab, TokenContainer.transform);
             token.StartPosition = startPosition;
@@ -75,6 +73,16 @@ namespace ElectionTactics
                 token.gameObject.SetActive(true);
                 token.transform.position = token.StartPosition;
             }
+        }
+
+        /// <summary>
+        /// Stops the current animation without calling the callback.
+        /// </summary>
+        private void StopAnimation()
+        {
+            IsAnimating = false;
+            foreach (UI_ScoreToken token in Tokens) GameObject.Destroy(token.gameObject);
+            Tokens.Clear();
         }
 
         public void SetAnimationSpeedModifier(float speed)

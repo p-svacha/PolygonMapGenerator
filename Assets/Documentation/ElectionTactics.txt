@@ -1,13 +1,3 @@
-(T) bot difficulty setting
-(T) show total seats somewhere prominent
-(T) hide turn length setting in singleplayer lobby
-(T) header icon tooltips
-(T) add tooltips to district trait category titles (geograohy, economy, etc.)
-
-- conclude district doesnt update standings panel
-- make labels in graph a tiny bit smaller
-- fix graph performance spike
-
 - improve party name generator (less long, more variance, take real-world parties for inspiration)
 - fix bug: multiple parties can be generated with same color if they have color in name "purple"
 
@@ -33,6 +23,8 @@
 - fix region highlight shader resetting from time to time
 
 - additional district voting system "proportional" besides "winner takes it all" that affects how seats are distributed.
+
+- fix invalid seeds (see MapEditor.txt)
 
 Election Tactics
 ----------------

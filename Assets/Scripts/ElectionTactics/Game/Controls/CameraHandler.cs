@@ -79,5 +79,11 @@ namespace ElectionTactics
             OnMoveDoneCallback = callback;
         }
 
+        public void StopMovement()
+        {
+            IsMoving = false;
+            OnMoveDoneCallback = null;
+            MoveDelay = 0;
+        }
     }
 }

@@ -3,6 +3,8 @@ INVALID SEEDS
 1561287060 with MapType == Regional
 -1871779113 default settings
 -487901131
+649944443 (ElectionTactics)
+1539413686 (ElectionTactics)
 
 1. Known issues in map generation
 

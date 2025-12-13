@@ -89,9 +89,10 @@ namespace ElectionTactics
 
         public void Update()
         {
-            if(State != LastState)
+            if (State != LastState)
             {
-                Debug.Log("Changing animation state : " + LastState.ToString() + " --> " + State.ToString());
+                string toString = State == AnimationState.Wait ? $"{State} ({PostWaitState})" : State.ToString();
+                Debug.Log("Changing animation state : " + LastState.ToString() + " --> " + toString);
                 LastState = State;
             }
             
@@ -439,10 +440,21 @@ namespace ElectionTactics
 
         public void ConcludeDistrict()
         {
+            // Disallow in certain states
+            List<AnimationState> forbiddenStates = new List<AnimationState>() { AnimationState.InitApplyElectionResult, AnimationState.ApplyElectionResult, AnimationState.InitEndAnimation, AnimationState.EndAnimation };
+            if (forbiddenStates.Contains(State) || (State == AnimationState.Wait && forbiddenStates.Contains(PostWaitState))) return;
+
+            Debug.Log("Concluding District early.");
+
+            // Color district
             SetColorOfCurrentDistrictResult();
 
-            // Update party list with result from current district
+            // Interrupt ongoing animations & callbacks
+            Game.CameraHandler.StopMovement();
+
+            // Update party lists with result from current district
             Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true);
+            Game.UI.StandingsPanel.Init(TempStandingsScore, dynamic: true);
 
             State = AnimationState.InitNextDistrict;
         }
