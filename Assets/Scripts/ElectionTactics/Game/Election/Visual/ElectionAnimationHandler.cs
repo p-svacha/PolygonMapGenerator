@@ -175,10 +175,12 @@ namespace ElectionTactics
             Game.UI.SidePanelFooter.Slide(new Vector2(0, -60), UiControlsSlideTime);
             Game.UI.ElectionControls.DoSetSpeed(ElectionAnimationSpeed.Normal);
 
-            // Change map display to none (colors of winning parties will be set during animation)
+            // Hide map controls (colors of winning parties will be set during animation)
             Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.NoOverlay, DistrictLabelMode.InElection);
+            Game.UI.MapControls.gameObject.SetActive(false);
 
             // Prepare election animation
+            Game.UI.Parliament.ParliamentPartyList.ShowEliminatedParties = false;
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.Parliament.ParliamentTitle.text = $"Cycle {ElectionResult.ElectionCycle} Parliament";
             Game.UI.Parliament.StandingsContainer.SetActive(false);
@@ -393,7 +395,11 @@ namespace ElectionTactics
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.Slide(new Vector2(0, 0), UiControlsSlideTime);
             Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractable);
+
+            Game.UI.MapControls.gameObject.SetActive(true);
             Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.LastElection, DistrictLabelMode.Default);
+
+            Game.UI.Parliament.ParliamentPartyList.ShowEliminatedParties = true;
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);
 

@@ -1,13 +1,28 @@
-BR Game mode:
-- Eliminate parties below 0 health
-- Show eliminated parties still, but somehow different
-- legitimacy title tooltip
+- bot difficulty setting
+- show total seats somewhere prominent
+- hide turn length setting in singleplayer lobby
+- header icon tooltips
+- add tooltips to district trait category titles (geograohy, economy, etc.)
 
 - improve party name generator (less long, more variance, take real-world parties for inspiration)
+- fix bug: multiple parties can be generated with same color if they have color in name "purple"
+
 - move district traits to defs
 - add commonness to district traits
 - add more district traits that are directly usable by players (like linguistic, religous, etc.)
 
+- is large 1 & 2 broken?
+- remove age group
+- more geography traits (coastal, biome)
+
+- add some kind of district variety
+
+- move religion to def system
+- move language to def system
+- move economies to def system
+- assigned fixed colors to all of the above and use those in legend
+
+- make economy traits more dependent on geogeaphy (mining / fishing, etc)
 
 Election Tactics
 ----------------

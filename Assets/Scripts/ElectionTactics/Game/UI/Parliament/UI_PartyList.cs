@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace ElectionTactics
 {
@@ -24,6 +25,7 @@ namespace ElectionTactics
         public bool UsePartyAcronyms;
         public bool ListIsHorizontal;
         public bool ResizeContainer; // If true, size of ListContainer is dynamically set according to the elements + PADDING on each side.
+        public bool ShowEliminatedParties = true;
 
         private Dictionary<Party, UI_PartyListElement> ListElements = new Dictionary<Party, UI_PartyListElement>();
         private Dictionary<UI_PartyListElement, Vector2> SourcePositions = new Dictionary<UI_PartyListElement, Vector2>();
@@ -63,6 +65,8 @@ namespace ElectionTactics
 
         public void Init(Dictionary<Party, int> values, bool dynamic)
         {
+            // Reset current content
+            for (int i = 0; i < ListContainer.transform.childCount; i++) Destroy(ListContainer.transform.GetChild(i).gameObject);
             ListElements.Clear();
 
             // Measure dimensions
@@ -74,9 +78,11 @@ namespace ElectionTactics
             Parties = values.Keys.ToList();
             Dynamic = dynamic;
 
-            for (int i = 0; i < ListContainer.transform.childCount; i++) Destroy(ListContainer.transform.GetChild(i).gameObject);
+            // Filter values
+            if (!ShowEliminatedParties) values = values.Where(x => !x.Key.IsEliminated).ToDictionary(x => x.Key, x => x.Value);
 
-            foreach(KeyValuePair<Party, int> entry in values)
+            // Create list elements
+            foreach (KeyValuePair<Party, int> entry in values)
             {
                 UI_PartyListElement elem = Instantiate(PartyListElementPrefab, ListContainer.transform, false);
                 elem.Init(entry.Key, entry.Value.ToString(), UsePartyAcronyms);
@@ -94,7 +100,11 @@ namespace ElectionTactics
         /// </summary>
         public void MovePositionsAnimated(Dictionary<Party, int> values, float time, Action callback = null)
         {
+            // Filter values
+            if (!ShowEliminatedParties) values = values.Where(x => !x.Key.IsEliminated).ToDictionary(x => x.Key, x => x.Value);
+
             foreach (KeyValuePair<Party, int> value in values) ListElements[value.Key].UpdateValue(value.Value.ToString());
+
             CalculateTargetPositions(values);
             AnimationTime = time;
             CurrentAnimationTime = 0f;
@@ -128,7 +138,7 @@ namespace ElectionTactics
             TargetPositions.Clear();
 
             int counter = 0;
-            Dictionary<Party, int> sortedValues = Dynamic ? values.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value) : values;
+            Dictionary<Party, int> sortedValues = Dynamic ? values.OrderBy(x => x.Key.FinalRank).ThenByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value) : values;
 
             foreach (KeyValuePair<Party, int> entry in sortedValues)
             {

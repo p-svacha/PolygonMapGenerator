@@ -12,6 +12,8 @@ namespace ElectionTactics
         public TextMeshProUGUI NameText;
         public TextMeshProUGUI ValueText;
         public Party Party;
+        public GameObject EliminationOverlay;
+        public Image PlayerControlledIndicator;
 
         public void Init(Party p, string value, bool useAcronym)
         {
@@ -20,6 +22,12 @@ namespace ElectionTactics
             NameText.color = p.Color;
             ValueText.text = value;
             Background.color = ColorManager.Instance.UiMainLighter1;
+            if (EliminationOverlay != null) EliminationOverlay.SetActive(p.IsEliminated);
+            if (PlayerControlledIndicator != null)
+            {
+                // PlayerControlledIndicator.color = p.Color;
+                PlayerControlledIndicator.gameObject.SetActive(p.IsLocalPlayer);
+            }
         }
 
         public void UpdateValue(string value)

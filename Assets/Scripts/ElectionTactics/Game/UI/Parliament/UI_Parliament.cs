@@ -62,11 +62,15 @@ namespace ElectionTactics
             UpdateStandings(StandingsDropdown.value);
         }
 
+
         private void UpdateStandings(int value)
         {
             if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.BattleRoyale)
             {
                 StandingsTitle.text = "Legitimacy";
+                StandingsTitle.GetComponent<TooltipTarget>().Title = "Legitimacy";
+                StandingsTitle.GetComponent<TooltipTarget>().Text = "Legitimacy defines how accepted a party is. Once the legitimacy of a party reaches 0, the party is eliminated. 1 Legitimacy is lost for each seat not won, and legitimacy is gained by winning general elections (+1 per cycle).";
+
                 StandingsPartyList.Init(ElectionTacticsGame.Instance.GetCurrentStandings(), dynamic: false);
             }
             else if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.Classic)

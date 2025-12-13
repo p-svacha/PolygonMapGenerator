@@ -13,6 +13,7 @@ namespace ElectionTactics
         public Button PrevYearButton;
         public Button NextYearButton;
         public Button LastYearButton;
+        public Toggle NonEliminatedToggle;
         public WindowGraph ElectionGraph;
 
         public List<DistrictElectionResult> ElectionResults;
@@ -25,7 +26,7 @@ namespace ElectionTactics
             DisplayGraph();
         }
 
-        private void DisplayGraph(bool fullRefesh = true)
+        private void DisplayGraph(bool fullRefresh = true)
         {
             DistrictElectionResult result = ElectionResults[CurrentIndex];
             YearText.text = result.Year.ToString();
@@ -34,6 +35,8 @@ namespace ElectionTactics
                 List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
                 foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
                 {
+                    if (NonEliminatedToggle.isOn && kvp.Key.IsEliminated) continue;
+
                     List<Sprite> modifierIcons = new List<Sprite>();
                     List<string> iconTooltipTitles = new List<string>();
                     List<string> iconTooltipTexts = new List<string>();
@@ -47,7 +50,7 @@ namespace ElectionTactics
                     dataPoints.Add(new GraphDataPoint(label, kvp.Value, kvp.Key.Color, modifierIcons, iconTooltipTitles, iconTooltipTexts));
                 }
                 int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-                if (fullRefesh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
+                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
             }
         }
@@ -56,25 +59,30 @@ namespace ElectionTactics
         {
             if (CurrentIndex == 0) return;
             CurrentIndex = 0;
-            DisplayGraph(false);
+            DisplayGraph(fullRefresh: false);
         }
         private void GoToPreviousYear()
         {
             if (CurrentIndex == 0) return;
             CurrentIndex--;
-            DisplayGraph(false);
+            DisplayGraph(fullRefresh: false);
         }
         private void GoToNextYear()
         {
             if (CurrentIndex == ElectionResults.Count - 1) return;
             CurrentIndex++;
-            DisplayGraph(false);
+            DisplayGraph(fullRefresh: false);
         }
         private void GoToLastYear()
         {
             if (CurrentIndex == ElectionResults.Count - 1) return;
             CurrentIndex = ElectionResults.Count - 1;
-            DisplayGraph(false);
+            DisplayGraph(fullRefresh: false);
+        }
+
+        private void NonEliminated_OnToggle(bool value)
+        {
+            DisplayGraph(fullRefresh: true);
         }
 
         // Start is called before the first frame update
@@ -84,6 +92,7 @@ namespace ElectionTactics
             PrevYearButton.onClick.AddListener(GoToPreviousYear);   
             NextYearButton.onClick.AddListener(GoToNextYear);   
             LastYearButton.onClick.AddListener(GoToLastYear);
+            NonEliminatedToggle.onValueChanged.AddListener(NonEliminated_OnToggle);
         }
     }
 }

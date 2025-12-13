@@ -77,8 +77,8 @@
     <Compile Include="Assets\Scripts\VoronoiLib\ParabolaMath.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameSettingDropdownOptionListener.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\GlobalInputManager.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />

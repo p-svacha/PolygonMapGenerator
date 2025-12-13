@@ -17,11 +17,13 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (Title == "" && Text == "") return;
         IsFocussed = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (Title == "" && Text == "") return;
         HideTooltip();
     }
 

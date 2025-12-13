@@ -14,6 +14,8 @@ namespace ElectionTactics
         public int DistrictId;
         public District District; // Reference to the district
 
+        public List<Party> Parties; // Parties that participated in the election
+
         public Dictionary<int, int> PartyPopularitiesById = new Dictionary<int, int>();
         public Dictionary<Party, int> PartyPopularities = new Dictionary<Party, int>();
 
@@ -31,11 +33,12 @@ namespace ElectionTactics
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
-        public DistrictElectionResult(int electionCycle, int year, int seats, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
+        public DistrictElectionResult(int electionCycle, int year, int seats, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
         {
             ElectionCycle = electionCycle;
             Year = year;
             Seats = seats;
+            Parties = parties;
             District = district;
             DistrictId = district.Region.Id;
             PartyPopularities = partyPoints;
@@ -89,12 +92,12 @@ namespace ElectionTactics
 
             // Award victory points
             Winner.TotalDistrictsWon++;
-            foreach (Party p in game.Parties) p.Seats += SeatsWon[p];
-            foreach (Party p in game.Parties) p.TotalSeatsWon += SeatsWon[p];
-            foreach (Party p in game.Parties) p.TotalVotes += Votes[p];
+            foreach (Party p in Parties) p.Seats += SeatsWon[p];
+            foreach (Party p in Parties) p.TotalSeatsWon += SeatsWon[p];
+            foreach (Party p in Parties) p.TotalVotes += Votes[p];
 
             // Substract legitimacy for non-won seats (relevant for battle royale)
-            foreach (Party p in game.Parties) p.Legitimacy -= (Seats - SeatsWon[p]);
+            foreach (Party p in Parties) p.Legitimacy -= (Seats - SeatsWon[p]);
         }
     }
 }

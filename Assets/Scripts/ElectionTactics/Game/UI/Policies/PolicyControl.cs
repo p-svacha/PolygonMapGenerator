@@ -20,8 +20,20 @@ namespace ElectionTactics
         // Start is called before the first frame update
         void Start()
         {
-            PlusButton.onClick.AddListener(() => Policy.Party.Game.IncreasePolicy(Policy));
-            MinusButton.onClick.AddListener(() => Policy.Party.Game.DecreasePolicy(Policy));
+            PlusButton.onClick.AddListener(PlusButton_OnClick);
+            MinusButton.onClick.AddListener(MinusButton_OnClick);
+        }
+
+        private void PlusButton_OnClick()
+        {
+            Policy.Party.Game.IncreasePolicy(Policy);
+            ShowPolicyMapOverlay();
+        }
+
+        private void MinusButton_OnClick()
+        {
+            Policy.Party.Game.DecreasePolicy(Policy);
+            ShowPolicyMapOverlay();
         }
 
         public void Init(Policy p)
@@ -51,7 +63,12 @@ namespace ElectionTactics
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            switch(Policy.Type)
+            ShowPolicyMapOverlay();
+        }
+
+        private void ShowPolicyMapOverlay()
+        {
+            switch (Policy.Type)
             {
                 case PolicyType.Geography:
                     Policy.Party.Game.UI.MapControls.ShowGeographyOverlay(((GeographyPolicy)Policy).Trait);

@@ -325,6 +325,7 @@ namespace ElectionTactics
                 Game.ElectionCycle,
                 Game.Year,
                 Seats,
+                new List<Party>(parties),
                 this,
                 partyPopularities,
                 partyVotes,

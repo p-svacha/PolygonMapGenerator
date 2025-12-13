@@ -54,7 +54,7 @@ public class WindowGraph : MonoBehaviour
     {
         if(AnimationType != GraphAnimationType.None)
         {
-            if (AnimationDelay >= AnimationTime)
+            if (AnimationDelay >= AnimationTime) // Animation is done
             {
                 if(AnimationType == GraphAnimationType.Update)
                 {
@@ -66,7 +66,7 @@ public class WindowGraph : MonoBehaviour
                 AnimationType = GraphAnimationType.None;
                 if (AnimationCallback != null) AnimationCallback();
             }
-            else
+            else // Animation is ongoing
             {
                 float r = AnimationDelay / AnimationTime;
 
@@ -107,7 +107,13 @@ public class WindowGraph : MonoBehaviour
                         float tmpYMax = 0;
                         for(int i = 0; i < TargetDataPoints.Count; i++)
                         {
-                            float value = SourceDataPoints[i].Value + (TargetDataPoints[i].Value - SourceDataPoints[i].Value) * r;
+                            // Check if the same data point exists in both source and target
+                            GraphDataPoint matchingSourceDataPoint = SourceDataPoints.FirstOrDefault(x => x.Label == TargetDataPoints[i].Label);
+ 
+                            // Lerp value
+                            float value;
+                            if (matchingSourceDataPoint == null) value = TargetDataPoints[i].Value; // Show final value immediately if data point wasn't present before update
+                            else value = matchingSourceDataPoint.Value + (TargetDataPoints[i].Value - matchingSourceDataPoint.Value) * r;
                             GraphDataPoint tmpDataPoint = new GraphDataPoint(TargetDataPoints[i].Label, value, TargetDataPoints[i].Color, TargetDataPoints[i].Icons, TargetDataPoints[i].IconTooltipTitles, TargetDataPoints[i].IconTooltipTexts);
                             tmpDataPoints.Add(tmpDataPoint);
 

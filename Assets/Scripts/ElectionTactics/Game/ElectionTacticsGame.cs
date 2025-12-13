@@ -205,11 +205,12 @@ namespace ElectionTactics
         private void InitParties()
         {
             int id = 0;
-            foreach(LobbySlot slot in GameSettings.Slots)
+            foreach (LobbySlot slot in GameSettings.Slots)
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
                 Party party = new Party(this, id++, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
                 if (slot.SlotType == LobbySlotType.Human && slot.ClientId == NetworkPlayer.LocalClientId) LocalPlayerParty = party;
+                LocalPlayerParty.IsLocalPlayer = true;
                 Parties.Add(party);
             }
             Debug.Log("Local player id is " + LocalPlayerParty.Id);
@@ -380,14 +381,55 @@ namespace ElectionTactics
         /// </summary>
         private bool HandleWinConditions()
         {
-            Party winner = Constitution.WinCondition.GetWinner();
-            if (winner != null)
+            if (IsClassicMode)
             {
-                WinnerParty = winner;
-                UI.PostGameScreen.Init(this);
-                return true;
+                Party winner = Constitution.WinCondition.GetWinner();
+                if (winner != null)
+                {
+                    WinnerParty = winner;
+                    EndGame();
+                    return true;
+                }
             }
+            else if(IsBattleRoyale)
+            {
+                // Eliminate parties with non-positive legitimacy
+                List<Party> remainingParties = Parties.Where(p => !p.IsEliminated).ToList();
+                List<Party> newlyEliminatedParties = remainingParties.Where(p => p.Legitimacy <= 0).OrderBy(p => p.Legitimacy).ToList();
+
+                int nextEliminationRank = remainingParties.Count;
+                while (newlyEliminatedParties.Count > 0)
+                {
+                    newlyEliminatedParties.First().Eliminate(nextEliminationRank);
+                    nextEliminationRank--;
+                    newlyEliminatedParties.RemoveAt(0);
+                }
+
+                // Update UI
+                UI.StandingsPanel.Init(GetCurrentStandings(), dynamic: true);
+                UI.SelectTab(Tab.Parliament); // Refresh parliament UI
+
+                // If only one left, assign it as the winner (and eliminate it)
+                remainingParties = Parties.Where(p => !p.IsEliminated).ToList();
+                if (remainingParties.Count == 1) remainingParties[0].Eliminate(rank: 1);
+
+                // If all parties are eliminated, end the game
+                remainingParties = Parties.Where(p => !p.IsEliminated).ToList();
+                if (remainingParties.Count == 0)
+                {
+                    List<Party> finalStandings = Parties.OrderBy(p => p.FinalRank).ToList();
+                    WinnerParty = finalStandings.First();
+                    EndGame();
+                    return true;
+                }
+            }
+
             return false;
+        }
+
+        private void EndGame()
+        {
+            UI.PostGameScreen.Init(this);
         }
 
         #endregion
@@ -666,11 +708,11 @@ namespace ElectionTactics
             // Reset seats
             foreach (Party p in Parties) p.Seats = 0;
 
-            // Create and apply election result
+            // Generate and apply election result
             List<DistrictElectionResult> districtResults = new List<DistrictElectionResult>();
             foreach (District district in VisibleDistricts.Values)
             {
-                DistrictElectionResult districtResult = district.RunElection(Parties);
+                DistrictElectionResult districtResult = district.RunElection(NonEliminatedParties);
                 districtResults.Add(districtResult);
             }
             GeneralElectionResult electionResult = new GeneralElectionResult(ElectionCycle, Year, districtResults);
@@ -691,7 +733,7 @@ namespace ElectionTactics
         }
 
         /// <summary>
-        /// Gets triggered when the election animation is done
+        /// Gets triggered when the election animation is done.
         /// </summary>
         public void OnElectionAnimationDone()
         {
@@ -743,6 +785,8 @@ namespace ElectionTactics
 
         #region Getters
 
+        public List<Party> NonEliminatedParties => Parties.Where(p => !p.IsEliminated).ToList();
+
         public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;
         public bool IsBattleRoyale => GameSettings.GameMode == GameModeDefOf.BattleRoyale;
 
@@ -765,7 +809,7 @@ namespace ElectionTactics
         /// </summary>
         public Dictionary<Party, int> GetCurrentStandings()
         {
-            return Parties.OrderByDescending(p => p.GetGameScore()).ToDictionary(p => p, p => p.GetGameScore());
+            return Parties.OrderBy(p => p.FinalRank).ThenByDescending(p => p.GetGameScore()).ToDictionary(p => p, p => p.GetGameScore());
         }
 
         #endregion

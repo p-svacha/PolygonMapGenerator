@@ -24,6 +24,7 @@ namespace ElectionTactics
         public Color UiMain;
         public Color UiMainLighter1;
         public Color UiMainLighter2;
+        public Color UiRed;
         public Color UiInteractable;
         public Color UiInteractableDisabled;
         public Color UiText;

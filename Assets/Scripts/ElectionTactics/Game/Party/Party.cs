@@ -15,6 +15,7 @@ namespace ElectionTactics {
         public string Acronym;
         public Color Color;
         public bool IsHuman;
+        public bool IsLocalPlayer;
         public PartyAI AI;
 
         // Win conditions
@@ -26,9 +27,12 @@ namespace ElectionTactics {
         /// <summary>
         /// Acts as the health in the battle royale game mode. Reaching a legitimacy of 0 means dropping out of the game.
         /// </summary>
-        public int Legitimacy;
+        public int Legitimacy { get; set; }
 
         public int PreviousScore; // Score of party before the most recent elections.
+
+        public bool IsEliminated { get; private set; }
+        public int FinalRank { get; private set; }
 
         // Game variables
         public List<Policy> Policies = new List<Policy>();
@@ -57,6 +61,13 @@ namespace ElectionTactics {
         public void AddPolicy(Policy p)
         {
             Policies.Add(p);
+        }
+
+        public void Eliminate(int rank)
+        {
+            IsEliminated = true;
+            FinalRank = rank;
+            if(Legitimacy < 0) Legitimacy = 0;
         }
 
 
