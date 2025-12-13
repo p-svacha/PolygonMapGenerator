@@ -47,12 +47,12 @@ namespace ElectionTactics
             }
         }
 
-        public void AddTokenToNextAnimation(District district, Party party, int value)
+        public void AddTokenToNextAnimation(Vector2 startPosition, Party party, int value)
         {
             if (IsAnimating) throw new Exception("Can't add new tokens mid-animation");
 
             UI_ScoreToken token = GameObject.Instantiate(ScoreTokenPrefab, TokenContainer.transform);
-            token.StartPosition = district.MapLabel.SeatsText.transform.position;
+            token.StartPosition = startPosition;
             token.TargetPosition = UI_ElectionTactics.Instance.StandingsPanel.GetElementCenter(party);
             token.ValueText.text = value.ToString();
             token.Background.color = value > 0 ? ColorManager.Instance.HighImpactColor : ColorManager.Instance.NegativeImpactColor;

@@ -119,6 +119,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\WaterCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\WinCondition.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
+    <Compile Include="Assets\Scripts\Helper\DictionaryExtensions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameModeDefs.cs" />
     <Compile Include="Assets\Scripts\UIBase\Tooltip\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Parrisk\InputHandler.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Constitution\UI_Constitution.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameSettings.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\LandTopologyNoise.cs" />
+    <Compile Include="Assets\Scripts\Helper\ListExtensions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\ElectionTacticsGame.cs" />
     <Compile Include="Assets\Scripts\MapEditor2\MapEditor.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\WaterBody.cs" />

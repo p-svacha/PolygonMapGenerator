@@ -14,6 +14,7 @@ namespace ElectionTactics
 
         [Header("Standings")]
         public List<Party> Parties;
+        public TextMeshProUGUI ParliamentTitle;
         public TextMeshProUGUI StandingsTitle;
         public GameObject StandingsContainer;
         public Dropdown StandingsDropdown;
@@ -45,6 +46,7 @@ namespace ElectionTactics
         {
             // Parlialment party list
             Parties = parties;
+            ParliamentTitle.text = game.ElectionCycle == 1 ? "Parliament" : $"Cycle {game.ElectionCycle - 1} Parliament";
             Dictionary<Party, int> listValues = new Dictionary<Party, int>();
             foreach (Party p in parties.OrderByDescending(x => x.Seats)) listValues.Add(p, p.Seats);
             ParliamentPartyList.Init(listValues, dynamic: true);

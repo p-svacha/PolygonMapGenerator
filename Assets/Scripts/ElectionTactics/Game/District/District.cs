@@ -269,6 +269,8 @@ namespace ElectionTactics
             Dictionary<Party, float> voterShares = new Dictionary<Party, float>();
             Dictionary<Party, int> partyPopularities = new Dictionary<Party, int>();
             Dictionary<Party, int> partyVotes = new Dictionary<Party, int>();
+            Dictionary<Party, int> seatsWon = new Dictionary<Party, int>();
+
             foreach (Party p in parties)
             {
                 partyPopularities.Add(p, GetPartyPopularity(p));
@@ -309,6 +311,14 @@ namespace ElectionTactics
                 partyVotes[p] = (int)((Population * VoterTurnout) * voterShares[p] / 100f);
             }
 
+            // Calculate number of seats won for each party
+            foreach (Party p in parties)
+            {
+                // Winner takes it all
+                if (p == winner) seatsWon[p] = Seats;
+                else seatsWon[p] = 0;
+            }
+
             // Create result
             DistrictElectionResult result = new DistrictElectionResult
             (
@@ -319,6 +329,7 @@ namespace ElectionTactics
                 partyPopularities,
                 partyVotes,
                 voterShares,
+                seatsWon,
                 winner,
                 electionModifiers
             );

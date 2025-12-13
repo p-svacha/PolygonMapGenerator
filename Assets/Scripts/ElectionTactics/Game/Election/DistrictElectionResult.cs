@@ -23,13 +23,15 @@ namespace ElectionTactics
         public Dictionary<int, float> VoteShareById = new Dictionary<int, float>();
         public Dictionary<Party, float> VoteShare = new Dictionary<Party, float>();
 
+        public Dictionary<Party, int> SeatsWon = new Dictionary<Party, int>(); // Which party has won how many seats in the election
+
         public int WinnerPartyId;
         public Party Winner;
         public List<Party> NonWinners => PartyPopularities.Keys.Where(p => p != Winner).ToList();
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
-        public DistrictElectionResult(int electionCycle, int year, int seats, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Party winner, List<Modifier> modifiers)
+        public DistrictElectionResult(int electionCycle, int year, int seats, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
         {
             ElectionCycle = electionCycle;
             Year = year;
@@ -42,6 +44,7 @@ namespace ElectionTactics
             VotesById = votes.ToDictionary(x => x.Key.Id, x => x.Value);
             VoteShare = voteShare;
             VoteShareById = voteShare.ToDictionary(x => x.Key.Id, x => x.Value);
+            SeatsWon = seatsWon;
             Winner = winner;
             WinnerPartyId = winner.Id;
             Modifiers = modifiers;
@@ -85,13 +88,13 @@ namespace ElectionTactics
             District.CurrentWinnerShare = VoteShare.First(x => x.Value == VoteShare.Max(y => y.Value)).Value;
 
             // Award victory points
-            Winner.Seats += Seats;
-            Winner.TotalSeatsWon += Seats;
             Winner.TotalDistrictsWon++;
+            foreach (Party p in game.Parties) p.Seats += SeatsWon[p];
+            foreach (Party p in game.Parties) p.TotalSeatsWon += SeatsWon[p];
             foreach (Party p in game.Parties) p.TotalVotes += Votes[p];
 
-            // Substract legitimacy for non-winners (battle royale only)
-            foreach (Party p in game.Parties.Where(p => p != Winner)) p.Legitimacy -= Seats;
+            // Substract legitimacy for non-won seats (relevant for battle royale)
+            foreach (Party p in game.Parties) p.Legitimacy -= (Seats - SeatsWon[p]);
         }
     }
 }

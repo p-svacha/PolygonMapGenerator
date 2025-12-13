@@ -12,11 +12,18 @@ namespace ElectionTactics
         public int Year;
         public List<DistrictElectionResult> DistrictResults;
 
+        public Dictionary<Party, int> SeatsWon;
+        public List<Party> WinnerParties;
+
         public GeneralElectionResult(int electionCycle, int year, List<DistrictElectionResult> districtResults)
         {
             ElectionCycle = electionCycle;
             Year = year;
             DistrictResults = districtResults;
+
+            SeatsWon = new Dictionary<Party, int>();
+            foreach (DistrictElectionResult dr in DistrictResults) SeatsWon.IncrementMultiple(dr.SeatsWon);
+            WinnerParties = SeatsWon.Where(x => x.Value == SeatsWon.Values.Max()).Select(x => x.Key).ToList();
         }
 
         /// <summary>
@@ -34,12 +41,15 @@ namespace ElectionTactics
             foreach (DistrictElectionResult result in DistrictResults) result.Apply(game);
 
             // Award total election victory points
-            List<Party> winnerParties = game.Parties.Where(x => x.Seats == game.Parties.Max(y => y.Seats)).ToList();
-            foreach (Party p in winnerParties) p.TotalElectionsWon++;
+            foreach (Party p in WinnerParties) p.TotalElectionsWon++;
 
             // Add legitimacy bonus for winners (battle royale only)
-            int legitimacyBonus = ElectionTacticsGame.BR_BASE_HEAL_PER_ELECTION_WON + ElectionTacticsGame.Instance.ElectionCycle * ElectionTacticsGame.BR_HEAL_PER_ELECTION_WON_PER_TURN;
-            foreach (Party p in winnerParties) p.Legitimacy += legitimacyBonus;
+            foreach (Party p in WinnerParties) p.Legitimacy += GetWinnerLegitimacyBonus();
+        }
+
+        public int GetWinnerLegitimacyBonus()
+        {
+            return ElectionTacticsGame.BR_BASE_HEAL_PER_ELECTION_WON + ElectionCycle * ElectionTacticsGame.BR_HEAL_PER_ELECTION_WON_PER_TURN;
         }
     }
 }

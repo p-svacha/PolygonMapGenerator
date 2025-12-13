@@ -29,8 +29,11 @@ namespace ElectionTactics
             InitGraphAnimation,
             GraphAnimation,
 
-            InitUpdatePartyList,
-            UpdatePartyList,
+            InitApplyDistrictResult,
+            ApplyDistrictResult,
+
+            InitApplyElectionResult,
+            ApplyElectionResult,
 
             InitEndAnimation,
             EndAnimation
@@ -136,13 +139,22 @@ namespace ElectionTactics
                     // Wait for callback from graph animation
                     break;
 
-                case AnimationState.InitUpdatePartyList:
+                case AnimationState.InitApplyDistrictResult:
                     InitDistrictResultApplication();
-                    State = AnimationState.UpdatePartyList;
+                    State = AnimationState.ApplyDistrictResult;
                     break;
 
-                case AnimationState.UpdatePartyList:
+                case AnimationState.ApplyDistrictResult:
                     // Wait for callback from party list update animation
+                    break;
+
+                case AnimationState.InitApplyElectionResult:
+                    InitElectionResultApplication();
+                    State = AnimationState.ApplyElectionResult;
+                    break;
+
+                case AnimationState.ApplyElectionResult:
+                    // Wait for callback from score update
                     break;
 
                 case AnimationState.InitEndAnimation:
@@ -168,6 +180,7 @@ namespace ElectionTactics
 
             // Prepare election animation
             Game.UI.SelectTab(Tab.Parliament);
+            Game.UI.Parliament.ParliamentTitle.text = $"Cycle {ElectionResult.ElectionCycle} Parliament";
             Game.UI.Parliament.StandingsContainer.SetActive(false);
 
             // Clear visual seats
@@ -237,7 +250,7 @@ namespace ElectionTactics
             }
             else
             {
-                State = AnimationState.InitEndAnimation;
+                State = AnimationState.InitApplyElectionResult;
             }
         }
 
@@ -271,7 +284,7 @@ namespace ElectionTactics
         }
         private void OnGraphAnimationDone()
         {
-            InitWaitTime(PostGraphPauseTime, AnimationState.InitUpdatePartyList);
+            InitWaitTime(PostGraphPauseTime, AnimationState.InitApplyDistrictResult);
         }
 
         /// <summary>
@@ -287,7 +300,10 @@ namespace ElectionTactics
             // Init flying damage tokens from district label towards standings panel
             if (Game.IsBattleRoyale)
             {
-                foreach (Party p in CurrentDistrictResult.NonWinners) ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District, p, -CurrentDistrictResult.Seats);
+                foreach (Party p in CurrentDistrictResult.NonWinners)
+                {
+                    ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District.MapLabel.SeatsText.transform.position, p, -CurrentDistrictResult.Seats);
+                }
                 ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnDistrictResultTokensArrived);
             }
         }
@@ -313,12 +329,53 @@ namespace ElectionTactics
 
         private void OnDistrictResultTokensArrived()
         {
-            Game.UI.StandingsPanel.MovePositionsAnimated(TempStandingsScore, ListAnimationTime, callback: OnStandingsPanelUpdateAnimationDone);
+            Game.UI.StandingsPanel.MovePositionsAnimated(TempStandingsScore, ListAnimationTime, callback: OnStandingsPanelDistrictUpdateAnimationDone);
         }
 
-        private void OnStandingsPanelUpdateAnimationDone()
+        private void OnStandingsPanelDistrictUpdateAnimationDone()
         {
             InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitNextDistrict);
+        }
+
+        private void InitElectionResultApplication()
+        {
+            // Disable graph
+            Game.UI.Parliament.CurrentElectionContainer.SetActive(false);
+
+            // Apply election score points as flying tokens
+            if (Game.IsClassicMode)
+            {
+                foreach (Party p in ElectionResult.WinnerParties)
+                {
+                    int scoreBonus = 1;
+                    ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(Game.UI.Parliament.ParliamentPartyList.GetElementCenter(p), p, scoreBonus);
+                    TempStandingsScore[p] += scoreBonus;
+                }
+                ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnElectionResultTokensArrived);
+            }
+            else if (Game.IsBattleRoyale)
+            {
+                foreach (Party p in ElectionResult.WinnerParties)
+                {
+                    int scoreBonus = ElectionResult.GetWinnerLegitimacyBonus();
+                    ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(Game.UI.Parliament.ParliamentPartyList.GetElementCenter(p), p, scoreBonus);
+                    TempStandingsScore[p] += scoreBonus;
+                }
+                ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnElectionResultTokensArrived);
+            }
+
+            // Instantly switch to end animation if no flying tokens needed
+            else State = AnimationState.InitEndAnimation;
+        }
+
+        private void OnElectionResultTokensArrived()
+        {
+            Game.UI.StandingsPanel.MovePositionsAnimated(TempStandingsScore, ListAnimationTime, callback: OnStandingsPanelElectionUpdateAnimationDone);
+        }
+
+        private void OnStandingsPanelElectionUpdateAnimationDone()
+        {
+            InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitEndAnimation);
         }
 
         private void InitEndAnimation()
@@ -339,6 +396,9 @@ namespace ElectionTactics
             Game.UI.MapControls.SetMapDisplayMode(MapDisplayMode.LastElection, DistrictLabelMode.Default);
             Game.UI.SelectTab(Tab.Parliament);
             Game.UI.SidePanelHeader.UpdateValues(Game);
+
+            // Update standings panel to real values
+            Game.UI.StandingsPanel.MovePositionsAnimated(Game.GetCurrentStandings(), ListAnimationTime);
 
             // Zoom out to show all districts
             Game.CameraHandler.MoveToFocusDistricts(Game.VisibleDistricts.Values.ToList(), DistrictPanTime, callback: OnCameraZoomOutAfterElectionDone);

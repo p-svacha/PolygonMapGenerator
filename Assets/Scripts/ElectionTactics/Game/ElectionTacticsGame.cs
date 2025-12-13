@@ -743,6 +743,7 @@ namespace ElectionTactics
 
         #region Getters
 
+        public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;
         public bool IsBattleRoyale => GameSettings.GameMode == GameModeDefOf.BattleRoyale;
 
         public GeographyTrait GetGeographyTrait(GeographyTraitType type, int category)
