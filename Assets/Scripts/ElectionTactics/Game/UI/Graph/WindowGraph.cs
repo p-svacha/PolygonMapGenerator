@@ -119,7 +119,7 @@ public class WindowGraph : MonoBehaviour
                             float barHeight = (currentVal / currentYMax) * (GraphHeight - YMarginTop);
                             float barX = (i + 1) * XStep;
 
-                            // 3. Apply updated values to existing objects
+                            // Apply updated values to existing objects
                             if (i < Bars.Count)
                             {
                                 // Update Bar

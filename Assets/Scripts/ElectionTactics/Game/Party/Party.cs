@@ -46,9 +46,7 @@ namespace ElectionTactics {
             Id = id;
             Game = game;
             Name = name;
-            Acronym = "";
-            string[] words = name.Split(' ');
-            foreach (string w in words) Acronym += (w[0] + "").ToUpper(); 
+            Acronym = PartyNameGenerator.CreateAcronym(Name);
             Color = c;
             IsHuman = !isAi;
             if (isAi)

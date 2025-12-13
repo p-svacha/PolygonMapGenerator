@@ -185,7 +185,7 @@ namespace ElectionTactics
 
         public void AddBot()
         {
-            string botName = PartyNameGenerator.GetRandomPartyName();
+            string botName = PartyNameGenerator.GetRandomPartyName(maxLength: 40);
             Color botColor = PartyNameGenerator.GetPartyColor(botName, UsedColors);
             UsedColors.Add(botColor);
             FillNextFreeSlot(botName, botColor, LobbySlotType.Bot);
