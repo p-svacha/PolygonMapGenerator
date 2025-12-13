@@ -112,13 +112,13 @@ namespace ElectionTactics
 
                     // Host new game
                     MenuNavigator.Lobby.InitHostMultiplayerGame(playerName);
-                    MenuNavigator.SwitchToLobbyScreen();
+                    MenuNavigator.SwitchToLobbyScreen(GameType.MultiplayerHost);
                 }
                 else // Client
                 {
                     // Join existing game
                     MenuNavigator.Lobby.InitJoinMultiplayerGame();
-                    MenuNavigator.SwitchToLobbyScreen();
+                    MenuNavigator.SwitchToLobbyScreen(GameType.MultiplayerClient);
                 }
             }
 

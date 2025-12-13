@@ -210,6 +210,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\LegendEntry.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\BeachLine.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\UI_DistrictLabel.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\BotDifficultyDefs.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictListElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />

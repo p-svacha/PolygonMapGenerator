@@ -94,11 +94,11 @@ namespace ElectionTactics
 
             // Economy
             UI_DistrictAttribute eco1Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco1Att.Init(UI, d.Economy1);
+            eco1Att.Init(UI, d.Economy1, rank: 1);
             UI_DistrictAttribute eco2Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco2Att.Init(UI, d.Economy2);
+            eco2Att.Init(UI, d.Economy2, rank: 2);
             UI_DistrictAttribute eco3Att = Instantiate(AttributePrefab, EconomyPanel.transform);
-            eco3Att.Init(UI, d.Economy3);
+            eco3Att.Init(UI, d.Economy3, rank: 3);
 
             // Mentality
             foreach (Mentality m in d.Mentalities)

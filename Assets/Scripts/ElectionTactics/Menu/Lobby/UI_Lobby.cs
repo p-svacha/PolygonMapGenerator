@@ -33,9 +33,11 @@ namespace ElectionTactics
         // Game settings
         public TMP_Dropdown GameModeDropdown;
         public TMP_Dropdown TurnLengthDropdown;
+        public TMP_Dropdown BotDifficultyDropdown;
         public Dictionary<int, TMP_Dropdown> GameSettingDropdowns { get; private set; }
         public const int GAME_MODE = 0;
         public const int TURN_LENGTH = 1;
+        public const int BOT_DIFFICULTY = 2;
 
         public TextMeshProUGUI HoveredItemDescriptionText;
 
@@ -63,9 +65,12 @@ namespace ElectionTactics
             MenuNavigator = nav;
 
             // Create settings dropdown map
-            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>();
-            GameSettingDropdowns.Add(GAME_MODE, GameModeDropdown);
-            GameSettingDropdowns.Add(TURN_LENGTH, TurnLengthDropdown);
+            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>()
+            {
+                { GAME_MODE, GameModeDropdown },
+                { TURN_LENGTH, TurnLengthDropdown },
+                { BOT_DIFFICULTY, BotDifficultyDropdown },
+            };
 
             // Buttons
             StartGameButton.onClick.AddListener(StartGameButton_OnClick);
@@ -84,12 +89,25 @@ namespace ElectionTactics
 
             GameModeDropdown.AddOptions(DefDatabase<GameModeDef>.AllDefs.Select(x => x.LabelCap).ToList());
             TurnLengthDropdown.AddOptions(DefDatabase<TurnLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            BotDifficultyDropdown.AddOptions(DefDatabase<BotDifficultyDef>.AllDefs.Select(x => x.LabelCap).ToList());
 
             // Add listeners to all setting changes for multiplayer
             foreach (var setting in GameSettingDropdowns)
             {
                 setting.Value.onValueChanged.AddListener((x) => OnRuleChanged(setting.Key, x));
             }
+
+            // Default values
+            BotDifficultyDropdown.value = 1; // Medium difficulty
+        }
+
+        /// <summary>
+        /// Gets called whenever the user switches to the lobby screen.
+        /// </summary>
+        public void Show(GameType gameType)
+        {
+            gameObject.SetActive(true);
+            TurnLengthDropdown.transform.parent.gameObject.SetActive(gameType != GameType.Singleplayer);
         }
 
         public void InitSingleplayerGame(string playerName)

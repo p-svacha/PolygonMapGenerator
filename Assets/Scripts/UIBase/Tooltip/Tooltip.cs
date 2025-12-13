@@ -22,7 +22,7 @@ public class Tooltip : MonoBehaviour
     public float Width;
     public float Height;
 
-    private const int MAX_WIDTH = 200; // px
+    private const int MAX_WIDTH = 300; // px
     private const int MOUSE_OFFSET = 5; // px
     private const int SCREEN_EDGE_OFFSET = 5; // px
 

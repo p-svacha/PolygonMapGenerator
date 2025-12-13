@@ -26,14 +26,14 @@ namespace ElectionTactics
         {
             string playerName = MainMenu.PlayerNameText.text;
             Lobby.InitSingleplayerGame(playerName);
-            SwitchToLobbyScreen();
+            SwitchToLobbyScreen(GameType.Singleplayer);
         }
 
 
-        public void SwitchToLobbyScreen()
+        public void SwitchToLobbyScreen(GameType gameType)
         {
             MainMenu.gameObject.SetActive(false);
-            Lobby.gameObject.SetActive(true);
+            Lobby.Show(gameType);
         }
 
         public void InitGame(GameSettings gameSettings)

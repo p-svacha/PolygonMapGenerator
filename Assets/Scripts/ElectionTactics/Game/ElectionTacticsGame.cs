@@ -51,8 +51,6 @@ namespace ElectionTactics
 
         // Constant Rules
         private const int PlayerPolicyPointsPerCycle = 3;
-        private const int MinAIPolicyPointsPerCycle = 3;
-        private const int MaxAIPolicyPointsPerCycle = 6;
         private const int MaxPolicyValue = 8;
 
         public const int BR_START_LEGITIMACY = 100;
@@ -82,6 +80,7 @@ namespace ElectionTactics
             DefDatabaseRegistry.ClearAllDatabases();
             DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
+            DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
         }
@@ -100,6 +99,7 @@ namespace ElectionTactics
             InitGame();
 
             GameSettings = gameSettings;
+            Debug.Log("Initializing new game with settings: " + gameSettings);
 
             GameType = type;
             int mapSeed = GetRandomSeed();
@@ -308,7 +308,7 @@ namespace ElectionTactics
 
         private void ResetTurnTimer()
         {
-            TurnTime = GameSettings.TurnLengthOption.BaseTurnTime + ElectionCycle * GameSettings.TurnLengthOption.TurnLengthIncreasePerTurn;
+            TurnTime = GameSettings.TurnLength.BaseTurnTime + ElectionCycle * GameSettings.TurnLength.TurnLengthIncreasePerTurn;
             RemainingTime = TurnTime;
         }
 
@@ -330,8 +330,8 @@ namespace ElectionTactics
             // Add policy points to all players
             foreach(Party p in Parties)
             {
-                if(p.IsHuman) AddPolicyPoints(p, PlayerPolicyPointsPerCycle);
-                else AddPolicyPoints(p, UnityEngine.Random.Range(MinAIPolicyPointsPerCycle, MaxAIPolicyPointsPerCycle + 1));
+                if (p.IsHuman) AddPolicyPoints(p, PlayerPolicyPointsPerCycle);
+                else AddPolicyPoints(p, UnityEngine.Random.Range(GameSettings.BotDifficulty.MinPolicyPointsPerCycle, GameSettings.BotDifficulty.MaxPolicyPointsPerCycle + 1));
             }
 
             // Mark all human players as not ready for next turn
@@ -803,6 +803,8 @@ namespace ElectionTactics
         public Dictionary<Region, District> VisibleDistricts { get { return Districts.Where(x => x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
+
+        public int GetNextElectionNumSeats() => Districts.Sum(d => d.Value.Seats);
 
         /// <summary>
         /// Returns the current standings as an ordered dictionary with the value representing the party score (varies by gamemode).

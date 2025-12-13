@@ -171,9 +171,9 @@ namespace ElectionTactics
             // Large
             if (Region.Area >= 1.4f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 3));
-            else if (Region.Area >= 1.3f)
+            else if (Region.Area >= 1.25f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 2));
-            else if (Region.Area >= 1.2f)
+            else if (Region.Area >= 1.1f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 1));
 
             // Northern

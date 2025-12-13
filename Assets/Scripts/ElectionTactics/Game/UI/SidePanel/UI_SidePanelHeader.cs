@@ -11,6 +11,7 @@ namespace ElectionTactics
         [Header("Elements")]
         public TextMeshProUGUI YearText;
         public TextMeshProUGUI ElectionCycleText;
+        public TextMeshProUGUI SeatsText;
         public TextMeshProUGUI PPText;
         public TextMeshProUGUI CPText;
 
@@ -18,6 +19,7 @@ namespace ElectionTactics
         {
             YearText.text = game.Year.ToString();
             ElectionCycleText.text = game.ElectionCycle.ToString();
+            SeatsText.text = game.GetNextElectionNumSeats().ToString();
             PPText.text = game.LocalPlayerParty.PolicyPoints.ToString();
             CPText.text = game.LocalPlayerParty.CampaignPoints.ToString();
         }

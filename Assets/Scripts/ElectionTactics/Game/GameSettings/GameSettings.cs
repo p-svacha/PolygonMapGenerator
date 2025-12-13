@@ -13,7 +13,8 @@ namespace ElectionTactics
     {
         public List<LobbySlot> Slots;
         public GameModeDef GameMode;
-        public TurnLengthDef TurnLengthOption;
+        public TurnLengthDef TurnLength;
+        public BotDifficultyDef BotDifficulty;
 
         /// <summary>
         /// Creates a new game setting object based on the current state of the lobby.
@@ -21,8 +22,15 @@ namespace ElectionTactics
         public GameSettings()
         {
             Slots = new List<LobbySlot>(UI_Lobby.Instance.Slots);
-            TurnLengthOption = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.value];
+            TurnLength = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.value];
             GameMode = DefDatabase<GameModeDef>.AllDefs[UI_Lobby.Instance.GameModeDropdown.value];
+            BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.value];
+        }
+
+
+        public override string ToString()
+        {
+            return $"Game mode: {GameMode.Label}, Turn length: {TurnLength.Label}, Bot difficuly: {BotDifficulty.Label}";
         }
     }
 }

@@ -29,10 +29,10 @@ namespace ElectionTactics
             HoverAction = () => { UI.MapControls.ShowGeographyOverlay(gt.Type); };
             Init(ui, gt.FullName, gt.BaseName, gt.Description);
         }
-        public void Init(UI_ElectionTactics ui, EconomyTrait et)
+        public void Init(UI_ElectionTactics ui, EconomyTrait et, int rank)
         {
             HoverAction = () => { UI.MapControls.ShowEconomyOverlay(et); };
-            Init(ui, EnumHelper.GetDescription(et), EnumHelper.GetDescription(et), "Economy sector");
+            Init(ui, rank + ". " + EnumHelper.GetDescription(et), EnumHelper.GetDescription(et), "Economy sector");
         }
         public void Init(UI_ElectionTactics ui, Density d)
         {
