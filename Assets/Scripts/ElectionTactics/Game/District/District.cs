@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace ElectionTactics
 {
@@ -22,8 +23,7 @@ namespace ElectionTactics
         public EconomyTrait Economy1;
         public EconomyTrait Economy2;
         public EconomyTrait Economy3;
-        public List<Mentality> Mentalities = new List<Mentality>();
-        public List<MentalityType> MentalityTypes = new List<MentalityType>();
+        public List<MentalityTrait> MentalityTraits = new List<MentalityTrait>();
 
         // Election
         public List<DistrictElectionResult> ElectionResults = new List<DistrictElectionResult>();
@@ -95,11 +95,12 @@ namespace ElectionTactics
             while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
 
             int numMentalities = Random.Range(1, 4);
-            while (Mentalities.Count < numMentalities)
+            while (MentalityTraits.Count < numMentalities)
             {
-                Mentality m = Game.GetRandomAdoptableMentality(this);
-                Mentalities.Add(m);
-                MentalityTypes.Add(m.Type);
+                MentalityTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
+                MentalityTrait trait = (MentalityTrait)System.Activator.CreateInstance(def.TraitClass);
+                trait.Init(def, this);
+                MentalityTraits.Add(trait);
             }
 
             // Population calculation
@@ -122,16 +123,6 @@ namespace ElectionTactics
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
             Seats = Mathf.Max(MinSeats, tmpSeats);
-
-            // Voter calculation
-            if (MentalityTypes.Contains(MentalityType.Predictable)) Voters = Random.Range(NumVotersPredictableMin, NumVotersPredictableMax + 1);
-            else if (MentalityTypes.Contains(MentalityType.Unpredictable)) Voters = Random.Range(NumVotersUnpredictableMin, NumVotersUnpredictableMax + 1);
-            else Voters = Random.Range(NumVotersDefaultMin, NumVotersDefaultMax + 1);
-
-            // Voter turnour
-            if (MentalityTypes.Contains(MentalityType.LowVoterTurnout)) VoterTurnout = Random.Range(VoterTurnoutLowMin, VoterTurnoutLowMax);
-            else if (MentalityTypes.Contains(MentalityType.HighVoterTurnout)) VoterTurnout = Random.Range(VoterTurnoutHighMin, VoterTurnoutHighMax);
-            else VoterTurnout = Random.Range(VoterTurnoutDefaultMin, VoterTurnoutDefaultMax);
         }
 
         private void SetGeographyTraits()
@@ -341,7 +332,7 @@ namespace ElectionTactics
         public void OnElectionEnd()
         {
             UpdateModifiers();
-            ApplyMentalityEndTurnEffects();
+            foreach (MentalityTrait trait in MentalityTraits) trait.OnPostElection();
         }
 
         private Party GetSingleVoterResult(Dictionary<Party, int> partyPoints)
@@ -389,8 +380,6 @@ namespace ElectionTactics
 
             // Base popularity
             int basePopularity = BasePopularity;
-            if (HasMentality(MentalityType.Decided)) basePopularity = DecidedBasePopularity;
-            else if (HasMentality(MentalityType.Undecided)) basePopularity = UndecidedBasePopularity;
             factors.Add("Base Popularity", basePopularity);
 
             // Policies
@@ -567,21 +556,9 @@ namespace ElectionTactics
             Modifiers = Modifiers.Where(x => x.RemainingLength > 0).ToList();
         }
 
-        private void ApplyMentalityEndTurnEffects()
+        private bool HasMentality(MentalityTraitDef def)
         {
-            if (HasMentality(MentalityType.Stable) && CurrentWinnerParty != null)
-                Game.AddModifier(this, new Modifier(ModifierType.Positive, CurrentWinnerParty, 1, "Bonus for winning last election", "Stable Mentality"));
-
-            if (HasMentality(MentalityType.Rebellious) && CurrentWinnerParty != null) 
-                Game.AddModifier(this, new Modifier(ModifierType.Negative, CurrentWinnerParty, 1, "Malus for winning last election", "Rebellious Mentality"));
-
-            if (HasMentality(MentalityType.Revolutionary) && CurrentWinnerParty != null) 
-                Game.AddModifier(this, new Modifier(ModifierType.Exclusion, CurrentWinnerParty, 1, "Excluded for winning last election", "Revolutionary Mentality"));
-        }
-
-        private bool HasMentality(MentalityType t)
-        {
-            return MentalityTypes.Contains(t);
+            return MentalityTraits.Any(m => m.Def == def);
         }
 
         #endregion

@@ -7090,7 +7090,6 @@ GameObject:
   m_Component:
   - component: {fileID: 574115446}
   - component: {fileID: 574115447}
-  - component: {fileID: 574115448}
   m_Layer: 5
   m_Name: CampaignsTab
   m_TagString: Untagged
@@ -7133,18 +7132,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1684980337}
   Button: {fileID: 1667527446}
---- !u!114 &574115448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 574115445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &581513185
 GameObject:
   m_ObjectHideFlags: 0
@@ -9222,7 +9209,6 @@ GameObject:
   m_Component:
   - component: {fileID: 795354714}
   - component: {fileID: 795354715}
-  - component: {fileID: 795354716}
   m_Layer: 5
   m_Name: EventsTab
   m_TagString: Untagged
@@ -9265,18 +9251,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 1638187998}
   Button: {fileID: 321323329}
---- !u!114 &795354716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795354713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &802370046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10432,7 +10406,6 @@ GameObject:
   m_Component:
   - component: {fileID: 933649860}
   - component: {fileID: 933649861}
-  - component: {fileID: 933649862}
   m_Layer: 5
   m_Name: VotingTab
   m_TagString: Untagged
@@ -10475,18 +10448,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 484570804}
   Button: {fileID: 433802009}
---- !u!114 &933649862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933649859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &947498990
 GameObject:
   m_ObjectHideFlags: 0
@@ -16041,6 +16002,7 @@ GameObject:
   - component: {fileID: 1424186717}
   - component: {fileID: 1424186716}
   - component: {fileID: 1424186719}
+  - component: {fileID: 1424186720}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -16074,7 +16036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 0}
+    NetworkTransport: {fileID: 1424186720}
     PlayerPrefab: {fileID: 7654557136196479940, guid: 3670cd0273b3a224f8cf4d0fa045056f,
       type: 3}
     Prefabs:
@@ -16126,6 +16088,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MenuNavigator: {fileID: 407366627}
   Game: {fileID: 631248565}
+--- !u!114 &1424186720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424186715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 127.0.0.1
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
 --- !u!1 &1426916323
 GameObject:
   m_ObjectHideFlags: 0
@@ -23831,9 +23822,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2099477386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fcf996ebea15a40a7d017346041fde, type: 3}
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
+  Title: Map Overlays
+  Text: Choose a lens to color the districts to show something specific.
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1001 &2102679670
 PrefabInstance:
   m_ObjectHideFlags: 0

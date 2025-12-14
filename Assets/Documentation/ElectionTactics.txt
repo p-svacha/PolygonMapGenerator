@@ -81,14 +81,6 @@ Election Tactics
 		- Load game
 		- Quit to Desktop
 
-1.10 Game setup screen
-	- Add a game screen that appears after clicking "start new game" in the main menu.
-	- It should contain elements:
-		- Party Name Input
-		- # Opponents Slider
-		- Difficulty Dropdown (opponents will get policy points per cycle depending on this)
-		- Start Game Button
-
 1.11 In-Game menu tab
 	- Add ingame menu tab with some buttons:
 		- Save Game
@@ -115,24 +107,6 @@ add mentality with negative effect for testing
 Pre-Alpha 0.3 - Map Improvements
 ----------------------------------
 
-(/) Improve district labels on map:
-	- add amount of seats
-	- add last winner (with small % lbale with margin)
-	- maybe 4 small icons for religion/density/age/language
-	- maybe popularity
-
-(/) Add framework for repeating overlay textures on map:
-	- use to display biomes (very slight as background)
-	- use for party overlay with icons
-
-(/) Add particle effects that appear over district:	
-	- happy smileys when doing something with positive effect (depending on impact)
-	- unhappy smileys when doing something negative
-
-(/) Allow moving camera of map:
-	- Current camera will define boundaries of allowed movement (bounds and zoom)
-	- zooming in and moving within those boundaries should be allowed
-
 Add Democracy 4 like impact animations. 
 	- When hovering with mouse over a policy, slowly fade out all unaffected districts.
 	- Draw arrows with the impact to the affected ones.
@@ -157,12 +131,6 @@ mentality changes:
 	- add new: growing population: population will increase each turn which may lead to more seats as the game goes on
 	- add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
 	- fix rebellious mentality: atm 2 different get the malus instead of only winner with 8 players
-
-implement trust system as win condition:
-	- all parties start with 100 trust
-	- every district vote adds the amount of seats of that district as trust to the winning party and removes the amount as trust from all the other parties
-	- once a party reaches 0 trust, it is eliminated
-	- last party that has trust, wins
 
 Pre-Alpha 0.5 - Tutorial
 ---------------------------------

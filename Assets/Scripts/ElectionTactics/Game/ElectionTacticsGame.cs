@@ -47,8 +47,6 @@ namespace ElectionTactics
         public List<Language> ActiveLanguageTraits = new List<Language>();
         public List<Religion> ActiveReligionTraits = new List<Religion>();
 
-        public List<Mentality> Mentalities = new List<Mentality>();
-
         // Constant Rules
         private const int PlayerPolicyPointsPerCycle = 3;
         private const int MaxPolicyValue = 8;
@@ -81,6 +79,7 @@ namespace ElectionTactics
             DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
+            DefDatabase<MentalityTraitDef>.AddDefs(MentalityTraitDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
         }
@@ -161,7 +160,6 @@ namespace ElectionTactics
             VfxManager.Init(this);
 
             InitGeograhyTraits();
-            InitMentalities();
             InitParties();
             InitPolicies();
             UI.SidePanelFooter.Init(this);
@@ -190,15 +188,6 @@ namespace ElectionTactics
                 GeographyTraits.Add(new GeographyTrait(t, 1));
                 GeographyTraits.Add(new GeographyTrait(t, 2));
                 GeographyTraits.Add(new GeographyTrait(t, 3));
-            }
-        }
-
-        private void InitMentalities()
-        {
-            Mentalities.Clear();
-            foreach(MentalityType mt in Enum.GetValues(typeof(MentalityType)))
-            {
-                Mentalities.Add(new Mentality(mt));
             }
         }
 
@@ -507,14 +496,21 @@ namespace ElectionTactics
             }
         }
 
-        public Mentality GetRandomAdoptableMentality(District d)
+        public MentalityTraitDef GetRandomAdoptableMentalityTraitDef(District district)
         {
-            List<Mentality> candidates = new List<Mentality>();
-            foreach (Mentality m in Mentalities)
+            List<MentalityTraitDef> candidates = new List<MentalityTraitDef>();
+            foreach (MentalityTraitDef def in DefDatabase<MentalityTraitDef>.AllDefs)
             {
-                if (m.CanAdoptMentality(d)) candidates.Add(m);
+                bool canAdopt = true;
+
+                // Exclusion criteria
+                if (district.MentalityTraits.Any(m => def.ForbiddenMentalityTraits.Contains(m.Def.DefName))) canAdopt = false;
+                if (def.RequiresReligion && district.Religion == Religion.None) canAdopt = false;
+
+                if(canAdopt) candidates.Add(def);
             }
-            return candidates[UnityEngine.Random.Range(0, candidates.Count)];
+
+            return candidates.RandomElement();
         }
 
         private void UpdateActivePolicies()

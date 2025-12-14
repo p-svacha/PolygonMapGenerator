@@ -254,7 +254,7 @@ namespace ElectionTactics
         };
 
 
-        public static string GetRandomPartyName(int maxLength = 0)
+        public static string GetRandomPartyName(int maxLength = 0, bool log = true)
         {
             string name = "";
 
@@ -282,9 +282,9 @@ namespace ElectionTactics
                 maxLength = 0;
                 Debug.LogWarning($"maxLength is getting ignored because it was below 16. Too dangerous to not find any names.");
             }
-            while (maxLength > 0 && name.Length > maxLength) name = GetRandomPartyName();
+            while (maxLength > 0 && name.Length > maxLength) name = GetRandomPartyName(log: false);
 
-            Debug.Log($"Generated party name '{name}' out of language word '{nameType}'.");
+            if (log) Debug.Log($"Generated party name '{name}' out of language word '{nameType}'.");
             return name;
         }
 

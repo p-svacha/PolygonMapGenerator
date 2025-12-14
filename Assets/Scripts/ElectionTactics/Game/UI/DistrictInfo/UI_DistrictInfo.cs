@@ -101,10 +101,10 @@ namespace ElectionTactics
             eco3Att.Init(UI, d.Economy3, rank: 3);
 
             // Mentality
-            foreach (Mentality m in d.Mentalities)
+            foreach (MentalityTrait m in d.MentalityTraits)
             {
                 UI_DistrictAttribute mentalityAtt = Instantiate(AttributePrefab, MentalityPanel.transform);
-                mentalityAtt.Init(UI, m.Name, m.Name, m.Description);
+                mentalityAtt.Init(UI, m.LabelCapWord, m.LabelCapWord, m.Description);
                 mentalityAtt.DisplayText.alignment = TextAnchor.MiddleRight;
             }
 
