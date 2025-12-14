@@ -599,7 +599,7 @@ namespace ElectionTactics
             if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
 
-            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, d.GetBaseImpact(p));
+            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
         }
 
         public void DecreasePolicy(Policy p)
@@ -609,7 +609,7 @@ namespace ElectionTactics
             if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
 
-            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, -d.GetBaseImpact(p));
+            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, -p.GetSinglePointImpactOn(d));
         }
 
         #endregion

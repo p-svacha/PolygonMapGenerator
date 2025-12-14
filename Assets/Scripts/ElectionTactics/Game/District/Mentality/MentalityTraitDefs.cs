@@ -35,10 +35,11 @@ namespace ElectionTactics
                 DefName = SECULAR,
                 Label = "secular",
                 Description = "Religion policy effectiveness in this district is halved.",
+                TraitClass = typeof(MentalityTrait_Secular),
                 Commonness = 100,
                 ForbiddenMentalityTraits = new List<string>()
                 {
-                    SECULAR
+                    RELIGIOUS,
                 },
                 RequiresReligion = true,
             },
@@ -48,10 +49,11 @@ namespace ElectionTactics
                 DefName = LINGUISTIC,
                 Label = "linguistic",
                 Description = "Language policy effectiveness in this district is doubled.",
+                TraitClass = typeof(MentalityTrait_Linguistic),
                 Commonness = 100,
                 ForbiddenMentalityTraits = new List<string>()
                 {
-                    NON_LINGUISTIC
+                    NON_LINGUISTIC,
                 },
             },
 
@@ -60,10 +62,11 @@ namespace ElectionTactics
                 DefName = NON_LINGUISTIC,
                 Label = "non-linguistic",
                 Description = "Language policy effectiveness in this district is halved.",
+                TraitClass = typeof(MentalityTrait_NonLinguistic),
                 Commonness = 100,
                 ForbiddenMentalityTraits = new List<string>()
                 {
-                    LINGUISTIC
+                    LINGUISTIC,
                 },
             },
 
@@ -77,7 +80,7 @@ namespace ElectionTactics
                 ForbiddenMentalityTraits = new List<string>()
                 {
                     REBELLIOUS,
-                    REVOLUTIONARY
+                    REVOLUTIONARY,
                 },
             },
 
@@ -91,7 +94,7 @@ namespace ElectionTactics
                 ForbiddenMentalityTraits = new List<string>()
                 {
                     STABLE,
-                    REVOLUTIONARY
+                    REVOLUTIONARY,
                 },
             },
 
@@ -105,7 +108,7 @@ namespace ElectionTactics
                 ForbiddenMentalityTraits = new List<string>()
                 {
                     STABLE,
-                    REBELLIOUS
+                    REBELLIOUS,
                 },
             },
         };

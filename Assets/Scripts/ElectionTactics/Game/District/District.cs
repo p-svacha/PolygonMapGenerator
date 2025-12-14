@@ -39,27 +39,13 @@ namespace ElectionTactics
         public int Voters;         // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
         public float VoterTurnout; // Value between 0 and 1 of how many people went to vote. This value is only relevant for the vote victory and is not used for calculation of the actual votes.
 
-        public const int NumVotersUnpredictableMin = 150;
-        public const int NumVotersUnpredictableMax = 200;
-        public const int NumVotersDefaultMin = 450;
-        public const int NumVotersDefaultMax = 550;
-        public const int NumVotersPredictableMin = 1900;
-        public const int NumVotersPredictableMax = 2100;
+        public const int NumVotersMin = 1500;
+        public const int NumVotersMax = 1700;
 
-        public const float VoterTurnoutLowMin = 0.3f;
-        public const float VoterTurnoutLowMax = 0.4f;
-        public const float VoterTurnoutDefaultMin = 0.6f;
-        public const float VoterTurnoutDefaultMax = 0.7f;
-        public const float VoterTurnoutHighMin = 0.9f;
-        public const float VoterTurnoutHighMax = 1f;
+        public const float VoterTurnoutMin = 0.6f;
+        public const float VoterTurnoutMax = 0.7f;
 
-        public const int BasePopularity = 20;
-        public const int UndecidedBasePopularity = 40;
-        public const int DecidedBasePopularity = 5;
-
-        public const int LowImpactPopularity = 3;
-        public const int MediumImpactPopularity = 5;
-        public const int HighImpactPopularity = 7;
+        public const int BasePopularity = 10;
 
         public const int PositiveModifierImpact = 30;
         public const int NegativeModifierImpact = 30;
@@ -123,6 +109,10 @@ namespace ElectionTactics
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
             Seats = Mathf.Max(MinSeats, tmpSeats);
+
+            // Voter calculation
+            Voters = Random.Range(NumVotersMin, NumVotersMax + 1);
+            VoterTurnout = Random.Range(VoterTurnoutMin, VoterTurnoutMax);
         }
 
         private void SetGeographyTraits()
@@ -287,14 +277,14 @@ namespace ElectionTactics
                 voterShares.Add(p, 100f * partyVotes[p] / Voters);
             }
 
-            // Guarantee that there is only one winner
+            // Guarantee that there is only one winner (by having winner have 0.1% more share than others)
             List<Party> winnerParties = voterShares.Where(x => x.Value == voterShares.Values.Max(v => v)).Select(x => x.Key).ToList();
             if (winnerParties.Count > 1)
             {
                 Party singleWinnerParty = winnerParties[Random.Range(0, winnerParties.Count)];
                 voterShares[singleWinnerParty] += 0.1f;
             }
-            Party winner = voterShares.First(x => x.Value == voterShares.Max(y => y.Value)).Key;
+            Party winner = voterShares.OrderByDescending(x => x.Value).First().Key;
 
             // Calculate number of "game" votes based on voter turnout
             foreach(Party p in parties)
@@ -383,7 +373,7 @@ namespace ElectionTactics
             factors.Add("Base Popularity", basePopularity);
 
             // Policies
-            foreach (Policy policy in party.ActivePolicies) factors.Add(policy.Name + " Policy", GetPolicyImpact(policy));
+            foreach (Policy policy in party.ActivePolicies) factors.Add($"{policy.Name } Policy ({policy.Value})", policy.GetCurrentImpactOn(this) );
 
             // Positive & Negative Modifiers
             foreach (Modifier m in Modifiers.Where(x => x.Party == party))
@@ -392,158 +382,7 @@ namespace ElectionTactics
                 else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -NegativeModifierImpact);
             }
 
-
             return factors;
-        }
-
-        /// <summary>
-        /// Returns the impact of a specific policy on the popularity of its party in this district.
-        /// </summary>
-        private int GetPolicyImpact(Policy policy)
-        {
-            switch (policy.Type)
-            {
-                case PolicyType.Geography:
-                    return GetPolicyImpact((GeographyPolicy)policy);
-
-                case PolicyType.Economy:
-                    return GetPolicyImpact((EconomyPolicy)policy);
-
-                case PolicyType.AgeGroup:
-                    return GetPolicyImpact((AgeGroupPolicy)policy);
-
-                case PolicyType.Density:
-                    return GetPolicyImpact((DensityPolicy)policy);
-
-                case PolicyType.Religion:
-                    return GetPolicyImpact((ReligionPolicy)policy);
-
-                case PolicyType.Language:
-                    return GetPolicyImpact((LanguagePolicy)policy);
-
-                default:
-                    throw new System.Exception("Policy type not handled.");
-            }
-        }
-
-        private int GetPolicyImpact(GeographyPolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetPolicyImpact(EconomyPolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetPolicyImpact(AgeGroupPolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetPolicyImpact(DensityPolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetPolicyImpact(LanguagePolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetPolicyImpact(ReligionPolicy policy)
-        {
-            return policy.Value * GetBaseImpact(policy);
-        }
-
-        private int GetImpactPointsFor(GeographyTrait t)
-        {
-            if (t.Category == 3) return HighImpactPopularity;
-            if (t.Category == 2) return MediumImpactPopularity;
-            if (t.Category == 1) return LowImpactPopularity;
-            throw new System.Exception("Geography traits with a category outside 1,2,3 is not allowed.");
-        }
-
-
-        /// <summary>
-        /// Returns the base impact a policy for this trait has. One point of this policy will generally have this impact on popularity.
-        /// </summary>
-        public int GetBaseImpact(Policy policy)
-        {
-            switch (policy.Type)
-            {
-                case PolicyType.Geography:
-                    return GetBaseImpact((GeographyPolicy)policy);
-
-                case PolicyType.Economy:
-                    return GetBaseImpact((EconomyPolicy)policy);
-
-                case PolicyType.AgeGroup:
-                    return GetBaseImpact((AgeGroupPolicy)policy);
-
-                case PolicyType.Density:
-                    return GetBaseImpact((DensityPolicy)policy);
-
-                case PolicyType.Religion:
-                    return GetBaseImpact((ReligionPolicy)policy);
-
-                case PolicyType.Language:
-                    return GetBaseImpact((LanguagePolicy)policy);
-
-                default:
-                    throw new System.Exception("Policy type not handled.");
-            }
-        }
-
-        private int GetBaseImpact(GeographyPolicy policy)
-        {
-            foreach (GeographyTrait trait in Geography)
-            {
-                if (trait.Type == policy.Trait) return GetImpactPointsFor(trait);
-            }
-            return 0;
-        }
-
-        private int GetBaseImpact(EconomyPolicy policy)
-        {
-            if (policy.Trait == Economy1) return HighImpactPopularity;
-            if (policy.Trait == Economy2) return MediumImpactPopularity;
-            if (policy.Trait == Economy3) return LowImpactPopularity;
-            return 0;
-        }
-
-        private int GetBaseImpact(AgeGroupPolicy policy)
-        {
-            if (policy.AgeGroup != AgeGroup) return 0;
-            
-            return MediumImpactPopularity;
-        }
-
-        private int GetBaseImpact(DensityPolicy policy)
-        {
-            if (policy.Density != Density) return 0;
-
-            return MediumImpactPopularity;
-        }
-
-        private int GetBaseImpact(LanguagePolicy policy)
-        {
-            if (policy.Language != Language) return 0;
-
-            int value = MediumImpactPopularity;
-            if (HasMentality(MentalityType.Linguistic)) value *= 2;
-            if (HasMentality(MentalityType.Nonlinguistic)) value /= 2;
-            return value;
-        }
-
-        private int GetBaseImpact(ReligionPolicy policy)
-        {
-            if (policy.Religion != Religion) return 0;
-
-            int value = MediumImpactPopularity;
-            if (HasMentality(MentalityType.Religious)) value *= 2;
-            if (HasMentality(MentalityType.Secular)) value /= 2;
-            return value;
         }
 
         #endregion

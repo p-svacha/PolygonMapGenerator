@@ -16,15 +16,22 @@ namespace ElectionTactics
             switch(density)
             {
                 case Density.Rural:
-                    OrderNum = 0;
+                    SortingOrder = 0;
                     break;
                 case Density.Suburban:
-                    OrderNum = 1;
+                    SortingOrder = 1;
                     break;
                 case Density.Urban:
-                    OrderNum = 2;
+                    SortingOrder = 2;
                     break;
             }
+        }
+
+        protected override int GetSinglePointBaseImpact(District district)
+        {
+            if (Density != district.Density) return 0;
+
+            return MEDIUM_POPULARITY_IMPACT;
         }
     }
 }

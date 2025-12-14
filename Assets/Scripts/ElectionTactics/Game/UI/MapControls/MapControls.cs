@@ -232,68 +232,64 @@ namespace ElectionTactics
         public void ShowGeographyOverlay(GeographyTraitType t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
         }
         public void ShowEconomyOverlay(EconomyTrait t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
         }
         public void ShowDensityOverlay(Density t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
         }
         public void ShowAgeOverlay(AgeGroup t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
         }
         public void ShowLanguageOverlay(Language t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
         }
         public void ShowReligionOverlay(Religion t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region r in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                int policyImpact = Game.VisibleDistricts[r].GetBaseImpact(policy);
-                Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
-                r.SetColor(impactColor);
+                ColorDistrictByPolicyImpact(region, policy);
             }
+        }
+
+        private void ColorDistrictByPolicyImpact(Region region, Policy policy)
+        {
+            District district = Game.VisibleDistricts[region];
+            int policyImpact = policy.GetSinglePointImpactOn(district);
+            Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
+            region.SetColor(impactColor);
         }
 
         private void ShowOverlayLegend(string title)

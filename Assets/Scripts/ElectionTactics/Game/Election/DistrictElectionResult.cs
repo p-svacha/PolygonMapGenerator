@@ -28,8 +28,8 @@ namespace ElectionTactics
         public Dictionary<Party, int> SeatsWon = new Dictionary<Party, int>(); // Which party has won how many seats in the election
 
         public int WinnerPartyId;
-        public Party Winner;
-        public List<Party> NonWinners => PartyPopularities.Keys.Where(p => p != Winner).ToList();
+        public Party WinnerParty;
+        public List<Party> NonWinners => PartyPopularities.Keys.Where(p => p != WinnerParty).ToList();
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
@@ -48,7 +48,7 @@ namespace ElectionTactics
             VoteShare = voteShare;
             VoteShareById = voteShare.ToDictionary(x => x.Key.Id, x => x.Value);
             SeatsWon = seatsWon;
-            Winner = winner;
+            WinnerParty = winner;
             WinnerPartyId = winner.Id;
             Modifiers = modifiers;
         }
@@ -62,7 +62,7 @@ namespace ElectionTactics
             PartyPopularities = PartyPopularitiesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             Votes = VotesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             VoteShare = VoteShareById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
-            Winner = game.Parties.First(x => x.Id == WinnerPartyId);
+            WinnerParty = game.Parties.First(x => x.Id == WinnerPartyId);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace ElectionTactics
         {
             float partyShare = VoteShare.First(x => x.Key == p).Value;
             float winnerShare = VoteShare.First(x => x.Value == VoteShare.Max(y => y.Value)).Value;
-            if (Winner == p)
+            if (WinnerParty == p)
             {
                 float secondHighest = VoteShare.Values.OrderByDescending(x => x).ToList()[1];
                 return "+" + (winnerShare - secondHighest).ToString("0.0") + "%";
@@ -87,11 +87,11 @@ namespace ElectionTactics
         {
             // Add result to district
             District.ElectionResults.Add(this);
-            District.CurrentWinnerParty = VoteShare.First(x => x.Value == VoteShare.Max(y => y.Value)).Key;
-            District.CurrentWinnerShare = VoteShare.First(x => x.Value == VoteShare.Max(y => y.Value)).Value;
+            District.CurrentWinnerParty = WinnerParty;
+            District.CurrentWinnerShare = VoteShare[WinnerParty];
 
             // Award victory points
-            Winner.TotalDistrictsWon++;
+            WinnerParty.TotalDistrictsWon++;
             foreach (Party p in Parties) p.Seats += SeatsWon[p];
             foreach (Party p in Parties) p.TotalSeatsWon += SeatsWon[p];
             foreach (Party p in Parties) p.TotalVotes += Votes[p];

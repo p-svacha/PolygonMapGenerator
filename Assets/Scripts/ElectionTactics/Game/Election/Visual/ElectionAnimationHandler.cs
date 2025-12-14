@@ -215,7 +215,7 @@ namespace ElectionTactics
                 // Update current result
                 CurrentDistrictResult = DistrictOrder[CurElectionDistrictIndex].GetLatestElectionResult();
                 CurrentDistrictResult.District.Region.SetAnimatedHighlight(true);
-                TempSeats[CurrentDistrictResult.Winner] += CurrentDistrictResult.Seats;
+                TempSeats[CurrentDistrictResult.WinnerParty] += CurrentDistrictResult.Seats;
                 if (Game.IsBattleRoyale)
                     foreach (Party p in CurrentDistrictResult.NonWinners)
                         TempStandingsScore[p] -= CurrentDistrictResult.Seats;
@@ -227,7 +227,7 @@ namespace ElectionTactics
                     Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
                     Game.UI.Parliament.CurrentElectionMarginText.text = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
-                    Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).Winner.Color;
+                    Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).WinnerParty.Color;
                 }
                 else
                 {
@@ -297,7 +297,7 @@ namespace ElectionTactics
         {
             SetColorOfCurrentDistrictResult();
 
-            Game.UI.Parliament.ParliamentPartyList.HighlightParty(CurrentDistrictResult.Winner);
+            Game.UI.Parliament.ParliamentPartyList.HighlightParty(CurrentDistrictResult.WinnerParty);
             Game.UI.Parliament.ParliamentPartyList.MovePositionsAnimated(TempSeats, ListAnimationTime, callback: OnPartyListUpdateAnimationDone);
 
             // Init flying damage tokens from district label towards standings panel
@@ -315,14 +315,14 @@ namespace ElectionTactics
         /// </summary>
         private void SetColorOfCurrentDistrictResult()
         {
-            CurrentDistrictResult.District.Region.SetColor(CurrentDistrictResult.Winner.Color);
-            CurrentDistrictResult.District.MapLabel.SetBackgroundColor(CurrentDistrictResult.Winner.Color);
+            CurrentDistrictResult.District.Region.SetColor(CurrentDistrictResult.WinnerParty.Color);
+            CurrentDistrictResult.District.MapLabel.SetBackgroundColor(CurrentDistrictResult.WinnerParty.Color);
             CurrentDistrictResult.District.MapLabel.SetMargin(CurrentDistrictResult.GetMargin(Game.LocalPlayerParty));
         }
 
         private void OnPartyListUpdateAnimationDone()
         {
-            Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(CurrentDistrictResult.Winner);
+            Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(CurrentDistrictResult.WinnerParty);
 
             if (!Game.IsBattleRoyale) // In some game modes we wait for tokens to arrive and the standings panel to update first
             {

@@ -24,5 +24,15 @@ namespace ElectionTactics
         /// This mentality trait can only be adopted if the district follows a religion.
         /// </summary>
         public bool RequiresReligion { get; init; }
+
+
+        public override void ResolveReferences()
+        {
+            foreach(string s in ForbiddenMentalityTraits)
+            {
+                if (s == DefName) throw new System.Exception("Cannot have own DefName in ForbiddenMentalityTraits");
+                if (!DefDatabase<MentalityTraitDef>.ContainsDef(s)) throw new System.Exception($"ForbiddenMentalityTraits has a trait defined that does not exist: {s}");
+            }
+        }
     }
 }

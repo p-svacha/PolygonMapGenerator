@@ -14,5 +14,12 @@ namespace ElectionTactics
             Name = EnumHelper.GetDescription(religion);
             Type = PolicyType.Religion;
         }
+
+        protected override int GetSinglePointBaseImpact(District district)
+        {
+            if (Religion != district.Religion) return 0;
+
+            return MEDIUM_POPULARITY_IMPACT;
+        }
     }
 }

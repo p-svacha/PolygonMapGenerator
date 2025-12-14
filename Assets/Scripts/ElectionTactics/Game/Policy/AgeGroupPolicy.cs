@@ -16,18 +16,25 @@ namespace ElectionTactics
             switch (ageGroup)
             {
                 case AgeGroup.GenerationZ:
-                    OrderNum = 0;
+                    SortingOrder = 0;
                     break;
                 case AgeGroup.Millenials:
-                    OrderNum = 1;
+                    SortingOrder = 1;
                     break;
                 case AgeGroup.GenerationX:
-                    OrderNum = 2;
+                    SortingOrder = 2;
                     break;
                 case AgeGroup.Boomers:
-                    OrderNum = 3;
+                    SortingOrder = 3;
                     break;
             }
+        }
+
+        protected override int GetSinglePointBaseImpact(District district)
+        {
+            if (AgeGroup != district.AgeGroup) return 0;
+
+            return MEDIUM_POPULARITY_IMPACT;
         }
     }
 }

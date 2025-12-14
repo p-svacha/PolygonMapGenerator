@@ -14,5 +14,12 @@ namespace ElectionTactics
             Name = EnumHelper.GetDescription(language);
             Type = PolicyType.Language;
         }
+
+        protected override int GetSinglePointBaseImpact(District district)
+        {
+            if (Language != district.Language) return 0;
+
+            return MEDIUM_POPULARITY_IMPACT;
+        }
     }
 }
