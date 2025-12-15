@@ -96,8 +96,27 @@ namespace ElectionTactics
             foreach (Party p in Parties) p.TotalSeatsWon += SeatsWon[p];
             foreach (Party p in Parties) p.TotalVotes += Votes[p];
 
-            // Substract legitimacy for non-won seats (relevant for battle royale)
-            foreach (Party p in Parties) p.Legitimacy -= (Seats - SeatsWon[p]);
+            // Change legitimacy based on won and non-won seats
+            foreach (Party p in Parties)
+            {
+                p.Legitimacy += GetLegitimacyChange(p);
+            }
+        }
+
+        /// <summary>
+        /// Returns how much the legitimacy of a party changes based on this election result.
+        /// <br/>Factors in won and not won seats.
+        /// </summary>
+        public int GetLegitimacyChange(Party party)
+        {
+            int wonSeats = SeatsWon[party];
+            int unwonSeats = Seats - SeatsWon[party];
+
+            int change = 0;
+            change += wonSeats * ElectionTacticsGame.BR_HEAL_PER_WON_SEAT;
+            change -= unwonSeats * ElectionTacticsGame.BR_DMG_PER_UNWON_SEAT;
+
+            return change;
         }
     }
 }

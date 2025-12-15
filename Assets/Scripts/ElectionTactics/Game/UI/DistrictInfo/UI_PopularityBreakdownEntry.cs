@@ -14,7 +14,7 @@ namespace ElectionTactics
         public void Init(string label, int value)
         {
             LabelText.text = label;
-            ValueText.text = value >= 0 ? "+" + value : "-" + value;
+            ValueText.text = value >= 0 ? "+" + value : value.ToString();
         }
     }
 }

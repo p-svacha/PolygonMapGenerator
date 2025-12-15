@@ -52,9 +52,13 @@ namespace ElectionTactics
         private const int MaxPolicyValue = 8;
 
         public const int BR_START_LEGITIMACY = 100;
-        public const int BR_DMG_PER_UNWON_SEAT = 1;
+        public const int BR_DMG_PER_UNWON_SEAT = 1; // How much legitimacy a party loses for not winning a seat
+        public const int BR_HEAL_PER_WON_SEAT = 1; // How much legitimacy a party gains for winning a seat
         public const int BR_BASE_HEAL_PER_ELECTION_WON = 0; // Base healing amount from winning elections
-        public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 1; // The healing from won elections increases by this every election.
+        public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
+
+        public const int MIN_MENTALITY_TRAITS = 0;
+        public const int MAX_MENTALITY_TRAITS = 3;
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions

@@ -80,7 +80,7 @@ namespace ElectionTactics
             Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
             while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
 
-            int numMentalities = Random.Range(1, 4);
+            int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
             while (MentalityTraits.Count < numMentalities)
             {
                 MentalityTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
@@ -259,11 +259,10 @@ namespace ElectionTactics
             }
 
             // Add modifiers to result
-            List<Modifier> electionModifiers = new List<Modifier>(); // Copy is created so that the modifiers in the election result don't get changed later
-            foreach (Modifier m in Modifiers) electionModifiers.Add(m);
+            List<Modifier> electionModifiers = Modifiers.Where(m => parties.Contains(m.Party)).ToList(); 
 
             // Exclude parties with exclusion modifiers
-            foreach(Modifier m in Modifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
+            foreach (Modifier m in electionModifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
 
             // Cast "calculation" votes
             for (int i = 0; i < Voters; i++)
@@ -393,11 +392,6 @@ namespace ElectionTactics
         {
             foreach(Modifier modifier in Modifiers) modifier.RemainingLength--;
             Modifiers = Modifiers.Where(x => x.RemainingLength > 0).ToList();
-        }
-
-        private bool HasMentality(MentalityTraitDef def)
-        {
-            return MentalityTraits.Any(m => m.Def == def);
         }
 
         #endregion

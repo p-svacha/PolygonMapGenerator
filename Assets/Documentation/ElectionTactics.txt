@@ -1,5 +1,5 @@
-- move district traits to defs
-- add commonness to district traits
+- introduce district policies (only affect one district with very high impact)
+
 - add more district traits that are directly usable by players (like linguistic, religous, etc.)
 - add new traits from suggestion:
 mentality changes:
@@ -10,8 +10,8 @@ mentality changes:
 	- add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
 	- fix rebellious mentality: atm 2 different get the malus instead of only winner with 8 players
 
-- remove age group
-- density map control
+- remove age group (?)
+- add density map control
 - more geography traits (coastal, biome)
 
 - move religion to def system
@@ -30,6 +30,9 @@ mentality changes:
 - additional district voting system "proportional" besides "winner takes it all" that affects how seats are distributed.
 
 - fix invalid seeds (see MapEditor.txt)
+
+show total seats of current parliament
+better end game screen
 
 Election Tactics
 ----------------

@@ -303,9 +303,13 @@ namespace ElectionTactics
             // Init flying damage tokens from district label towards standings panel
             if (Game.IsBattleRoyale)
             {
-                foreach (Party p in CurrentDistrictResult.NonWinners)
+                foreach (Party p in CurrentDistrictResult.Parties)
                 {
-                    ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District.MapLabel.SeatsText.transform.position, p, -CurrentDistrictResult.Seats);
+                    int legitimacyChange = CurrentDistrictResult.GetLegitimacyChange(p);
+                    if (legitimacyChange != 0)
+                    {
+                        ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District.MapLabel.SeatsText.transform.position, p, legitimacyChange);
+                    }
                 }
                 ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnDistrictResultTokensArrived);
             }

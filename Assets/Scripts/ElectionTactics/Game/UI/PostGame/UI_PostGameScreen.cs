@@ -20,7 +20,7 @@ namespace ElectionTactics
         public void Init(ElectionTacticsGame game)
         {
             Container.SetActive(true);
-            TitleText.text = "The " + game.WinnerParty.Name + " has won the game";
+            TitleText.text = $"{game.WinnerParty.Name} has won the game!";
         }
     }
 }
