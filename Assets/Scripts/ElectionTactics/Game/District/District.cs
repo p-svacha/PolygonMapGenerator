@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace ElectionTactics
 {
@@ -11,8 +10,13 @@ namespace ElectionTactics
         public Random.State Seed; // Random value that was used to create this district. Value can be used to exactly recreate the district.
         public ElectionTacticsGame Game;
         public string Name;
-        public int OrderId;
+        /// <summary>
+        /// The how manyeth district this was when added. 0-indexed.
+        /// </summary>
+        public int Index { get; private set; }
         public Region Region;
+
+        public bool IsActive { get; private set; }
 
         // Traits
         public List<GeographyTrait> Geography = new List<GeographyTrait>();
@@ -58,12 +62,13 @@ namespace ElectionTactics
 
         #region Initialization
 
-        public District(Random.State seed, ElectionTacticsGame game, Region r, string name)
+        public District(Random.State seed, ElectionTacticsGame game, Region r, string name, int index)
         {
             Seed = seed;
             Game = game;
             Region = r;
             Name = name;
+            Index = index;
 
             Random.state = seed;
 
@@ -113,6 +118,9 @@ namespace ElectionTactics
             // Voter calculation
             Voters = Random.Range(NumVotersMin, NumVotersMax + 1);
             VoterTurnout = Random.Range(VoterTurnoutMin, VoterTurnoutMax);
+
+            // Set initially inactive
+            IsActive = false;
         }
 
         private void SetGeographyTraits()
@@ -231,6 +239,11 @@ namespace ElectionTactics
                 religionChances.Add(religion);
             }
             return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
+        }
+
+        public void Activate()
+        {
+            IsActive = true;
         }
 
         #endregion

@@ -59,6 +59,15 @@
 
             new MentalityTraitDef()
             {
+                DefName = ECONOMIC_POWERHOUSE,
+                Label = "economic powerhouse",
+                Description = "Economy policy effectiveness in this district is doubled.",
+                TraitClass = typeof(MentalityTrait_EconomicPowerhouse),
+                Commonness = 100,
+            },
+
+            new MentalityTraitDef()
+            {
                 DefName = STABLE,
                 Label = "stable",
                 Description = "The party that won the last election will get a bonus for the next one.",

@@ -68,27 +68,7 @@ namespace ElectionTactics
 
         private void ShowPolicyMapOverlay()
         {
-            switch (Policy.Type)
-            {
-                case PolicyType.Geography:
-                    Policy.Party.Game.UI.MapControls.ShowGeographyOverlay(((GeographyPolicy)Policy).Trait);
-                    break;
-                case PolicyType.Economy:
-                    Policy.Party.Game.UI.MapControls.ShowEconomyOverlay(((EconomyPolicy)Policy).Trait);
-                    break;
-                case PolicyType.Density:
-                    Policy.Party.Game.UI.MapControls.ShowDensityOverlay(((DensityPolicy)Policy).Density);
-                    break;
-                case PolicyType.AgeGroup:
-                    Policy.Party.Game.UI.MapControls.ShowAgeOverlay(((AgeGroupPolicy)Policy).AgeGroup);
-                    break;
-                case PolicyType.Language:
-                    Policy.Party.Game.UI.MapControls.ShowLanguageOverlay(((LanguagePolicy)Policy).Language);
-                    break;
-                case PolicyType.Religion:
-                    Policy.Party.Game.UI.MapControls.ShowReligionOverlay(((ReligionPolicy)Policy).Religion);
-                    break;
-            }
+            Policy.Party.Game.UI.MapControls.ShowPolicyImpactOverlay(Policy);
         }
 
         public void OnPointerExit(PointerEventData eventData)

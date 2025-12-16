@@ -217,8 +217,8 @@ namespace ElectionTactics
                 CurrentDistrictResult.District.Region.SetAnimatedHighlight(true);
                 TempSeats[CurrentDistrictResult.WinnerParty] += CurrentDistrictResult.Seats;
                 if (Game.IsBattleRoyale)
-                    foreach (Party p in CurrentDistrictResult.NonWinners)
-                        TempStandingsScore[p] -= CurrentDistrictResult.Seats;
+                    foreach (Party p in CurrentDistrictResult.Parties)
+                        TempStandingsScore[p] += CurrentDistrictResult.GetLegitimacyChange(p);
 
 
                 // Prepare graph for next district
@@ -394,7 +394,7 @@ namespace ElectionTactics
             Game.UI.Parliament.CurrentElectionContainer.SetActive(false);
 
             // Show new districts
-            Game.SetAllDistrictsVisible();
+            Game.SetAllActiveDistrictsVisible();
 
             // Change UI controls
             Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);

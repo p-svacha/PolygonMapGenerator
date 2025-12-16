@@ -6,6 +6,7 @@ INVALID SEEDS
 649944443 (ElectionTactics)
 1539413686 (ElectionTactics)
 1544330277 (ElectionTactics)
+-1741177070 (ElectionTactics)
 
 1. Known issues in map generation
 

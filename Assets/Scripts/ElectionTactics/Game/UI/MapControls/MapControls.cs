@@ -229,6 +229,15 @@ namespace ElectionTactics
 
         #region Policy Overlays
 
+        public void ShowPolicyImpactOverlay(Policy policy)
+        {
+            ShowOverlayLegend("Policy " + policy.Name);
+            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
+            {
+                ColorDistrictByPolicyImpact(region, policy);
+            }
+        }
+
         public void ShowGeographyOverlay(GeographyTraitType t)
         {
             ShowOverlayLegend(EnumHelper.GetDescription(t));

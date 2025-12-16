@@ -30,7 +30,7 @@ namespace ElectionTactics
         public Constitution Constitution;
 
         // Districts
-        public Dictionary<Region, District> Districts = new Dictionary<Region, District>();   // Contains districts that will be added after the election animation
+        private Dictionary<Region, District> Districts = new Dictionary<Region, District>();   // Contains districts that will be added after the election animation
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -46,6 +46,7 @@ namespace ElectionTactics
         public List<AgeGroup> ActiveAgeGroupTraits = new List<AgeGroup>();
         public List<Language> ActiveLanguageTraits = new List<Language>();
         public List<Religion> ActiveReligionTraits = new List<Religion>();
+        public List<District> ActiveDistrictTraits = new List<District>();
 
         // Constant Rules
         private const int PlayerPolicyPointsPerCycle = 3;
@@ -59,6 +60,8 @@ namespace ElectionTactics
 
         public const int MIN_MENTALITY_TRAITS = 0;
         public const int MAX_MENTALITY_TRAITS = 3;
+
+        public const int MAX_NUM_DISTRICTS = 20;
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions
@@ -77,6 +80,7 @@ namespace ElectionTactics
             Instance = this;
 
             ResourceManager.ClearCache();
+            MarkovChainWordGenerator.Init();
 
             // Initialize Defs
             DefDatabaseRegistry.ClearAllDatabases();
@@ -165,17 +169,17 @@ namespace ElectionTactics
 
             InitGeograhyTraits();
             InitParties();
+            InitDistricts();
             InitPolicies();
             UI.SidePanelFooter.Init(this);
 
             // Battle royale
             foreach (Party party in Parties) party.Legitimacy = BR_START_LEGITIMACY;
 
-            MarkovChainWordGenerator.Init();
             Constitution = new Constitution(this);
             UI.Constitution.Init(Constitution);
             StartNextElectionCycle(); // Start first cycle
-            SetAllDistrictsVisible();
+            SetAllActiveDistrictsVisible();
             CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
             State = GameState.PreparationPhase;
 
@@ -217,6 +221,11 @@ namespace ElectionTactics
         {
             int policyId = 0;
 
+            foreach (District district in Districts.Values)
+            {
+                foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, p, district, MaxPolicyValue));
+            }
+
             foreach (GeographyTraitType t in Enum.GetValues(typeof(GeographyTraitType)))
             {
                 foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MaxPolicyValue));
@@ -245,6 +254,17 @@ namespace ElectionTactics
             foreach (Religion t in Enum.GetValues(typeof(Religion)))
             {
                 foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, t, MaxPolicyValue));
+            }
+        }
+
+        /// <summary>
+        /// Initializes all districts that can initially appear in the game. All except for the first one will be hidden in the beginning.
+        /// </summary>
+        private void InitDistricts()
+        {
+            for (int i = 0; i < MAX_NUM_DISTRICTS; i++)
+            {
+                AddRandomDistrict();
             }
         }
 
@@ -318,10 +338,12 @@ namespace ElectionTactics
             Year++;
 
             // Add new district
-            AddRandomDistrict();
+            Districts.Values.ToList()[ElectionCycle - 1].Activate();
+            UpdateDistrictAges();
+            UpdateActivePolicies();
 
             // Add policy points to all players
-            foreach(Party p in Parties)
+            foreach (Party p in Parties)
             {
                 if (p.IsHuman) AddPolicyPoints(p, PlayerPolicyPointsPerCycle);
                 else AddPolicyPoints(p, UnityEngine.Random.Range(GameSettings.BotDifficulty.MinPolicyPointsPerCycle, GameSettings.BotDifficulty.MaxPolicyPointsPerCycle + 1));
@@ -444,30 +466,29 @@ namespace ElectionTactics
         /// </summary>
         public District CreateDistrict(DistrictData data)
         {
+            int index = Districts.Count;
             Region region = Map.Regions.First(x => x.Id == data.RegionId);
-            District newDistrict = new District(data.Seed, this, region, data.Name);
+            District newDistrict = new District(data.Seed, this, region, data.Name, index);
             UI_DistrictLabel label = Instantiate(UI.DistrictLabelPrefab, UI.OverlayContainer.transform);
             label.gameObject.SetActive(false);
             label.Init(newDistrict);
             newDistrict.MapLabel = label;
-            newDistrict.OrderId = Districts.Count;
-            newDistrict.SetVisible(false);
 
             Districts.Add(region, newDistrict);
-
-            UpdateDistrictAges();
-            UpdateActivePolicies();
 
             return newDistrict;
         }
 
-        public void SetAllDistrictsVisible()
+        public void SetAllActiveDistrictsVisible()
         {
-            foreach (District d in Districts.Values) d.SetVisible(true);
+            foreach (District d in ActiveDistricts) d.SetVisible(true);
             UI.MapControls.RefreshMapDisplay();
         }
 
-        public void AddRandomDistrict()
+        /// <summary>
+        /// Adds a new inactive district to the game.
+        /// </summary>
+        private void AddRandomDistrict()
         {
             if (Districts.Count == 0)
             {
@@ -508,6 +529,7 @@ namespace ElectionTactics
                 bool canAdopt = true;
 
                 // Exclusion criteria
+                if (district.MentalityTraits.Any(m => m.Def == def)) canAdopt = false;
                 if (district.MentalityTraits.Any(m => def.ForbiddenMentalityTraits.Contains(m.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == Religion.None) canAdopt = false;
 
@@ -519,10 +541,14 @@ namespace ElectionTactics
 
         private void UpdateActivePolicies()
         {
-            // TODO: Instead of creating new policies, just change the active flag
-
-            foreach (District d in Districts.Values)
+            foreach (District d in ActiveDistricts)
             {
+                if (!ActiveDistrictTraits.Contains(d))
+                {
+                    ActiveDistrictTraits.Add(d);
+                    foreach (Party p in Parties) p.GetPolicy(d).Activate();
+                }
+
                 foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
                 {
                     if (!ActiveGeographyTraits.Contains(t))
@@ -573,21 +599,21 @@ namespace ElectionTactics
 
         private void UpdateDistrictAges()
         {
-            foreach(District d in Districts.Values)
+            foreach (District d in ActiveDistricts)
             {
                 GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.Core);
                 if (coreTrait != null) d.Geography.Remove(coreTrait);
                 GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.New);
                 if (newTrait != null) d.Geography.Remove(newTrait);
 
-                if (d.OrderId < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3));
-                else if (d.OrderId < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
-                else if (d.OrderId < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
+                if (d.Index < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3));
+                else if (d.Index < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
+                else if (d.Index < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
 
-                int numDistricts = Districts.Count;
-                if(numDistricts - d.OrderId - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
-                else if(numDistricts - d.OrderId - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
-                else if(numDistricts - d.OrderId - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
+                int numDistricts = ActiveDistricts.Count;
+                if(numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
+                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
+                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
             }
         }
 
@@ -603,7 +629,7 @@ namespace ElectionTactics
             if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
 
-            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
+            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
         }
 
         public void DecreasePolicy(Policy p)
@@ -613,7 +639,7 @@ namespace ElectionTactics
             if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
 
-            foreach (District d in Districts.Values) VfxManager.ShowDistrictPopularityImpactParticles(d, -p.GetSinglePointImpactOn(d));
+            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, -p.GetSinglePointImpactOn(d));
         }
 
         #endregion
@@ -786,6 +812,7 @@ namespace ElectionTactics
         #region Getters
 
         public List<Party> NonEliminatedParties => Parties.Where(p => !p.IsEliminated).ToList();
+        public List<District> ActiveDistricts => Districts.Values.Where(d => d.IsActive).ToList();
 
         public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;
         public bool IsBattleRoyale => GameSettings.GameMode == GameModeDefOf.BattleRoyale;
@@ -804,7 +831,7 @@ namespace ElectionTactics
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
 
-        public int GetNextElectionNumSeats() => Districts.Sum(d => d.Value.Seats);
+        public int GetNextElectionNumSeats() => ActiveDistricts.Sum(d => d.Seats);
 
         /// <summary>
         /// Returns the current standings as an ordered dictionary with the value representing the party score (varies by gamemode).

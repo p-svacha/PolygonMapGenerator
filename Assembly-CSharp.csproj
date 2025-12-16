@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\Traits\MentalityTrait_EconomicPowerhouse.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Density.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\ConstitutionChapter.cs" />
     <Compile Include="Assets\Scripts\Map\Display\MapColorMode.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\DistrictPolicy.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovInputDataType.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\PolygonCenterFinder.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelHeader.cs" />

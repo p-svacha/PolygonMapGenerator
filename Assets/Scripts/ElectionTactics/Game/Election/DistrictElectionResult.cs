@@ -58,7 +58,7 @@ namespace ElectionTactics
         /// </summary>
         public void InitReferences(ElectionTacticsGame game)
         {
-            District = game.Districts.First(x => x.Key.Id == DistrictId).Value;
+            District = game.ActiveDistricts.First(x => x.Region.Id == DistrictId);
             PartyPopularities = PartyPopularitiesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             Votes = VotesById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
             VoteShare = VoteShareById.ToDictionary(x => game.Parties.First(p => p.Id == x.Key), x => x.Value);
@@ -113,8 +113,12 @@ namespace ElectionTactics
             int unwonSeats = Seats - SeatsWon[party];
 
             int change = 0;
-            change += wonSeats * ElectionTacticsGame.BR_HEAL_PER_WON_SEAT;
-            change -= unwonSeats * ElectionTacticsGame.BR_DMG_PER_UNWON_SEAT;
+            int gain = wonSeats * ElectionTacticsGame.BR_HEAL_PER_WON_SEAT;
+            int loss = unwonSeats * ElectionTacticsGame.BR_DMG_PER_UNWON_SEAT;
+            if (Parties.Count == 2) loss *= 2; // Double loss if only 2 parties remaining
+
+            change += gain;
+            change -= loss;
 
             return change;
         }

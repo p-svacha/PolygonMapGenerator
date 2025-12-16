@@ -13,6 +13,7 @@ namespace ElectionTactics
         private static string STABLE = "Stable";
         private static string REBELLIOUS = "Rebellious";
         private static string REVOLUTIONARY = "Revolutionary";
+        private static string ECONOMIC_POWERHOUSE = "EconomicPowerhouse";
 
         public static List<MentalityTraitDef> Defs => new List<MentalityTraitDef>()
         {
@@ -68,6 +69,15 @@ namespace ElectionTactics
                 {
                     LINGUISTIC,
                 },
+            },
+
+            new MentalityTraitDef()
+            {
+                DefName = ECONOMIC_POWERHOUSE,
+                Label = "economic powerhouse",
+                Description = "Economy policy effectiveness in this district is doubled.",
+                TraitClass = typeof(MentalityTrait_EconomicPowerhouse),
+                Commonness = 100,
             },
 
             new MentalityTraitDef()

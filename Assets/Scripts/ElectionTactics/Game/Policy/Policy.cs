@@ -22,6 +22,7 @@ namespace ElectionTactics
         public const int LOW_POPULARITY_IMPACT = 3;
         public const int MEDIUM_POPULARITY_IMPACT = 5;
         public const int HIGH_POPULARITY_IMPACT = 7;
+        public const int VERY_HIGH_POPULARITY_IMPACT = 10;
 
         public Policy(int id, Party p, int maxValue)
         {

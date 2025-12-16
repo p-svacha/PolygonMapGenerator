@@ -1,14 +1,20 @@
-- introduce district policies (only affect one district with very high impact)
-
 - add more district traits that are directly usable by players (like linguistic, religous, etc.)
 - add new traits from suggestion:
 mentality changes:
-	- add probabilities to mentalities for them to appear
 	- add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
 	- add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
 	- add new: growing population: population will increase each turn which may lead to more seats as the game goes on
 	- add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
-	- fix rebellious mentality: atm 2 different get the malus instead of only winner with 8 players
+	- add new: district rivals and district partners
+	- add new: nationalistic - double district trait impact
+- dont show "mentality" label if no mentality traits
+
+- add very very high impact in map overview
+- increase scroll speed in policy tab
+
+- party name generator can go to infiite loop
+- make player fixed color in singleplayer
+- almost fully remove randomness in district election result (calculate election result directly based on party popularities and apply just slight 0.1 offsets after, instead of casting single votes)
 
 - remove age group (?)
 - add density map control
@@ -21,6 +27,8 @@ mentality changes:
 
 - elevation traits (?)
 - make economy traits more dependent on geogeaphy (mining / fishing, etc)
+
+- show remaining seats during election animation
 
 - add more ways in battle royale to gain/lose legitimacy. right now many parties are eliminated at the same time and it very quickly goes from 8 to over. end game with less parties should be longer. maybe legitimacy bonus for all other parties on eliminations? or locked behind new party campaign mechanics with unique passive and active effects.
 

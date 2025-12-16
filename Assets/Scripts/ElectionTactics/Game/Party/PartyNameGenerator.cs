@@ -329,9 +329,6 @@ namespace ElectionTactics
 
         public static string CreateAcronym(string partyName)
         {
-            // Special rule if party name is one word
-            if (!partyName.Contains(' ')) return partyName.Substring(0, Mathf.Min(partyName.Length, 3));
-
             // Acronym is first letter of each capitalized word
             string acronym = "";
             foreach (string word in partyName.Split(' ', StringSplitOptions.RemoveEmptyEntries))
@@ -339,6 +336,16 @@ namespace ElectionTactics
                 if (char.IsUpper(word[0])) acronym += word[0];
                 else if (word == "and") acronym += "&";
             }
+
+            // If acronym is empty, consider lower case words
+            if (acronym == "")
+            {
+                foreach (string word in partyName.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    acronym += word[0];
+                }
+            }
+
             return acronym;
         }
     }

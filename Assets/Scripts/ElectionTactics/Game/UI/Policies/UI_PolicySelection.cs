@@ -17,6 +17,7 @@ namespace ElectionTactics
         public GameObject AgeGroupContainer;
         public GameObject LanguageContainer;
         public GameObject ReligionContainer;
+        public GameObject DistrictContainer;
 
         public Dictionary<PolicyType, GameObject> PolicyContainers = new Dictionary<PolicyType, GameObject>();
 
@@ -40,6 +41,7 @@ namespace ElectionTactics
                 PolicyContainers.Add(PolicyType.AgeGroup, AgeGroupContainer);
                 PolicyContainers.Add(PolicyType.Language, LanguageContainer);
                 PolicyContainers.Add(PolicyType.Religion, ReligionContainer);
+                PolicyContainers.Add(PolicyType.District, DistrictContainer);
             }
 
             foreach(GameObject container in PolicyContainers.Values)
