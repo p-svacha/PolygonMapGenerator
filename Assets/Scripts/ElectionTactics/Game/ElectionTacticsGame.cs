@@ -812,6 +812,9 @@ namespace ElectionTactics
         #region Getters
 
         public List<Party> NonEliminatedParties => Parties.Where(p => !p.IsEliminated).ToList();
+
+        public bool HasDistrict(Region r) => Districts.ContainsKey(r);
+        public District GetDistrict(Region r) => Districts.ContainsKey(r) ? Districts[r] : null;
         public List<District> ActiveDistricts => Districts.Values.Where(d => d.IsActive).ToList();
 
         public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;

@@ -17,9 +17,15 @@ namespace ElectionTactics
         {
             Def = def;
             District = district;
+            OnInit();
         }
 
         #region Mentality effect
+
+        /// <summary>
+        /// Called once when initializing the trait.
+        /// </summary>
+        protected virtual void OnInit() { }
 
         /// <summary>
         /// Gets called at the very end of a turn after an election has ended.
@@ -27,10 +33,16 @@ namespace ElectionTactics
         public virtual void OnPostElection() { }
 
         /// <summary>
-        /// Gets called when calculating the impact of a single policy point of a policy on a district.
+        /// Gets called when calculating the impact of a single policy point of a policy on a district with this trait.
         /// <br/>Allows to modify the value by reference.
         /// </summary>
-        public virtual void ModifyPolicyPointImpact(Policy policy, District district, ref int impact) { }
+        public virtual void ModifyPolicyPointImpact(Policy policy, ref int impact) { }
+
+        /// <summary>
+        /// Gets called when calculating the impact of a single policy point of a policy on a neighbouring district of a district with this trait.
+        /// <br/>Allows to modify the value by reference.
+        /// </summary>
+        public virtual void ModifyNeighbourPolicyPointImpact(Policy policy, District sourceWithTrait, ref int impact) { }
 
         #endregion
 

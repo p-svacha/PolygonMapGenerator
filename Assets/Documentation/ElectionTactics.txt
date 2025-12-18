@@ -1,20 +1,30 @@
-- add more district traits that are directly usable by players (like linguistic, religous, etc.)
 - add new traits from suggestion:
 mentality changes:
-	- add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
-	- add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
-	- add new: growing population: population will increase each turn which may lead to more seats as the game goes on
-	- add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
+	(T) - remove: non-linguistic, rebellious, revolutioniary, secular
+	(T) - add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
+	(T) - add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
+	(T) - add new: growing population: population will increase each turn which may lead to more seats as the game goes on
+	(T) - add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
 	- add new: district rivals and district partners
 	- add new: nationalistic - double district trait impact
-- dont show "mentality" label if no mentality traits
+	- add new: geographic
+(T) - dont show "mentality" label if no mentality traits
 
-- add very very high impact in map overview
+- add very very high impact in map overview or change to scale (-20 red to 20 green)
+- separate neighbour district impact in popularity breakdown and summarize it as "neighbour impact".
+
+- lower all impact values (to 1, 2, 3, 4). base = 0
+
 - increase scroll speed in policy tab
+- make rows a little less high
 
-- party name generator can go to infiite loop
-- make player fixed color in singleplayer
+- priorities for bot party policy selection: instead of full random pp assignent, every bot makes a weighted table at the start of the game that assigns a random weight to each policy. pp are then assigned based on these weights.
+
+- party name generator can go to infiite loop, find out why
+- make player fixed color in singleplayer to light green
 - almost fully remove randomness in district election result (calculate election result directly based on party popularities and apply just slight 0.1 offsets after, instead of casting single votes)
+
+- log tab, that shows messages like "district has gained a seat due to growing population"
 
 - remove age group (?)
 - add density map control

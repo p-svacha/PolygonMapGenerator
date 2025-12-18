@@ -104,6 +104,18 @@ namespace ElectionTactics
             Population = (Population / 1000) * 1000;
 
             // Seat calculation
+            RecalculateSeats();
+
+            // Voter calculation
+            Voters = Random.Range(NumVotersMin, NumVotersMax + 1);
+            VoterTurnout = Random.Range(VoterTurnoutMin, VoterTurnoutMax);
+
+            // Set initially inactive
+            IsActive = false;
+        }
+
+        private void RecalculateSeats()
+        {
             int tmpPop = Population;
             int tmpSeatRequirement = RequiredPopulationPerSeat;
             int tmpSeats = 0;
@@ -114,13 +126,6 @@ namespace ElectionTactics
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
             Seats = Mathf.Max(MinSeats, tmpSeats);
-
-            // Voter calculation
-            Voters = Random.Range(NumVotersMin, NumVotersMax + 1);
-            VoterTurnout = Random.Range(VoterTurnoutMin, VoterTurnoutMax);
-
-            // Set initially inactive
-            IsActive = false;
         }
 
         private void SetGeographyTraits()
@@ -335,6 +340,7 @@ namespace ElectionTactics
         {
             UpdateModifiers();
             foreach (MentalityTrait trait in MentalityTraits) trait.OnPostElection();
+            RecalculateSeats();
         }
 
         private Party GetSingleVoterResult(Dictionary<Party, int> partyPoints)
@@ -416,6 +422,12 @@ namespace ElectionTactics
             IsVisible = v;
             MapLabel.gameObject.SetActive(v);
         }
+
+        #endregion
+
+        #region Getters
+
+        public List<District> AdjacentDistricts => Region.AdjacentRegions.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).ToList();
 
         #endregion
 

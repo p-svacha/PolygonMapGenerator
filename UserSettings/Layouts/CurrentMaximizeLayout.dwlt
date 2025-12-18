@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 2768
+  controlID: 2076
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 2743
+  controlID: 2051
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 2706
+  controlID: 2014
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -246,9 +246,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: acb10000
       m_LastClickedID: 0
-      m_ExpandedIDs: fe42fdff24fbffffb6940000d0940000b29500001e96000098970000209800009e980000
+      m_ExpandedIDs: 24fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -949,7 +949,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 2744
+  controlID: 2052
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1026,7 +1026,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/UIBase/Tooltip
+    - Assets/Scripts/ElectionTactics/Game/District/Mentality/Traits
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1036,16 +1036,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/UIBase/Tooltip
+  - Assets/Scripts/ElectionTactics/Game/District/Mentality/Traits
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 881}
-    m_SelectedIDs: 46a30000
-    m_LastClickedID: 41798
-    m_ExpandedIDs: 0000000040a2000042a2000044a2000046a2000048a200004aa200004ca200004ea2000050a2000052a2000000ca9a3b
+    scrollPos: {x: 0, y: 401}
+    m_SelectedIDs: a6a30000
+    m_LastClickedID: 41894
+    m_ExpandedIDs: 0000000048a200004aa200004ca200004ea2000050a2000052a2000054a2000056a2000058a200005aa20000eca2000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1074,7 +1074,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000040a2000042a2000044a2000046a2000048a200004aa200004ca200004ea2000050a2000052a2000000ca9a3b
+    m_ExpandedIDs: 0000000048a200004aa200004ca200004ea2000050a2000052a2000054a2000056a2000058a200005aa20000eca2000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1100,9 +1100,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: acb10000
+    m_LastClickedInstanceID: 45484
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000389c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1188,8 +1188,8 @@ MonoBehaviour:
     y: 0
     width: 531
     height: 381
-  m_MinSize: {x: 202, y: 226}
-  m_MaxSize: {x: 4002, y: 4026}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 2}

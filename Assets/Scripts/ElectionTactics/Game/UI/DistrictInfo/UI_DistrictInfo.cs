@@ -107,6 +107,7 @@ namespace ElectionTactics
                 mentalityAtt.Init(UI, m.LabelCapWord, m.LabelCapWord, m.Description);
                 mentalityAtt.DisplayText.alignment = TextAnchor.MiddleRight;
             }
+            MentalityPanel.gameObject.SetActive(d.MentalityTraits.Count > 0);
 
             // Modifiers
             if (d.Modifiers.Count > 0)
