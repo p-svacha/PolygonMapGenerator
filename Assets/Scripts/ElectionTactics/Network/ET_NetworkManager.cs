@@ -45,7 +45,7 @@ namespace ElectionTactics
 
         public void JoinGame()
         {
-            NetworkConnectionData connectionData = new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameText.text);
+            NetworkConnectionData connectionData = new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameInput.text);
             NetworkManager.Singleton.NetworkConfig.ConnectionData = Serialize(connectionData);
             NetworkManager.Singleton.StartClient();
         }
@@ -101,14 +101,14 @@ namespace ElectionTactics
         {
             if (clientId == NetworkManager.Singleton.LocalClientId) // We ourselves just joined
             {
-                string playerName = MenuNavigator.MainMenu.PlayerNameText.text;
+                string playerName = MenuNavigator.MainMenu.PlayerNameInput.text;
                 Debug.Log("NETWORK: We (" + playerName + " / " + clientId + ") connected to the server");
 
                 if (NetworkManager.Singleton.IsHost) // Host
                 {
                     // Set data of host network player object
                     NetworkClient connectedClient = NetworkManager.Singleton.ConnectedClients[clientId];
-                    connectedClient.PlayerObject.GetComponent<NetworkPlayer>().Init(new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameText.text, clientId));
+                    connectedClient.PlayerObject.GetComponent<NetworkPlayer>().Init(new NetworkConnectionData(MenuNavigator.MainMenu.PlayerNameInput.text, clientId));
 
                     // Host new game
                     MenuNavigator.Lobby.InitHostMultiplayerGame(playerName);

@@ -27,6 +27,14 @@ namespace ElectionTactics
             BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.value];
         }
 
+        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty)
+        {
+            Slots = slots;
+            GameMode = gameMode;
+            TurnLength = turnLength;
+            BotDifficulty = botDifficulty;
+        }
+
 
         public override string ToString()
         {

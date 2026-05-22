@@ -51,3 +51,12 @@ public static class BotDifficultyDefs
         },
     };
 }
+
+[DefOf]
+public static class BotDifficultyDefOf
+{
+    public static BotDifficultyDef Easy;
+    public static BotDifficultyDef Standard;
+    public static BotDifficultyDef Hard;
+    public static BotDifficultyDef Extreme;
+}

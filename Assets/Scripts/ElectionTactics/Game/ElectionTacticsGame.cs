@@ -34,7 +34,7 @@ namespace ElectionTactics
 
         // Parties
         public List<Party> Parties = new List<Party>();
-        public Party LocalPlayerParty;
+        public Party LocalPlayerParty { get; set; }
         public Party WinnerParty;
 
         // Traits
@@ -158,6 +158,8 @@ namespace ElectionTactics
         /// <param name="seed">Seed is used to synchronize in multiplayer</param>
         public void StartGame(int seed)
         {
+            Debug.Log($"Starting a {GameType} game with seed {seed}.");
+
             UnityEngine.Random.InitState(seed);
 
             UI.LoadingScreen.gameObject.SetActive(false);
@@ -206,7 +208,13 @@ namespace ElectionTactics
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
                 Party party = new Party(this, id++, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
-                if (slot.SlotType == LobbySlotType.Human && slot.ClientId == NetworkPlayer.LocalClientId) LocalPlayerParty = party;
+
+                if (slot.SlotType == LobbySlotType.Human && (GameType == GameType.Singleplayer || slot.ClientId == NetworkPlayer.LocalClientId))
+                {
+                    LocalPlayerParty = party;
+                }
+
+
                 LocalPlayerParty.IsLocalPlayer = true;
                 Parties.Add(party);
             }

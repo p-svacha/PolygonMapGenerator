@@ -11,12 +11,16 @@ namespace ElectionTactics
         public UI_MainMenu MainMenu;
         public UI_Lobby Lobby;
 
+        private void Awake()
+        {
+            MainMenu.gameObject.SetActive(true);
+        }
+
         void Start()
         {
             // Initialize menu screens
             MainMenu.Init(this);
             Lobby.Init(this);
-            MainMenu.gameObject.SetActive(true);
             Lobby.gameObject.SetActive(false);
         }
 
@@ -24,7 +28,7 @@ namespace ElectionTactics
 
         public void CreateSingleplayerGame()
         {
-            string playerName = MainMenu.PlayerNameText.text;
+            string playerName = MainMenu.PlayerNameInput.text;
             Lobby.InitSingleplayerGame(playerName);
             SwitchToLobbyScreen(GameType.Singleplayer);
         }
