@@ -323,7 +323,12 @@ namespace ElectionTactics
         private static string GetRandomWord(string partyName, Dictionary<string, int> wordList)
         {
             string word = wordList.GetWeightedRandomElement();
-            while (partyName.Contains(word)) word = wordList.GetWeightedRandomElement();
+            int numTries = 0;
+            while (partyName.Contains(word) && numTries <= 20)
+            {
+                word = wordList.GetWeightedRandomElement();
+                numTries++;
+            }
             return word;
         }
 
