@@ -10,7 +10,7 @@ namespace ElectionTactics
     /// <summary>
     /// UI element to display a dynamic party list that can change ordering of elements with an animation.
     /// </summary>
-    public class UI_PartyList : MonoBehaviour
+    public class UI_PartyList : UIElement
     {
         private float ListElementWidth; // read dynamically from prefab
         private float ListElementHeight; // read dynamically from prefab
@@ -39,8 +39,10 @@ namespace ElectionTactics
         private float AnimationSpeedModifier = 1f;
         private Action AnimationCallback;
 
-        void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if (IsAnimating && CurrentAnimationTime >= AnimationTime)
             {
                 UpdatePartyPosition(Parties);

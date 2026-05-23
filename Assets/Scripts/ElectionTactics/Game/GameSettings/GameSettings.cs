@@ -15,6 +15,7 @@ namespace ElectionTactics
         public GameModeDef GameMode;
         public TurnLengthDef TurnLength;
         public BotDifficultyDef BotDifficulty;
+        public bool IsTutorialEnabled { get; private set; }
 
         /// <summary>
         /// Creates a new game setting object based on the current state of the lobby.
@@ -25,14 +26,16 @@ namespace ElectionTactics
             TurnLength = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.value];
             GameMode = DefDatabase<GameModeDef>.AllDefs[UI_Lobby.Instance.GameModeDropdown.value];
             BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.value];
+            IsTutorialEnabled = false;
         }
 
-        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty)
+        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty, bool isTutorialEnabled)
         {
             Slots = slots;
             GameMode = gameMode;
             TurnLength = turnLength;
             BotDifficulty = botDifficulty;
+            IsTutorialEnabled = isTutorialEnabled;
         }
 
 

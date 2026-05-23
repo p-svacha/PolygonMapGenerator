@@ -137,16 +137,57 @@ namespace ElectionTactics
             { "Solidarity", 100 },
             { "Enlightenment", 100 },
             { "Democracy", 100 },
+            { "Community", 100 },
+            { "Cooperation", 100 },
+
+            { "Hope", 70 },
+            { "Grace", 70 },
+            { "Faith", 70 },
+            { "Wisdom", 70 },
+            { "Truth", 70 },
+
+            { "Harmony", 50 },
+            { "Love", 50 },
+            { "Compassion", 50 },
+            { "Empathy", 50 },
+            { "Togetherness", 50 },
+            { "Friendship", 50 },
+            { "Affection", 50 },
+            { "Serenity", 50 },
+            { "Fulfillment", 50 },
+            { "Balance", 50 },
+            { "Cohesion", 50 },
+            { "Resonance", 50 },
+            { "Concord", 50 },
+            { "Accord", 50 },
+
+            { "Fellowship", 30 },
+            { "Calm", 30 },
+            { "Contentment", 30 },
+            { "Tranquility", 30 },
+            { "Joy", 30 },
+            { "Bliss", 30 },
+            { "Ease", 30 },
+            { "Alignment", 30 },
+            { "Symmetry", 30 },
+            { "Understanding", 30 },
+            { "Flow", 30 },
+            { "Spirit", 30 },
+            { "Soul", 30 },
+            { "Goodwill", 30 },
+
+            { "Brotherhood", 30 },
+            { "Sisterhood", 30 },
         };
 
         private static Dictionary<string, int> PartyNouns = new() // P
         {
-            { "Party", 400 },
+            { "Party", 500 },
 
             { "Movement", 200 },
             { "Front", 150 },
+            { "Union", 150 },
 
-            { "Union", 100 },
             { "League", 100 },
             { "Alliance", 100 },
             { "Action", 100 },
@@ -167,6 +208,9 @@ namespace ElectionTactics
             { "Nation", 100 },
             { "Voice", 100 },
             { "Network", 100 },
+            { "Forum", 100 },
+            { "Initiative", 100 },
+            { "Assembly", 100 },
 
             { "Tribune", 50 },
             { "Tigers", 50 },
@@ -176,6 +220,8 @@ namespace ElectionTactics
             { "Guard", 50 },
             { "Proposal", 50 },
             { "Contract", 50 },
+            { "Directorate", 50 },
+            { "Authority", 50 },
         };
 
         private static Dictionary<string, int> Prepositions = new() // f
@@ -336,7 +382,7 @@ namespace ElectionTactics
             return c;
         }
 
-        public static Color GetDefaultPlayerColor() => Colors[1];
+        public static Color GetDefaultPlayerColor() => Colors[10];
 
         private static string GetRandomWord(string partyName, Dictionary<string, int> wordList)
         {

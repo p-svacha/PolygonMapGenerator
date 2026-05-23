@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace ElectionTactics
 {
@@ -172,8 +173,8 @@ namespace ElectionTactics
         private void InitAnimation()
         {
             // Change UI controls
-            Game.UI.SidePanelHeader.Slide(new Vector2(0, 60), UiControlsSlideTime);
-            Game.UI.SidePanelFooter.Slide(new Vector2(0, -60), UiControlsSlideTime);
+            Game.UI.SlideOutHeader(UiControlsSlideTime);
+            Game.UI.SlideOutFooter(UiControlsSlideTime);
             Game.UI.ElectionControls.DoSetSpeed(ElectionAnimationSpeed.Normal);
 
             // Hide map controls (colors of winning parties will be set during animation)
@@ -397,8 +398,8 @@ namespace ElectionTactics
             Game.SetAllActiveDistrictsVisible();
 
             // Change UI controls
-            Game.UI.SidePanelHeader.Slide(new Vector2(0, 0), UiControlsSlideTime);
-            Game.UI.SidePanelFooter.Slide(new Vector2(0, 0), UiControlsSlideTime);
+            Game.UI.SlideInHeader(UiControlsSlideTime);
+            Game.UI.SlideInFooter(UiControlsSlideTime);
             Game.UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractable);
 
             Game.UI.MapControls.gameObject.SetActive(true);

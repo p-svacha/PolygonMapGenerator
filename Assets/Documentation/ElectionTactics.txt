@@ -1,3 +1,38 @@
+PRE-RELEASE CHECKLIST:
+
+district info redesign (labels instead of icons with lower transparency, font, divider lines)
+labels for top 3 and demographic traits
+make popularity breakdown more promoinent
+
+fixed colors for religions and languages, age groups and density
+main menu / lobby / loading screen background: slightly x panning map with colored districts
+
+SOUND
+ambient sound - 2 alternating piano orchestra tracks (see downloads)
+ui sounds
+ux sounds
+
+
+rename mentality to cultural
+check if new culture traits work
+policy title tooltips
+trait title tooltips
+tooltips for economic sector (impact expanation)
+fix bug with "... exporter" trait giving +9 to adjacent districts instead of +3
+more clearer popularity presentation
+fix invalid seeds (crash)
+make tooltip frame thicker
+tooltip on map labels
+update version in main menu
+fix "options" in game - remove debug mode, add back to menu
+bug: fanatics trait reduces popuilarity from ALL other traits, not just religion
+add back to menu in game over screen
+add mute button permanently on top right -> move header on right panel a little
+use new font in modifiers
+show popularity modifier in modifiers in district info
+--------------------------------------------------------------------------------------------
+
+
 - add new traits from suggestion:
 mentality changes:
 	(T) - remove: non-linguistic, rebellious, revolutioniary, secular
@@ -7,7 +42,8 @@ mentality changes:
 	(T) - add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
 	- add new: district rivals and district partners
 	- add new: nationalistic - double district trait impact
-	- add new: geographic
+	- add new: geographic identity
+	- add new: weak & strong economy: weak lowers eco policy impact, strong increases eco policy impact
 (T) - dont show "mentality" label if no mentality traits
 
 - add very very high impact in map overview or change to scale (-20 red to 20 green)

@@ -16,6 +16,9 @@ namespace ElectionTactics
         public Button PlayerNameRandomizeButton;
         public Button PlayerColorButton;
 
+        public Button TutorialButton;
+        public Image TutorialCheckmark;
+
         public Button QuickPlayButton;
         public Button SingleplayerButton;
         public Button HostGameButton;
@@ -27,15 +30,17 @@ namespace ElectionTactics
             MenuNavigator = nav;
             PlayerNameRandomizeButton.onClick.AddListener(RandomizePlayerPartyName);
             PlayerColorButton.onClick.AddListener(RandomizePlayerPartyColor);
+            TutorialButton.onClick.AddListener(ToggleTutorial);
             QuickPlayButton.onClick.AddListener(QuickPlay);
             SingleplayerButton.onClick.AddListener(CreateSingleplayerGame);
             HostGameButton.onClick.AddListener(HostGame);
             JoinGameButton.onClick.AddListener(JoinGame);
             ExitButton.onClick.AddListener(() => Application.Quit());
 
-            // Initial player party values
+            // Initial values
             PlayerNameInput.text = "Your Party Name";
             SetPlayerColor(PartyNameGenerator.GetDefaultPlayerColor());
+            SetTutorialEnabled(true);
 
             // Focus name input
             StartCoroutine(FocusInput());
@@ -45,8 +50,13 @@ namespace ElectionTactics
         {
             yield return null;
 
-            //PlayerNameInput.Select();
             PlayerNameInput.ActivateInputField();
+
+            // Move caret to end without selecting
+            yield return null; // Wait one more frame for activation to complete
+            PlayerNameInput.caretPosition = PlayerNameInput.text.Length;
+            PlayerNameInput.selectionAnchorPosition = PlayerNameInput.text.Length;
+            PlayerNameInput.selectionFocusPosition = PlayerNameInput.text.Length;
         }
 
         private void RandomizePlayerPartyName()
@@ -63,6 +73,17 @@ namespace ElectionTactics
         {
             PlayerNameText.color = color;
             PlayerColorButton.GetComponent<Image>().color = color;
+        }
+
+        private void ToggleTutorial()
+        {
+            bool isEnabled = TutorialCheckmark.gameObject.activeSelf;
+            SetTutorialEnabled(!isEnabled);
+        }
+
+        private void SetTutorialEnabled(bool value)
+        {
+            TutorialCheckmark.gameObject.SetActive(value);
         }
 
         private void CreateSingleplayerGame()
@@ -113,7 +134,10 @@ namespace ElectionTactics
             TurnLengthDef turnLength = TurnLengthDefOf.Medium;
             BotDifficultyDef botDifficulty = BotDifficultyDefOf.Standard;
 
-            return new GameSettings(slots, mode, turnLength, botDifficulty);
+            // Tutorial
+            bool isTutorialEnabled = TutorialCheckmark.gameObject.activeSelf;
+
+            return new GameSettings(slots, mode, turnLength, botDifficulty, isTutorialEnabled);
         }
 
         #endregion

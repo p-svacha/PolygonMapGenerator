@@ -182,7 +182,43 @@ namespace ElectionTactics
             }
         }
 
-        
+
+        public void SlideOutHeader(float slideTime)
+        {
+            SidePanelHeader.Slide(new Vector2(0, 60), slideTime);
+        }
+        public void SlideInHeader(float slideTime)
+        {
+            SidePanelHeader.Slide(new Vector2(0, 0), slideTime);
+        }
+
+        public void SlideOutFooter(float slideTime)
+        {
+            SidePanelFooter.Slide(new Vector2(0, -60), slideTime);
+        }
+        public void SlideInFooter(float slideTime)
+        {
+            SidePanelFooter.Slide(new Vector2(0, 0), slideTime);
+        }
+
+        // Only move button, not legend
+        public void SlideOutMapControls(float slideTime)
+        {
+            MapControls.OverlayDropdown.GetComponent<UIElement>().Slide(new Vector2(-70, 0), slideTime);
+        }   
+        public void SlideInMapControls(float slideTime)
+        {
+            MapControls.OverlayDropdown.GetComponent<UIElement>().Slide(new Vector2(0, 0), slideTime);
+        }
+
+        public void SlideOutStandings(float slideTime)
+        {
+            StandingsPanel.Slide(new Vector2(0, -60), slideTime);
+        }
+        public void SlideInStandings(float slideTime)
+        {
+            StandingsPanel.Slide(new Vector2(0, 0), slideTime);
+        }
     }
 
     public enum Tab

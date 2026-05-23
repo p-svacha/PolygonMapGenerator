@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class MapControls : MonoBehaviour
+    public class MapControls : UIElement
     {
         public LegendEntry LegendEntryPrefab;
 
