@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_ReligionFanatics : MentalityTrait
+    public class MentalityTrait_ReligionFanatics : CulturalTrait
     {
         private const int NegativeImpact = Policy.LOW_POPULARITY_IMPACT;
 

@@ -1,8 +1,13 @@
 PRE-RELEASE CHECKLIST:
 
 district info redesign (labels instead of icons with lower transparency, font, divider lines)
+
 labels for top 3 and demographic traits
 make popularity breakdown more promoinent
+move popularity tutorial arrow for new design
+rename traits to attributes, cultural traits
+
+sort geography traits by impact
 
 fixed colors for religions and languages, age groups and density
 main menu / lobby / loading screen background: slightly x panning map with colored districts
@@ -22,7 +27,9 @@ fix bug with "... exporter" trait giving +9 to adjacent districts instead of +3
 more clearer popularity presentation
 fix invalid seeds (crash)
 make tooltip frame thicker
+in map control policy impact overlays, also show the exact impact as a number in the district label in the popularity box (i.e. 25 + 5)
 tooltip on map labels
+tooltip on standings panel
 update version in main menu
 fix "options" in game - remove debug mode, add back to menu
 bug: fanatics trait reduces popuilarity from ALL other traits, not just religion

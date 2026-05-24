@@ -15,6 +15,13 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private float Delay = 0.5f;
     [HideInInspector] public float CurrentDelay;
 
+    public void SetValues(Tooltip.TooltipType type, string title, string text)
+    {
+        Type = type;
+        Title = title;
+        Text = text;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Title == "" && Text == "") return;

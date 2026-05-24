@@ -8,7 +8,7 @@ namespace ElectionTactics
         /// <summary>
         /// Class of the actual trait that will be instantiated.
         /// </summary>
-        public System.Type TraitClass { get; init; } = typeof(MentalityTrait);
+        public System.Type TraitClass { get; init; } = typeof(CulturalTrait);
 
         /// <summary>
         /// How likely this trait is to appear in a district. 100 is default.

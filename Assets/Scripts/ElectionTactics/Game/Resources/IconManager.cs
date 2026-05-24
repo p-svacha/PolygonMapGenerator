@@ -43,38 +43,40 @@ namespace ElectionTactics
             throw new System.Exception("Modifier sprite not found for " + type.ToString());
         } 
 
-        public Sprite GetLanguageIcon(Language language)
+        
+        public Sprite GetLanguageIcon(LanguageDef language)
         {
-            if (language == Language.Arabic) return ArabicSprite;
-            if (language == Language.Bengali) return BengaliSprite;
-            if (language == Language.English) return EnglishSprite;
-            if (language == Language.French) return FrenchSprite;
-            if (language == Language.German) return GermanSprite;
-            if (language == Language.Hindi) return HindiSprite;
-            if (language == Language.Mandarin) return MandarinSprite;
-            if (language == Language.Portuguese) return PortugueseSprite;
-            if (language == Language.Russian) return RussianSprite;
-            if (language == Language.Spanish) return SpanishSprite;
+            if (language == LanguageDefOf.Arabic) return ArabicSprite;
+            if (language == LanguageDefOf.Bengali) return BengaliSprite;
+            if (language == LanguageDefOf.English) return EnglishSprite;
+            if (language == LanguageDefOf.French) return FrenchSprite;
+            if (language == LanguageDefOf.German) return GermanSprite;
+            if (language == LanguageDefOf.Hindi) return HindiSprite;
+            if (language == LanguageDefOf.Mandarin) return MandarinSprite;
+            if (language == LanguageDefOf.Portuguese) return PortugueseSprite;
+            if (language == LanguageDefOf.Russian) return RussianSprite;
+            if (language == LanguageDefOf.Spanish) return SpanishSprite;
             throw new System.Exception("Language sprite not found for " + language.ToString());
         }
 
-        public Sprite GetReligionIcon(Religion religion)
+        public Sprite GetReligionIcon(ReligionDef religion)
         {
-            if (religion == Religion.Buddhist) return BuddhismSprite;
-            if (religion == Religion.Christian) return ChristianitySprite;
-            if (religion == Religion.Hindu) return HinduismSprite;
-            if (religion == Religion.Jewish) return JudaismSprite;
-            if (religion == Religion.Muslim) return IslamSprite;
+            if (religion == ReligionDefOf.Buddhist) return BuddhismSprite;
+            if (religion == ReligionDefOf.Christian) return ChristianitySprite;
+            if (religion == ReligionDefOf.Hindu) return HinduismSprite;
+            if (religion == ReligionDefOf.Jewish) return JudaismSprite;
+            if (religion == ReligionDefOf.Muslim) return IslamSprite;
             throw new System.Exception("Religion sprite not found for " + religion.ToString());
         }
 
-        public Sprite GetDensityIcon(Density density)
+        public Sprite GetDensityIcon(DensityDef density)
         {
-            if (density == Density.Urban) return UrbanSprite;
-            if (density == Density.Suburban) return SuburbanSprite;
-            if (density == Density.Rural) return RuralSprite;
+            if (density == DensityDefOf.Urban) return UrbanSprite;
+            if (density == DensityDefOf.Suburban) return SuburbanSprite;
+            if (density == DensityDefOf.Rural) return RuralSprite;
             throw new System.Exception("Density sprite not found for " + density.ToString());
         }
+        
 
         public static IconManager Singleton
         {

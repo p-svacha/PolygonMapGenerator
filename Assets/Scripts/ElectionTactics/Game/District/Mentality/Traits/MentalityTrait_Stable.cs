@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Stable : MentalityTrait
+    public class MentalityTrait_Stable : CulturalTrait
     {
         public override void OnPostElection()
         {

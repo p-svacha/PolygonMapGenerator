@@ -6,12 +6,12 @@ namespace ElectionTactics
 {
     public class EconomyPolicy : Policy
     {
-        public EconomyTrait Trait;
+        public EconomicSectorDef Trait;
 
-        public EconomyPolicy(int id, Party p, EconomyTrait trait, int maxValue) : base(id, p, maxValue)
+        public EconomyPolicy(int id, Party p, EconomicSectorDef trait, int maxValue) : base(id, p, maxValue)
         {
             Trait = trait;
-            Name = EnumHelper.GetDescription(trait);
+            Name = trait.Label;
             Type = PolicyType.Economy;
         }
 

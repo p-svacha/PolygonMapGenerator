@@ -20,14 +20,14 @@ namespace ElectionTactics
 
         // Traits
         public List<GeographyTrait> Geography = new List<GeographyTrait>();
-        public Language Language;
-        public Religion Religion;
-        public Density Density;
-        public AgeGroup AgeGroup;
-        public EconomyTrait Economy1;
-        public EconomyTrait Economy2;
-        public EconomyTrait Economy3;
-        public List<MentalityTrait> MentalityTraits = new List<MentalityTrait>();
+        public LanguageDef Language;
+        public ReligionDef Religion;
+        public DensityDef Density;
+        public AgeGroupDef AgeGroup;
+        public EconomicSectorDef Economy1;
+        public EconomicSectorDef Economy2;
+        public EconomicSectorDef Economy3;
+        public List<CulturalTrait> MentalityTraits = new List<CulturalTrait>();
 
         // Election
         public List<DistrictElectionResult> ElectionResults = new List<DistrictElectionResult>();
@@ -79,17 +79,16 @@ namespace ElectionTactics
             Language = GetLanguageForNewRegion();
             Religion = GetReligionForNewRegion();
 
-            Economy1 = ElectionTacticsGame.GetRandomEconomyTrait();
-            Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
-            while (Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomyTrait();
-            Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
-            while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomyTrait();
-
+            Economy1 = ElectionTacticsGame.GetRandomEconomicSector();
+            Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
+            while (Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
+            Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
+            while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
             int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
             while (MentalityTraits.Count < numMentalities)
             {
                 MentalityTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
-                MentalityTrait trait = (MentalityTrait)System.Activator.CreateInstance(def.TraitClass);
+                CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
                 trait.Init(def, this);
                 MentalityTraits.Add(trait);
             }
@@ -97,9 +96,9 @@ namespace ElectionTactics
             // Population calculation
             Population = (int)(Region.Area * 1000000);
             float populationModifier = 0f;
-            if (Density == Density.Urban) populationModifier = Random.Range(1.2f, 1.6f);
-            if (Density == Density.Suburban) populationModifier = Random.Range(0.8f, 1.2f);
-            if (Density == Density.Rural) populationModifier = Random.Range(0.4f, 0.8f);
+            if (Density == DensityDefOf.Urban) populationModifier = Random.Range(1.2f, 1.6f);
+            if (Density == DensityDefOf.Suburban) populationModifier = Random.Range(0.8f, 1.2f);
+            if (Density == DensityDefOf.Rural) populationModifier = Random.Range(0.4f, 0.8f);
             Population = (int)(Population * populationModifier);
             Population = (Population / 1000) * 1000;
 
@@ -211,20 +210,20 @@ namespace ElectionTactics
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 1));
         }
 
-        private Density GetDensityForNewRegion() // Denisty is weighted random rural > mixed > urban
+        private DensityDef GetDensityForNewRegion() // Denisty is weighted random rural > mixed > urban
         {
             float rng = UnityEngine.Random.value;
-            if (rng < 0.25f) return Density.Urban; // Urban - 25% chance
-            else if (rng < 0.25f + 0.33f) return Density.Suburban; // Mixed - 33% chance
-            else return Density.Rural; // Rural  - 42 % chance
+            if (rng < 0.25f) return DensityDefOf.Urban; // Urban - 25% chance
+            else if (rng < 0.25f + 0.33f) return DensityDefOf.Suburban; // Mixed - 33% chance
+            else return DensityDefOf.Rural; // Rural  - 42 % chance
         }
-        private AgeGroup GetAgeGroupForNewRegion() // Age group is fully random
+        private AgeGroupDef GetAgeGroupForNewRegion() // Age group is fully random
         {
             return ElectionTacticsGame.GetRandomAgeGroup();
         }
-        private Language GetLanguageForNewRegion() // Languages can spread over land borders
+        private LanguageDef GetLanguageForNewRegion() // Languages can spread over land borders
         {
-            List<Language> languageChances = new List<Language>();
+            List<LanguageDef> languageChances = new List<LanguageDef>();
             languageChances.Add(ElectionTacticsGame.GetRandomLanguage());
             foreach (Region r in Region.LandNeighbours)
             {
@@ -232,12 +231,12 @@ namespace ElectionTactics
             }
             return languageChances[Random.Range(0, languageChances.Count)];
         }
-        private Religion GetReligionForNewRegion() // Religion can spread over land and water
+        private ReligionDef GetReligionForNewRegion() // Religion can spread over land and water
         {
-            List<Religion> religionChances = new List<Religion>();
+            List<ReligionDef> religionChances = new List<ReligionDef>();
             foreach (Region r in Region.Neighbours)
             {
-                Religion religion;
+                ReligionDef religion;
                 if (Game.VisibleDistricts.ContainsKey(r)) religion = Game.VisibleDistricts[r].Religion;
                 else religion = ElectionTacticsGame.GetRandomReligion();
 
@@ -339,7 +338,7 @@ namespace ElectionTactics
         public void OnElectionEnd()
         {
             UpdateModifiers();
-            foreach (MentalityTrait trait in MentalityTraits) trait.OnPostElection();
+            foreach (CulturalTrait trait in MentalityTraits) trait.OnPostElection();
             RecalculateSeats();
         }
 

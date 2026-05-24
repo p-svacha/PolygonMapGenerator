@@ -139,8 +139,9 @@ namespace ElectionTactics
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Language);
-                            HandleLegendEntry(r, label);
+                            LanguageDef language = Game.VisibleDistricts[r].Language;
+                            if (!Legend.ContainsValue(language.LabelCapWord)) Legend.Add(language.Color, language.LabelCapWord);
+                            r.SetColor(language.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
@@ -152,8 +153,9 @@ namespace ElectionTactics
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Religion);
-                            HandleLegendEntry(r, label);
+                            ReligionDef religion = Game.VisibleDistricts[r].Religion;
+                            if (!Legend.ContainsValue(religion.LabelCapWord)) Legend.Add(religion.Color, religion.LabelCapWord);
+                            r.SetColor(religion.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
@@ -165,8 +167,9 @@ namespace ElectionTactics
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].AgeGroup);
-                            HandleLegendEntry(r, label);
+                            AgeGroupDef ageGroup = Game.VisibleDistricts[r].AgeGroup;
+                            if (!Legend.ContainsValue(ageGroup.Label)) Legend.Add(ageGroup.Color, ageGroup.Label);
+                            r.SetColor(ageGroup.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
@@ -178,8 +181,9 @@ namespace ElectionTactics
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
-                            string label = EnumHelper.GetDescription(Game.VisibleDistricts[r].Density);
-                            HandleLegendEntry(r, label);
+                            DensityDef density = Game.VisibleDistricts[r].Density;
+                            if (!Legend.ContainsValue(density.Label)) Legend.Add(density.Color, density.Label);
+                            r.SetColor(density.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
                     }
@@ -193,21 +197,6 @@ namespace ElectionTactics
             }
 
             Canvas.ForceUpdateCanvases();
-        }
-
-        private void HandleLegendEntry(Region r, string label)
-        {
-            if (!Legend.ContainsValue(label))
-            {
-                Color c = ColorManager.Instance.LegendColors[Legend.Count];
-                Legend.Add(c, label);
-                r.SetColor(c);
-            }
-            else
-            {
-                Color c = Legend.First(x => x.Value == label).Key;
-                r.SetColor(c);
-            }
         }
 
         /// <summary>
@@ -247,48 +236,50 @@ namespace ElectionTactics
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }
-        public void ShowEconomyOverlay(EconomyTrait t)
+        public void ShowEconomicSectorOverlay(EconomicSectorDef def)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
+            ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }
-        public void ShowDensityOverlay(Density t)
+        public void ShowDensityOverlay(DensityDef def)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
+            ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }
-        public void ShowAgeOverlay(AgeGroup t)
+        public void ShowAgeOverlay(AgeGroupDef def)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
+            ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }
-        public void ShowLanguageOverlay(Language t)
+        public void ShowLanguageOverlay(LanguageDef def)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
+            ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }
-        public void ShowReligionOverlay(Religion t)
+        public void ShowReligionOverlay(ReligionDef def)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
+            if(def == ReligionDefOf.None) return;
+
+            ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
                 ColorDistrictByPolicyImpact(region, policy);
             }
         }

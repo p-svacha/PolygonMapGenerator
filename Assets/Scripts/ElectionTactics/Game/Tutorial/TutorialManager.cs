@@ -261,7 +261,7 @@ namespace ElectionTactics
             NewDistrictArrow.gameObject.SetActive(false);
 
             StepText.text = "9/9";
-            TutorialText.text = "You now know the basics: match your policies to district traits, build popularity, and win seats.\n\nRemember: You can hover over almost any element for a helpful tooltip.\n\nGood luck!";
+            TutorialText.text = "You now know the basics: match your policies to district traits, build popularity, and win seats.\n\nRemember: You can hover over many elements for a helpful tooltip.\n\nGood luck!";
             ContinueText.text = "";
             ContinueButtonText.text = "Finish Tutorial";
         }

@@ -56,6 +56,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\LanguagePolicy.cs" />
     <Compile Include="Assets\Scripts\NameGeneration\MarkovChainWordGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_Trait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyAI.cs" />
     <Compile Include="Assets\Scripts\FlagGeneration\FlagGenerator.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Army.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Scripts\Helper\ResourceManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\IconManager.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_InfoTableRow.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\MentalityTraitDefs.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictList.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\ModifierType.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Base\ElectionTacticsGame.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Region.cs" />
+    <Compile Include="Assets\Scripts\Helper\HelperFunctions.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\NoiseTester.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Settings\UI_Settings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\UI_MainMenu.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_LobbySlot.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\LoadingScreen\UI_LoadingScreen.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\CulturalTrait.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Continent.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\UI_ScoreToken.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\ColorManager.cs" />
@@ -152,13 +156,13 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierListElement.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\TopologyCreator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraph.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_TraitContainer.cs" />
     <Compile Include="Assets\Scripts\Parrisk\ParriskGame.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\PolygonMapGenerator.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\BorderBattle.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Territory.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Policies\UI_PolicySelection.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\PrecipitationNoise.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\MentalityTrait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\ConstitutionChapter.cs" />
     <Compile Include="Assets\Scripts\Map\Display\MapColorMode.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\CameraHandler.cs" />
@@ -218,12 +222,14 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Language.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\Party.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_InfoTable.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\RBTree.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\TurnLengthDefs.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\Traits\MentalityTrait_Linguistic.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\PostGame\UI_PostGameScreen.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\Traits\MentalityTrait_Revolutionary.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphAnimationType.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_TraitRow.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphPolygon.cs" />
     <Compile Include="Assets\Scripts\PolygonLabels\CenterlineLabler.cs" />
@@ -268,7 +274,6 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\EconomyPolicy.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictAttribute.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Tutorial\TutorialArrow.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphEdge.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneCircleEvent.cs" />

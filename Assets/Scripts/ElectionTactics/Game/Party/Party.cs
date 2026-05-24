@@ -90,49 +90,49 @@ namespace ElectionTactics {
            return GetPolicy(t).Value;
         }
 
-        public Policy GetPolicy(EconomyTrait t)
+        public Policy GetPolicy(EconomicSectorDef def)
         {
-            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == t);
+            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == def);
         }
-        public int GetPolicyValueFor(EconomyTrait t)
+        public int GetPolicyValueFor(EconomicSectorDef def)
         {
-            return GetPolicy(t).Value;
+            return GetPolicy(def).Value;
         }
 
-        public Policy GetPolicy(Density d)
+        public Policy GetPolicy(DensityDef d)
         {
             return Policies.OfType<DensityPolicy>().First(x => x.Density == d);
         }
-        public int GetPolicyValueFor(Density d)
+        public int GetPolicyValueFor(DensityDef d)
         {
             return GetPolicy(d).Value;
         }
 
-        public Policy GetPolicy(AgeGroup a)
+        public Policy GetPolicy(AgeGroupDef a)
         {
             return Policies.OfType<AgeGroupPolicy>().First(x => x.AgeGroup == a);
         }
-        public int GetPolicyValueFor(AgeGroup a)
+        public int GetPolicyValueFor(AgeGroupDef a)
         {
             return GetPolicy(a).Value;
         }
 
-        public Policy GetPolicy(Language l)
+        public Policy GetPolicy(LanguageDef l)
         {
             return Policies.OfType<LanguagePolicy>().First(x => x.Language == l);
         }
-        public int GetPolicyValueFor(Language l)
+        public int GetPolicyValueFor(LanguageDef l)
         {
             return GetPolicy(l).Value;
         }
-        public Policy GetPolicy(Religion r)
+        public Policy GetPolicy(ReligionDef r)
         {
-            if (r == Religion.None) return null;
+            if (r == ReligionDefOf.None) return null;
             return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r);
         }
-        public int GetPolicyValueFor(Religion r)
+        public int GetPolicyValueFor(ReligionDef r)
         {
-            if (r == Religion.None) return 0;
+            if (r == ReligionDefOf.None) return 0;
             return GetPolicy(r).Value;
         }
 

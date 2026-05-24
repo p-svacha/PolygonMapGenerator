@@ -6,25 +6,14 @@ namespace ElectionTactics
 {
     public class DensityPolicy : Policy
     {
-        public Density Density;
+        public DensityDef Density;
 
-        public DensityPolicy(int id, Party p, Density density, int maxValue) : base(id, p, maxValue)
+        public DensityPolicy(int id, Party p, DensityDef density, int maxValue) : base(id, p, maxValue)
         {
             Density = density;
-            Name = EnumHelper.GetDescription(density);
+            Name = density.Label;
             Type = PolicyType.Density;
-            switch(density)
-            {
-                case Density.Rural:
-                    SortingOrder = 0;
-                    break;
-                case Density.Suburban:
-                    SortingOrder = 1;
-                    break;
-                case Density.Urban:
-                    SortingOrder = 2;
-                    break;
-            }
+            SortingOrder = density.SortingOrder;
         }
 
         protected override int GetSinglePointBaseImpact(District district)

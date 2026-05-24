@@ -41,13 +41,12 @@ namespace ElectionTactics
         public List<GeographyTrait> GeographyTraits = new List<GeographyTrait>();
         public List<GeographyTraitType> ActiveGeographyTraits = new List<GeographyTraitType>();
 
-        public List<EconomyTrait> ActiveEconomyTraits = new List<EconomyTrait>();
-        public List<Density> ActiveDensityTraits = new List<Density>();
-        public List<AgeGroup> ActiveAgeGroupTraits = new List<AgeGroup>();
-        public List<Language> ActiveLanguageTraits = new List<Language>();
-        public List<Religion> ActiveReligionTraits = new List<Religion>();
+        public List<EconomicSectorDef> ActiveEconomicSectors = new List<EconomicSectorDef>();
+        public List<DensityDef> ActiveDensityTraits = new List<DensityDef>();
+        public List<AgeGroupDef> ActiveAgeGroupTraits = new List<AgeGroupDef>();
+        public List<LanguageDef> ActiveLanguageTraits = new List<LanguageDef>();
+        public List<ReligionDef> ActiveReligionTraits = new List<ReligionDef>();
         public List<District> ActiveDistrictTraits = new List<District>();
-
         // Constant Rules
         private const int NUM_STARTING_DISTRICTS = 3;
 
@@ -90,6 +89,11 @@ namespace ElectionTactics
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
             DefDatabase<MentalityTraitDef>.AddDefs(MentalityTraitDefs.Defs);
+            DefDatabase<AgeGroupDef>.AddDefs(AgeGroupDefs.Defs);
+            DefDatabase<LanguageDef>.AddDefs(LanguageDefs.Defs);
+            DefDatabase<ReligionDef>.AddDefs(ReligionDefs.Defs);
+            DefDatabase<DensityDef>.AddDefs(DensityDefs.Defs);
+            DefDatabase<EconomicSectorDef>.AddDefs(EconomicSectorDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
         }
@@ -251,29 +255,29 @@ namespace ElectionTactics
                 foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MaxPolicyValue));
             }
 
-            foreach (EconomyTrait t in Enum.GetValues(typeof(EconomyTrait)))
+            foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, def, MaxPolicyValue));
             }
 
-            foreach (Density t in Enum.GetValues(typeof(Density)))
+            foreach (DensityDef def in DefDatabase<DensityDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, def, MaxPolicyValue));
             }
 
-            foreach (AgeGroup t in Enum.GetValues(typeof(AgeGroup)))
+            foreach (AgeGroupDef def in DefDatabase<AgeGroupDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, def, MaxPolicyValue));
             }
 
-            foreach (Language t in Enum.GetValues(typeof(Language)))
+            foreach (LanguageDef def in DefDatabase<LanguageDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, def, MaxPolicyValue));
             }
 
-            foreach (Religion t in Enum.GetValues(typeof(Religion)))
+            foreach (ReligionDef def in DefDatabase<ReligionDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, def, MaxPolicyValue));
             }
         }
 
@@ -552,7 +556,7 @@ namespace ElectionTactics
                 // Exclusion criteria
                 if (district.MentalityTraits.Any(m => m.Def == def)) canAdopt = false;
                 if (district.MentalityTraits.Any(m => def.ForbiddenMentalityTraits.Contains(m.Def.DefName))) canAdopt = false;
-                if (def.RequiresReligion && district.Religion == Religion.None) canAdopt = false;
+                if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
 
                 if(canAdopt) candidates.Add(def);
             }
@@ -579,19 +583,19 @@ namespace ElectionTactics
                     }
                 }
 
-                if (!ActiveEconomyTraits.Contains(d.Economy1))
+                if (!ActiveEconomicSectors.Contains(d.Economy1))
                 {
-                    ActiveEconomyTraits.Add(d.Economy1);
+                    ActiveEconomicSectors.Add(d.Economy1);
                     foreach (Party p in Parties) p.GetPolicy(d.Economy1).Activate();
                 }
-                if (!ActiveEconomyTraits.Contains(d.Economy2))
+                if (!ActiveEconomicSectors.Contains(d.Economy2))
                 {
-                    ActiveEconomyTraits.Add(d.Economy2);
+                    ActiveEconomicSectors.Add(d.Economy2);
                     foreach (Party p in Parties) p.GetPolicy(d.Economy2).Activate();
                 }
-                if (!ActiveEconomyTraits.Contains(d.Economy3))
+                if (!ActiveEconomicSectors.Contains(d.Economy3))
                 {
-                    ActiveEconomyTraits.Add(d.Economy3);
+                    ActiveEconomicSectors.Add(d.Economy3);
                     foreach (Party p in Parties) p.GetPolicy(d.Economy3).Activate();
                 }
 
@@ -610,7 +614,7 @@ namespace ElectionTactics
                     ActiveLanguageTraits.Add(d.Language);
                     foreach (Party p in Parties) p.GetPolicy(d.Language).Activate();
                 }
-                if (!ActiveReligionTraits.Contains(d.Religion) && d.Religion != Religion.None)
+                if (!ActiveReligionTraits.Contains(d.Religion) && d.Religion != ReligionDefOf.None)
                 {
                     ActiveReligionTraits.Add(d.Religion);
                     foreach (Party p in Parties) p.GetPolicy(d.Religion).Activate();
@@ -794,30 +798,25 @@ namespace ElectionTactics
 
         #region Random Values
 
-        public static Density GetRandomDensity()
+        public static DensityDef GetRandomDensity()
         {
-            Array values = Enum.GetValues(typeof(Density));
-            return (Density)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return DefDatabase<DensityDef>.AllDefs.RandomElement();
         }
-        public static EconomyTrait GetRandomEconomyTrait()
+        public static EconomicSectorDef GetRandomEconomicSector()
         {
-            Array values = Enum.GetValues(typeof(EconomyTrait));
-            return (EconomyTrait)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return DefDatabase<EconomicSectorDef>.AllDefs.RandomElement();
         }
-        public static Language GetRandomLanguage()
+        public static LanguageDef GetRandomLanguage()
         {
-            Array values = Enum.GetValues(typeof(Language));
-            return (Language)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return DefDatabase<LanguageDef>.AllDefs.RandomElement();
         }
-        public static Religion GetRandomReligion()
+        public static ReligionDef GetRandomReligion()
         {
-            Array values = Enum.GetValues(typeof(Religion));
-            return (Religion)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return DefDatabase<ReligionDef>.AllDefs.RandomElement();
         }
-        public static AgeGroup GetRandomAgeGroup()
+        public static AgeGroupDef GetRandomAgeGroup()
         {
-            Array values = Enum.GetValues(typeof(AgeGroup));
-            return (AgeGroup)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return DefDatabase<AgeGroupDef>.AllDefs.RandomElement();
         }
         public static string GetRandomDistrictName()
         {

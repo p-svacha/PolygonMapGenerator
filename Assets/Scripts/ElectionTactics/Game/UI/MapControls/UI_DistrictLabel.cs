@@ -39,8 +39,8 @@ namespace ElectionTactics
             NameText.text = District.Name;
             LanguageIcon.sprite = IconManager.Singleton.GetLanguageIcon(District.Language);
             DensityIcon.sprite = IconManager.Singleton.GetDensityIcon(District.Density);
-            ReligionIcon.gameObject.SetActive(District.Religion != Religion.None);
-            if (District.Religion != Religion.None) ReligionIcon.sprite = IconManager.Singleton.GetReligionIcon(District.Religion);
+            ReligionIcon.gameObject.SetActive(District.Religion != ReligionDefOf.None);
+            if (District.Religion != ReligionDefOf.None) ReligionIcon.sprite = IconManager.Singleton.GetReligionIcon(District.Religion);
 
             switch(mode)
             {

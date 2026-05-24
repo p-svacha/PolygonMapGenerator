@@ -6,28 +6,14 @@ namespace ElectionTactics
 {
     public class AgeGroupPolicy : Policy
     {
-        public AgeGroup AgeGroup;
+        public AgeGroupDef AgeGroup;
 
-        public AgeGroupPolicy(int id, Party p, AgeGroup ageGroup, int maxValue) : base(id, p, maxValue)
+        public AgeGroupPolicy(int id, Party p, AgeGroupDef ageGroup, int maxValue) : base(id, p, maxValue)
         {
             AgeGroup = ageGroup;
-            Name = EnumHelper.GetDescription(ageGroup);
+            Name = ageGroup.Label;
             Type = PolicyType.AgeGroup;
-            switch (ageGroup)
-            {
-                case AgeGroup.GenerationZ:
-                    SortingOrder = 0;
-                    break;
-                case AgeGroup.Millenials:
-                    SortingOrder = 1;
-                    break;
-                case AgeGroup.GenerationX:
-                    SortingOrder = 2;
-                    break;
-                case AgeGroup.Boomers:
-                    SortingOrder = 3;
-                    break;
-            }
+            SortingOrder = ageGroup.SortingOrder;
         }
 
         protected override int GetSinglePointBaseImpact(District district)

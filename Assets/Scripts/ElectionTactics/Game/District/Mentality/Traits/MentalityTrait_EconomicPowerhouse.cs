@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_EconomicPowerhouse : MentalityTrait
+    public class MentalityTrait_EconomicPowerhouse : CulturalTrait
     {
         public override void ModifyPolicyPointImpact(Policy policy, ref int impact)
         {

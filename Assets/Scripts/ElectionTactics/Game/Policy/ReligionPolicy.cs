@@ -6,12 +6,12 @@ namespace ElectionTactics
 {
     public class ReligionPolicy : Policy
     {
-        public Religion Religion;
+        public ReligionDef Religion;
 
-        public ReligionPolicy(int id, Party p, Religion religion, int maxValue) : base(id, p, maxValue)
+        public ReligionPolicy(int id, Party p, ReligionDef religion, int maxValue) : base(id, p, maxValue)
         {
             Religion = religion;
-            Name = EnumHelper.GetDescription(religion);
+            Name = religion.Label;
             Type = PolicyType.Religion;
         }
 

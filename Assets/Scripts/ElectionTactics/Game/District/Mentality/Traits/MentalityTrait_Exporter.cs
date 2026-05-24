@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Exporter : MentalityTrait
+    public class MentalityTrait_Exporter : CulturalTrait
     {
         private const int INCREASE = Policy.HIGH_POPULARITY_IMPACT;
         private const int NEIGHBOUR_IMPACT = Policy.LOW_POPULARITY_IMPACT;

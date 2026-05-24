@@ -6,12 +6,12 @@ namespace ElectionTactics
 {
     public class LanguagePolicy : Policy
     {
-        public Language Language;
+        public LanguageDef Language;
 
-        public LanguagePolicy(int id, Party p, Language language, int maxValue) : base(id, p, maxValue)
+        public LanguagePolicy(int id, Party p, LanguageDef language, int maxValue) : base(id, p, maxValue)
         {
             Language = language;
-            Name = EnumHelper.GetDescription(language);
+            Name = language.Label;
             Type = PolicyType.Language;
         }
 

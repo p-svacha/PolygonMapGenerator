@@ -68,7 +68,7 @@ namespace ElectionTactics
         public int GetSinglePointImpactOn(District district)
         {
             int impact = GetSinglePointBaseImpact(district);
-            foreach (MentalityTrait trait in district.MentalityTraits)
+            foreach (CulturalTrait trait in district.MentalityTraits)
             {
                 // Impact from own traits
                 trait.ModifyPolicyPointImpact(this, ref impact);
@@ -76,7 +76,7 @@ namespace ElectionTactics
                 // Impact from neighbour traits
                 foreach (District neighbour in district.AdjacentDistricts)
                 {
-                    foreach (MentalityTrait neighbourTrait in neighbour.MentalityTraits)
+                    foreach (CulturalTrait neighbourTrait in neighbour.MentalityTraits)
                     {
                         neighbourTrait.ModifyNeighbourPolicyPointImpact(this, neighbour, ref impact);
                     }
