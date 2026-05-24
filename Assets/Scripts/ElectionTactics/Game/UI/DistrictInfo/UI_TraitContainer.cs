@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ElectionTactics
@@ -20,6 +21,7 @@ namespace ElectionTactics
             HelperFunctions.DestroyAllChildredImmediately(RowContainer);
 
             List<GeographyTrait> traits = d.Geography;
+            traits = traits.OrderByDescending(t => t.Category).ToList();
 
             UI_TraitRow currentRow = null;
             for (int i = 0; i < traits.Count; i++)

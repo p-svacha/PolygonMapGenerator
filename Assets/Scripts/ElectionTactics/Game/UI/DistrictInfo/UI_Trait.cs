@@ -20,7 +20,7 @@ public class UI_Trait : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void InitCulturalTrait(CulturalTrait trait)
     {
-        Text.text = trait.Label;
+        Text.text = trait.LabelCapWord;
         TooltipTarget.SetValues(Tooltip.TooltipType.TitleAndText, trait.LabelCapWord, trait.Description);
     }
 

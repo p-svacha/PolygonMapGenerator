@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Tutorial\TutorialManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Mentality\Traits\MentalityTrait_Rebellious.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\ScrollingBackground.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Policy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
