@@ -4,9 +4,16 @@ SOUND
 ambient sound - 2 alternating piano orchestra tracks (see downloads)
 ui sounds
 ux sounds
+modifier slide sounds
 election graph sounds
 
+mute button
+back to menu from settings panel
+back to menu from game over screen
 
+
+
+bug: district names seem to have a line break in them. to check fix, look at impact of disrtict policy in popularity breakdown
 check if all culture traits work
 policy title tooltips
 trait title tooltips
@@ -22,15 +29,19 @@ tooltip for demography rows (with exact impact of policy)
 tooltip for economy rows (with exact impact of policy)
 tooltips for trait titles in district info
 add exact impact of policy for geography traits in tooltip
+add line break in geography traits in tooltip
 update version in main menu
 fix "options" in game - remove debug mode, add back to menu
 bug: fanatics trait reduces popuilarity from ALL other traits, not just religion
 add back to menu in game over screen
 add mute button permanently on top right -> move header on right panel a little
-use new font in modifiers
+use new font in modifier in district info
+use new font in slide modifier
 show popularity modifier in modifiers in district info
 check old to-do lists and see if anything on them needs to go in the build
 fix resolution/layout bugs in web build (maybe just add recommendation to play in fullscreen 1920x1080 as that works the best if I can't fix otherwise)
+popularity breakdown overlay is slightly offset on right side
+rework max calculation for popularity lens
 
 after all that go to step 4 (final web build + private testing a couple matches)
 

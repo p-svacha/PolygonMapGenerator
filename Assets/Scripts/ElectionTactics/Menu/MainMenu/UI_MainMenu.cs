@@ -29,13 +29,28 @@ namespace ElectionTactics
         {
             MenuNavigator = nav;
             PlayerNameRandomizeButton.onClick.AddListener(RandomizePlayerPartyName);
+            PlayerNameRandomizeButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.Chimes));
+
             PlayerColorButton.onClick.AddListener(RandomizePlayerPartyColor);
+            PlayerColorButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             TutorialButton.onClick.AddListener(ToggleTutorial);
+            TutorialButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             QuickPlayButton.onClick.AddListener(QuickPlay);
+            QuickPlayButton.onClick.AddListener(() => AudioManager.PlayStartGameSound());
+
             SingleplayerButton.onClick.AddListener(CreateSingleplayerGame);
+            SingleplayerButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             HostGameButton.onClick.AddListener(HostGame);
+            HostGameButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             JoinGameButton.onClick.AddListener(JoinGame);
+            JoinGameButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             ExitButton.onClick.AddListener(() => Application.Quit());
+            ExitButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
 
             // Initial values
             PlayerNameInput.text = "Your Party Name";

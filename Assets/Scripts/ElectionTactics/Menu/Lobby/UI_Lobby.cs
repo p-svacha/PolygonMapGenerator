@@ -74,10 +74,13 @@ namespace ElectionTactics
 
             // Buttons
             StartGameButton.onClick.AddListener(StartGameButton_OnClick);
+            StartGameButton.onClick.AddListener(() => AudioManager.PlayStartGameSound());
+
             BackButton.onClick.AddListener(BackButton_OnClick);
+            BackButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
 
             // Slots
-            for(int i = 0; i < UiSlots.Count; i++)
+            for (int i = 0; i < UiSlots.Count; i++)
             {
                 LobbySlot slot = new LobbySlot(i, LobbySlotType.Free);
                 Slots.Add(slot);
@@ -88,8 +91,13 @@ namespace ElectionTactics
             foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.ClearOptions();
 
             GameModeDropdown.AddOptions(DefDatabase<GameModeDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            GameModeDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
+
             TurnLengthDropdown.AddOptions(DefDatabase<TurnLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            TurnLengthDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
+
             BotDifficultyDropdown.AddOptions(DefDatabase<BotDifficultyDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            BotDifficultyDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
 
             // Add listeners to all setting changes for multiplayer
             foreach (var setting in GameSettingDropdowns)
@@ -98,7 +106,7 @@ namespace ElectionTactics
             }
 
             // Default values
-            BotDifficultyDropdown.value = 1; // Medium difficulty
+            BotDifficultyDropdown.SetValueWithoutNotify(1); // Medium difficulty
         }
 
         /// <summary>

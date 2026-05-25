@@ -19,6 +19,7 @@ namespace ElectionTactics {
         void Start()
         {
             NextActionButton.onClick.AddListener(DoNextAction);
+            NextActionButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.Gong, volume: 0.45f));
         }
 
         public void Init(ElectionTacticsGame game)

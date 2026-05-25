@@ -50,6 +50,7 @@ namespace ElectionTactics
                 OverlayDropdown.options.Add(new Dropdown.OptionData(EnumHelper.GetDescription<MapDisplayMode>(displayMode)));
 
             OverlayDropdown.onValueChanged.AddListener(OverlayDropdown_OnValueChanged);
+            OverlayDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
         }
 
         public void Init(ElectionTacticsGame game, MapDisplayMode mapDisplayMode, DistrictLabelMode districtLabelMode)

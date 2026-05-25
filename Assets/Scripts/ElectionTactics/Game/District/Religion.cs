@@ -16,7 +16,7 @@ namespace ElectionTactics
             new ReligionDef()
             {
                 DefName = "None",
-                Label = "None",
+                Label = "-",
                 Color = new Color(0.55f, 0.55f, 0.55f),
             },
 

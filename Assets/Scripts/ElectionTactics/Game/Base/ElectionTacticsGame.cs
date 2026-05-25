@@ -100,6 +100,7 @@ namespace ElectionTactics
 
         void Start()
         {
+            AudioManager.StartMusic();
             State = GameState.Inactive;
         }
 
@@ -388,6 +389,7 @@ namespace ElectionTactics
         {
             Debug.Log("Ending Turn");
 
+            AudioManager.SwitchToTrack(AudioManager.Instance.ElectionTrack, fadeDuration: 1f);
             UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractableDisabled);
 
             if (GameType == GameType.Singleplayer) ConcludePreparationPhase(GetRandomSeed());
@@ -469,6 +471,8 @@ namespace ElectionTactics
 
         private void EndGame()
         {
+
+
             UI.PostGameScreen.Init(this);
         }
 

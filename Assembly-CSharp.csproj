@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Parrisk\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Region.cs" />
     <Compile Include="Assets\Scripts\Helper\HelperFunctions.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Base\AudioManager.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\NoiseTester.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Settings\UI_Settings.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\UI_MainMenu.cs" />

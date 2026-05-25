@@ -88,11 +88,20 @@ namespace ElectionTactics
         // Start is called before the first frame update
         void Start()
         {
-            FirstYearButton.onClick.AddListener(GoToFirstYear);   
-            PrevYearButton.onClick.AddListener(GoToPreviousYear);   
-            NextYearButton.onClick.AddListener(GoToNextYear);   
+            FirstYearButton.onClick.AddListener(GoToFirstYear);
+            FirstYearButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
+            PrevYearButton.onClick.AddListener(GoToPreviousYear);
+            PrevYearButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
+            NextYearButton.onClick.AddListener(GoToNextYear);
+            NextYearButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             LastYearButton.onClick.AddListener(GoToLastYear);
+            LastYearButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             NonEliminatedToggle.onValueChanged.AddListener(NonEliminated_OnToggle);
+            NonEliminatedToggle.onValueChanged.AddListener((value) => AudioManager.PlayStandardClickSound());
         }
     }
 }

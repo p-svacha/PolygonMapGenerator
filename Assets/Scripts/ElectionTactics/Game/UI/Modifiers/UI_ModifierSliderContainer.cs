@@ -62,6 +62,9 @@ namespace ElectionTactics
             Height = AnimatedSlider.GetComponent<RectTransform>().sizeDelta.y;
 
             AnimatedSlider.GetComponent<RectTransform>().sizeDelta = new Vector2(0, Height);
+
+            // Audio
+            AudioManager.PlaySound(AudioManager.Instance.Woosh);
         }
 
         public void ClearContainer()

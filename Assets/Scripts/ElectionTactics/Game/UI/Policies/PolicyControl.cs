@@ -21,7 +21,10 @@ namespace ElectionTactics
         void Start()
         {
             PlusButton.onClick.AddListener(PlusButton_OnClick);
+            PlusButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 1.3f));
+
             MinusButton.onClick.AddListener(MinusButton_OnClick);
+            MinusButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 0.85f));
         }
 
         private void PlusButton_OnClick()

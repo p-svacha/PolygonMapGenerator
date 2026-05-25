@@ -26,8 +26,13 @@ namespace ElectionTactics
         void Start()
         {
             PlayerColorButton.onClick.AddListener(() => Lobby.ChangeSlotColor(this));
+            PlayerColorButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             RemovePlayerButton.onClick.AddListener(() => Lobby.RemovePlayer(this));
+            RemovePlayerButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.RemoveBot));
+
             AddPlayerButton.onClick.AddListener(() => Lobby.AddBot());
+            AddPlayerButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.AddBot));
         }
 
         public void Init(UI_Lobby lobby, LobbySlot slot)

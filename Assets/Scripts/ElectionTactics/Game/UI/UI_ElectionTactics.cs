@@ -71,38 +71,38 @@ namespace ElectionTactics
             // Listeners
             TabPanels.Add(Tab.DistrictList, DistrictList.gameObject);
             TabButtons.Add(Tab.DistrictList, DistrictTabButton);
-            DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList));
+            DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList, playClickSound: true));
 
             TabPanels.Add(Tab.DistrictInfo, DistrictInfo.gameObject);
             TabButtons.Add(Tab.DistrictInfo, DistrictTabButton);
 
             TabPanels.Add(Tab.Parliament, Parliament.gameObject);
             TabButtons.Add(Tab.Parliament, ParliamentTabButton);
-            ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament));
+            ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament, playClickSound: true));
 
             TabPanels.Add(Tab.Constitution, Constitution.gameObject);
             TabButtons.Add(Tab.Constitution, ConstitutionTabButton);
-            ConstitutionTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Constitution));
+            ConstitutionTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Constitution, playClickSound: true));
 
             TabPanels.Add(Tab.Events, Events.gameObject);
             TabButtons.Add(Tab.Events, EventsTabButton);
-            EventsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Events));
+            EventsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Events, playClickSound: true));
 
             TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
             TabButtons.Add(Tab.Policies, PoliciesTabButton);
-            PoliciesTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies));
+            PoliciesTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies, playClickSound: true));
 
             TabPanels.Add(Tab.Campaigns, Campaigns.gameObject);
             TabButtons.Add(Tab.Campaigns, CampaignsTabButton);
-            CampaignsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Campaigns));
+            CampaignsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Campaigns, playClickSound: true));
 
             TabPanels.Add(Tab.Voting, Voting.gameObject);
             TabButtons.Add(Tab.Voting, VotingTabButton);
-            VotingTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Voting));
+            VotingTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Voting, playClickSound: true));
 
             TabPanels.Add(Tab.Settings, Settings.gameObject);
             TabButtons.Add(Tab.Settings, SettingsTabButton);
-            SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings));
+            SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings, playClickSound: true));
 
             // Element initialization
             ElectionControls.Init(Game);
@@ -117,8 +117,10 @@ namespace ElectionTactics
 
         #endregion
 
-        public void SelectTab(Tab tab)
+        public void SelectTab(Tab tab, bool playClickSound = false)
         {
+            if (playClickSound) AudioManager.PlayStandardClickSound();
+
             TabButtons[ActiveTab].SetSelected(false);
             TabPanels[ActiveTab].SetActive(false);
 
@@ -147,6 +149,8 @@ namespace ElectionTactics
 
         public void SelectDistrict(District d)
         {
+            AudioManager.PlayStandardClickSound();
+
             if (SelectedDistrict == d && SelectedDistrict != null) // Clicking the already selected district or clicking away from district unselects it
             {
                 SelectTab(Tab.DistrictList);

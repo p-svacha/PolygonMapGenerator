@@ -56,6 +56,8 @@ namespace ElectionTactics
 
         private void ContinueButton_OnClick()
         {
+            AudioManager.PlayStandardClickSound();
+
             if (CurrentStep == TutorialStep.Popularity) ShowElectionStep();
             else if (CurrentStep == TutorialStep.Parliament) ShowNewDistrictStep();
             else if (CurrentStep == TutorialStep.NewDistrict) ShowConclusionStep();

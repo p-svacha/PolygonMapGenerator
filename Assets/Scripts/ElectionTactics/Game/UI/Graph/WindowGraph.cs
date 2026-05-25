@@ -237,6 +237,31 @@ public class WindowGraph : MonoBehaviour
         AnimationSpeedModifier = speed;
     }
 
+    /// <summary>
+    /// Returns how far a specific bar (by index) has reached its target value during Init animation.
+    /// Returns 0-1 where 1 means the bar has reached its full height.
+    /// </summary>
+    public float GetBarProgress(int barIndex)
+    {
+        if (AnimationType != GraphAnimationType.Init || barIndex >= DataPoints.Count) return 1f;
+
+        float r = AnimationDelay / AnimationTime;
+        float curValue = MaxValue * r;
+
+        if (DataPoints[barIndex].Value <= 0f) return 1f;
+        return Mathf.Clamp01(curValue / DataPoints[barIndex].Value);
+    }
+
+    /// <summary>
+    /// Returns the index of a data point by label, or -1 if not found.
+    /// </summary>
+    public int GetBarIndex(string label)
+    {
+        for (int i = 0; i < DataPoints.Count; i++)
+            if (DataPoints[i].Label == label) return i;
+        return -1;
+    }
+
     #endregion
 
     #region GraphElements

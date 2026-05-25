@@ -21,6 +21,16 @@ namespace ElectionTactics
         {
             Container.SetActive(true);
             TitleText.text = $"{game.WinnerParty.Name} has won the game!";
+            if (game.WinnerParty == game.LocalPlayerParty)
+            {
+                TitleText.text += "\n\nCongratulations!";
+                AudioManager.PlaySound(AudioManager.Instance.WinGame);
+            }
+            else
+            {
+                TitleText.text += "\n\nBetter luck next time!";
+                AudioManager.PlaySound(AudioManager.Instance.LoseGame);
+            }
         }
     }
 }

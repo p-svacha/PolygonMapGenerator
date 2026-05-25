@@ -60,7 +60,7 @@ namespace ElectionTactics
         private float UiControlsSlideTime = 0.3f;
         private float DistrictPanTime = 2f;
         private float PostDistrictPanPauseTime = 1f; // Length of pause after moving to a district
-        private float ModifierSlideTime = 1f; // Length of slide animation per modifier
+        private float ModifierSlideTime = 0.5f; // Length of slide animation per modifier
         private float PostModifierSlideTime = 1.5f; // Length of pause after a modifier
         private float GraphAnimationTime = 6f;
         private float PostGraphPauseTime = 0.8f;
@@ -75,6 +75,10 @@ namespace ElectionTactics
             { ElectionAnimationSpeed.Fast, 2.5f },
             { ElectionAnimationSpeed.VeryFast, 5f },
         };
+
+        // Sound
+        private int playerBarIndex = -1;
+        private bool isPlayingBarSound = false;
 
         public ElectionAnimationHandler(ElectionTacticsGame game)
         {
@@ -138,6 +142,7 @@ namespace ElectionTactics
                     break;
 
                 case AnimationState.GraphAnimation:
+                    UpdateGraphAnimationSound();
                     // Wait for callback from graph animation
                     break;
 
@@ -285,9 +290,47 @@ namespace ElectionTactics
         private void InitGraphAnimation()
         {
             Game.UI.Parliament.CurrentElectionGraph.StartAnimation(OnGraphAnimationDone);
+
+            // Start charging sound for player party bar
+            playerBarIndex = Game.UI.Parliament.CurrentElectionGraph.GetBarIndex(Game.LocalPlayerParty.Acronym);
+            if (playerBarIndex >= 0)
+            {
+                // Calculate max pitch based on vote share — higher share = higher final pitch
+                float voteShare = CurrentDistrictResult.VoteShare[Game.LocalPlayerParty];
+                float basePitch = 0.7f; // Base pitch for 0% share
+                float maxMaxPitch = 5f;  // Pitch ceiling for 100% share
+                float pitchCeiling = Mathf.Lerp(basePitch, maxMaxPitch, Mathf.Clamp01(voteShare / 100f));
+
+                AudioManager.StartChargingSound("electionBar", AudioManager.Instance.GraphAnimationSound, basePitch: basePitch, maxPitch: pitchCeiling, volume: 0.8f);
+                isPlayingBarSound = true;
+            }
         }
+
+        private void UpdateGraphAnimationSound()
+        {
+            // Update charging sound pitch based on player bar progress
+            if (isPlayingBarSound && playerBarIndex >= 0)
+            {
+                float progress = Game.UI.Parliament.CurrentElectionGraph.GetBarProgress(playerBarIndex);
+                AudioManager.SetChargingProgress("electionBar", progress);
+
+                // Stop sound when player bar reaches its target
+                if (progress >= 1f)
+                {
+                    AudioManager.StopChargingSound("electionBar");
+                    isPlayingBarSound = false;
+                }
+            }
+        }
+
         private void OnGraphAnimationDone()
         {
+            if (isPlayingBarSound)
+            {
+                AudioManager.StopChargingSound("electionBar");
+                isPlayingBarSound = false;
+            }
+
             InitWaitTime(PostGraphPauseTime, AnimationState.InitApplyDistrictResult);
         }
 
@@ -388,6 +431,9 @@ namespace ElectionTactics
 
         private void InitEndAnimation()
         {
+            // Resume ambient audio
+            AudioManager.ResumeAmbient();
+
             // Clear graph and highlight from last district
             if (CurrentDistrictResult != null) CurrentDistrictResult.District.Region.SetAnimatedHighlight(false);
             Game.UI.Parliament.CurrentElectionGraph.ClearGraph();
@@ -450,6 +496,13 @@ namespace ElectionTactics
             if (forbiddenStates.Contains(State) || (State == AnimationState.Wait && forbiddenStates.Contains(PostWaitState))) return;
 
             Debug.Log("Concluding District early.");
+
+            // Stop any ongoing sounds
+            if (isPlayingBarSound)
+            {
+                AudioManager.StopChargingSound("electionBar");
+                isPlayingBarSound = false;
+            }
 
             // Color district
             SetColorOfCurrentDistrictResult();
