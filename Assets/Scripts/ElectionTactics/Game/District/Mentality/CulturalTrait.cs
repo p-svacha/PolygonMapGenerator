@@ -36,13 +36,13 @@ namespace ElectionTactics
         /// Gets called when calculating the impact of a single policy point of a policy on a district with this trait.
         /// <br/>Allows to modify the value by reference.
         /// </summary>
-        public virtual void ModifyPolicyPointImpact(Policy policy, ref int impact) { }
+        public virtual void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact) { }
 
         /// <summary>
         /// Gets called when calculating the impact of a single policy point of a policy on a neighbouring district of a district with this trait.
         /// <br/>Allows to modify the value by reference.
         /// </summary>
-        public virtual void ModifyNeighbourPolicyPointImpact(Policy policy, District sourceWithTrait, ref int impact) { }
+        public virtual void ModifyNeighbourPolicyPointImpact(District targetDistrict, Policy policy, District neighbourWithTrait, ref int impact) { }
 
         #endregion
 

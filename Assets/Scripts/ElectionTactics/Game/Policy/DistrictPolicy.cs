@@ -13,7 +13,7 @@ namespace ElectionTactics
             Type = PolicyType.District;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (District == district) return VERY_HIGH_POPULARITY_IMPACT;
 

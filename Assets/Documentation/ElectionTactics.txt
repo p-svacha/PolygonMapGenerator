@@ -1,20 +1,9 @@
 PRE-RELEASE CHECKLIST:
 
-
 IN TESTING
-fix invalid map seeds that crash the game - - maybe just with try catch?
-mute button
-back to menu from settings panel
 back to menu from game over screen
-main menu color needs to be taken over to lobby
-tutorial arrows need to reset on new game (all hide)
-lobby start plays sound even if it doesn't start
-bug: district names seem to have a line break in them. to check fix, look at impact of disrtict policy in popularity breakdown
-fix corrupt map generations (corrupt ones dont get destroyed)
-tooltip on map labels
-
-
 check if all culture traits work
+
 policy title tooltips
 trait title tooltips
 tooltips for economic sector (impact expanation)
@@ -30,7 +19,7 @@ tooltip for economy rows (with exact impact of policy)
 tooltips for trait titles in district info
 add exact impact of policy for geography traits in tooltip
 add line break in geography traits in tooltip
-update version in main menu
+
 fix "options" in game - remove debug mode, add back to menu
 bug: fanatics trait reduces popuilarity from ALL other traits, not just religion
 add back to menu in game over screen
@@ -44,11 +33,17 @@ popularity breakdown overlay is slightly offset on right side
 rework max calculation for popularity lens
 rework core trait to be III on initial ones, II one the following, then I on the following
 rework new trait so it only starts after the initial ones
-
+show "source" label in modifier source
+explain how to win???
+bug: districts with changing populartion already show the new seat count when election animation starts
+click sounds in election controls (speed and conclude buttons)
 
 after all that go to step 4 (final web build + private testing a couple matches)
 
 prepare itch page
+
+update version in main menu
+publish
 --------------------------------------------------------------------------------------------
 
 

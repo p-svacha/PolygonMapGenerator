@@ -57,9 +57,9 @@ namespace ElectionTactics
         }
 
         /// <summary>
-        /// Returns how much a single point in this policy affects the popularity of the party in the given district at a base level, purely from the policy excluding any modifierts from district or party traits.
+        /// Returns how much a single point in this policy affects the popularity of the party in the given district at a base level, purely from the policy excluding any modifiers from district or party traits.
         /// </summary>
-        protected abstract int GetSinglePointBaseImpact(District district);
+        public abstract int GetSinglePointBaseImpact(District district);
 
         /// <summary>
         /// Returns how much a single point in this policy affects the popularity of the party in the given district, including all modifiers from district and party traits.
@@ -68,17 +68,18 @@ namespace ElectionTactics
         public int GetSinglePointImpactOn(District district)
         {
             int impact = GetSinglePointBaseImpact(district);
+
             foreach (CulturalTrait trait in district.MentalityTraits)
             {
                 // Impact from own traits
-                trait.ModifyPolicyPointImpact(this, ref impact);
+                trait.ModifyPolicyPointImpact(district, this, ref impact);
 
                 // Impact from neighbour traits
-                foreach (District neighbour in district.AdjacentDistricts)
+                foreach (District neighbour in district.AdjacentActiveDistricts)
                 {
                     foreach (CulturalTrait neighbourTrait in neighbour.MentalityTraits)
                     {
-                        neighbourTrait.ModifyNeighbourPolicyPointImpact(this, neighbour, ref impact);
+                        neighbourTrait.ModifyNeighbourPolicyPointImpact(district, this, neighbour, ref impact);
                     }
                 }
             }

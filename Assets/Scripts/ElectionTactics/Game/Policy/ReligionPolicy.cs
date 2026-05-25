@@ -15,7 +15,7 @@ namespace ElectionTactics
             Type = PolicyType.Religion;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (Religion != district.Religion) return 0;
 

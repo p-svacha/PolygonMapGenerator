@@ -4,15 +4,19 @@ namespace ElectionTactics
 {
     public class MentalityTrait_ReligionFanatics : CulturalTrait
     {
+        private const int PositiveImpact = Policy.VERY_HIGH_POPULARITY_IMPACT;
         private const int NegativeImpact = Policy.LOW_POPULARITY_IMPACT;
 
-        public override void ModifyPolicyPointImpact(Policy policy, ref int impact)
+        public override void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact)
         {
-            if (policy is ReligionPolicy relPolicy && relPolicy.Religion == District.Religion) impact *= 3;
-            else impact -= NegativeImpact;
+            if (policy is ReligionPolicy religionPolicy) // Only relevant for religion policies
+            {
+                if (religionPolicy.Religion == District.Religion) impact += PositiveImpact;
+                else impact -= NegativeImpact;
+            }
         }
 
         public override string Label => District.Religion + " Fanatics";
-        public override string Description => $"Effectiveness of {District.Religion} policy is tripled. All other religion policies reduce popularity by {NegativeImpact}.";
+        public override string Description => $"{District.Religion.Label} policy impact is increased by {PositiveImpact}. All other religion policies reduce popularity by {NegativeImpact}.";
     }
 }

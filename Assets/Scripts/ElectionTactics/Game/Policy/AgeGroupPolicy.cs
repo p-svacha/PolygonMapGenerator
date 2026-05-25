@@ -16,7 +16,7 @@ namespace ElectionTactics
             SortingOrder = ageGroup.SortingOrder;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (AgeGroup != district.AgeGroup) return 0;
 

@@ -19,6 +19,6 @@ namespace ElectionTactics
             District.Population += PopulationIncrease;
         }
 
-        public override string Description => $"The population in this district grows by {PopulationIncrease} every cycle.";
+        public override string Description => $"The population in this district grows by {PopulationIncrease} every cycle.\n\nThis district will gain seats over time.";
     }
 }

@@ -20,6 +20,6 @@ namespace ElectionTactics
             if (District.Population < 1000) District.Population = 1000;
         }
 
-        public override string Description => $"The population in this district shrinks by {PopulationDecrease} every cycle.";
+        public override string Description => $"The population in this district shrinks by {PopulationDecrease} every cycle.\n\nThis district will lose seats over time.";
     }
 }

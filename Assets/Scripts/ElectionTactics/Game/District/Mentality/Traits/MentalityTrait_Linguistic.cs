@@ -4,9 +4,11 @@ namespace ElectionTactics
 {
     public class MentalityTrait_Linguistic : CulturalTrait
     {
-        public override void ModifyPolicyPointImpact(Policy policy, ref int impact)
+        public override void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact)
         {
-            if (policy.Type == PolicyType.Language) impact *= 2;
+            if (policy is LanguagePolicy lp) impact += policy.GetSinglePointBaseImpact(targetDistrict);
         }
+
+        public override string Description => $"Base language policy impact in this district is doubled.";
     }
 }

@@ -162,7 +162,7 @@ namespace ElectionTactics
                 Label = "rebellious",
                 Description = "The party that won the last election will get a malus for the next one.",
                 TraitClass = typeof(MentalityTrait_Rebellious),
-                Commonness = 20,
+                Commonness = 11,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     STABLE,
@@ -176,7 +176,7 @@ namespace ElectionTactics
                 Label = "revolutionary",
                 Description = "The party that won the last election will be excluded for the next one.",
                 TraitClass = typeof(MentalityTrait_Revolutionary),
-                Commonness = 5,
+                Commonness = 3,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     STABLE,

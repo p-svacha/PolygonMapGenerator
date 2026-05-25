@@ -7,12 +7,12 @@ namespace ElectionTactics
         private const int INCREASE = Policy.HIGH_POPULARITY_IMPACT;
         private const int NEIGHBOUR_IMPACT = Policy.LOW_POPULARITY_IMPACT;
 
-        public override void ModifyPolicyPointImpact(Policy policy, ref int impact)
+        public override void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact)
         {
             if (policy is EconomyPolicy econPolicy && econPolicy.Trait == District.Economy1) impact += INCREASE;
         }
 
-        public override void ModifyNeighbourPolicyPointImpact(Policy policy, District neighbourWithTrait, ref int impact)
+        public override void ModifyNeighbourPolicyPointImpact(District targetDistrict, Policy policy, District neighbourWithTrait, ref int impact)
         {
             if (policy is EconomyPolicy econPolicy && econPolicy.Trait == neighbourWithTrait.Economy1) impact += NEIGHBOUR_IMPACT;
         }

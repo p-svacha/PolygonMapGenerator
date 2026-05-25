@@ -16,7 +16,7 @@ namespace ElectionTactics
             Type = PolicyType.Geography;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             // Check if district has geography trait of this policy
             GeographyTrait trait = district.Geography.FirstOrDefault(g => g.Type == Trait);

@@ -14,7 +14,8 @@ namespace ElectionTactics
 
         void Start()
         {
-            QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
+            //QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
+            QuitToDesktopButton.onClick.AddListener(() => ElectionTacticsGame.Instance.MenuNavigator.SwitchToMainMenuScreen());
         }
 
         public void Init(ElectionTacticsGame game)

@@ -15,7 +15,7 @@ namespace ElectionTactics
             Type = PolicyType.Economy;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (Trait == district.Economy1) return HIGH_POPULARITY_IMPACT;
             if (Trait == district.Economy2) return MEDIUM_POPULARITY_IMPACT;

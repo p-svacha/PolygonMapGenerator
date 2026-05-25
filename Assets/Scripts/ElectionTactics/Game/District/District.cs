@@ -51,9 +51,6 @@ namespace ElectionTactics
 
         public const int BasePopularity = 10;
 
-        public const int PositiveModifierImpact = 30;
-        public const int NegativeModifierImpact = 30;
-
         public List<Modifier> Modifiers = new List<Modifier>();
 
         // Visual
@@ -395,8 +392,8 @@ namespace ElectionTactics
             // Positive & Negative Modifiers
             foreach (Modifier m in Modifiers.Where(x => x.Party == party))
             {
-                if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", PositiveModifierImpact);
-                else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -NegativeModifierImpact);
+                if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", m.Value);
+                else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -m.Value);
             }
 
             return factors;
@@ -426,7 +423,7 @@ namespace ElectionTactics
 
         #region Getters
 
-        public List<District> AdjacentDistricts => Region.AdjacentRegions.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).ToList();
+        public List<District> AdjacentActiveDistricts => Region.AdjacentRegions.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
 
         #endregion
 

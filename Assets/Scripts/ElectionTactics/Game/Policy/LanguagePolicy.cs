@@ -15,7 +15,7 @@ namespace ElectionTactics
             Type = PolicyType.Language;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (Language != district.Language) return 0;
 

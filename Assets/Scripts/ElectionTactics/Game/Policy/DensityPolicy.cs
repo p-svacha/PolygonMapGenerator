@@ -16,7 +16,7 @@ namespace ElectionTactics
             SortingOrder = density.SortingOrder;
         }
 
-        protected override int GetSinglePointBaseImpact(District district)
+        public override int GetSinglePointBaseImpact(District district)
         {
             if (Density != district.Density) return 0;
 

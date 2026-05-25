@@ -124,7 +124,7 @@ namespace ElectionTactics
             source.Play();
         }
         public static void PlayStandardClickSound(float pitch = 1f) => PlaySound(Instance.ButtonClick, 1f, pitch);
-        public static void PlayStartGameSound() => PlaySound(Instance.StartGame, volume: 0.6f);
+        public static void PlayStartGameSound() => PlaySound(Instance.StartGame, volume: 0.55f);
 
         private AudioSource GetNextOneShotSource()
         {

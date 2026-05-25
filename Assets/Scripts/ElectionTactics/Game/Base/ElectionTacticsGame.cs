@@ -53,6 +53,8 @@ namespace ElectionTactics
         public const int PP_PER_CYCLE = 4;
         public const int MAX_POLICY_VALUE = 8;
 
+        public const int STANDARD_MODIFIER_VALUE = 30;
+
         public const int BR_START_LEGITIMACY = 100;
         public const int BR_DMG_PER_UNWON_SEAT = 1; // How much legitimacy a party loses for not winning a seat
         public const int BR_HEAL_PER_WON_SEAT = 1; // How much legitimacy a party gains for winning a seat

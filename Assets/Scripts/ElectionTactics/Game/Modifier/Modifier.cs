@@ -11,6 +11,7 @@ namespace ElectionTactics
     public class Modifier
     {
         public ModifierType Type;
+        public int Value;
         public int RegionId;
         public int PartyId;
         [System.NonSerialized] public District District;
@@ -20,15 +21,18 @@ namespace ElectionTactics
         public string Description;
         public string Source;
 
-        public Modifier(ModifierType type, Party p, int length, string description, string source)
+        public Modifier(ModifierType type, int value, Party p, int length, string description, string source)
         {
             Type = type;
+            Value = value;
             Party = p;
             PartyId = p.Id;
             TotalLength = length;
             RemainingLength = length;
             Description = description;
             Source = source;
+
+            if (type == ModifierType.Exclusion && value != 0) throw new System.Exception($"Exclusion modifiers cannot have a value.");
         }
 
         public void SetDistrict(District d)
