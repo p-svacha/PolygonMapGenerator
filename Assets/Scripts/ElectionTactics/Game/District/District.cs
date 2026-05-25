@@ -87,7 +87,7 @@ namespace ElectionTactics
             int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
             while (MentalityTraits.Count < numMentalities)
             {
-                MentalityTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
+                CulturalTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
                 CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
                 trait.Init(def, this);
                 MentalityTraits.Add(trait);

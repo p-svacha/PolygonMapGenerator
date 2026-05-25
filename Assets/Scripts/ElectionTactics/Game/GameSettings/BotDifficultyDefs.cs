@@ -22,32 +22,32 @@ public static class BotDifficultyDefs
         {
             DefName = "Easy",
             Label = "easy",
-            MinPolicyPointsPerCycle = 2,
-            MaxPolicyPointsPerCycle = 5,
-        },
-
-        new BotDifficultyDef()
-        {
-            DefName = "Standard",
-            Label = "standard",
             MinPolicyPointsPerCycle = 3,
             MaxPolicyPointsPerCycle = 6,
         },
 
         new BotDifficultyDef()
         {
-            DefName = "Hard",
-            Label = "hard",
+            DefName = "Standard",
+            Label = "standard",
             MinPolicyPointsPerCycle = 4,
             MaxPolicyPointsPerCycle = 7,
         },
 
         new BotDifficultyDef()
         {
-            DefName = "Extreme",
-            Label = "extreme",
+            DefName = "Hard",
+            Label = "hard",
             MinPolicyPointsPerCycle = 5,
             MaxPolicyPointsPerCycle = 8,
+        },
+
+        new BotDifficultyDef()
+        {
+            DefName = "Extreme",
+            Label = "extreme",
+            MinPolicyPointsPerCycle = 6,
+            MaxPolicyPointsPerCycle = 9,
         },
     };
 }

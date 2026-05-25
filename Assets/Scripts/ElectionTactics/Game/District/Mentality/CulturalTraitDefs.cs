@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public static class MentalityTraitDefs
+    public static class CulturalTraitDefs
     {
         // Defname constants
         private static string RELIGIOUS = "Religious";
@@ -19,17 +19,17 @@ namespace ElectionTactics
         private static string GROWING_POPULATION = "GrowingPopulation";
         private static string DECLINING_POPULATION = "DecliningPopulation";
 
-        public static List<MentalityTraitDef> Defs => new List<MentalityTraitDef>()
+        public static List<CulturalTraitDef> Defs => new List<CulturalTraitDef>()
         {
             // Religion
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = RELIGIOUS,
                 Label = "religious",
                 Description = "Religion policy effectiveness in this district is doubled.",
                 TraitClass = typeof(MentalityTrait_Religious),
                 Commonness = 100,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     SECULAR,
                     FANATIC
@@ -37,14 +37,14 @@ namespace ElectionTactics
                 RequiresReligion = true,
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = SECULAR,
                 Label = "secular",
                 Description = "Religion policy effectiveness in this district is halved.",
                 TraitClass = typeof(MentalityTrait_Secular),
                 Commonness = 40,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     RELIGIOUS,
                     FANATIC
@@ -52,14 +52,14 @@ namespace ElectionTactics
                 RequiresReligion = true,
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = FANATIC,
                 Label = "", // Set by trait class
                 Description = "", // Set by trait class
                 TraitClass = typeof(MentalityTrait_ReligionFanatics),
                 Commonness = 50,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     RELIGIOUS,
                     SECULAR
@@ -68,34 +68,34 @@ namespace ElectionTactics
             },
 
             // Language 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = LINGUISTIC,
                 Label = "linguistic",
                 Description = "Language policy effectiveness in this district is doubled.",
                 TraitClass = typeof(MentalityTrait_Linguistic),
                 Commonness = 100,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     NON_LINGUISTIC,
                 },
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = NON_LINGUISTIC,
                 Label = "non-linguistic",
                 Description = "Language policy effectiveness in this district is halved.",
                 TraitClass = typeof(MentalityTrait_NonLinguistic),
                 Commonness = 40,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     LINGUISTIC,
                 },
             },
 
             // Economy
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = ECONOMIC_POWERHOUSE,
                 Label = "economic powerhouse",
@@ -103,7 +103,7 @@ namespace ElectionTactics
                 TraitClass = typeof(MentalityTrait_EconomicPowerhouse),
                 Commonness = 100,
             },
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = EXPORTER,
                 Label = "",
@@ -113,27 +113,27 @@ namespace ElectionTactics
             },
 
             // Population
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = GROWING_POPULATION,
                 Label = "growing population",
                 Description = "", // set by trait
                 TraitClass = typeof(MentalityTrait_GrowingPopulation),
                 Commonness = 100,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     DECLINING_POPULATION
                 },
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = DECLINING_POPULATION,
                 Label = "declining population",
                 Description = "", // set by trait
                 TraitClass = typeof(MentalityTrait_DecliningPopulation),
                 Commonness = 100,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     GROWING_POPULATION
                 },
@@ -142,42 +142,42 @@ namespace ElectionTactics
             // Popularity General
 
             // Modifiers
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = STABLE,
                 Label = "stable",
                 Description = "The party that won the last election will get a bonus for the next one.",
                 TraitClass = typeof(MentalityTrait_Stable),
                 Commonness = 70,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     REBELLIOUS,
                     REVOLUTIONARY,
                 },
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = REBELLIOUS,
                 Label = "rebellious",
                 Description = "The party that won the last election will get a malus for the next one.",
                 TraitClass = typeof(MentalityTrait_Rebellious),
                 Commonness = 20,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     STABLE,
                     REVOLUTIONARY,
                 },
             },
 
-            new MentalityTraitDef()
+            new CulturalTraitDef()
             {
                 DefName = REVOLUTIONARY,
                 Label = "revolutionary",
                 Description = "The party that won the last election will be excluded for the next one.",
                 TraitClass = typeof(MentalityTrait_Revolutionary),
                 Commonness = 5,
-                ForbiddenMentalityTraits = new List<string>()
+                ForbiddenCulturalTraits = new List<string>()
                 {
                     STABLE,
                     REBELLIOUS,

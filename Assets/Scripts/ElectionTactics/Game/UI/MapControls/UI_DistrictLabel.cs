@@ -19,6 +19,10 @@ namespace ElectionTactics
         public Text PopularityText;
         public Text MarginText;
 
+        // State
+        public DistrictLabelMode Mode { get; private set; }
+        public int PopularityImpact { get; private set; } // If not 0, this will show next to the popularity as +/- the value.
+
         public void Update()
         {
             transform.position = Camera.main.WorldToScreenPoint(new Vector3(District.Region.CenterPoi.x, 0.01f, District.Region.CenterPoi.y));
@@ -30,11 +34,15 @@ namespace ElectionTactics
         public void Init(District district)
         {
             District = district;
+            GetComponent<UI_DistrictLabelClickHandler>().Init(district);
             Refresh(DistrictLabelMode.Default);
         }
 
+        public void Refresh() => Refresh(Mode);
         public void Refresh(DistrictLabelMode mode)
         {
+            Mode = mode;
+
             SeatsText.text = District.Seats.ToString();
             NameText.text = District.Name;
             LanguageIcon.sprite = IconManager.Singleton.GetLanguageIcon(District.Language);
@@ -42,10 +50,20 @@ namespace ElectionTactics
             ReligionIcon.gameObject.SetActive(District.Religion != ReligionDefOf.None);
             if (District.Religion != ReligionDefOf.None) ReligionIcon.sprite = IconManager.Singleton.GetReligionIcon(District.Religion);
 
+            // Dynamic tooltips
+            ReligionIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Religion.Label, "The religion of this district.");
+            LanguageIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Language.Label, "The language spoken in this districts.");
+
             switch(mode)
             {
                 case DistrictLabelMode.Default:
-                    PopularityText.text = District.GetPartyPopularity(District.Game.LocalPlayerParty).ToString();
+
+                    string popularityLabel = District.GetPartyPopularity(District.Game.LocalPlayerParty).ToString();
+                    if (PopularityImpact > 0) popularityLabel += "+" + PopularityImpact.ToString();
+                    else if (PopularityImpact < 0) popularityLabel += PopularityImpact.ToString();
+                    PopularityText.text = popularityLabel;
+
+
                     if (District.CurrentWinnerParty != null)
                     {
                         SetBackgroundColor(District.CurrentWinnerParty.Color);
@@ -83,6 +101,20 @@ namespace ElectionTactics
         {
             MarginText.text = marginText;
             LayoutRebuilder.ForceRebuildLayoutImmediate(BackgroundBot.GetComponent<RectTransform>());
+        }
+
+        /// <summary>
+        /// Calling this will show the popularity impact for the local player of a single point of the given policy in the popularity box with a +/- sign. For example instead of "20" it will show "20 + 5".
+        /// </summary>
+        public void ShowPolicyImpact(Policy p)
+        {
+            PopularityImpact = p.GetSinglePointImpactOn(District);
+            Refresh();
+        }
+        public void HidePolicyImpact()
+        {
+            PopularityImpact = 0;
+            Refresh();
         }
     }
 }

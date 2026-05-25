@@ -74,7 +74,6 @@ namespace ElectionTactics
 
             // Buttons
             StartGameButton.onClick.AddListener(StartGameButton_OnClick);
-            StartGameButton.onClick.AddListener(() => AudioManager.PlayStartGameSound());
 
             BackButton.onClick.AddListener(BackButton_OnClick);
             BackButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
@@ -124,7 +123,7 @@ namespace ElectionTactics
             foreach (UI_LobbySlot slot in UiSlots) slot.SetInactive();
 
             UsedColors.Clear();
-            Color partyColor = PartyNameGenerator.GetPartyColor(playerName, UsedColors);
+            Color partyColor = MenuNavigator.MainMenu.PlayerColorButton.GetComponent<Image>().color;
             UsedColors.Add(partyColor);
             FillNextFreeSlot(playerName, partyColor, LobbySlotType.Human);
 
@@ -316,10 +315,12 @@ namespace ElectionTactics
             if (Slots.Where(x => x.SlotType == LobbySlotType.Bot || x.SlotType == LobbySlotType.Human).Count() < 2)
             {
                 DisplayStartGameError("Can't start game with less than two players.");
+                AudioManager.PlaySound(AudioManager.Instance.Error);
                 return;
             }
 
             // Start game
+            AudioManager.PlayStartGameSound();
             GameSettings gameSettings = new GameSettings();
             if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.InitGameServerRpc();
             MenuNavigator.InitGame(gameSettings);

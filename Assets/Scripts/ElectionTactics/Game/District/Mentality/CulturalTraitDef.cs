@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTraitDef : Def
+    public class CulturalTraitDef : Def
     {
         /// <summary>
         /// Class of the actual trait that will be instantiated.
@@ -16,22 +16,22 @@ namespace ElectionTactics
         public int Commonness { get; init; }
 
         /// <summary>
-        /// This mentality trait can not be adopted if the district has a trait with DefName in this list.
+        /// This cultural trait can not be adopted if the district has a trait with DefName in this list.
         /// </summary>
-        public List<string> ForbiddenMentalityTraits { get; init; } = new List<string>();
+        public List<string> ForbiddenCulturalTraits { get; init; } = new List<string>();
 
         /// <summary>
-        /// This mentality trait can only be adopted if the district follows a religion.
+        /// This cultural trait can only be adopted if the district follows a religion.
         /// </summary>
         public bool RequiresReligion { get; init; }
 
 
         public override void ResolveReferences()
         {
-            foreach(string s in ForbiddenMentalityTraits)
+            foreach(string s in ForbiddenCulturalTraits)
             {
-                if (s == DefName) throw new System.Exception("Cannot have own DefName in ForbiddenMentalityTraits");
-                if (!DefDatabase<MentalityTraitDef>.ContainsDef(s)) throw new System.Exception($"ForbiddenMentalityTraits has a trait defined that does not exist: {s}");
+                if (s == DefName) throw new System.Exception("Cannot have own DefName in ForbiddenCulturalTraits");
+                if (!DefDatabase<CulturalTraitDef>.ContainsDef(s)) throw new System.Exception($"ForbiddenCulturalTraits has a trait defined that does not exist: {s}");
             }
         }
     }

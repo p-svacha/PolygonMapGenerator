@@ -30,6 +30,7 @@ namespace ElectionTactics
         public AudioClip LoseGame;
         public AudioClip Gong;
         public AudioClip Woosh;
+        public AudioClip Error;
 
         public AudioClip GraphAnimationSound;
 

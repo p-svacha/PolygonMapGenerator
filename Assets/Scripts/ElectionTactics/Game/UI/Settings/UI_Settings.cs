@@ -15,7 +15,8 @@ namespace ElectionTactics
         {
             OnSettingChanged();
             DebugMode.onValueChanged.AddListener(x => OnSettingChanged());
-            QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
+            //QuitToDesktopButton.onClick.AddListener(() => Application.Quit());
+            QuitToDesktopButton.onClick.AddListener(() => MenuNavigator.Instance.SwitchToMainMenuScreen());
         }
 
         public void OnSettingChanged()

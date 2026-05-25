@@ -1,29 +1,29 @@
 PRE-RELEASE CHECKLIST:
 
-SOUND
-ambient sound - 2 alternating piano orchestra tracks (see downloads)
-ui sounds
-ux sounds
-modifier slide sounds
-election graph sounds
 
+IN TESTING
+fix invalid map seeds that crash the game - - maybe just with try catch?
 mute button
 back to menu from settings panel
 back to menu from game over screen
-
-
-
+main menu color needs to be taken over to lobby
+tutorial arrows need to reset on new game (all hide)
+lobby start plays sound even if it doesn't start
 bug: district names seem to have a line break in them. to check fix, look at impact of disrtict policy in popularity breakdown
+fix corrupt map generations (corrupt ones dont get destroyed)
+tooltip on map labels
+
+
 check if all culture traits work
 policy title tooltips
 trait title tooltips
 tooltips for economic sector (impact expanation)
 fix bug with "... exporter" trait giving +9 to adjacent districts instead of +3
 more clearer popularity presentation
-fix invalid map seeds that crash the game
+
 make tooltip frame thicker
 in map control policy impact overlays, also show the exact impact as a number in the district label in the popularity box (i.e. 25 + 5)
-tooltip on map labels
+
 tooltip on standings panel
 tooltip for demography rows (with exact impact of policy)
 tooltip for economy rows (with exact impact of policy)
@@ -42,6 +42,9 @@ check old to-do lists and see if anything on them needs to go in the build
 fix resolution/layout bugs in web build (maybe just add recommendation to play in fullscreen 1920x1080 as that works the best if I can't fix otherwise)
 popularity breakdown overlay is slightly offset on right side
 rework max calculation for popularity lens
+rework core trait to be III on initial ones, II one the following, then I on the following
+rework new trait so it only starts after the initial ones
+
 
 after all that go to step 4 (final web build + private testing a couple matches)
 

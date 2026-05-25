@@ -71,7 +71,7 @@ namespace ElectionTactics
 
         private void ShowPolicyMapOverlay()
         {
-            Policy.Party.Game.UI.MapControls.ShowPolicyImpactOverlay(Policy);
+            Policy.Party.Game.UI.MapControls.ShowPolicyImpact(Policy);
         }
 
         public void OnPointerExit(PointerEventData eventData)

@@ -13,6 +13,10 @@ namespace ElectionTactics
         public ElectionTacticsGame Game;
         public Font Font;
 
+        [Header("General")]
+        public Button MuteAudioButton;
+        public Image MuteAudioButtonIcon;
+
         [Header("Screens")]
         public UI_LoadingScreen LoadingScreen;
         public UI_PostGameScreen PostGameScreen;
@@ -62,6 +66,8 @@ namespace ElectionTactics
         private void Awake()
         {
             Instance = this;
+
+            MuteAudioButton.onClick.AddListener(ToggleAudio);
         }
 
         public void Init(ElectionTacticsGame game)
@@ -116,6 +122,28 @@ namespace ElectionTactics
         }
 
         #endregion
+
+        private void ToggleAudio()
+        {
+            AudioManager.ToggleMute();
+
+            if (AudioManager.IsMuted)
+            {
+                MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOff");
+            }
+            else
+            {
+                MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOn");
+                AudioManager.PlayStandardClickSound();
+            }
+        }
+
+        public void DestroyCurrentGame()
+        {
+            IsDistrictSelected = false;
+            SelectedDistrict = null;
+            HelperFunctions.DestroyAllChildredImmediately(OverlayContainer);
+        }
 
         public void SelectTab(Tab tab, bool playClickSound = false)
         {

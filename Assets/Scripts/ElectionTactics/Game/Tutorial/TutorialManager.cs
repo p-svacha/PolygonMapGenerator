@@ -37,6 +37,7 @@ namespace ElectionTactics
         public TextMeshProUGUI ContinueButtonText;
 
         [Header("Highlight Arrows")]
+        public GameObject ArrowContainer;
         public TutorialArrow DistrictArrow_Map;
         public TutorialArrow DistrictArrow_List;
         public TutorialArrow PolicyTabArrow;
@@ -131,8 +132,15 @@ namespace ElectionTactics
         public void StartTutorial()
         {
             IsTutorialActive = true;
-            ContinueButtonText.text = "Continue";
 
+            // Reset values from previous playthroughs
+            ContinueButtonText.text = "Continue";
+            foreach (Transform t in ArrowContainer.transform)
+            {
+                t.gameObject.SetActive(false);
+            }
+
+            // Start tutorial
             ShowWelcomeStep();
         }
 
@@ -180,7 +188,7 @@ namespace ElectionTactics
             PolicyTabArrow.gameObject.SetActive(false);
 
             StepText.text = "3/9";
-            TutorialText.text = "Here you can set your POLICIES. Each election cycle you receive 3 Policy Points (PP) to spend freely.\n\nHover over a policy to see its impact on the map.";
+            TutorialText.text = $"Here you can set your POLICIES. Each election cycle you receive {ElectionTacticsGame.PP_PER_CYCLE} Policy Points (PP) to spend freely.\n\nHover over any policy to see its impact on the map.";
             ContinueText.text = "Spend all your PP to continue.";
 
             PolicyPointsArrow.gameObject.SetActive(true);
@@ -204,7 +212,7 @@ namespace ElectionTactics
             ContinueButton.gameObject.SetActive(false);
 
             StepText.text = "5/9";
-            TutorialText.text = "All policy points spent. Time to see how your party performs in the first general election!\n\nNote: All policies already spent cannot be redistributed.";
+            TutorialText.text = "All policy points spent. Time to see how your party performs in the first general election!\n\nNote: This locks all policies. PP can cannot be redistributed.";
             ContinueText.text = "End your turn to continue.";
 
             ElectionTacticsGame.Instance.UI.ElectionControls.gameObject.SetActive(true);

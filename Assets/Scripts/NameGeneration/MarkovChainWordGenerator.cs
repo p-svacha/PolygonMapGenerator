@@ -86,7 +86,7 @@ public static class MarkovChainWordGenerator
             }
         }
 
-        return word.Substring(1, word.Length - 2); // Remove word start and end char
+        return word.Substring(1, word.Length - 2).Trim(); // Remove word start and end char
     }
 
     public static List<string> GenerateWords(string wordType, int nGramLength, int maxLength, int amount)

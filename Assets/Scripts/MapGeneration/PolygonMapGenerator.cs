@@ -12,10 +12,13 @@ public class PolygonMapGenerator : MonoBehaviour
 {
     public MapGenerationState GenerationState;
 
+    // General settings
     public MapGenerationSettings GenerationSettings; // Settings containing all necessary information for the kind of map that should be created
     public int Seed;
     private Map Map;
     public Action<Map> Callback; // Gets called when map generation is done
+    public const int MAX_RETRIES = 10; // The maximum number of times the map generation process is retried if any error is thrown anywhere during the generation process. All fails will be logged as warning.
+    private int CurrentRetry;
 
     public List<GraphNode> CornerNodes = new List<GraphNode>();
     public List<GraphNode> EdgeNodes = new List<GraphNode>(); // Edge nodes (are on the graph edge)
@@ -88,8 +91,11 @@ public class PolygonMapGenerator : MonoBehaviour
         GenerationState = MapGenerationState.Waiting;
     }
 
-    public void GenerateMap(MapGenerationSettings settings, Action<Map> callback = null)
+    public void GenerateMap(MapGenerationSettings settings, Action<Map> callback = null, bool isRetry = false)
     {
+        if (isRetry) CurrentRetry++;
+        else CurrentRetry = 0;
+
         GenerationSettings = settings;
         Callback = callback;
 
@@ -112,10 +118,38 @@ public class PolygonMapGenerator : MonoBehaviour
 
     void Update()
     {
-        switch(GenerationState)
+        try
+        {
+            ExecuteMapGenerationStep();
+        }
+
+        catch (System.Exception e)
+        {
+            CurrentRetry++;
+            if (CurrentRetry >= MAX_RETRIES)
+            {
+                Debug.LogError($"Map generation failed after {MAX_RETRIES} retries. Last error: {e.Message}");
+                GenerationState = MapGenerationState.GenerationAborted;
+                return;
+            }
+
+            Debug.LogWarning($"Map generation with seed {GenerationSettings.Seed} failed (attempt {CurrentRetry}/{MAX_RETRIES}): {e.Message}\nRetrying with new seed...");
+
+            // Clean up the failed map
+            if (Map != null) Map.DestroyAllGameObjects();
+
+            // Retry with a new seed
+            GenerationSettings.Seed = MapGenerationSettings.RandomSeed();
+            GenerateMap(GenerationSettings, Callback, isRetry: true);
+        }
+    }
+
+    private void ExecuteMapGenerationStep()
+    {
+        switch (GenerationState)
         {
             case MapGenerationState.CreateMapBounds:
-                if(GenerationSettings.MapType == MapType.Regional) CreateNonIslandMapBounds();
+                if (GenerationSettings.MapType == MapType.Regional) CreateNonIslandMapBounds();
                 else CreateIslandMapBounds();
                 SwitchState(MapGenerationState.CreateInitialGraph);
                 break;

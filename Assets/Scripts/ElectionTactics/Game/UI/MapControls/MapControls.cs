@@ -83,8 +83,15 @@ namespace ElectionTactics
             // Show region borders in active districts only
             foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.VisibleDistricts.ContainsKey(r));
 
-            // Show district winners as district label background color
-            foreach (District d in Game.VisibleDistricts.Values) d.MapLabel.Refresh(districtLabelMode);
+            // Update district labels
+            foreach (District d in Game.VisibleDistricts.Values)
+            {
+                // Reset temporary popularity impact values
+                d.MapLabel.HidePolicyImpact();
+
+                // Show district winners as district label background color
+                d.MapLabel.Refresh(districtLabelMode);
+            }
 
             DisplayMode = mapDisplayMode;
             switch(mapDisplayMode)
@@ -219,12 +226,16 @@ namespace ElectionTactics
 
         #region Policy Overlays
 
-        public void ShowPolicyImpactOverlay(Policy policy)
+        /// <summary>
+        /// Shows the impact of the specified policy on all districts by coloring the districts based on impact and also showing the exact popularity impact value in the district labels.
+        /// </summary>
+        public void ShowPolicyImpact(Policy policy)
         {
             ShowOverlayLegend("Policy " + policy.Name);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
-                ColorDistrictByPolicyImpact(region, policy);
+                ColorDistrictByPolicyImpact(region, policy); // Color districts
+                Game.VisibleDistricts[region].MapLabel.ShowPolicyImpact(policy); // Show in map labels
             }
         }
 
@@ -234,7 +245,7 @@ namespace ElectionTactics
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
         public void ShowEconomicSectorOverlay(EconomicSectorDef def)
@@ -243,7 +254,7 @@ namespace ElectionTactics
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
         public void ShowDensityOverlay(DensityDef def)
@@ -252,7 +263,7 @@ namespace ElectionTactics
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
         public void ShowAgeOverlay(AgeGroupDef def)
@@ -261,7 +272,7 @@ namespace ElectionTactics
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
         public void ShowLanguageOverlay(LanguageDef def)
@@ -270,18 +281,18 @@ namespace ElectionTactics
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
         public void ShowReligionOverlay(ReligionDef def)
         {
-            if(def == ReligionDefOf.None) return;
+            if (def == ReligionDefOf.None) return;
 
             ShowOverlayLegend(def.Label);
             foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
             {
                 Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ColorDistrictByPolicyImpact(region, policy);
+                ShowPolicyImpact(policy);
             }
         }
 

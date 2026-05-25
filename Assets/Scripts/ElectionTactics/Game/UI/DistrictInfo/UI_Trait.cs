@@ -15,13 +15,16 @@ public class UI_Trait : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void InitGeographyTrait(GeographyTrait trait)
     {
         Text.text = trait.FullName;
-        TooltipTarget.SetValues(Tooltip.TooltipType.TitleAndText, trait.FullName, trait.Description);
+        TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, trait.FullName, trait.Description);
+
+        HoverAction = () => UI_ElectionTactics.Instance.MapControls.ShowGeographyOverlay(trait.Type);
+        UnhoverAction = () => UI_ElectionTactics.Instance.MapControls.ClearOverlay();
     }
 
     public void InitCulturalTrait(CulturalTrait trait)
     {
         Text.text = trait.LabelCapWord;
-        TooltipTarget.SetValues(Tooltip.TooltipType.TitleAndText, trait.LabelCapWord, trait.Description);
+        TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, trait.LabelCapWord, trait.Description);
     }
 
     public Action HoverAction { get; private set; }

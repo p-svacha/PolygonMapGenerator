@@ -50,8 +50,8 @@ namespace ElectionTactics
         // Constant Rules
         private const int NUM_STARTING_DISTRICTS = 3;
 
-        private const int PlayerPolicyPointsPerCycle = 3;
-        private const int MaxPolicyValue = 8;
+        public const int PP_PER_CYCLE = 4;
+        public const int MAX_POLICY_VALUE = 8;
 
         public const int BR_START_LEGITIMACY = 100;
         public const int BR_DMG_PER_UNWON_SEAT = 1; // How much legitimacy a party loses for not winning a seat
@@ -88,7 +88,7 @@ namespace ElectionTactics
             DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
-            DefDatabase<MentalityTraitDef>.AddDefs(MentalityTraitDefs.Defs);
+            DefDatabase<CulturalTraitDef>.AddDefs(CulturalTraitDefs.Defs);
             DefDatabase<AgeGroupDef>.AddDefs(AgeGroupDefs.Defs);
             DefDatabase<LanguageDef>.AddDefs(LanguageDefs.Defs);
             DefDatabase<ReligionDef>.AddDefs(ReligionDefs.Defs);
@@ -96,6 +96,8 @@ namespace ElectionTactics
             DefDatabase<EconomicSectorDef>.AddDefs(EconomicSectorDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
+
+            UI.Init(this);
         }
 
         void Start()
@@ -109,7 +111,7 @@ namespace ElectionTactics
         /// </summary>
         public void InitNewGame(GameSettings gameSettings, GameType type)
         {
-            if (State != GameState.Inactive) return;
+            if (State != GameState.Inactive) ExitAndDestroyCurrentGame();
             InitGame();
 
             GameSettings = gameSettings;
@@ -128,6 +130,7 @@ namespace ElectionTactics
         /// </summary>
         public void InitJoinGame()
         {
+            if (State != GameState.Inactive) ExitAndDestroyCurrentGame();
             InitGame();
 
             GameSettings = new GameSettings();
@@ -140,9 +143,9 @@ namespace ElectionTactics
         /// </summary>
         private void InitGame()
         {
+            // Load
             State = GameState.Loading;
             CameraHandler.Init(this);
-            UI.Init(this);
             UI.LoadingScreen.gameObject.SetActive(true);
         }
 
@@ -176,6 +179,7 @@ namespace ElectionTactics
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay, DistrictLabelMode.Default);
             VfxManager.Init(this);
 
+            // Init elements
             InitGeograhyTraits();
             InitParties();
             InitDistricts();
@@ -220,6 +224,8 @@ namespace ElectionTactics
 
         private void InitParties()
         {
+            Parties.Clear();
+
             int id = 0;
             foreach (LobbySlot slot in GameSettings.Slots)
             {
@@ -248,37 +254,37 @@ namespace ElectionTactics
 
             foreach (District district in Districts.Values)
             {
-                foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, p, district, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, p, district, MAX_POLICY_VALUE));
             }
 
             foreach (GeographyTraitType t in Enum.GetValues(typeof(GeographyTraitType)))
             {
-                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MAX_POLICY_VALUE));
             }
 
             foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, def, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
 
             foreach (DensityDef def in DefDatabase<DensityDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, def, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
 
             foreach (AgeGroupDef def in DefDatabase<AgeGroupDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, def, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
 
             foreach (LanguageDef def in DefDatabase<LanguageDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, def, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
 
             foreach (ReligionDef def in DefDatabase<ReligionDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, def, MaxPolicyValue));
+                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
         }
 
@@ -287,6 +293,8 @@ namespace ElectionTactics
         /// </summary>
         private void InitDistricts()
         {
+            Districts.Clear();
+
             for (int i = 0; i < MAX_NUM_DISTRICTS; i++)
             {
                 AddRandomDistrict();
@@ -371,7 +379,7 @@ namespace ElectionTactics
             // Add policy points to all players
             foreach (Party p in Parties)
             {
-                if (p.IsHuman) AddPolicyPoints(p, PlayerPolicyPointsPerCycle);
+                if (p.IsHuman) AddPolicyPoints(p, PP_PER_CYCLE);
                 else AddPolicyPoints(p, UnityEngine.Random.Range(GameSettings.BotDifficulty.MinPolicyPointsPerCycle, GameSettings.BotDifficulty.MaxPolicyPointsPerCycle + 1));
             }
 
@@ -471,9 +479,36 @@ namespace ElectionTactics
 
         private void EndGame()
         {
-
-
             UI.PostGameScreen.Init(this);
+        }
+
+        /// <summary>
+        /// Completely exits and destroys everything of the current game. Should not be called while in a game, only when going back to the main menu or starting a new game.
+        /// </summary>
+        public void ExitAndDestroyCurrentGame()
+        {
+            // Reset some values
+            Parties.Clear();
+            Districts.Clear();
+            VisibleDistricts.Clear();
+
+            ActiveDistricts.Clear();
+            ActiveEconomicSectors.Clear();
+            ActiveGeographyTraits.Clear();
+            ActiveDistrictTraits.Clear();
+            ActiveAgeGroupTraits.Clear();
+            ActiveReligionTraits.Clear();
+            ActiveLanguageTraits.Clear();
+            ActiveDensityTraits.Clear();
+
+            ElectionResults.Clear();
+            GeographyTraits.Clear();
+            ElectionResults.Clear();
+            WinnerParty = null;
+
+            Map.DestroyAllGameObjects();
+            UI.DestroyCurrentGame();
+            State = GameState.Inactive;
         }
 
         #endregion
@@ -550,16 +585,16 @@ namespace ElectionTactics
             }
         }
 
-        public MentalityTraitDef GetRandomAdoptableMentalityTraitDef(District district)
+        public CulturalTraitDef GetRandomAdoptableMentalityTraitDef(District district)
         {
-            List<MentalityTraitDef> candidates = new List<MentalityTraitDef>();
-            foreach (MentalityTraitDef def in DefDatabase<MentalityTraitDef>.AllDefs)
+            List<CulturalTraitDef> candidates = new List<CulturalTraitDef>();
+            foreach (CulturalTraitDef def in DefDatabase<CulturalTraitDef>.AllDefs)
             {
                 bool canAdopt = true;
 
                 // Exclusion criteria
                 if (district.MentalityTraits.Any(m => m.Def == def)) canAdopt = false;
-                if (district.MentalityTraits.Any(m => def.ForbiddenMentalityTraits.Contains(m.Def.DefName))) canAdopt = false;
+                if (district.MentalityTraits.Any(m => def.ForbiddenCulturalTraits.Contains(m.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
 
                 if(canAdopt) candidates.Add(def);

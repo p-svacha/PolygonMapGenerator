@@ -9,11 +9,11 @@ namespace ElectionTactics
         /// </summary>
         public CulturalTrait() { }
 
-        public MentalityTraitDef Def { get; private set; }
+        public CulturalTraitDef Def { get; private set; }
         public District District { get; private set; }
         public ElectionTacticsGame Game => District.Game;
 
-        public void Init(MentalityTraitDef def, District district)
+        public void Init(CulturalTraitDef def, District district)
         {
             Def = def;
             District = district;

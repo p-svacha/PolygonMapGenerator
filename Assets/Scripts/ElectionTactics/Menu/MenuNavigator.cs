@@ -7,12 +7,15 @@ namespace ElectionTactics
 {
     public class MenuNavigator : MonoBehaviour
     {
+        public static MenuNavigator Instance;
+
         public ElectionTacticsGame Game;
         public UI_MainMenu MainMenu;
         public UI_Lobby Lobby;
 
         private void Awake()
         {
+            Instance = this;
             MainMenu.gameObject.SetActive(true);
         }
 
