@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_DecliningPopulation : CulturalTrait
+    public class CT_DecliningPopulation : CulturalTrait
     {
         private const int MIN_DECREASE = 80; // thousand
         private const int MAX_DECREASE = 120; // thousand

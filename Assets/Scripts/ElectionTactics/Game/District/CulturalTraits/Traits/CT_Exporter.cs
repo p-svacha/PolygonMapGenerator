@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Exporter : CulturalTrait
+    public class CT_Exporter : CulturalTrait
     {
         private const int INCREASE = Policy.HIGH_POPULARITY_IMPACT;
         private const int NEIGHBOUR_IMPACT = Policy.LOW_POPULARITY_IMPACT;
@@ -17,7 +17,7 @@ namespace ElectionTactics
             if (policy is EconomyPolicy econPolicy && econPolicy.Trait == neighbourWithTrait.Economy1) impact += NEIGHBOUR_IMPACT;
         }
 
-        public override string Label => $"{District.Economy1} exporter";
+        public override string Label => $"{District.Economy1.LabelCapWord} Exporter";
         public override string Description => $"{District.Economy1} Policy impact is increased by {INCREASE} and also increases popularity in neighbouring districts by {NEIGHBOUR_IMPACT}.";
     }
 }

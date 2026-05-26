@@ -221,7 +221,12 @@ namespace ElectionTactics
                 // Update current result
                 CurrentDistrictResult = DistrictOrder[CurElectionDistrictIndex].GetLatestElectionResult();
                 CurrentDistrictResult.District.Region.SetAnimatedHighlight(true);
-                TempSeats[CurrentDistrictResult.WinnerParty] += CurrentDistrictResult.Seats;
+
+                // Award seats
+                foreach (Party p in CurrentDistrictResult.Parties)
+                    TempSeats[p] += CurrentDistrictResult.SeatsWon[p];
+
+                // BR mode
                 if (Game.IsBattleRoyale)
                     foreach (Party p in CurrentDistrictResult.Parties)
                         TempStandingsScore[p] += CurrentDistrictResult.GetLegitimacyChange(p);

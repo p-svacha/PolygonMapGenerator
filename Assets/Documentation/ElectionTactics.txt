@@ -3,17 +3,6 @@ PRE-RELEASE CHECKLIST:
 IN TESTING
 fix bug when map gen fails - objects dont get destroyed
 
-fix formatting in seats (seats show as % when animation is done)
-show seats toggle in graph
-remove noneliminated toggle from classic mode
-
-rename cultural traits to district traits
-fix trait commonness (not used at all currently)
-add cultural trait: proportional representation
-add cultural trait: majority bonus
-add cultural trait: patriotic
-add cultural trait: weak economy
-
 
 after all that go to step 4 (final web build + private testing a couple matches)
 test back to menu after game

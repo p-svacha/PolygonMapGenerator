@@ -27,7 +27,7 @@ namespace ElectionTactics
         public EconomicSectorDef Economy1;
         public EconomicSectorDef Economy2;
         public EconomicSectorDef Economy3;
-        public List<CulturalTrait> MentalityTraits = new List<CulturalTrait>();
+        public List<CulturalTrait> CulturalTraits = new List<CulturalTrait>();
 
         // Election
         public List<DistrictElectionResult> ElectionResults = new List<DistrictElectionResult>();
@@ -82,12 +82,12 @@ namespace ElectionTactics
             Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
             while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
             int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
-            while (MentalityTraits.Count < numMentalities)
+            while (CulturalTraits.Count < numMentalities)
             {
                 CulturalTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
                 CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
                 trait.Init(def, this);
-                MentalityTraits.Add(trait);
+                CulturalTraits.Add(trait);
             }
 
             // Population calculation
@@ -306,11 +306,71 @@ namespace ElectionTactics
             }
 
             // Calculate number of seats won for each party
-            foreach (Party p in parties)
+            bool isProportional = CulturalTraits.Any(ct => ct.Def == CulturalTraitDefOf.ProportionalRepresentation);
+            bool isMajorityBonus = CulturalTraits.Any(ct => ct.Def == CulturalTraitDefOf.MajorityBonus);
+
+            if (isProportional)
             {
-                // Winner takes it all
-                if (p == winner) seatsWon[p] = Seats;
-                else seatsWon[p] = 0;
+                // Proportional Representation: award seats one at a time to the party with the highest remaining votes
+                Dictionary<Party, float> remainingVotes = new Dictionary<Party, float>();
+                foreach (Party p in parties)
+                {
+                    seatsWon[p] = 0;
+                    remainingVotes[p] = voterShares[p];
+                }
+
+                float votesPerSeat = 100f / Seats;
+                int seatsAwarded = 0;
+                while (seatsAwarded < Seats)
+                {
+                    Party highest = remainingVotes.OrderByDescending(x => x.Value).First().Key;
+                    seatsWon[highest]++;
+                    remainingVotes[highest] -= votesPerSeat;
+                    seatsAwarded++;
+                }
+            }
+            else if (isMajorityBonus)
+            {
+                // Majority Bonus: winner gets absolute majority, rest distributed proportionally among non-winners
+                int winnerSeats = (Seats / 2) + 1; // Works for both even and odd: 10→6, 9→5, 3→2, 1→1
+                int remainingSeats = Seats - winnerSeats;
+
+                foreach (Party p in parties) seatsWon[p] = 0;
+                seatsWon[winner] = winnerSeats;
+
+                // Distribute remaining seats proportionally among non-winners
+                if (remainingSeats > 0)
+                {
+                    float nonWinnerTotalShare = parties.Where(p => p != winner).Sum(p => voterShares[p]);
+
+                    if (nonWinnerTotalShare > 0)
+                    {
+                        Dictionary<Party, float> remainingVotes = new Dictionary<Party, float>();
+                        foreach (Party p in parties.Where(p => p != winner))
+                        {
+                            remainingVotes[p] = voterShares[p];
+                        }
+
+                        float votesPerSeat = nonWinnerTotalShare / remainingSeats;
+                        int seatsAwarded = 0;
+                        while (seatsAwarded < remainingSeats)
+                        {
+                            Party highest = remainingVotes.OrderByDescending(x => x.Value).First().Key;
+                            seatsWon[highest]++;
+                            remainingVotes[highest] -= votesPerSeat;
+                            seatsAwarded++;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Winner Takes All
+                foreach (Party p in parties)
+                {
+                    if (p == winner) seatsWon[p] = Seats;
+                    else seatsWon[p] = 0;
+                }
             }
 
             // Create result
@@ -336,7 +396,7 @@ namespace ElectionTactics
         public void OnElectionEnd()
         {
             UpdateModifiers();
-            foreach (CulturalTrait trait in MentalityTraits) trait.OnPostElection();
+            foreach (CulturalTrait trait in CulturalTraits) trait.OnPostElection();
             RecalculateSeats();
         }
 

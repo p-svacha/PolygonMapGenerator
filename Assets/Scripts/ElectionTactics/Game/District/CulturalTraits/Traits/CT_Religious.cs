@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Religious : CulturalTrait
+    public class CT_Religious : CulturalTrait
     {
         public override void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact)
         {

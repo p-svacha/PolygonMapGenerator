@@ -835,7 +835,7 @@ public class PolygonMapGenerator : MonoBehaviour
         {
             // Mesh
             GameObject polygon = MeshGenerator.GeneratePolygon(p.Nodes.Select(x => x.Vertex).ToList(), this, layer: LAYER_REGION);
-            //polygon.transform.SetParent(Map.RegionContainer.transform);
+            polygon.transform.SetParent(Map.RegionContainer.transform);
 
             // Collider
             polygon.AddComponent<MeshCollider>();

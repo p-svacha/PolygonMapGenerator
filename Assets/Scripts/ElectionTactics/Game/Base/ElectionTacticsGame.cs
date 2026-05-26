@@ -600,20 +600,21 @@ namespace ElectionTactics
 
         public CulturalTraitDef GetRandomAdoptableMentalityTraitDef(District district)
         {
-            List<CulturalTraitDef> candidates = new List<CulturalTraitDef>();
+
+            Dictionary<CulturalTraitDef, int> candidates = new Dictionary<CulturalTraitDef, int>();
             foreach (CulturalTraitDef def in DefDatabase<CulturalTraitDef>.AllDefs)
             {
                 bool canAdopt = true;
 
                 // Exclusion criteria
-                if (district.MentalityTraits.Any(m => m.Def == def)) canAdopt = false;
-                if (district.MentalityTraits.Any(m => def.ForbiddenCulturalTraits.Contains(m.Def.DefName))) canAdopt = false;
+                if (district.CulturalTraits.Any(m => m.Def == def)) canAdopt = false;
+                if (district.CulturalTraits.Any(m => def.ForbiddenCulturalTraits.Contains(m.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
 
-                if(canAdopt) candidates.Add(def);
+                if(canAdopt) candidates.Add(def, def.Commonness);
             }
 
-            return candidates.RandomElement();
+            return candidates.GetWeightedRandomElement();
         }
 
         private void UpdateActivePolicies()

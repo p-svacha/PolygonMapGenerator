@@ -68,6 +68,9 @@ namespace ElectionTactics
                 if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
             }
+
+            // Hide eliminated toggle in classic mode
+            NonEliminatedToggle.gameObject.SetActive(ElectionTacticsGame.Instance.IsBattleRoyale);
         }
 
         private void GoToFirstYear()

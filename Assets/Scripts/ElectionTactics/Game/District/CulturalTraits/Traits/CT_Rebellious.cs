@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Rebellious : CulturalTrait
+    public class CT_Rebellious : CulturalTrait
     {
         public const int PENALTY_VALUE = ElectionTacticsGame.STANDARD_MODIFIER_VALUE;
 

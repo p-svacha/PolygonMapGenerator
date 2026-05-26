@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class MentalityTrait_Stable : CulturalTrait
+    public class CT_Stable : CulturalTrait
     {
         public const int BONUS_VALUE = ElectionTacticsGame.STANDARD_MODIFIER_VALUE;
 
