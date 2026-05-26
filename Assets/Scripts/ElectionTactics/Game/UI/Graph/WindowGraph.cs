@@ -99,7 +99,7 @@ public class WindowGraph : MonoBehaviour
 
                             float barLabelY = barHeight + FontSize;
                             BarLabels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(barX, barLabelY);
-                            BarLabels[i].text = barValue.ToString("0.0") + "%";
+                            BarLabels[i].text = FormatBarLabel(barValue);
                         }
                         break;
 
@@ -130,7 +130,7 @@ public class WindowGraph : MonoBehaviour
                                 // Update Label
                                 RectTransform labelRect = BarLabels[i].GetComponent<RectTransform>();
                                 labelRect.anchoredPosition = new Vector2(barX, barHeight + FontSize);
-                                BarLabels[i].text = currentVal.ToString("0.0") + "%";
+                                BarLabels[i].text = FormatBarLabel(currentVal);
                             }
                         }
                         break;
@@ -186,7 +186,7 @@ public class WindowGraph : MonoBehaviour
             float height = (dataPoints[i].Value / yMax) * (GraphHeight - YMarginTop);
             if (zeroed) height = 0;
             Bars.Add(CreateBar(xPos, BarWidth, height, dataPoints[i].Color)); // Bars
-            BarLabels.Add(DrawText(zeroed ? "" : dataPoints[i].Value.ToString("0.0") + "%", new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
+            BarLabels.Add(DrawText(zeroed ? "" : FormatBarLabel(dataPoints[i].Value), new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
         }
     }
     
@@ -388,6 +388,20 @@ public class WindowGraph : MonoBehaviour
             float circleSize = Mathf.Min(GraphWidth, GraphHeight) * 0.05f;
             CreateCircle(new Vector2(xPos, yPos), circleSize);
         }
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private string FormatBarLabel(float value)
+    {
+        if (YMax <= 100 && DataPoints.Any(d => d.Value != Mathf.Floor(d.Value)))
+            return value.ToString("0.0") + "%";
+        else if (YMax <= 100 && DataPoints.All(d => d.Value == Mathf.Floor(d.Value)))
+            return value.ToString("0");
+        else
+            return value.ToString("0.0") + "%";
     }
 
     #endregion

@@ -16,6 +16,7 @@ namespace ElectionTactics
         public List<Party> Parties;
         public TextMeshProUGUI ParliamentTitle;
         public TextMeshProUGUI StandingsTitle;
+        public TextMeshProUGUI WinConditionText;
         public GameObject StandingsContainer;
         public Dropdown StandingsDropdown;
         public UI_PartyList StandingsPartyList;
@@ -69,13 +70,16 @@ namespace ElectionTactics
             {
                 StandingsTitle.text = "Legitimacy";
                 StandingsTitle.GetComponent<TooltipTarget>().Title = "Legitimacy";
-                StandingsTitle.GetComponent<TooltipTarget>().Text = "Legitimacy defines how accepted a party is. Once the legitimacy of a party reaches 0, the party is eliminated. 1 Legitimacy is lost for each seat not won, and legitimacy is gained by winning general elections (+1 per cycle).";
+                StandingsTitle.GetComponent<TooltipTarget>().Text = "Legitimacy defines how accepted a party is. Once the legitimacy of a party reaches 0, the party is eliminated. 1 Legitimacy is lost for each seat not won, and legitimacy is gained by winning seats and general elections.";
+                WinConditionText.text = "Be the last one standing";
 
                 StandingsPartyList.Init(ElectionTacticsGame.Instance.GetCurrentStandings(), dynamic: false);
             }
+
             else if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.Classic)
             {
-                StandingsTitle.text = "Elections Won";
+                StandingsTitle.text = $"Elections Won";
+                WinConditionText.text = ElectionTacticsGame.Instance.Constitution.WinCondition.GetConstitutionText();
                 StandingsPartyList.Init(ElectionTacticsGame.Instance.GetCurrentStandings(), dynamic: false);
             }
             else

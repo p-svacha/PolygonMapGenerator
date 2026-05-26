@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 2358823001133047171}
   - component: {fileID: 238044464991797451}
   - component: {fileID: 4693003481117547055}
+  - component: {fileID: 159048453247642576}
   m_Layer: 5
   m_Name: StandingsElement
   m_TagString: Untagged
@@ -193,6 +194,24 @@ MonoBehaviour:
   ValueText: {fileID: 7983808441981372140}
   EliminationOverlay: {fileID: 1374725590246560380}
   PlayerControlledIndicator: {fileID: 7181723100979305517}
+  TooltipTarget: {fileID: 159048453247642576}
+--- !u!114 &159048453247642576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807262211217271342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
+  Type: 0
+  Title: 
+  Text: 
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1 &4876544558815749142
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +316,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -434,6 +454,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

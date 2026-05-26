@@ -56,7 +56,7 @@ namespace ElectionTactics
         public override string GetConstitutionText()
         {
             string type = "";
-            if (Type == WinConditionType.TotalElectionsWon) type = "election wins";
+            if (Type == WinConditionType.TotalElectionsWon) return $"Win {ConditionValue} elections";
             else if (Type == WinConditionType.TotalSeatsWon) type = "total seats";
             else if (Type == WinConditionType.TotalDistrictsWon) type = "total districts";
             else if (Type == WinConditionType.TotalVotes) type = "total votes";

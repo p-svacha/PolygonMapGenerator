@@ -13,6 +13,7 @@ namespace ElectionTactics
         public Button PrevYearButton;
         public Button NextYearButton;
         public Button LastYearButton;
+        public Toggle ShowSeatsToggle;
         public Toggle NonEliminatedToggle;
         public WindowGraph ElectionGraph;
 
@@ -30,25 +31,39 @@ namespace ElectionTactics
         {
             DistrictElectionResult result = ElectionResults[CurrentIndex];
             YearText.text = result.Year.ToString();
-            if (result != null)
-            {
-                List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
-                foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
-                {
-                    if (NonEliminatedToggle.isOn && kvp.Key.IsEliminated) continue;
+            if (result == null) return;
 
-                    List<Sprite> modifierIcons = new List<Sprite>();
-                    List<string> iconTooltipTitles = new List<string>();
-                    List<string> iconTooltipTexts = new List<string>();
-                    foreach (Modifier m in result.Modifiers.Where(x => x.Party == kvp.Key))
-                    {
-                        modifierIcons.Add(IconManager.Singleton.GetModifierIcon(m.Type));
-                        iconTooltipTitles.Add(m.Type.ToString());
-                        iconTooltipTexts.Add(m.Description + "\n\nSource: " + m.Source);
-                    }
-                    string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + "|" + result.PartyPopularities[kvp.Key] : kvp.Key.Acronym; // Show party points when in debug mode
-                    dataPoints.Add(new GraphDataPoint(label, kvp.Value, kvp.Key.Color, modifierIcons, iconTooltipTitles, iconTooltipTexts));
+            bool showSeats = ShowSeatsToggle.isOn;
+
+            List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
+            foreach (KeyValuePair<Party, float> kvp in result.VoteShare)
+            {
+                if (NonEliminatedToggle.isOn && kvp.Key.IsEliminated) continue;
+
+                List<Sprite> modifierIcons = new List<Sprite>();
+                List<string> iconTooltipTitles = new List<string>();
+                List<string> iconTooltipTexts = new List<string>();
+                foreach (Modifier m in result.Modifiers.Where(x => x.Party == kvp.Key))
+                {
+                    modifierIcons.Add(IconManager.Singleton.GetModifierIcon(m.Type));
+                    iconTooltipTitles.Add(m.Type.ToString());
+                    iconTooltipTexts.Add(m.Description + "\n\nSource: " + m.Source);
                 }
+
+                string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + "|" + result.PartyPopularities[kvp.Key] : kvp.Key.Acronym;
+                float value = showSeats ? result.SeatsWon[kvp.Key] : kvp.Value;
+                dataPoints.Add(new GraphDataPoint(label, value, kvp.Key.Color, modifierIcons, iconTooltipTitles, iconTooltipTexts));
+            }
+
+            if (showSeats)
+            {
+                int yMax = Mathf.Max(result.Seats, 1);
+                float yStep = yMax <= 5 ? 1 : yMax <= 20 ? 5 : 10;
+                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, yStep, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
+                else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
+            }
+            else
+            {
                 int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
                 if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
@@ -85,6 +100,11 @@ namespace ElectionTactics
             DisplayGraph(fullRefresh: true);
         }
 
+        private void ShowSeats_OnToggle(bool value)
+        {
+            DisplayGraph(fullRefresh: true);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -99,6 +119,9 @@ namespace ElectionTactics
 
             LastYearButton.onClick.AddListener(GoToLastYear);
             LastYearButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
+            ShowSeatsToggle.onValueChanged.AddListener(ShowSeats_OnToggle);
+            ShowSeatsToggle.onValueChanged.AddListener((value) => AudioManager.PlayStandardClickSound());
 
             NonEliminatedToggle.onValueChanged.AddListener(NonEliminated_OnToggle);
             NonEliminatedToggle.onValueChanged.AddListener((value) => AudioManager.PlayStandardClickSound());

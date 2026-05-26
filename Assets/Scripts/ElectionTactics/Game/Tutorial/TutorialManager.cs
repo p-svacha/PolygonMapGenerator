@@ -11,7 +11,7 @@ namespace ElectionTactics
     {
         private static float DEFAULT_UI_SLIDE_TIME = 0.3f;
 
-        enum TutorialStep
+        public enum TutorialStep
         {
             Welcome,
             District,
@@ -26,7 +26,7 @@ namespace ElectionTactics
         }
         public static TutorialManager Instance { get; private set; }
         public bool IsTutorialActive { get; private set; }
-        private TutorialStep CurrentStep;
+        public TutorialStep CurrentStep { get; private set; }
 
         [Header("Tutorial Popup")]
         public GameObject TutorialPopup;
@@ -62,7 +62,7 @@ namespace ElectionTactics
             if (CurrentStep == TutorialStep.Popularity) ShowElectionStep();
             else if (CurrentStep == TutorialStep.Parliament) ShowNewDistrictStep();
             else if (CurrentStep == TutorialStep.NewDistrict) ShowConclusionStep();
-            else if (CurrentStep == TutorialStep.End) Hide();
+            else if (CurrentStep == TutorialStep.End) EndTutorial();
         }
 
 
@@ -240,7 +240,7 @@ namespace ElectionTactics
             ElectionControlsArrow.gameObject.SetActive(false);
 
             StepText.text = "7/9";
-            TutorialText.text = "The first election is over.\n\nThe parliament view shows the seat distribution from the last election and the current overall standings.\n\nYou can also inspect individual district results by selecting them.";
+            TutorialText.text = $"The first election is over.\n\nThe parliament view shows the seat distribution from the last election and the current overall standings.\n\nYou can also inspect individual district results by selecting them.\n\nBe the first party to win {ElectionTacticsGame.Instance.Constitution.WinCondition.ConditionValue} general elections to win the game.";
             ContinueText.text = "";
 
             ElectionTacticsGame.Instance.UI.SlideInStandings(slideTime: 0.3f);
@@ -276,8 +276,16 @@ namespace ElectionTactics
             ContinueButtonText.text = "Finish Tutorial";
         }
 
-        public void Hide()
+        public void EndTutorial()
         {
+            // Set all elements active that may be hidden during the tutorial
+            ElectionTacticsGame.Instance.UI.SlideInStandings(0f);
+            ElectionTacticsGame.Instance.UI.ElectionControls.gameObject.SetActive(true);
+            ElectionTacticsGame.Instance.UI.SlideInFooter(0f);
+            ElectionTacticsGame.Instance.UI.SlideInHeader(0f);
+            ElectionTacticsGame.Instance.UI.SlideInMapControls(0f);
+
+            // End tutorial
             IsTutorialActive = false;
             gameObject.SetActive(false);
         }

@@ -9,7 +9,8 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     public Tooltip.TooltipType Type;
     public string Title;
-    public string Text;
+    [TextArea(3, 10)] public string Text;
+
 
     [HideInInspector] public bool IsFocussed;
     private float Delay = 0.5f;

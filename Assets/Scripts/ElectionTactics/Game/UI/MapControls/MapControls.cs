@@ -125,7 +125,10 @@ namespace ElectionTactics
                 case MapDisplayMode.Popularity:
                     PopularityLegend.gameObject.SetActive(true);
                     LegendTitleText.text = "Popularity";
-                    int maxPopularity = 90 + 10 * Game.ElectionCycle;
+
+                    // Take current max popularity as max
+                    int maxPopularity = Game.ActiveDistricts.Max(d => d.GetPartyPopularity(Game.LocalPlayerParty));
+
                     PopularityLegendBotLimitText.text = "- 0";
                     PopularityLegendTopLimitText.text = "- " + maxPopularity;
                     foreach (Region r in Map.LandRegions)

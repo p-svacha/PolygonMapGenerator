@@ -69,6 +69,8 @@ namespace ElectionTactics
             { "Humanist", 100 },
             { "Civil", 100 },
             { "Alternative", 100 },
+
+            { "Evil", 50 },
         };
 
         private static Dictionary<string, int> PartyTypeNouns = new() // T
@@ -160,6 +162,8 @@ namespace ElectionTactics
             { "Resonance", 50 },
             { "Concord", 50 },
             { "Accord", 50 },
+
+            { "Tyranny", 40 },
 
             { "Fellowship", 30 },
             { "Calm", 30 },

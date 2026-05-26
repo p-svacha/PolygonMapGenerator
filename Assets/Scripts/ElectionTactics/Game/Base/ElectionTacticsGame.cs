@@ -176,6 +176,7 @@ namespace ElectionTactics
 
             UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
+            ElectionCycle = 0;
             
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.MinorNoise);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay, DistrictLabelMode.Default);
@@ -210,7 +211,7 @@ namespace ElectionTactics
 
             // Tutorial
             if (GameSettings.IsTutorialEnabled) TutorialManager.Instance.StartTutorial();
-            else TutorialManager.Instance.Hide();
+            else TutorialManager.Instance.EndTutorial();
         }
 
         private void InitGeograhyTraits()
@@ -399,9 +400,19 @@ namespace ElectionTactics
         {
             Debug.Log("Ending Turn");
 
+            // If tutorial is still active and not in first election stage, end it
+            if (TutorialManager.Instance.IsTutorialActive && TutorialManager.Instance.CurrentStep != TutorialManager.TutorialStep.Election)
+            {
+                TutorialManager.Instance.EndTutorial();
+            }
+
+            // Audio
             AudioManager.SwitchToTrack(AudioManager.Instance.ElectionTrack, fadeDuration: 1f);
+
+            // Disable footer
             UI.SidePanelFooter.SetBackgroundColor(ColorManager.Instance.UiInteractableDisabled);
 
+            // Start election
             if (GameType == GameType.Singleplayer) ConcludePreparationPhase(GetRandomSeed());
             else // Multiplayer
             {
@@ -672,14 +683,15 @@ namespace ElectionTactics
                 GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.New);
                 if (newTrait != null) d.Geography.Remove(newTrait);
 
-                if (d.Index < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3));
-                else if (d.Index < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2));
-                else if (d.Index < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1));
+                if (d.Index < NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3)); // Starting districts get the Core III trait
+                else if (d.Index == NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2)); // Following district the Core II
+                else if (d.Index == NUM_STARTING_DISTRICTS + 1) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1)); // Following district the Core I
 
                 int numDistricts = ActiveDistricts.Count;
-                if(numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3));
-                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2));
-                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1));
+                if (d.Index < NUM_STARTING_DISTRICTS) { } // Starting districts (Core III) districts never get the new trait
+                else if (numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3)); // 2 newest districts get New III
+                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2)); // 3rd and 4th newest districts get New II
+                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1)); // 5th and 6th newest districts get New I
             }
         }
 
@@ -833,6 +845,9 @@ namespace ElectionTactics
             if (HandleWinConditions()) return;
 
             State = GameState.PreparationPhase;
+
+            // Update all map labels
+            foreach (District d in ActiveDistricts) d.MapLabel.Refresh();
         }
 
         #endregion

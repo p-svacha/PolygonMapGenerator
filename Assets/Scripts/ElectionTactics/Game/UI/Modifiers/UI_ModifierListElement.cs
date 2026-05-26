@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +9,11 @@ namespace ElectionTactics
     public class UI_ModifierListElement : MonoBehaviour
     {
         public Image TypeImage;
-        public Text PartyText;
-        public Text DescriptionText;
-        public Text SourceText;
-        public Text LengthText;
+        public TextMeshProUGUI PartyText;
+        public TextMeshProUGUI ValueText;
+        public TextMeshProUGUI DescriptionText;
+        public TextMeshProUGUI RemainingDurationText;
+        public TooltipTarget TooltipTarget;
 
         public void Init(Modifier m)
         {
@@ -19,9 +21,13 @@ namespace ElectionTactics
 
             PartyText.text = m.Party.Acronym;
             PartyText.color = m.Party.Color;
+            ValueText.text = (m.Value > 0 ? "+" : "") + m.Value.ToString();
+            if (m.Value == 0) ValueText.text = "";
             DescriptionText.text = m.Description;
-            SourceText.text = m.Source;
-            LengthText.text = m.RemainingLength.ToString();
+            if (m.Type == ModifierType.Exclusion) DescriptionText.text = $"<b>EXCLUDED</b> {DescriptionText.text}";
+            RemainingDurationText.text = $"{m.RemainingLength} {"cycle".Pluralize(m.RemainingLength)} remaining";
+
+            TooltipTarget.Init(Tooltip.TooltipType.TextOnly, "", $"Source: {m.Source}");
         }
     }
 }

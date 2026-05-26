@@ -10,10 +10,10 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Negative, PENALTY_VALUE, District.CurrentWinnerParty, 1, "Penalty for winning last election", "Rebellious"));
+                Game.AddModifier(District, new Modifier(ModifierType.Negative, PENALTY_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "Rebellious"));
             }
         }
 
-        public override string Description => $"The districts' governing party gets a -{PENALTY_VALUE} penalty in the next election.";
+        public override string Description => $"The districts' governing party gets a -{PENALTY_VALUE} penalty in an election.";
     }
 }

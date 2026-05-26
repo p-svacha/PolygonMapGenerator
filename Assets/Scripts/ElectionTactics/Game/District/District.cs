@@ -314,6 +314,7 @@ namespace ElectionTactics
             }
 
             // Create result
+            Debug.Log($"Saving district election result for {Name} for cycle {Game.ElectionCycle} with {Seats} seats.");
             DistrictElectionResult result = new DistrictElectionResult
             (
                 Game.ElectionCycle,

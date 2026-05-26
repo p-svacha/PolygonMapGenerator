@@ -10,10 +10,10 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, 1, "Bonus for winning last election", "Stable Mentality"));
+                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "Stable Mentality"));
             }
         }
 
-        public override string Description => $"The districts' governing party gets a +{BONUS_VALUE} bonus in the next election.";
+        public override string Description => $"The districts' governing party gets a +{BONUS_VALUE} bonus in an election.";
     }
 }

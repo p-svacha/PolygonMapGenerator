@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ namespace ElectionTactics
         public RectTransform Container;
         public Image TypeImage;
         public Text PartyText;
-        public Text DescriptionText;
+        public TextMeshProUGUI DescriptionText;
 
         public void Init(Modifier m)
         {
@@ -21,7 +22,10 @@ namespace ElectionTactics
 
             PartyText.text = m.Party.Acronym;
             PartyText.color = m.Party.Color;
-            DescriptionText.text = m.Description;
+
+            if (m.Type == ModifierType.Exclusion) DescriptionText.text = $"<b>EXCLUDED</b> {m.Description}";
+            if (m.Type == ModifierType.Positive) DescriptionText.text = "<b>+" + m.Value + "</b> " + m.Description;
+            if (m.Type == ModifierType.Negative) DescriptionText.text = "<b>-" + m.Value + "</b> " + m.Description;
         }
     }
 }

@@ -1,44 +1,23 @@
 PRE-RELEASE CHECKLIST:
 
 IN TESTING
-back to menu from game over screen
-check if all culture traits work
+fix bug when map gen fails - objects dont get destroyed
 
-policy title tooltips
-trait title tooltips
-tooltips for economic sector (impact expanation)
-fix bug with "... exporter" trait giving +9 to adjacent districts instead of +3
-more clearer popularity presentation
+fix formatting in seats (seats show as % when animation is done)
+show seats toggle in graph
+remove noneliminated toggle from classic mode
 
-make tooltip frame thicker
-in map control policy impact overlays, also show the exact impact as a number in the district label in the popularity box (i.e. 25 + 5)
+rename cultural traits to district traits
+fix trait commonness (not used at all currently)
+add cultural trait: proportional representation
+add cultural trait: majority bonus
+add cultural trait: patriotic
+add cultural trait: weak economy
 
-tooltip on standings panel
-tooltip for demography rows (with exact impact of policy)
-tooltip for economy rows (with exact impact of policy)
-tooltips for trait titles in district info
-add exact impact of policy for geography traits in tooltip
-add line break in geography traits in tooltip
-
-fix "options" in game - remove debug mode, add back to menu
-bug: fanatics trait reduces popuilarity from ALL other traits, not just religion
-add back to menu in game over screen
-add mute button permanently on top right -> move header on right panel a little
-use new font in modifier in district info
-use new font in slide modifier
-show popularity modifier in modifiers in district info
-check old to-do lists and see if anything on them needs to go in the build
-fix resolution/layout bugs in web build (maybe just add recommendation to play in fullscreen 1920x1080 as that works the best if I can't fix otherwise)
-popularity breakdown overlay is slightly offset on right side
-rework max calculation for popularity lens
-rework core trait to be III on initial ones, II one the following, then I on the following
-rework new trait so it only starts after the initial ones
-show "source" label in modifier source
-explain how to win???
-bug: districts with changing populartion already show the new seat count when election animation starts
-click sounds in election controls (speed and conclude buttons)
 
 after all that go to step 4 (final web build + private testing a couple matches)
+test back to menu after game
+fix resolution/layout bugs in web build (maybe just add recommendation to play in fullscreen 1920x1080 as that works the best if I can't fix otherwise)
 
 prepare itch page
 
@@ -46,19 +25,13 @@ update version in main menu
 publish
 --------------------------------------------------------------------------------------------
 
+- Add toggle in election graph to switch between vote percentage and seats won
 
-- add new traits from suggestion:
-mentality changes:
-	(T) - remove: non-linguistic, rebellious, revolutioniary, secular
-	(T) - add new: [economy] exporter: [economy] policy will also have a low impact on adjacent district (can't be on districts wo neighbours, must be economy that the district has)
-	(T) - add new:[religion] fanatics: [religion] policy impact is doubled. all other religion policies have a small negative impact
-	(T) - add new: growing population: population will increase each turn which may lead to more seats as the game goes on
-	(T) - add new: declining population: population will decrease each turn which may lead to more seats as the game goes on
-	- add new: district rivals and district partners
-	- add new: nationalistic - double district trait impact
-	- add new: geographic identity
-	- add new: weak & strong economy: weak lowers eco policy impact, strong increases eco policy impact
-(T) - dont show "mentality" label if no mentality traits
+
+- add new cultural traits: district rivals and district partners (gain/lose 10% of popularity in other district (without this modifier) as popularity)
+- add new: nationalistic - double district trait impact
+- add new: geographic identity for a specific geography trait (i.e. island identity)
+- add new: weak & strong economy: weak lowers eco policy impact, strong increases eco policy impact (rename economic powerhouse to strong econpomy)
 
 - add very very high impact in map overview or change to scale (-20 red to 20 green)
 - separate neighbour district impact in popularity breakdown and summarize it as "neighbour impact".
@@ -71,7 +44,6 @@ mentality changes:
 - priorities for bot party policy selection: instead of full random pp assignent, every bot makes a weighted table at the start of the game that assigns a random weight to each policy. pp are then assigned based on these weights.
 
 - party name generator can go to infiite loop, find out why
-- make player fixed color in singleplayer to light green
 - almost fully remove randomness in district election result (calculate election result directly based on party popularities and apply just slight 0.1 offsets after, instead of casting single votes)
 
 - log tab, that shows messages like "district has gained a seat due to growing population"
@@ -79,11 +51,6 @@ mentality changes:
 - remove age group (?)
 - add density map control
 - more geography traits (coastal, biome)
-
-- move religion to def system
-- move language to def system
-- move economies to def system
-- assigned fixed colors to all of the above and use those in legend
 
 - elevation traits (?)
 - make economy traits more dependent on geogeaphy (mining / fishing, etc)
@@ -149,10 +116,6 @@ Election Tactics
 1.6 General election
 	- Add intro animation
 	- Add outro animation
-
-1.7 Map controls
-	- Add popularity view that shows absolute popularity through policies per district
-	- Add density view
 
 1.9 Main menu
 	- Add main menu with options:

@@ -43,12 +43,26 @@ namespace ElectionTactics
         {
             Mode = mode;
 
-            SeatsText.text = District.Seats.ToString();
             NameText.text = District.Name;
             LanguageIcon.sprite = IconManager.Singleton.GetLanguageIcon(District.Language);
             DensityIcon.sprite = IconManager.Singleton.GetDensityIcon(District.Density);
             ReligionIcon.gameObject.SetActive(District.Religion != ReligionDefOf.None);
             if (District.Religion != ReligionDefOf.None) ReligionIcon.sprite = IconManager.Singleton.GetReligionIcon(District.Religion);
+
+            // Seats
+            Debug.Log($"Refreshing seats ({District.Name}): Current number: {District.Seats}");
+            int numSeats = District.Seats;
+
+            if (ElectionTacticsGame.Instance.State == GameState.Election) // Show seats of previous cycle when in election
+            {
+                DistrictElectionResult latestResult = ElectionTacticsGame.Instance.GetLatestElectionResult().GetDistrictResult(District);
+                if (latestResult != null)
+                {
+                    Debug.Log($"Number from prev election ({District.Name}): {latestResult.Seats}");
+                    numSeats = latestResult.Seats;
+                }
+            }
+            SeatsText.text = numSeats.ToString();
 
             // Dynamic tooltips
             ReligionIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Religion.Label, "The religion of this district.");

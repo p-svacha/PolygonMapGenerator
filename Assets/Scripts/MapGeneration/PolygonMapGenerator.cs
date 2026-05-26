@@ -93,8 +93,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
     public void GenerateMap(MapGenerationSettings settings, Action<Map> callback = null, bool isRetry = false)
     {
-        if (isRetry) CurrentRetry++;
-        else CurrentRetry = 0;
+        if (!isRetry) CurrentRetry = 0;
 
         GenerationSettings = settings;
         Callback = callback;
@@ -118,6 +117,20 @@ public class PolygonMapGenerator : MonoBehaviour
 
     void Update()
     {
+        // Handle callback in case map generation is done
+        if (GenerationState == MapGenerationState.GenerationDone)
+        {
+            if (Callback != null)
+            {
+                var cb = Callback;
+                Callback = null;
+                cb.Invoke(Map);
+            }
+            GenerationState = MapGenerationState.Waiting;
+            return;
+        }
+
+        // Continue map generation
         try
         {
             ExecuteMapGenerationStep();
@@ -135,10 +148,7 @@ public class PolygonMapGenerator : MonoBehaviour
 
             Debug.LogWarning($"Map generation with seed {GenerationSettings.Seed} failed (attempt {CurrentRetry}/{MAX_RETRIES}): {e.Message}\nRetrying with new seed...");
 
-            // Clean up the failed map
-            if (Map != null) Map.DestroyAllGameObjects();
-
-            // Retry with a new seed
+            // Reset() handles destroying the failed map and creating fresh containers
             GenerationSettings.Seed = MapGenerationSettings.RandomSeed();
             GenerateMap(GenerationSettings, Callback, isRetry: true);
         }
@@ -238,7 +248,29 @@ public class PolygonMapGenerator : MonoBehaviour
 
     private void Reset()
     {
-        Map = null;
+        // Destroy any existing map objects from a previous attempt
+        if (Map != null)
+        {
+            Map.DestroyAllGameObjects();
+            Map = null;
+        }
+
+        // Create fresh map with containers immediately so all objects have a parent
+        Map = new Map(GenerationSettings);
+        GameObject mapObject = new GameObject("Map");
+        Map.RootObject = mapObject;
+        Map.BorderPointContainer = new GameObject("BorderPoints");
+        Map.BorderPointContainer.transform.SetParent(mapObject.transform);
+        Map.BorderContainer = new GameObject("Borders");
+        Map.BorderContainer.transform.SetParent(mapObject.transform);
+        Map.RegionContainer = new GameObject("Regions");
+        Map.RegionContainer.transform.SetParent(mapObject.transform);
+        Map.RiverContainer = new GameObject("Rivers");
+        Map.RiverContainer.transform.SetParent(mapObject.transform);
+        Map.ContinentContainer = new GameObject("Continents");
+        Map.ContinentContainer.transform.SetParent(mapObject.transform);
+        Map.WaterConnectionContainer = new GameObject("Water Connections");
+        Map.WaterConnectionContainer.transform.SetParent(mapObject.transform);
 
         NumSplits = 0;
         NumMerges = 0;
@@ -765,24 +797,6 @@ public class PolygonMapGenerator : MonoBehaviour
             foreach (GraphNode n in p.Nodes)
                 if (!Nodes.Contains(n)) Debug.Log("################################ Node " + n.ToString() + " not found!");
 
-        Map = new Map(GenerationSettings);
-
-        // Init all gameobjects
-        GameObject mapObject = new GameObject("Map");
-        Map.RootObject = mapObject;
-        Map.BorderPointContainer = new GameObject("BorderPoints");
-        Map.BorderPointContainer.transform.SetParent(mapObject.transform);
-        Map.BorderContainer = new GameObject("Borders");
-        Map.BorderContainer.transform.SetParent(mapObject.transform);
-        Map.RegionContainer = new GameObject("Regions");
-        Map.RegionContainer.transform.SetParent(mapObject.transform);
-        Map.RiverContainer = new GameObject("Rivers");
-        Map.RiverContainer.transform.SetParent(mapObject.transform);
-        Map.ContinentContainer = new GameObject("Continents");
-        Map.ContinentContainer.transform.SetParent(mapObject.transform);
-        Map.WaterConnectionContainer = new GameObject("Water Connections");
-        Map.WaterConnectionContainer.transform.SetParent(mapObject.transform);
-
         // Add border points
         Map.BorderPoints = new List<BorderPoint>();
         foreach (GraphNode n in Nodes)
@@ -932,7 +946,6 @@ public class PolygonMapGenerator : MonoBehaviour
             }
         }
 
-        Callback?.Invoke(Map);
         return Map;
     }
 

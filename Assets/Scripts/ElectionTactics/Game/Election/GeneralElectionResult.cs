@@ -51,5 +51,7 @@ namespace ElectionTactics
         {
             return ElectionTacticsGame.BR_BASE_HEAL_PER_ELECTION_WON + ElectionCycle * ElectionTacticsGame.BR_HEAL_PER_ELECTION_WON_PER_TURN;
         }
+
+        public DistrictElectionResult GetDistrictResult(District d) => DistrictResults.FirstOrDefault(r => r.District == d);
     }
 }

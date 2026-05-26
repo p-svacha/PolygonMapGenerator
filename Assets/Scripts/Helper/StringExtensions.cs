@@ -90,4 +90,33 @@ public static class StringExtensions
         // Recombine into a single string
         return string.Join(" ", words);
     }
+
+    /// <summary>
+    /// Returns the pluralized form of the string if the given count is not 1.
+    /// Applies basic English pluralization rules.
+    /// </summary>
+    /// <param name="str">The singular form of the word.</param>
+    /// <param name="count">The count used to determine singular or plural.</param>
+    /// <returns>
+    /// The original string if <paramref name="count"/> is 1; otherwise a pluralized version.
+    /// </returns>
+    public static string Pluralize(this string str, int count)
+    {
+        if (count == 1) return str;
+        if (string.IsNullOrEmpty(str)) return str;
+
+        if (str.EndsWith("s") || str.EndsWith("sh") || str.EndsWith("ch") || str.EndsWith("x") || str.EndsWith("z"))
+            return str + "es";
+
+        if (str.EndsWith("y") && str.Length > 1 && !"aeiou".Contains(str[str.Length - 2]))
+            return str.Substring(0, str.Length - 1) + "ies";
+
+        if (str.EndsWith("f"))
+            return str.Substring(0, str.Length - 1) + "ves";
+
+        if (str.EndsWith("fe"))
+            return str.Substring(0, str.Length - 2) + "ves";
+
+        return str + "s";
+    }
 }

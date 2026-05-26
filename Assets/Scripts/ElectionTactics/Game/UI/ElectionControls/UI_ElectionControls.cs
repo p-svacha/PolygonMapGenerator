@@ -25,10 +25,19 @@ namespace ElectionTactics
         void Start()
         {
             Speed1Button.Button.onClick.AddListener(() => DoSetSpeed(ElectionAnimationSpeed.Normal));
+            Speed1Button.Button.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 0.6f));
+
             Speed2Button.Button.onClick.AddListener(() => DoSetSpeed(ElectionAnimationSpeed.Fast));
+            Speed2Button.Button.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 1.3f));
+
             Speed3Button.Button.onClick.AddListener(() => DoSetSpeed(ElectionAnimationSpeed.VeryFast));
-            ConcludeDistrictButton.onClick.AddListener(DoConcludeDistrict); 
+            Speed3Button.Button.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 2f));
+
+            ConcludeDistrictButton.onClick.AddListener(DoConcludeDistrict);
+            ConcludeDistrictButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
             ConcludeElectionButton.onClick.AddListener(DoConcludeElection);
+            ConcludeElectionButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
         }
 
         public void Init(ElectionTacticsGame game)
