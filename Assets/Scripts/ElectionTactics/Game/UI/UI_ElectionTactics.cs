@@ -47,6 +47,7 @@ namespace ElectionTactics
 
         [Header("Side Panel Tabs")]
         public Image SidePanel;
+        public GameObject SidePanelContentContainer;
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
         public UI_Parliament Parliament;
@@ -112,6 +113,13 @@ namespace ElectionTactics
 
             // Element initialization
             ElectionControls.Init(Game);
+
+            HideAllTabs();
+        }
+
+        private void HideAllTabs()
+        {
+            foreach (Transform t in SidePanelContentContainer.transform) t.gameObject.SetActive(false);
         }
 
         #region Update

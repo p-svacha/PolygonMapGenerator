@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,11 +21,11 @@ namespace ElectionTactics
 
         [Header("Legend")]
         public GameObject LegendContainer;
-        public Text LegendTitleText;
+        public TextMeshProUGUI LegendTitleText;
 
         public GameObject PopularityLegend;
-        public Text PopularityLegendTopLimitText;
-        public Text PopularityLegendBotLimitText;
+        public TextMeshProUGUI PopularityLegendTopLimitText;
+        public TextMeshProUGUI PopularityLegendBotLimitText;
 
         private Dictionary<Color, string> Legend = new Dictionary<Color, string>();
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace ElectionTactics
     public class LegendEntry : MonoBehaviour
     {
         public Image ColorKnob;
-        public Text Label;
+        public TextMeshProUGUI Label;
 
         public void Init(Color c, string text)
         {

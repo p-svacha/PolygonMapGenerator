@@ -124,6 +124,7 @@ namespace ElectionTactics
             StartGameSeed = GetRandomSeed();
             MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(mapSeed, StartGameSeed);
+
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 

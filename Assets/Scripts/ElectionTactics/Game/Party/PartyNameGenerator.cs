@@ -11,7 +11,7 @@ namespace ElectionTactics
 
         private static Dictionary<string, int> Adjectives = new() // A
         {
-            { GeneratedNameTemplate, 300 },
+            { GeneratedNameTemplate, 200 },
             { "Revolutionary", 100 },
             { "Socialist", 100 },
             { "Anarchist", 100 },
@@ -45,6 +45,7 @@ namespace ElectionTactics
             { "Purple", 100 },
             { "Pink", 100 },
             { "Brown", 100 },
+            { "Crimson", 100 },
             { "Reformist", 100 },
             { "Capitalist", 100 },
             { "Anti-Capitalist", 100 },
@@ -69,8 +70,39 @@ namespace ElectionTactics
             { "Humanist", 100 },
             { "Civil", 100 },
             { "Alternative", 100 },
+            { "Public", 100 },
+            { "Federal", 100 },
+            { "Traditional", 100 },
+            { "Constitutional", 100 },
+            { "Patriotic", 100 },
+            { "Collective", 100 },
+            { "Cooperative", 100 },
+            { "Common", 100 },
+            { "Rational", 100 },
+            { "Scientific", 100 },
+            { "Unified", 100 },
+            { "Technocratic", 100 },
+            { "Supreme", 100 },
+            { "Nationalized", 100 },
 
             { "Evil", 50 },
+            { "First", 50 },
+            { "Second", 50 },
+            { "Third", 50 },
+            { "Last", 50 },
+            { "Ultimate", 50 },
+            { "Final", 50 },
+            { "Sovereign", 50 },
+            { "Central", 50 },
+            { "Radiant", 50 },
+            { "Perfect", 50 },
+            { "Compassionate", 50 },
+            { "Benevolent", 50 },
+            { "Approved", 50 },
+
+            { "Villainous", 30 },
+            { "Correct", 30 },
+            { "Acceptable", 30 },
         };
 
         private static Dictionary<string, int> PartyTypeNouns = new() // T
@@ -102,11 +134,20 @@ namespace ElectionTactics
             { "Centre", 100 },
             { "One", 100 },
             { "Reforms", 100 },
+            { "Forward", 100 },
+            { "Cause", 100 },
+            { "Citizen", 100 },
+            { "Values", 100 },
+            { "Systems", 100 },
+            { "Human", 100 },
+            { "Tomorrow", 100 },
+            { "First", 100 },
+            { "Executive", 100 },
         };
 
         private static Dictionary<string, int> PartyPurposeWords = new() // U
         {
-            { GeneratedNameTemplate, 200 },
+            { GeneratedNameTemplate, 250 },
             { "Justice", 100 },
             { "Peace", 100 },
             { "Resurgence", 100 },
@@ -120,6 +161,7 @@ namespace ElectionTactics
             { "Science", 100 },
             { "Thought", 100 },
             { "Equality", 100 },
+            { "Equity", 100 },
             { "Anarchy", 100 },
             { "Integration", 100 },
             { "Unity", 100 },
@@ -141,12 +183,24 @@ namespace ElectionTactics
             { "Democracy", 100 },
             { "Community", 100 },
             { "Cooperation", 100 },
+            { "Prosperity", 100 },
+            { "Stability", 100 },
+            { "Tradition", 100 },
+            { "Continuity", 100 },
+            { "Progress", 100 },
+            { "Wealth", 100 },
+            { "Horizon", 100 },
+            { "Optimization", 100 },
+            { "Dominion", 100 },
+            { "Victory", 100 },
+            { "Everything", 100 },
 
             { "Hope", 70 },
             { "Grace", 70 },
             { "Faith", 70 },
             { "Wisdom", 70 },
             { "Truth", 70 },
+            { "Efficiency", 70 },
 
             { "Harmony", 50 },
             { "Love", 50 },
@@ -162,8 +216,16 @@ namespace ElectionTactics
             { "Resonance", 50 },
             { "Concord", 50 },
             { "Accord", 50 },
+            { "Heritage", 50 },
+            { "Family", 50 },
+            { "Happiness", 50 },
 
             { "Tyranny", 40 },
+            { "Purity", 40 },
+            { "Obedience", 40 },
+            { "Iron", 40 },
+            { "Steel", 40 },
+            { "Disco", 40 },
 
             { "Fellowship", 30 },
             { "Calm", 30 },
@@ -179,6 +241,8 @@ namespace ElectionTactics
             { "Spirit", 30 },
             { "Soul", 30 },
             { "Goodwill", 30 },
+            { "Ascension", 30 },
+            { "Cleansing", 30 },
 
             { "Brotherhood", 30 },
             { "Sisterhood", 30 },
@@ -215,6 +279,8 @@ namespace ElectionTactics
             { "Forum", 100 },
             { "Initiative", 100 },
             { "Assembly", 100 },
+            { "Collective", 100 },
+            { "Advancement", 100 },
 
             { "Tribune", 50 },
             { "Tigers", 50 },
@@ -226,6 +292,20 @@ namespace ElectionTactics
             { "Contract", 50 },
             { "Directorate", 50 },
             { "Authority", 50 },
+            { "Ministry", 50 },
+            { "Department", 50 },
+            { "Mandate", 50 },
+            { "Vanguard", 50 },
+            { "Legion", 50 },
+            { "Path", 50 },
+            { "Committee", 50 },
+
+            { "Algorithm", 20 },
+            { "Will", 20 },
+            { "Purpose", 20 },
+            { "Doctrine", 20 },
+            { "Alignment", 20 },
+            { "Keepers", 20 },
         };
 
         private static Dictionary<string, int> Prepositions = new() // f
@@ -233,6 +313,7 @@ namespace ElectionTactics
             { "of", 100 },
             { "for", 100 },
             { "for the", 40 },
+            { "through", 20 },
         };
 
 
@@ -256,25 +337,31 @@ namespace ElectionTactics
         private static Dictionary<string, int> NameLanguage = new Dictionary<string, int>()
         {
             // Doubles
-            { "AP", 100 },
-            { "TP", 100 },
-            { "UP", 100 },
+            { "AP", 150 },
+            { "TP", 80 },
+            { "UP", 150 },
+            { "AU", 120 },
+            { "UU", 35 },
 
             { "PfU", 80 },
             { "U&U", 50 },
+            { "A&A", 25 },
 
             { "tP", 10 },
 
             // Triples
-            { "ATP", 100 },
-            { "AUP", 80 },
-            { "TUP", 80 },
+            { "ATP", 70 },
+            { "AUP", 90 },
+            { "TUP", 70 },
             { "TAP", 40 },
+            { "AAP", 50 },
 
-            { "APfU", 80 },
-            { "TPfU", 60 },
-            { "UPfU", 60 },
-            { "U&UP", 50 },
+            { "APfU", 60 },
+            { "PfAU", 60 },
+            { "TPfU", 50 },
+            { "UPfU", 50 },
+            { "U&UP", 40 },
+            { "AAUP", 20 },
 
             { "tAP", 10 },
             { "tTP", 10 },

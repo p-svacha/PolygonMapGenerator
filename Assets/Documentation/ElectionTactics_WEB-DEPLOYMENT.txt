@@ -1,0 +1,9 @@
+Build the Project with Web settings into the "WebBuild" folder
+Viewport: 1280x720
+
+Open WebBuild/index.html and add   style="display:none"  to the unity-footer, so the resulting line is:
+<div id="unity-footer" style="display:none">
+
+Then zip the content of WebBuild (the files in it, not the folder, so index.html is at root) and upload it to itch.io
+Make sure the viewport on itch is the same as in the Build.
+Check "Include fullscreen button" in itch settings
