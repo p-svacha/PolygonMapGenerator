@@ -201,7 +201,7 @@ namespace ElectionTactics
             TempStandingsScore.Clear();
             foreach (Party p in Game.Parties) TempStandingsScore.Add(p, p.PreviousScore);
 
-            DistrictOrder = ElectionResult.DistrictResults.Select(x => x.District).OrderBy(x => x.Population).ToList();
+            DistrictOrder = ElectionResult.DistrictResults.OrderBy(x => x.Seats).ThenBy(x => x.District.Population).Select(x => x.District).ToList();
             CurElectionDistrictIndex = -1;
         }
 

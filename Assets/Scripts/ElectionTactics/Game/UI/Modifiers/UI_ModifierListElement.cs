@@ -21,7 +21,7 @@ namespace ElectionTactics
 
             PartyText.text = m.Party.Acronym;
             PartyText.color = m.Party.Color;
-            ValueText.text = (m.Value > 0 ? "+" : "") + m.Value.ToString();
+            ValueText.text = m.Type == ModifierType.Positive ? "+" + m.Value.ToString() : "-" + m.Value.ToString();
             if (m.Value == 0) ValueText.text = "";
             DescriptionText.text = m.Description;
             if (m.Type == ModifierType.Exclusion) DescriptionText.text = $"<b>EXCLUDED</b> {DescriptionText.text}";

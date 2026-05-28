@@ -1,21 +1,8 @@
 PRE-RELEASE CHECKLIST:
 
 
-TEST GAME 2 NOTES
-(T) tooltip needs to be above mute button
-(T) redesign policy control a little - less height per row, non-title font, more bot-top margin in point display, smaller +- buttons
-(T) mini visual bug: selected district shader pattern sometimes resets, causing a jump in the pattern
-(T) fix coastal and lakeside geographic traits. just saw that they technically exist, but haven't seen them in dozens of playthroughs
-(T) make randomness in amount of cultural traits weighted. currently 0-3 traits all have the same chance. make 1-2 have more chance to appear and add tiny chance for 4
-(T) add a new bot personality: currently bots spread their policy points FULL RANDOM. keep this but add a 50% chance that they have another personality. in the new personality, they create a weighted table where they get a random weight for each policy. when spending a policy point, they choose the policy randomly according to these weights. should lead to some bot parties being a little more focussed, making strategies more interesting because some bots might be REALLY good in some districts and fully neglect others. currently they are often all very similar in popularity.
-(T) add dynamic tooltip for margin display during election animation
-(T) add dynamic tooltip for seat display during election animation
-(T) add one more cultural trait for a bit more variation, the traits make the game really fun
-
-
+TEST GAME 3 NOTES
 after all that go to step 4 (final web build + private testing a couple matches)
-test back to menu after game
-fix resolution/layout bugs in web build (maybe just add recommendation to play in fullscreen 1920x1080 as that works the best if I can't fix otherwise)
 
 prepare itch page
 

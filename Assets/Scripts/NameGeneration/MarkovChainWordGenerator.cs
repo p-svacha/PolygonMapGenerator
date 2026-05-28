@@ -90,7 +90,12 @@ public static class MarkovChainWordGenerator
         word = word.Substring(1, word.Length - 2);
 
         // Remove special characters at the end
+        word = word.Trim();
+
         word = word.TrimEnd('\'');
+        word = word.TrimEnd('-');
+        word = word.TrimEnd('.');
+
         word = word.Trim();
 
         return word;
