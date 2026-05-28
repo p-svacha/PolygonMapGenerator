@@ -31,6 +31,7 @@ namespace ElectionTactics
         public AudioClip Gong;
         public AudioClip Woosh;
         public AudioClip Error;
+        public AudioClip Swoosh;
 
         public AudioClip GraphAnimationSound;
 
@@ -48,6 +49,8 @@ namespace ElectionTactics
         // Charging sounds
         private Dictionary<string, ChargingSound> chargingSounds = new Dictionary<string, ChargingSound>();
 
+        // General
+        private static float sfxSpeedModifier = 1f;
         private bool isMuted;
 
         private class ChargingSound
@@ -107,12 +110,17 @@ namespace ElectionTactics
             }
         }
 
+        public static void SetSfxSpeedModifier(float speed)
+        {
+            sfxSpeedModifier = speed;
+        }
+
         // ==================== ONE-SHOT SOUNDS ====================
 
         /// <summary>
         /// Play a sound effect once. Supports overlapping.
         /// </summary>
-        public static void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f)
+        public static void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f, bool applySpeedModifier = false)
         {
             Debug.Log($"PlaySound: {clip?.name} (vol={volume}, pitch={pitch})");
             if (Instance == null || clip == null || Instance.isMuted) return;
@@ -120,7 +128,7 @@ namespace ElectionTactics
             AudioSource source = Instance.GetNextOneShotSource();
             source.clip = clip;
             source.volume = volume * Instance.SfxVolume * Instance.MasterVolume;
-            source.pitch = pitch;
+            source.pitch = pitch * (applySpeedModifier ? sfxSpeedModifier : 1f);
             source.Play();
         }
         public static void PlayStandardClickSound(float pitch = 1f) => PlaySound(Instance.ButtonClick, 1f, pitch);

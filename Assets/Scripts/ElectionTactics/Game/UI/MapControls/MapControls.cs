@@ -17,7 +17,7 @@ namespace ElectionTactics
         private Map Map;
 
         [Header("Footer Menubar")]
-        public Dropdown OverlayDropdown;
+        public TMP_Dropdown OverlayDropdown;
 
         [Header("Legend")]
         public GameObject LegendContainer;
@@ -27,28 +27,35 @@ namespace ElectionTactics
         public TextMeshProUGUI PopularityLegendTopLimitText;
         public TextMeshProUGUI PopularityLegendBotLimitText;
 
-        private Dictionary<Color, string> Legend = new Dictionary<Color, string>();
+        private List<LegendEntryData> Legend = new List<LegendEntryData>();
 
         private MapDisplayMode DisplayMode;
         private DistrictLabelMode DistrictLabelMode;
 
         // Specific Legends
-        private Dictionary<Color, string> NoOverlayLegend = new Dictionary<Color, string>();
-        private Dictionary<Color, string> ImpactLegend = new Dictionary<Color, string>();
+        private List<LegendEntryData> PolicyImpactLegend;
 
         private void Start()
         {
-            // Create default legends
-            NoOverlayLegend.Add(ColorManager.Instance.InactiveDistrictColor, "District");
-            ImpactLegend.Add(ColorManager.Instance.VeryHighImpactColor, "Very High");
-            ImpactLegend.Add(ColorManager.Instance.HighImpactColor, "High");
-            ImpactLegend.Add(ColorManager.Instance.MediumImpactColor, "Medium");
-            ImpactLegend.Add(ColorManager.Instance.LowImpactColor, "Low");
-            ImpactLegend.Add(ColorManager.Instance.NoImpactColor, "None");
-            ImpactLegend.Add(ColorManager.Instance.NegativeImpactColor, "Negative");
+            // Static legends initialization
+            PolicyImpactLegend  = new List<LegendEntryData>()
+            {
+                new LegendEntryData("40", ColorManager.Instance.VeryHighImpactColor, "Very High", 40),
+                new LegendEntryData("30", ColorManager.Instance.HighImpactColor, "High", 30),
+                new LegendEntryData("20", ColorManager.Instance.MediumImpactColor, "Medium", 20),
+                new LegendEntryData("10", ColorManager.Instance.LowImpactColor, "Low", 10),
+                new LegendEntryData("0", ColorManager.Instance.NoImpactColor, "None", 0),
+                new LegendEntryData("-10", ColorManager.Instance.NegativeImpactColor, "Negative", -10),
+            };
 
+            // Dropdown
+            List<string> options = new List<string>();
             foreach(MapDisplayMode displayMode in Enum.GetValues(typeof(MapDisplayMode)))
-                OverlayDropdown.options.Add(new Dropdown.OptionData(EnumHelper.GetDescription<MapDisplayMode>(displayMode)));
+            {
+                options.Add(EnumHelper.GetDescription<MapDisplayMode>(displayMode));
+            }
+            OverlayDropdown.ClearOptions();
+            OverlayDropdown.AddOptions(options);
 
             OverlayDropdown.onValueChanged.AddListener(OverlayDropdown_OnValueChanged);
             OverlayDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
@@ -99,7 +106,7 @@ namespace ElectionTactics
             {
                 case MapDisplayMode.NoOverlay:
                     LegendTitleText.text = "Districts";
-                    foreach (KeyValuePair<Color, string> kvp in NoOverlayLegend) Legend.Add(kvp.Key, kvp.Value);
+                    Legend.Add(new LegendEntryData("0", ColorManager.Instance.InactiveDistrictColor, "District"));
                     foreach(Region r in Map.LandRegions)
                     {
                         if (Game.VisibleDistricts.ContainsKey(r)) r.SetColor(ColorManager.Instance.NoImpactColor);
@@ -109,8 +116,8 @@ namespace ElectionTactics
 
                 case MapDisplayMode.LastElection:
                     LegendTitleText.text = "Parties";
-                    Legend.Add(ColorManager.Instance.NoImpactColor, "None");
-                    foreach (Party party in Game.Parties) Legend.Add(party.Color, party.Acronym);
+                    Legend.Add(new LegendEntryData("none", ColorManager.Instance.NoImpactColor, "None", 1));
+                    foreach (Party party in Game.Parties) Legend.Add(new LegendEntryData(party.Id.ToString(), party.Color, party.Acronym));
                     foreach (Region r in Map.LandRegions) 
                     {
                         if (Game.VisibleDistricts.ContainsKey(r))
@@ -152,7 +159,7 @@ namespace ElectionTactics
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
                             LanguageDef language = Game.VisibleDistricts[r].Language;
-                            if (!Legend.ContainsValue(language.LabelCapWord)) Legend.Add(language.Color, language.LabelCapWord);
+                            if (!HasLegendEntry(language.DefName)) Legend.Add(new LegendEntryData(language.DefName, language.Color, language.LabelCapWord));
                             r.SetColor(language.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
@@ -166,7 +173,7 @@ namespace ElectionTactics
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
                             ReligionDef religion = Game.VisibleDistricts[r].Religion;
-                            if (!Legend.ContainsValue(religion.LabelCapWord)) Legend.Add(religion.Color, religion.LabelCapWord);
+                            if (!HasLegendEntry(religion.DefName)) Legend.Add(new LegendEntryData(religion.DefName, religion.Color, religion.LabelCapWord, religion.SortingOrder));
                             r.SetColor(religion.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
@@ -180,7 +187,7 @@ namespace ElectionTactics
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
                             AgeGroupDef ageGroup = Game.VisibleDistricts[r].AgeGroup;
-                            if (!Legend.ContainsValue(ageGroup.Label)) Legend.Add(ageGroup.Color, ageGroup.Label);
+                            if (!HasLegendEntry(ageGroup.DefName)) Legend.Add(new LegendEntryData(ageGroup.DefName, ageGroup.Color, ageGroup.Label, ageGroup.SortingOrder));
                             r.SetColor(ageGroup.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
@@ -194,7 +201,7 @@ namespace ElectionTactics
                         if (Game.VisibleDistricts.ContainsKey(r))
                         {
                             DensityDef density = Game.VisibleDistricts[r].Density;
-                            if (!Legend.ContainsValue(density.Label)) Legend.Add(density.Color, density.Label);
+                            if (!HasLegendEntry(density.DefName)) Legend.Add(new LegendEntryData(density.DefName, density.Color, density.Label, density.SortingOrder));
                             r.SetColor(density.Color);
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
@@ -202,11 +209,8 @@ namespace ElectionTactics
                     break;
             }
 
-            foreach(KeyValuePair<Color, string> kvp in Legend)
-            {
-                LegendEntry entry = Instantiate(LegendEntryPrefab, LegendContainer.transform);
-                entry.Init(kvp.Key, kvp.Value);
-            }
+            // Finalize legend
+            DisplayLegend(Legend);
 
             Canvas.ForceUpdateCanvases();
         }
@@ -225,6 +229,8 @@ namespace ElectionTactics
         {
             DoSetMapDisplayMode(DisplayMode, DistrictLabelMode);
         }
+
+        private bool HasLegendEntry(string id) => Legend.Any(e => e.Id == id);
 
         #endregion
 
@@ -245,59 +251,35 @@ namespace ElectionTactics
 
         public void ShowGeographyOverlay(GeographyTraitType t)
         {
-            ShowOverlayLegend(EnumHelper.GetDescription(t));
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(t);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+            ShowPolicyImpact(policy);
         }
         public void ShowEconomicSectorOverlay(EconomicSectorDef def)
         {
-            ShowOverlayLegend(def.Label);
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
+            ShowPolicyImpact(policy);
         }
         public void ShowDensityOverlay(DensityDef def)
         {
-            ShowOverlayLegend(def.Label);
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
+            ShowPolicyImpact(policy);
         }
         public void ShowAgeOverlay(AgeGroupDef def)
         {
-            ShowOverlayLegend(def.Label);
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
+            ShowPolicyImpact(policy);
         }
         public void ShowLanguageOverlay(LanguageDef def)
         {
-            ShowOverlayLegend(def.Label);
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
+            ShowPolicyImpact(policy);
         }
         public void ShowReligionOverlay(ReligionDef def)
         {
             if (def == ReligionDefOf.None) return;
 
-            ShowOverlayLegend(def.Label);
-            foreach (Region region in Map.LandRegions.Where(x => Game.VisibleDistricts.ContainsKey(x)))
-            {
-                Policy policy = Game.LocalPlayerParty.GetPolicy(def);
-                ShowPolicyImpact(policy);
-            }
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
+            ShowPolicyImpact(policy);
         }
 
         private void ColorDistrictByPolicyImpact(Region region, Policy policy)
@@ -313,12 +295,16 @@ namespace ElectionTactics
             ClearLegend();
 
             LegendTitleText.text = "Impact " + title;
-            foreach (KeyValuePair<Color, string> kvp in ImpactLegend) Legend.Add(kvp.Key, kvp.Value);
+            DisplayLegend(PolicyImpactLegend);
+        }
 
-            foreach (KeyValuePair<Color, string> kvp in Legend)
+        private void DisplayLegend(List<LegendEntryData> legend)
+        {
+            legend = legend.OrderByDescending(e => e.SortingOrder).ThenBy(e => e.Label).ToList();
+            foreach (LegendEntryData data in legend)
             {
                 LegendEntry entry = Instantiate(LegendEntryPrefab, LegendContainer.transform);
-                entry.Init(kvp.Key, kvp.Value);
+                entry.Init(data);
             }
         }
 

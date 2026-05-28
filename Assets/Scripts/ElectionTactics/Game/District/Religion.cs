@@ -7,6 +7,7 @@ namespace ElectionTactics
     public class ReligionDef : Def
     {
         public Color Color { get; init; }
+        public int SortingOrder { get; init; } // Used in policy list and map control legend, highest on top
     }
 
     public static class ReligionDefs
@@ -18,6 +19,7 @@ namespace ElectionTactics
                 DefName = "None",
                 Label = "-",
                 Color = new Color(0.55f, 0.55f, 0.55f),
+                SortingOrder = 1,
             },
 
             new ReligionDef()

@@ -185,15 +185,17 @@ namespace ElectionTactics
 
         public void SelectDistrict(District d)
         {
-            AudioManager.PlayStandardClickSound();
-
             if (SelectedDistrict == d && SelectedDistrict != null) // Clicking the already selected district or clicking away from district unselects it
             {
+                AudioManager.PlayStandardClickSound();
+
                 SelectTab(Tab.DistrictList);
                 IsDistrictSelected = false;
             }
             else if (d != null) // Clicking on a district
             {
+                AudioManager.PlayStandardClickSound();
+
                 UnselectDistrict();
                 SelectedDistrict = d;
                 SelectedDistrict.Region.SetAnimatedHighlight(true);
@@ -203,6 +205,8 @@ namespace ElectionTactics
             }
             else if(d == null && SelectedDistrict != null) // Clicking away when a district has been selected before
             {
+                AudioManager.PlayStandardClickSound();
+
                 SelectTab(Tab.DistrictList);
                 IsDistrictSelected = false;
             }

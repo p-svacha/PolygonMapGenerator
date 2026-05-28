@@ -117,6 +117,8 @@ public class PolygonMapGenerator : MonoBehaviour
 
     void Update()
     {
+        if (GenerationState == MapGenerationState.Waiting) return;
+
         // Handle callback in case map generation is done
         if (GenerationState == MapGenerationState.GenerationDone)
         {

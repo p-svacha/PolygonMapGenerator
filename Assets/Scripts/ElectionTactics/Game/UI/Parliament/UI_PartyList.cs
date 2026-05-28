@@ -112,6 +112,20 @@ namespace ElectionTactics
             CurrentAnimationTime = 0f;
             IsAnimating = true;
             AnimationCallback = callback;
+
+            // Check if any element actually moves
+            bool anyMovement = false;
+            foreach (var elem in ListElements.Values)
+            {
+                if (Vector2.Distance(SourcePositions[elem], TargetPositions[elem]) > 0.1f)
+                {
+                    anyMovement = true;
+                    break;
+                }
+            }
+
+            // Play sound if there is movement
+            if (anyMovement) AudioManager.PlaySound(AudioManager.Instance.Swoosh, volume: 0.4f, applySpeedModifier: true);
         }
 
         public void HighlightParty(Party p)

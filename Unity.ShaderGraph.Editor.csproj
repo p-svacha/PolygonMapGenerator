@@ -500,8 +500,8 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\Matrix2MaterialSlot.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\Math\Derivative\DDXNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\MipmapStreamingShaderProperties.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\GraphData.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Interfaces\IMayRequireScreenPosition.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\GraphData.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Views\Slots\TextureSlotControlView.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Inspector\PropertyDrawers\SubGraphOutputNodePropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\Input\Basic\Vector1Node.cs" />

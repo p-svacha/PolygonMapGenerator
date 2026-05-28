@@ -13,8 +13,8 @@ namespace ElectionTactics
 
         public int ConditionValue;
 
-        private const int MinElectionWins = 5;
-        private const int MaxElectionWins = 8;
+        private const int MinElectionWins = 7;
+        private const int MaxElectionWins = 7;
         private const int StepElectionWins = 1;
 
         private const int MinSeatWins = 50;

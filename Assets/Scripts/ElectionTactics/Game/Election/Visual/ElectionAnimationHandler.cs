@@ -346,7 +346,10 @@ namespace ElectionTactics
         {
             SetColorOfCurrentDistrictResult();
 
-            Game.UI.Parliament.ParliamentPartyList.HighlightParty(CurrentDistrictResult.WinnerParty);
+            // Highlight all parties that won at least one seat
+            foreach (Party p in CurrentDistrictResult.GetPartiesThatWonSeats()) Game.UI.Parliament.ParliamentPartyList.HighlightParty(p);
+
+            // Move positions
             Game.UI.Parliament.ParliamentPartyList.MovePositionsAnimated(TempSeats, ListAnimationTime, callback: OnPartyListUpdateAnimationDone);
 
             // Init flying damage tokens from district label towards standings panel
@@ -375,9 +378,11 @@ namespace ElectionTactics
 
         private void OnPartyListUpdateAnimationDone()
         {
-            Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(CurrentDistrictResult.WinnerParty);
+            // Unhighlight all parties that won at least one seat
+            foreach (Party p in CurrentDistrictResult.GetPartiesThatWonSeats()) Game.UI.Parliament.ParliamentPartyList.UnhighlightParty(p);
 
-            if (!Game.IsBattleRoyale) // In some game modes we wait for tokens to arrive and the standings panel to update first
+            // In some game modes we wait for tokens to arrive and the standings panel to update first
+            if (!Game.IsBattleRoyale)
             {
                 InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitNextDistrict);
             }
@@ -436,7 +441,8 @@ namespace ElectionTactics
 
         private void InitEndAnimation()
         {
-            // Resume ambient audio
+            // Reset audio
+            AudioManager.SetSfxSpeedModifier(1f);
             AudioManager.ResumeAmbient();
 
             // Clear graph and highlight from last district
@@ -486,6 +492,8 @@ namespace ElectionTactics
         public void SetAnimationSpeed(ElectionAnimationSpeed speed)
         {
             AnimationSpeedModifier = AnimationSpeeds[speed];
+
+            AudioManager.SetSfxSpeedModifier(AnimationSpeedModifier);
             Game.CameraHandler.SetMoveSpeedModifier(AnimationSpeedModifier);
             Game.UI.Parliament.ModifierSliderContainer.SetAnimationSpeedModifier(AnimationSpeedModifier);
             Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(AnimationSpeedModifier);

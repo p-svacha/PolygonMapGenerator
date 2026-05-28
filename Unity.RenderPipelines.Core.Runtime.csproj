@@ -259,11 +259,11 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\PostProcessing\LensFlareCommonSRP.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Utilities\CoreUtils.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\RenderGraph\RenderGraphUtilsBlit.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\XR\XRVisibleMesh.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Common\ComponentSingleton.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Debugging\DebugShapes.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Common\RemoveRange.Extensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Stripping\RenderPipelineGraphicsSettingsStripperFetcher.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\XR\XRVisibleMesh.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\RenderGraph\Compiler\PassesData.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Debugging\DebugUI.Panel.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@bbe9c1837b9e\Runtime\Camera\CameraSwitcher.cs" />

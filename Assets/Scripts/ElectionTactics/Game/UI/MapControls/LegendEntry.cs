@@ -11,10 +11,10 @@ namespace ElectionTactics
         public Image ColorKnob;
         public TextMeshProUGUI Label;
 
-        public void Init(Color c, string text)
+        public void Init(LegendEntryData entry)
         {
-            ColorKnob.color = c;
-            Label.text = text;
+            ColorKnob.color = entry.Color;
+            Label.text = entry.Label;
             Canvas.ForceUpdateCanvases();
             GetComponent<HorizontalLayoutGroup>().SetLayoutHorizontal();
         }

@@ -19,7 +19,6 @@ namespace ElectionTactics {
         void Start()
         {
             NextActionButton.onClick.AddListener(DoNextAction);
-            NextActionButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.Gong, volume: 0.45f));
         }
 
         public void Init(ElectionTacticsGame game)
@@ -40,6 +39,8 @@ namespace ElectionTactics {
     
         private void DoNextAction()
         {
+            if (Game.State != GameState.PreparationPhase) return;
+
             Game.EndTurn();
         }
 

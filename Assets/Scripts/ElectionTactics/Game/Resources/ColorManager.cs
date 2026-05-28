@@ -6,6 +6,8 @@ namespace ElectionTactics
 {
     public class ColorManager : MonoBehaviour
     {
+        public static ColorManager Instance;
+
         [Header("Map Colors")]
         public Color WaterColor;
         public Color InactiveDistrictColor;
@@ -29,6 +31,11 @@ namespace ElectionTactics
         public Color UiInteractableDisabled;
         public Color UiText;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         /// <summary>
         /// Returns the fitting color for a popularity impact value.
         /// </summary>
@@ -45,14 +52,6 @@ namespace ElectionTactics
         public Color Lighter(Color c)
         {
             return new Color(c.r + 0.5f * (1f - c.r), c.g + 0.5f * (1f - c.g), c.b + 0.5f * (1f - c.b));
-        }
-
-        public static ColorManager Instance
-        {
-            get
-            {
-                return GameObject.Find("ColorManager").GetComponent<ColorManager>();
-            }
         }
     }
 }

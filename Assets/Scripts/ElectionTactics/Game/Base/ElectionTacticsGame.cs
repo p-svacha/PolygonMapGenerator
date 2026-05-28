@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
-using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -125,6 +122,7 @@ namespace ElectionTactics
             MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(mapSeed, StartGameSeed);
 
+            // settings.Seed = -346576213;
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
@@ -373,10 +371,11 @@ namespace ElectionTactics
             // Go to next year
             ElectionCycle++;
             Year++;
+            Debug.Log($"Starting cycle {ElectionCycle} in Year {Year}.");
 
             // Add new district
             int indexToActivate = ElectionCycle + NUM_STARTING_DISTRICTS - 2; // -2 because cycle starts at 1 and we already have starting districts
-            Districts.Values.ToList()[indexToActivate].Activate();
+            if (indexToActivate < MAX_NUM_DISTRICTS) Districts.Values.ToList()[indexToActivate].Activate();
             UpdateDistrictAges();
             UpdateActivePolicies();
 
@@ -408,6 +407,7 @@ namespace ElectionTactics
             }
 
             // Audio
+            AudioManager.PlaySound(AudioManager.Instance.Gong, volume: 0.45f);
             AudioManager.SwitchToTrack(AudioManager.Instance.ElectionTrack, fadeDuration: 1f);
 
             // Disable footer
@@ -455,7 +455,7 @@ namespace ElectionTactics
                     return true;
                 }
             }
-            else if(IsBattleRoyale)
+            else if (IsBattleRoyale)
             {
                 // Eliminate parties with non-positive legitimacy
                 List<Party> remainingParties = Parties.Where(p => !p.IsEliminated).ToList();
@@ -483,6 +483,14 @@ namespace ElectionTactics
                 {
                     List<Party> finalStandings = Parties.OrderBy(p => p.FinalRank).ToList();
                     WinnerParty = finalStandings.First();
+                    EndGame();
+                    return true;
+                }
+
+                // End the game is the player is eliminated
+                if (LocalPlayerParty.IsEliminated)
+                {
+                    WinnerParty = null;
                     EndGame();
                     return true;
                 }

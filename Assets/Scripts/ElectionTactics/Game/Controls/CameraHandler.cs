@@ -32,6 +32,10 @@ namespace ElectionTactics
         {
             if (Game == null) return;
 
+            // Always process mouse button releases to prevent stuck states
+            if (Input.GetKeyUp(KeyCode.Mouse1)) IsRightMouseDown = false;
+            if (Input.GetKeyUp(KeyCode.Mouse2)) IsMouseWheelDown = false;
+
             // Free Movement
             if (Game.State == GameState.PreparationPhase && !EventSystem.current.IsPointerOverGameObject()) base.Update();
 

@@ -7,7 +7,7 @@ namespace ElectionTactics
     public class DensityDef : Def
     {
         public Color Color { get; init; }
-        public int SortingOrder { get; init; } // Used in policy list, highest on top
+        public int SortingOrder { get; init; } // Used in policy list and map control legend, highest on top
     }
 
     public static class DensityDefs

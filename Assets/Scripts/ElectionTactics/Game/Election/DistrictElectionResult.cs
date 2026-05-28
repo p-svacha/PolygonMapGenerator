@@ -122,5 +122,10 @@ namespace ElectionTactics
 
             return change;
         }
+
+        public List<Party> GetPartiesThatWonSeats()
+        {
+            return Parties.Where(p => SeatsWon[p] > 0).ToList();
+        }
     }
 }

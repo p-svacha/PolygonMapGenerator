@@ -142,8 +142,8 @@
     <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\UnderlyingConnectionList.cs" />
     <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\Layers\StreamSegmentationLayer.cs" />
     <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\LoggingParameters.cs" />
-    <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\ConnectionToken.cs" />
     <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\Layers\TopLayer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\ConnectionToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.transport@704dcd729477\Runtime\Unity.Networking.Transport.asmdef" />

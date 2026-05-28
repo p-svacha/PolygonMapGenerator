@@ -54,6 +54,29 @@ namespace ElectionTactics
             // Popularity breakdown triggers
             PopularityInfo.SetHoverAction(() => { PopularityBreakdown.gameObject.SetActive(true); PopularityBreakdownTable.InitPopularityBreakdown(CurrentDistrict, UI.Game.LocalPlayerParty); });
             PopularityInfo.SetUnhoverAction(() => PopularityBreakdown.gameObject.SetActive(false));
+
+            // Demography
+            DensityInfo.SetHoverAction(() => { UI.MapControls.ShowDensityOverlay(CurrentDistrict.Density); });
+            DensityInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            AgeGroupInfo.SetHoverAction(() => { UI.MapControls.ShowAgeOverlay(CurrentDistrict.AgeGroup); });
+            AgeGroupInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            ReligionInfo.SetHoverAction(() => { UI.MapControls.ShowReligionOverlay(CurrentDistrict.Religion); });
+            ReligionInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            LanguageInfo.SetHoverAction(() => { UI.MapControls.ShowLanguageOverlay(CurrentDistrict.Language); });
+            LanguageInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            // Economy
+            Economy1Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy1); });
+            Economy1Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            Economy2Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy2); });
+            Economy2Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            Economy3Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy3); });
+            Economy3Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
         }
 
         public void Init(District district)
@@ -75,33 +98,14 @@ namespace ElectionTactics
 
             // Demography
             DensityInfo.SetValue(district.Density.Label);
-            DensityInfo.SetHoverAction(() => { UI.MapControls.ShowDensityOverlay(district.Density); });
-            DensityInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
-
             AgeGroupInfo.SetValue(district.AgeGroup.Label);
-            AgeGroupInfo.SetHoverAction(() => { UI.MapControls.ShowAgeOverlay(district.AgeGroup); });
-            AgeGroupInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
-
             ReligionInfo.SetValue(district.Religion.Label);
-            ReligionInfo.SetHoverAction(() => { UI.MapControls.ShowReligionOverlay(district.Religion); });
-            ReligionInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
-
             LanguageInfo.SetValue(district.Language.Label);
-            LanguageInfo.SetHoverAction(() => { UI.MapControls.ShowLanguageOverlay(district.Language); });
-            LanguageInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
             // Economy
             Economy1Info.SetValue(district.Economy1.Label);
-            Economy1Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(district.Economy1); });
-            Economy1Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
-
             Economy2Info.SetValue(district.Economy2.Label);
-            Economy2Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(district.Economy2); });
-            Economy2Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
-
             Economy3Info.SetValue(district.Economy3.Label);
-            Economy3Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(district.Economy3); });
-            Economy3Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
             // Cultural Traits
             CulturalTraitsPanel.InitCulturalTraits(district);

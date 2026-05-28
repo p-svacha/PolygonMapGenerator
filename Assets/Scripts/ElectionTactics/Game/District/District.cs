@@ -224,7 +224,8 @@ namespace ElectionTactics
             languageChances.Add(ElectionTacticsGame.GetRandomLanguage());
             foreach (Region r in Region.LandNeighbours)
             {
-                if (Game.VisibleDistricts.ContainsKey(r)) languageChances.Add(Game.VisibleDistricts[r].Language);
+                District d = Game.GetDistrict(r);
+                if (d != null) languageChances.Add(d.Language);
             }
             return languageChances[Random.Range(0, languageChances.Count)];
         }
@@ -233,8 +234,10 @@ namespace ElectionTactics
             List<ReligionDef> religionChances = new List<ReligionDef>();
             foreach (Region r in Region.Neighbours)
             {
+                District d = Game.GetDistrict(r);
+
                 ReligionDef religion;
-                if (Game.VisibleDistricts.ContainsKey(r)) religion = Game.VisibleDistricts[r].Religion;
+                if (d != null) religion = d.Religion;
                 else religion = ElectionTacticsGame.GetRandomReligion();
 
                 religionChances.Add(religion);
