@@ -607,7 +607,7 @@ namespace ElectionTactics
             }
         }
 
-        public CulturalTraitDef GetRandomAdoptableMentalityTraitDef(District district)
+        public CulturalTraitDef GetRandomAdoptableCulturalTraitDef(District district)
         {
 
             Dictionary<CulturalTraitDef, int> candidates = new Dictionary<CulturalTraitDef, int>();
@@ -616,9 +616,10 @@ namespace ElectionTactics
                 bool canAdopt = true;
 
                 // Exclusion criteria
-                if (district.CulturalTraits.Any(m => m.Def == def)) canAdopt = false;
-                if (district.CulturalTraits.Any(m => def.ForbiddenCulturalTraits.Contains(m.Def.DefName))) canAdopt = false;
+                if (district.CulturalTraits.Any(t => t.Def == def)) canAdopt = false;
+                if (district.CulturalTraits.Any(t => def.ForbiddenCulturalTraits.Contains(t.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
+                if (district.CulturalTraits.Any(t => t.Def.IsSeatDistributionTrait && def.IsSeatDistributionTrait)) canAdopt = false;
 
                 if(canAdopt) candidates.Add(def, def.Commonness);
             }

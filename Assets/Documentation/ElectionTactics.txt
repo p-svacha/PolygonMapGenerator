@@ -2,23 +2,6 @@ PRE-RELEASE CHECKLIST:
 
 
 TEST GAME 1 NOTES
-(/) map control DROPDOWN SELECTION needs TMPro text, it's blurry
-(/) no religion should be on top in legend in map controls
-(/) add a swoosh sound if during an election the party standings change - would feel very natural and feels like it's missing (AudioManager.Instance.Swoosh)
-(/) exporter trait doesn't work correctly, gives inconsistent and too many points to adjacent districts
-(/) only the winning party gets highlighted in the list during the election animation. when multiple parties gain seats, all of them should be highlighted
-(/) less diverse languages and religion
-(/) it is possible to click on "end turn" again right when it slides in after the end of the election animation. It should stay uninteractable until the state switches back to preparation phase (like when it slides out)
-(/) right click camera move gets stuck in movement mode (when letting go over raycast target, i.e. district label)
- > also it doesn't move the map while over a district label
-(/) clicking anywhere on the map plays the click sound
-(/) getting eliminated in battle royale doesn't work. it should show the losing screen but it doesn't
-(/) Back to Menu Button in Game Over Screen doesn't work.
-(/) always win 7 elec
-(/) cultural traits chips text gets drawn over 2 lines when 2 long traits are on the same line. Find a general solution for the trait container so the amount of traits per line is dynamic based on the chip length.
-(/) game over screen stays there after a game
-(/) game over screen button doesnt have click sound
-(/) hovering over an attribute row or trait in district info makes huge lag spike
 
 after all that go to step 4 (final web build + private testing a couple matches)
 test back to menu after game

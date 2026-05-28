@@ -246,6 +246,17 @@ namespace ElectionTactics
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(false);
                 }
 
+                // Seat distribution trait
+                CulturalTrait seatDistributionTrait = CurrentDistrictResult.District.GetSeatDistributionTrait();
+                if (seatDistributionTrait != null)
+                {
+                    Game.UI.Parliament.SeatDistributionTrait.gameObject.SetActive(true);
+                    Game.UI.Parliament.SeatDistributionTrait.InitCulturalTrait(seatDistributionTrait);
+                }
+                else Game.UI.Parliament.SeatDistributionTrait.gameObject.SetActive(false);
+
+                // Hide tooltip
+                Tooltip.Instance.Hide();
 
                 List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
                 foreach (KeyValuePair<Party, float> kvp in CurrentDistrictResult.VoteShare)

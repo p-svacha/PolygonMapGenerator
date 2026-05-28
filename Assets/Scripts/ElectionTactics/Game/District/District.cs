@@ -84,7 +84,7 @@ namespace ElectionTactics
             int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
             while (CulturalTraits.Count < numMentalities)
             {
-                CulturalTraitDef def = Game.GetRandomAdoptableMentalityTraitDef(this);
+                CulturalTraitDef def = Game.GetRandomAdoptableCulturalTraitDef(this);
                 CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
                 trait.Init(def, this);
                 CulturalTraits.Add(trait);
@@ -488,6 +488,8 @@ namespace ElectionTactics
         #region Getters
 
         public List<District> AdjacentActiveDistricts => Region.AdjacentRegions.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
+
+        public CulturalTrait GetSeatDistributionTrait() => CulturalTraits.FirstOrDefault(t => t.Def.IsSeatDistributionTrait);
 
         #endregion
 

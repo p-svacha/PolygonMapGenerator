@@ -34,6 +34,7 @@ namespace ElectionTactics
         public Text CurrentElectionSeatsText;
         public Image CurrentElectionSeatsIcon;
         public WindowGraph CurrentElectionGraph;
+        public UI_Trait SeatDistributionTrait;
 
         private void Start()
         {

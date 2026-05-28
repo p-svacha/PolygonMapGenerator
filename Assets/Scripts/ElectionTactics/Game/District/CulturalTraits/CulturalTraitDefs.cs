@@ -225,11 +225,8 @@ namespace ElectionTactics
                 Label = "Proportional Representation",
                 Description = "Seats in this district are awarded to all parties proportially according to their voter share.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
-                Commonness = 60,
-                ForbiddenCulturalTraits = new List<string>()
-                {
-                    MAJORITY_BONUS
-                },
+                Commonness = 65,
+                IsSeatDistributionTrait = true,
             },
 
             new CulturalTraitDef()
@@ -238,11 +235,8 @@ namespace ElectionTactics
                 Label = "Majority Bonus",
                 Description = "Seats in this district are awarded in a way that the winning party gets the absolute majority, and the rest of the seats are distributed proportionally along the other parties according to their voter share.",
                 TraitClass = typeof(CT_MajorityBonus),
-                Commonness = 30,
-                ForbiddenCulturalTraits = new List<string>()
-                {
-                    PROPORTIONAL_REPRESENTATION
-                },
+                Commonness = 25,
+                IsSeatDistributionTrait = true,
             },
         };
     }

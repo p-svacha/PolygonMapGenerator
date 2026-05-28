@@ -25,6 +25,11 @@ namespace ElectionTactics
         /// </summary>
         public bool RequiresReligion { get; init; }
 
+        /// <summary>
+        /// Flag for if this trait affects how seats are distributed. Only one such a trait can exist per district and they are displayed during an election if present.
+        /// </summary>
+        public bool IsSeatDistributionTrait { get; init; }
+
 
         public override void ResolveReferences()
         {
