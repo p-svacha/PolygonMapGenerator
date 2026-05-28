@@ -80,12 +80,11 @@ Shader "Custom/DistrictShader"
             // Animated Highlight
             if (_AnimatedHighlight == 1.0f)
             {
-                float timeMod = (_Time.w % (1 / _AnimatedHighlightSpeed)) / (1 / _AnimatedHighlightSpeed);
-                float posValue = IN.worldPos.x + IN.worldPos.z;
-                float colVal = (posValue + timeMod) % _AnimatedHighlightSize;
-                if (colVal > (_AnimatedHighlightSize / 4) && colVal < (_AnimatedHighlightSize / 4 * 3))
+                float offset = _Time.y * _AnimatedHighlightSpeed;
+                float pattern = frac((IN.worldPos.x + IN.worldPos.z + offset) / _AnimatedHighlightSize);
+                if (pattern > 0.25 && pattern < 0.75)
                 {
-                    c = _AnimatedHighlightColor.a * (_AnimatedHighlightColor)+(1 - _AnimatedHighlightColor.a) * c;
+                    c = _AnimatedHighlightColor.a * (_AnimatedHighlightColor) + (1 - _AnimatedHighlightColor.a) * c;
                 }
             }
 

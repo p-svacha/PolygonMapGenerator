@@ -259,8 +259,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 17
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0c4e605557cf6f04bab78d59ec2a929d, type: 2}
-  m_sharedMaterial: {fileID: -2452372178596128274, guid: 0c4e605557cf6f04bab78d59ec2a929d,
+  m_fontAsset: {fileID: 11400000, guid: 585553a87312cfd4b9430107a7daa2eb, type: 2}
+  m_sharedMaterial: {fileID: 4089157083463317897, guid: 585553a87312cfd4b9430107a7daa2eb,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -296,6 +296,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -471,8 +472,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: <super duper long party name>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0c4e605557cf6f04bab78d59ec2a929d, type: 2}
-  m_sharedMaterial: {fileID: -2452372178596128274, guid: 0c4e605557cf6f04bab78d59ec2a929d,
+  m_fontAsset: {fileID: 11400000, guid: 585553a87312cfd4b9430107a7daa2eb, type: 2}
+  m_sharedMaterial: {fileID: 4089157083463317897, guid: 585553a87312cfd4b9430107a7daa2eb,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -508,6 +509,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -702,3 +704,4 @@ MonoBehaviour:
   ValueText: {fileID: 7298389984976834944}
   EliminationOverlay: {fileID: 5042635606558269470}
   PlayerControlledIndicator: {fileID: 4946823573905608956}
+  TooltipTarget: {fileID: 0}

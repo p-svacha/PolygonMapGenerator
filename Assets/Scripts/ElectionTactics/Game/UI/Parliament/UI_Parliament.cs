@@ -30,9 +30,13 @@ namespace ElectionTactics
         public GameObject CurrentElectionContainer;
         public Text CurrentElectionTitle;
         public Text CurrentElectionMarginText;
+        public TooltipTarget CurrentElectionMarginText_Tooltip;
         public Image LastElectionWinnerKnob;
+        public TooltipTarget LastElectionWinnerKnob_Tooltip;
         public Text CurrentElectionSeatsText;
+        public TooltipTarget CurrentElectionSeatsText_Tooltip;
         public Image CurrentElectionSeatsIcon;
+        public TooltipTarget CurrentElectionSeatsIcon_Tooltip;
         public WindowGraph CurrentElectionGraph;
         public UI_Trait SeatDistributionTrait;
 

@@ -214,6 +214,14 @@ namespace ElectionTactics
             {
                 // nothing happens
             }
+
+            // Debug
+            if (SelectedDistrict != null)
+            {
+                Debug.Log("Coast Ratio: " + SelectedDistrict.Region.CoastRatio);
+                Debug.Log("Ocean Coast Ratio: " + SelectedDistrict.Region.OceanCoastRatio);
+                Debug.Log("Lake Coast Ratio: " + SelectedDistrict.Region.LakeCoastRatio);
+            }
         }
 
         private void UnselectDistrict()

@@ -53,7 +53,6 @@
   <Project Path="Unity.ShaderGraph.Utilities.csproj" />
   <Project Path="Unity.InternalAPIEngineBridge.RenderPipelines.Core.Runtime.Shared.csproj" />
   <Project Path="Unity.PlasticSCM.Editor.Entities.csproj" />
-  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.InternalAPIEngineBridge.RenderPipelines.Core.Editor.csproj" />
   <Project Path="Unity.Rendering.LightTransport.Editor.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />

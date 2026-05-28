@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -58,9 +59,6 @@ namespace ElectionTactics
         public const int BR_BASE_HEAL_PER_ELECTION_WON = 0; // Base healing amount from winning elections
         public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
 
-        public const int MIN_MENTALITY_TRAITS = 0;
-        public const int MAX_MENTALITY_TRAITS = 3;
-
         public const int MAX_NUM_DISTRICTS = 20;
 
         // Global game values
@@ -77,6 +75,10 @@ namespace ElectionTactics
 
         private void Awake()
         {
+            // Vote experiment
+            ExecuteVotingExperiment(3000, 10);
+            ExecuteVotingExperiment(222, 10);
+
             Instance = this;
 
             ResourceManager.ClearCache();
@@ -97,6 +99,41 @@ namespace ElectionTactics
             DefDatabaseRegistry.OnLoadingDone();
 
             UI.Init(this);
+        }
+
+        private void ExecuteVotingExperiment(int numVotes, int numRuns)
+        {
+            Dictionary<string, int> experimentDic = new Dictionary<string, int>()
+            {
+                { "One", 20 },
+                { "Two", 20 },
+                { "Three", 20 },
+                { "Four", 20 },
+                { "Five", 20 },
+            };
+
+            List<float> minValues = new List<float>();
+            List<float> maxValues = new List<float>();
+
+            for (int i = 0; i < numRuns; i++)
+            {
+                Dictionary<string, int> picked = new Dictionary<string, int>();
+                foreach (string s in experimentDic.Keys) picked.Add(s, 0);
+                for (int v = 0; v < numVotes; v++)
+                {
+                    string selected = experimentDic.GetWeightedRandomElement();
+                    picked[selected]++;
+                }
+                List<float> ratios = new List<float>();
+                foreach (var x in picked)
+                {
+                    float ratio = (float)x.Value / (float)numVotes;
+                    ratios.Add(ratio);
+                }
+                minValues.Add(ratios.Min());
+                maxValues.Add(ratios.Max());
+            }
+            Debug.Log($"Maximum spread for {numVotes} votes across {numRuns} runs with 5 parties is {minValues.Min()} - {maxValues.Max()}. Average Spread is {minValues.Average()} - {maxValues.Average()}.");
         }
 
         void Start()
@@ -288,6 +325,9 @@ namespace ElectionTactics
             {
                 foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
+
+            // Init bot policy weights
+            foreach (Party p in Parties.Where(p => !p.IsHuman)) p.AI.InitRandomPolicyWeights();
         }
 
         /// <summary>
@@ -711,7 +751,7 @@ namespace ElectionTactics
         #region Game Commands
         // This chapter contains all functions that local players can trigger in their turn through their actions.
 
-        public void IncreasePolicy(Policy p)
+        public void IncreaseLocalPlayerPolicy(Policy p)
         {
             if (LocalPlayerParty.PolicyPoints == 0 || p.Value == p.MaxValue) return;
 
@@ -721,7 +761,7 @@ namespace ElectionTactics
             foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
         }
 
-        public void DecreasePolicy(Policy p)
+        public void DecreaseLocalPlayerPolicy(Policy p)
         {
             if (p.Value == p.LockedValue) return;
 
@@ -753,7 +793,7 @@ namespace ElectionTactics
             Policy policy = party.GetPolicy(policyId);
 
             if (party.PolicyPoints == 0 || policy.Value == policy.MaxValue) return;
-            Debug.Log(party.Name + " increased " + policy.Name + " policy.");
+            Debug.Log($"{party.Name} increased {policy.Name} policy. It is now at {policy.Value}/{policy.MaxValue}.");
             
             party.PolicyPoints--;
             policy.IncreaseValue();

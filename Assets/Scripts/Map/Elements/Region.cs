@@ -115,12 +115,6 @@ public class Region : MonoBehaviour
 
         GetComponent<Renderer>().material = MapDisplayResources.Singleton.DefaultMaterial;
 
-        // Coast
-        OceanCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && !x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
-        OceanCoastRatio = OceanCoastLength / TotalBorderLength;
-        LakeCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
-        LakeCoastRatio = LakeCoastLength / TotalBorderLength;
-
         // Border surrounding the region
         Border = MeshGenerator.CreateSinglePolygonBorder(p.Nodes, PolygonMapGenerator.DefaultRegionBorderWidth, Color.black, layer: PolygonMapGenerator.LAYER_REGION_BORDER);
         Border.transform.SetParent(transform);
@@ -128,6 +122,14 @@ public class Region : MonoBehaviour
         // Connection overlays (lines to neighbouring regions)
         ConnectionOverlays = InitConnectionOverlays();
         ShowConnectionOverlays(false);
+    }
+
+    public void CalculateCoastValues()
+    {
+        OceanCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && !x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
+        OceanCoastRatio = TotalBorderLength > 0 ? OceanCoastLength / TotalBorderLength : 0;
+        LakeCoastLength = RegionBorders.Where(x => x.Key.WaterBody != null && x.Key.WaterBody.IsLake).Sum(x => x.Value.Sum(y => y.Length));
+        LakeCoastRatio = TotalBorderLength > 0 ? LakeCoastLength / TotalBorderLength : 0;
     }
 
     private List<GameObject> InitConnectionOverlays()

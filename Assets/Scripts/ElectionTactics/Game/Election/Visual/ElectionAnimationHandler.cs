@@ -235,10 +235,15 @@ namespace ElectionTactics
                 // Prepare graph for next district
                 if (CurrentDistrictResult.District.ElectionResults.Count > 1)
                 {
+                    // Margin
                     Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
-                    Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
+                    Game.UI.Parliament.CurrentElectionMarginText_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Margin", "The difference in vote share between your party and the closest opponent in the last cycle's election.\n\nPositive means you won, negative means another party was ahead.");
                     Game.UI.Parliament.CurrentElectionMarginText.text = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
+
+                    // Leader Knob
+                    Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
                     Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).WinnerParty.Color;
+                    Game.UI.Parliament.LastElectionWinnerKnob_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Previous Winner", "The winning party in the last cycle's election.");
                 }
                 else
                 {
@@ -267,7 +272,9 @@ namespace ElectionTactics
                 Game.UI.Parliament.CurrentElectionContainer.SetActive(true);
                 Game.UI.Parliament.CurrentElectionTitle.text = CurrentDistrictResult.District.Name;
                 Game.UI.Parliament.CurrentElectionSeatsText.text = CurrentDistrictResult.Seats.ToString();
+                Game.UI.Parliament.CurrentElectionSeatsText_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Seats", "How many seats will be distributed for this district.");
                 Game.UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
+                Game.UI.Parliament.CurrentElectionSeatsIcon_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Seats", "How many seats will be distributed for this district.");
                 Game.UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, Game.UI.Font, GraphAnimationTime, startAnimation: false);
 
                 Game.CameraHandler.MoveToFocusDistricts(new List<District>() { CurrentDistrictResult.District }, DistrictPanTime, OnCameraMoveToNextDistrictDone);

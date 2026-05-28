@@ -60,6 +60,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\PartyAI.cs" />
     <Compile Include="Assets\Scripts\FlagGeneration\FlagGenerator.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Army.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_SwingDistrict.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Tutorial\TutorialManager.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\FortunesAlgorithm.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\ScrollingBackground.cs" />
@@ -202,7 +203,6 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Linguistic.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Landmass.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEventHandler.cs" />
-    <Compile Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\SimpleWaterShaders.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\CulturalTrait.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
@@ -272,6 +272,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\PolicyType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Base\GameState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTrait.cs" />
+    <Compile Include="Assets\Scripts\Helper\ButtonDeselect.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\PrefabManager.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\Noise.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
@@ -298,15 +299,12 @@
     <None Include="Assets\Documentation\ElectionTactics.txt" />
     <None Include="Assets\Shaders\DistrictShader.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\Resources\Textures\HITW_Terrain-Textures-Set\HITW-Terrain-Textures-LICENSE.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\Water Specular.shader" />
-    <None Include="Assets\#NVJOB Simple Water Shaders\#NVJOB Simple Water Shaders\Water Surface.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Documentation\ElectionTactics_WEB-DEPLOYMENT.txt" />

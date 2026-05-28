@@ -901,6 +901,9 @@ public class PolygonMapGenerator : MonoBehaviour
             Map.WaterBodies.Add(waterBody);
         }
 
+        // Calculate coasts
+        foreach (Region r in Map.Regions) r.CalculateCoastValues();
+
         // Add continents
         Map.Continents = new List<Continent>();
         foreach (List<GraphPolygon> continentList in Continents)

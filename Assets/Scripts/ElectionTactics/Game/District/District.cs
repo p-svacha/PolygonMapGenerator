@@ -29,6 +29,15 @@ namespace ElectionTactics
         public EconomicSectorDef Economy3;
         public List<CulturalTrait> CulturalTraits = new List<CulturalTrait>();
 
+        private Dictionary<int, int> NumCulturalTraitWeights = new Dictionary<int, int>() // Probabilities for how many cultural traits
+        {
+            { 0, 15 },
+            { 1, 30 },
+            { 2, 35 },
+            { 3, 15 },
+            { 4, 5 },
+        };
+
         // Election
         public List<DistrictElectionResult> ElectionResults = new List<DistrictElectionResult>();
         public Party CurrentWinnerParty;
@@ -40,11 +49,10 @@ namespace ElectionTactics
 
         public int Population;     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
         public int Seats;          // How many seats this district has in the parliament
-        public int Voters;         // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
+        public int Voters { get; set; } // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
         public float VoterTurnout; // Value between 0 and 1 of how many people went to vote. This value is only relevant for the vote victory and is not used for calculation of the actual votes.
 
-        public const int NumVotersMin = 1500;
-        public const int NumVotersMax = 1700;
+        public const int NumVoters = 3000; // Should lead to consistent results reflecting party popularities well with slight randomness
 
         public const float VoterTurnoutMin = 0.6f;
         public const float VoterTurnoutMax = 0.7f;
@@ -76,13 +84,16 @@ namespace ElectionTactics
             Language = GetLanguageForNewRegion();
             Religion = GetReligionForNewRegion();
 
+            // Economy
             Economy1 = ElectionTacticsGame.GetRandomEconomicSector();
             Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
             while (Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
             Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
             while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
-            int numMentalities = Random.Range(ElectionTacticsGame.MIN_MENTALITY_TRAITS, ElectionTacticsGame.MAX_MENTALITY_TRAITS + 1);
-            while (CulturalTraits.Count < numMentalities)
+
+            // Cultural Traits
+            int numCulturalTraits = NumCulturalTraitWeights.GetWeightedRandomElement();
+            while (CulturalTraits.Count < numCulturalTraits)
             {
                 CulturalTraitDef def = Game.GetRandomAdoptableCulturalTraitDef(this);
                 CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
@@ -103,7 +114,7 @@ namespace ElectionTactics
             RecalculateSeats();
 
             // Voter calculation
-            Voters = Random.Range(NumVotersMin, NumVotersMax + 1);
+            Voters = NumVoters;
             VoterTurnout = Random.Range(VoterTurnoutMin, VoterTurnoutMax);
 
             // Set initially inactive
@@ -284,7 +295,7 @@ namespace ElectionTactics
             // Cast "calculation" votes
             for (int i = 0; i < Voters; i++)
             {
-                Party votedParty = GetSingleVoterResult(partyPopularities);
+                Party votedParty = partyPopularities.GetWeightedRandomElement();
                 partyVotes[votedParty]++;
             }
             foreach (Party p in parties)
@@ -401,19 +412,6 @@ namespace ElectionTactics
             UpdateModifiers();
             foreach (CulturalTrait trait in CulturalTraits) trait.OnPostElection();
             RecalculateSeats();
-        }
-
-        private Party GetSingleVoterResult(Dictionary<Party, int> partyPoints)
-        {
-            int sum = partyPoints.Values.Sum(x => x);
-            int rng = Random.Range(0, sum);
-            int tmpSum = 0;
-            foreach(KeyValuePair<Party, int> kvp in partyPoints)
-            {
-                tmpSum += kvp.Value;
-                if (rng < tmpSum) return kvp.Key;
-            }
-            throw new System.Exception("Couldn't find single voter result: sum=" + sum + ", rng=" + rng);
         }
 
         /// <summary>

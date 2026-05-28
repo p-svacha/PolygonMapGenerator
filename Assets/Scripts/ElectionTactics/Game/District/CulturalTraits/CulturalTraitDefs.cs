@@ -22,6 +22,9 @@ namespace ElectionTactics
         private static string PATRIOTIC = "Patirotic";
         private static string PROPORTIONAL_REPRESENTATION = "ProportionalRepresentation";
         private static string MAJORITY_BONUS = "MajorityBonus";
+        private static string SWING_DISTRICT = "SwingDistrict";
+
+        // Note: The labels and descriptions defined here are often overriden by the trait class itself with more instance-specific details. Here they are very general. "Impact" refers to the popularity gain by the policy.
 
         public static List<CulturalTraitDef> Defs => new List<CulturalTraitDef>()
         {
@@ -30,7 +33,7 @@ namespace ElectionTactics
             {
                 DefName = RELIGIOUS,
                 Label = "Religious",
-                Description = "Religion policy effectiveness in this district is doubled.",
+                Description = "Base religion policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Religious),
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
@@ -45,7 +48,7 @@ namespace ElectionTactics
             {
                 DefName = SECULAR,
                 Label = "Secular",
-                Description = "Religion policy effectiveness in this district is halved.",
+                Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
                 Commonness = 20,
                 ForbiddenCulturalTraits = new List<string>()
@@ -59,8 +62,8 @@ namespace ElectionTactics
             new CulturalTraitDef()
             {
                 DefName = FANATIC,
-                Label = "", // Set by trait class
-                Description = "", // Set by trait class
+                Label = "Religion Fanatics",
+                Description = "+10 impact of religion policy of the districts religion. All other religion policies give -3.",
                 TraitClass = typeof(CT_Fanatics),
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
@@ -76,7 +79,7 @@ namespace ElectionTactics
             {
                 DefName = LINGUISTIC,
                 Label = "Linguistic",
-                Description = "Language policy effectiveness in this district is doubled.",
+                Description = "Base language policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Linguistic),
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
@@ -89,7 +92,7 @@ namespace ElectionTactics
             {
                 DefName = NON_LINGUISTIC,
                 Label = "Non-Linguistic",
-                Description = "Language policy effectiveness in this district is halved.",
+                Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
                 Commonness = 50,
                 ForbiddenCulturalTraits = new List<string>()
@@ -103,7 +106,7 @@ namespace ElectionTactics
             {
                 DefName = STRONG_ECONOMY,
                 Label = "Strong Economy",
-                Description = "",
+                Description = "Base economy policy impact in this district is doubled.",
                 TraitClass = typeof(CT_StrongEconomy),
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
@@ -115,7 +118,7 @@ namespace ElectionTactics
             {
                 DefName = WEAK_ECONOMY,
                 Label = "Weak Economy",
-                Description = "",
+                Description = "Base economy policy impact in this district is halved.",
                 TraitClass = typeof(CT_WeakEconomy),
                 Commonness = 80,
                 ForbiddenCulturalTraits = new List<string>()
@@ -127,8 +130,8 @@ namespace ElectionTactics
             new CulturalTraitDef()
             {
                 DefName = EXPORTER,
-                Label = "",
-                Description = "",
+                Label = "Exporter",
+                Description = "Policy for dominant industry in this district has +7 impact and also gives +3 popularity in all adjacent districts.",
                 TraitClass = typeof(CT_Exporter),
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
@@ -142,9 +145,9 @@ namespace ElectionTactics
             {
                 DefName = GROWING_POPULATION,
                 Label = "Growing Population",
-                Description = "", // set by trait
+                Description = "The population of this district grows after every election, leading to it being worth more seats over time.",
                 TraitClass = typeof(CT_GrowingPopulation),
-                Commonness = 100,
+                Commonness = 90,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     DECLINING_POPULATION
@@ -155,9 +158,9 @@ namespace ElectionTactics
             {
                 DefName = DECLINING_POPULATION,
                 Label = "Declining Population",
-                Description = "", // set by trait
+                Description = "The population of this district decreases after every election, leading to it being fewer more seats over time.", // set by trait
                 TraitClass = typeof(CT_DecliningPopulation),
-                Commonness = 100,
+                Commonness = 80,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     GROWING_POPULATION
@@ -169,7 +172,7 @@ namespace ElectionTactics
             {
                 DefName = PATRIOTIC,
                 Label = "Patriotic",
-                Description = "District policy effectiveness of this district is doubled.",
+                Description = "Base district policy impact of this district is doubled.",
                 TraitClass = typeof(CT_Patriotic),
                 Commonness = 100,
             },
@@ -179,7 +182,7 @@ namespace ElectionTactics
             {
                 DefName = STABLE,
                 Label = "Stable",
-                Description = "The party that won the last election will get a bonus for the next one.",
+                Description = "The party that won the last election will get a +30 popularity bonus for the next one.",
                 TraitClass = typeof(CT_Stable),
                 Commonness = 70,
                 ForbiddenCulturalTraits = new List<string>()
@@ -193,7 +196,7 @@ namespace ElectionTactics
             {
                 DefName = REBELLIOUS,
                 Label = "Rebellious",
-                Description = "The party that won the last election will get a malus for the next one.",
+                Description = "The party that won the last election will get a -30 popularity penalty for the next one.",
                 TraitClass = typeof(CT_Rebellious),
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
@@ -218,14 +221,23 @@ namespace ElectionTactics
             },
 
 
-            // Voting System
+            // Voting
+            new CulturalTraitDef()
+            {
+                DefName = SWING_DISTRICT,
+                Label = "Swing District",
+                Description = "Election outcomes in this district are less predictable. Results may not fully accurately represent party popularities.",
+                TraitClass = typeof(CT_SwingDistrict),
+                Commonness = 50,
+            },
+
             new CulturalTraitDef()
             {
                 DefName = PROPORTIONAL_REPRESENTATION,
                 Label = "Proportional Representation",
-                Description = "Seats in this district are awarded to all parties proportially according to their voter share.",
+                Description = "Seats in this district are awarded to all parties proportially according to their voter share. Replaces the default winner-takes-it-all system.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
-                Commonness = 65,
+                Commonness = 70,
                 IsSeatDistributionTrait = true,
             },
 
@@ -233,7 +245,7 @@ namespace ElectionTactics
             {
                 DefName = MAJORITY_BONUS,
                 Label = "Majority Bonus",
-                Description = "Seats in this district are awarded in a way that the winning party gets the absolute majority, and the rest of the seats are distributed proportionally along the other parties according to their voter share.",
+                Description = "Seats in this district are awarded in a way that the winning party gets the absolute majority, and the rest of the seats are distributed proportionally along the other parties according to their voter share. Replaces the default winner-takes-it-all system.",
                 TraitClass = typeof(CT_MajorityBonus),
                 Commonness = 25,
                 IsSeatDistributionTrait = true,

@@ -33,7 +33,7 @@ namespace ElectionTactics
 
         public void Init(Party p)
         {
-            if(PolicyContainers.Count == 0)
+            if (PolicyContainers.Count == 0)
             {
                 PolicyContainers.Add(PolicyType.Geography, GeographyContainer);
                 PolicyContainers.Add(PolicyType.Economy, EconomyContainer);

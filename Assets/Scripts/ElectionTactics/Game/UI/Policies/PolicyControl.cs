@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace ElectionTactics
     {
         private int MaxValue = 8;
 
-        public Text Label;
+        public TextMeshProUGUI Label;
         public GameObject ValueContainer;
         public Button MinusButton;
         public Button PlusButton;
@@ -29,13 +30,13 @@ namespace ElectionTactics
 
         private void PlusButton_OnClick()
         {
-            Policy.Party.Game.IncreasePolicy(Policy);
+            Policy.Party.Game.IncreaseLocalPlayerPolicy(Policy);
             ShowPolicyMapOverlay();
         }
 
         private void MinusButton_OnClick()
         {
-            Policy.Party.Game.DecreasePolicy(Policy);
+            Policy.Party.Game.DecreaseLocalPlayerPolicy(Policy);
             ShowPolicyMapOverlay();
         }
 
