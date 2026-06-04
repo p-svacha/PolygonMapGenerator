@@ -25,9 +25,48 @@ namespace ElectionTactics
         public Button JoinGameButton;
         public Button ExitButton;
 
+        // Logo
+        public Button LogoLeverButton;
+        public Image LogoElectionBar1;
+        public Image LogoElectionBar2;
+        public Image LogoElectionBar3;
+
+        [Header("Logo Animation")]
+        public RectTransform LogoLeverTransform; // The lever's RectTransform (pivot set in sprite editor)
+
+        private bool leverToggled = false;
+        private bool isAnimating = false;
+        private float animationTime = 0.3f;
+        private float animationDelay;
+
+        // Lever states
+        private Quaternion leverRotationOff;
+        private Quaternion leverRotationOn;
+        private Quaternion leverSourceRot;
+        private Quaternion leverTargetRot;
+        private float leverPosOff, leverPosOn;
+        private float leverSourcePos, leverTargetPos;
+
+        // Bar states
+        private float bar1Source, bar1Target;
+        private float bar2Source, bar2Target;
+        private float bar3Source, bar3Target;
+
         public void Init(MenuNavigator nav)
         {
             MenuNavigator = nav;
+
+            // Logo
+            LogoLeverButton.onClick.AddListener(ToggleLever);
+            LogoLeverButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+
+            // Capture the lever's resting rotation (the "off" state as authored in the scene)
+            leverRotationOff = LogoLeverTransform.localRotation;
+            leverRotationOn = leverRotationOff * Quaternion.Euler(0, 0, 35); // First toggle is CCW (+35°)
+            leverPosOff = LogoLeverTransform.anchoredPosition.x;
+            leverPosOn = leverPosOff - 50f; // Move left when toggled on
+
+            // Menu buttons
             PlayerNameRandomizeButton.onClick.AddListener(RandomizePlayerPartyName);
             PlayerNameRandomizeButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.Chimes));
 
@@ -115,6 +154,70 @@ namespace ElectionTactics
         {
             ET_NetworkManager.Singleton.JoinGame();
         }
+
+        #region Logo
+
+        private void ToggleLever()
+        {
+            if (isAnimating) return; // Ignore clicks mid-animation so states don't break
+
+            AudioManager.PlaySound(AudioManager.Instance.Lever, volume: 0.45f);
+            leverToggled = !leverToggled;
+
+            // Calculate lever target up front
+            leverSourceRot = LogoLeverTransform.localRotation;
+            leverTargetRot = leverToggled ? leverRotationOn : leverRotationOff;
+            leverSourcePos = LogoLeverTransform.anchoredPosition.x;
+            leverTargetPos = leverToggled ? leverPosOn : leverPosOff;
+
+            // Calculate bar targets
+            bar1Source = LogoElectionBar1.rectTransform.anchoredPosition.y;
+            bar2Source = LogoElectionBar2.rectTransform.anchoredPosition.y;
+            bar3Source = LogoElectionBar3.rectTransform.anchoredPosition.y;
+
+            bar1Target = Random.Range(345f, 420f);
+            bar2Target = Random.Range(315f, 390f);
+            bar3Target = Random.Range(300f, 375f);
+
+            animationDelay = 0f;
+            isAnimating = true;
+        }
+
+        private void Update()
+        {
+            if (!isAnimating) return;
+
+            animationDelay += Time.deltaTime;
+            float r = Mathf.Clamp01(animationDelay / animationTime);
+
+            // Lever rotation
+            LogoLeverTransform.localRotation = Quaternion.Lerp(leverSourceRot, leverTargetRot, r);
+            LogoLeverTransform.anchoredPosition = new Vector2(Mathf.Lerp(leverSourcePos, leverTargetPos, r), LogoLeverTransform.anchoredPosition.y);
+
+            // Bars
+            SetBarY(LogoElectionBar1, Mathf.Lerp(bar1Source, bar1Target, r));
+            SetBarY(LogoElectionBar2, Mathf.Lerp(bar2Source, bar2Target, r));
+            SetBarY(LogoElectionBar3, Mathf.Lerp(bar3Source, bar3Target, r));
+
+            if (r >= 1f)
+            {
+                // Snap to exact final state
+                LogoLeverTransform.localRotation = leverTargetRot;
+                SetBarY(LogoElectionBar1, bar1Target);
+                SetBarY(LogoElectionBar2, bar2Target);
+                SetBarY(LogoElectionBar3, bar3Target);
+                isAnimating = false;
+            }
+        }
+
+        private void SetBarY(Image bar, float y)
+        {
+            Vector2 pos = bar.rectTransform.anchoredPosition;
+            pos.y = y;
+            bar.rectTransform.anchoredPosition = pos;
+        }
+
+        #endregion
 
         #region Quick Play
 

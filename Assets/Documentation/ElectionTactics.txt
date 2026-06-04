@@ -1,176 +1,216 @@
-PRE-RELEASE CHECKLIST:
+0.2 to-do list:
+
+Menu::
+- Make a stylized logo for the game to use in the main menu and for the itch thumbnail.
+
+District Attributes & Info Screen:
+- CHange seats and popularity to icons
+- number in star for seats (make this a standard component that can be reused at different places)
+- number in heart for popularity
+
+- Move population to demography (first line)
+- Remove Age Group category
+- Change density to Low, Medium, High
+- For initial density generation, take size into account (so small districts are more likely to be high density, large districts more likely to be low density)
+- Density should be updated every turn based on population change, so it can change over time.
+- Attributes (Demography, Economy, Geography) on the left
+- Split geography into 3 subcategories by significance (I, II, III)
+- More complex / dynamic elements on the right (cultural traits, active modifiers)
+- Make cultural trait chips bigger and more prominent, 1 per line
+- make modifiers scrollable
 
 
-TEST GAME 3 NOTES
-after all that go to step 4 (final web build + private testing a couple matches)
-
-prepare itch page
-
-update version in main menu
-publish
---------------------------------------------------------------------------------------------
-
-- Add toggle in election graph to switch between vote percentage and seats won
+Post-Election:
+- At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
+- After that, enable HUD like before.
+- Add a new tab "Newspaper" tab with a letter as an icon.
+- This tab simply shows messages about relevant events in the game, such as election results, changing population, changing attributes, new districts.
 
 
-- add new cultural traits: district rivals and district partners (gain/lose 10% of popularity in other district (without this modifier) as popularity)
-- add new: nationalistic - double district trait impact
-- add new: geographic identity for a specific geography trait (i.e. island identity)
-- add new: weak & strong economy: weak lowers eco policy impact, strong increases eco policy impact (rename economic powerhouse to strong econpomy)
+Tutorial
+- Make tutorial box bigger with bigger text.
+- Make tutorial in a fixed seed.
+- Start with 2 districts only.
+- Split district info into 2 steps: attributes and cultural traits.
+- In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
+- Use fixed and SIMPLE cultural traits for starting districts
+- Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
 
-- add very very high impact in map overview or change to scale (-20 red to 20 green)
-- separate neighbour district impact in popularity breakdown and summarize it as "neighbour impact".
+Election animation:
+- After election is done in a district, add a new step for that district "District Event". Only happens if relevant. Shows animations for traits like growing / declining population and "Events" mentioned below.
+- Increase speed of district transition, change from lerp to slerp
+- If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
+- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternate voting mechanisms clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
+- Remember animation speed
+- Disable map label tooltips during election animation
+- Make sure tooltip of cultural voting trait doesn't get stuck
 
-- lower all impact values (to 1, 2, 3, 4). base = 0
+General UX:
+- Test tooltips on 1400p, they are broken. Fix
+- When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
+- Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
+- Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
+- Add line breaks in voting trait descriptions.
+- Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 
-- increase scroll speed in policy tab
-- make rows a little less high
+General Gameplay:
+- Reduce default win condition to 6 wins.
+- Ensure each letter is only used once as a starting letter for district names, to make them easier to parse.
+- Add some constraints for economic sectors (like no fishing in landlocked districts)
+- Add rivers as a geographical trait
 
-- priorities for bot party policy selection: instead of full random pp assignent, every bot makes a weighted table at the start of the game that assigns a random weight to each policy. pp are then assigned based on these weights.
+Cultural traits:
+- Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population").
+- Lower commonness of Secular, Declining Population, Weak economy
+- Remove non-linguistic
 
-- party name generator can go to infiite loop, find out why
-- almost fully remove randomness in district election result (calculate election result directly based on party popularities and apply just slight 0.1 offsets after, instead of casting single votes)
+Add events (that can happen randomly (rarely) after an election:
+- District gaining a cultural trait
+- District losing a cultural trait
+- District adopting the religion of a random neighboring district
+- District adopting the language of a random neighboring district
+- Random catastrophic event that reduces population instantly.
 
-- log tab, that shows messages like "district has gained a seat due to growing population"
+Policy :
+- Use not all caps for policy names
+- Add icons for economic sectors (in addition to text) - also use them in district info
+- Add a ? next to each category with an instant tooltip (replaces title tooltips)
+- Add tooltips for geography traits with info what they are (like in district info)
+- Sort policies alphabetically within their category
+- Left/Rightclicking a policy should increase/decrease it
 
-- remove age group (?)
-- add density map control
-- more geography traits (coastal, biome)
-
-- elevation traits (?)
-- make economy traits more dependent on geogeaphy (mining / fishing, etc)
-
-- show remaining seats during election animation
-
-- add more ways in battle royale to gain/lose legitimacy. right now many parties are eliminated at the same time and it very quickly goes from 8 to over. end game with less parties should be longer. maybe legitimacy bonus for all other parties on eliminations? or locked behind new party campaign mechanics with unique passive and active effects.
-
-- fix multiplayer hosting error
-- fix region highlight shader resetting from time to time
-
-- additional district voting system "proportional" besides "winner takes it all" that affects how seats are distributed.
-
-- fix invalid seeds (see MapEditor.txt)
-
-show total seats of current parliament
-better end game screen
-
-Election Tactics
-----------------
-
-1. To Do
-
-1.1 General Gameplay
-
-1.2 Constitution
-	- Add constitution tab in header
-	- Constitution is readonly information about current game rules
-	- Consitution describes following points:
-		- Captial (yes / no, # bonus seats)
-		- Seat distribution (minimum seats per district, population per seat, scaling population requirement)
-		- Constitution voting system (one vote per party, one vote per seat, one vote per district), (how many votes per cycle)
-		- District addition system (one district per cycle, no more districts)
-		- District voting system (winner takes it all, proportionally, alternative vote)
-		- Bans (on economies, religions, etc)
-
-1.3 Events tab
-	- Add an event tab in header
-
-	1.3.1 Constitution voting
-		- Each election cycle there's a random vote on a change in the constitution
-		- Add interactive display to vote
-
-	1.3.2 Event
-		- Each election cycle there's a random event happening
-		- More events can be forced with campaigns
-		- Add readonly event display with detailed description
-
-1.4 Campaigns tab
-	- Add campaigns tab in header
-	- Campaigns can be chosen with campaign points (CP)
-	- Each cycle there are three campaigns that can be chosen from
-	- Campaigns can have different costs according to the severity of their impact
-	- Campaigns can be locked for later for 1 campaign point
-	- Campaigns can be rerolled for 1 campaign point
-	- Examples of campaigns:
-		- Propaganda campaigns - Add a positive modifier for your party in a chosen district for a certain time
-		- Diffarmation campaigns - Add a negative or exclusion modifier to a chosen enemy party in a chosen district for a certain time
-		- District campaigns - Split or exclude a district from the game
-		- Force event campaigns - Force a certain random event for the next cycle
-		- Constitution vote campaigns - Force a certain random constitution vote
-
-1.6 General election
-	- Add intro animation
-	- Add outro animation
-
-1.9 Main menu
-	- Add main menu with options:
-		- Start new game
-		- Load game
-		- Quit to Desktop
-
-1.11 In-Game menu tab
-	- Add ingame menu tab with some buttons:
-		- Save Game
-		- Quit to Main Menu
-		- Quit to Desktop
-
-1.12 Parliament tab
-	- Add popular vote calculation
-	- Add popular vote display
+Election graph:
+- Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
 
 
-Feedback from 0.2 Playtest
-----------------------------------
-make parliament tab clearer, what is what
-	- title of first chapter to seat distribution
-	- move or add standings as a static part at the left side of the screen
-		- show party icon and win condition value staticly
-		- add hover effect to see additional infos of party (name, maxed policies, identity)
-
-add bot difficulty rule to lobby
-
-add mentality with negative effect for testing
-
-Pre-Alpha 0.3 - Map Improvements
-----------------------------------
-
-Add Democracy 4 like impact animations. 
-	- When hovering with mouse over a policy, slowly fade out all unaffected districts.
-	- Draw arrows with the impact to the affected ones.
-
-Add Textures to map to display economies.
-	
-
-Pre-Alpha 0.4 - Content Improvements
-----------------------------------
-geography changes:
-	- add biomes as traits and policies
-	- add flat/hilly/mountanous
-
-demography changes:
-	- maybe add more granular breakdown (distribute random 5% steps 20 times, then impact based on % of that age group: <= 10% no impact, 15% - 25% low impact, 30% - 40% medium impact, >= 45% high impact)
-	- maybe add more granular languaga breakdown (1 langugae (high impact), 2 languages (both medium impact), 2 languages (high and low), 3 langugaes (all low))
-
-Pre-Alpha 0.5 - Tutorial
----------------------------------
-Add tutorial to explain the game
-
-Pre-Alpha 0.6 - Identity System
----------------------------------
-Add a new system where each party can chose identites every x turns that greatly affect how they play, like:
-	- get one more policy point each turn
-	- geography/economy policies are worth more
-	- permanent bonus in [religion] districts
+[v0.3]
+Introduce new "Ideology" mechanic:
+- Every 3 cycles (first time at the start of cycle 3, so it fits nicely into the tutorial), each party has gets 3 semi-random "Ideologies" to choose from. Ideologies are a set of passive bonuses and penalties that define the general direction of the party, and also give a bit of flavour. The player can see the ideologies of the other parties. The offered ideologies are somewhat random but also weighted based on the policies the party has been using up to this point.
+- Ideas for first set of ideologies:
+  - Ecologist: +1 impact, +8 cap for "Renewables" economic policiy. Cannot use "Fossil Fuels" economic policy (-8 cap).
+  - Opportunist: +1 policy point per turn.
+  - <RELIGION> Follower: +1 impact, +8 cap of <RELIGION> policy. Cannot use policies related to other religions.
+  - <INDUSTRY> Lobbyist: +1 impact, +8 cap for <INDUSTRY> economic policy. -20 popularity in districts without that industry.
+  - Minority Supporter: +X impact for all language and religion policies, where X = 5-[number of districts with that language or religion].
+- Make sure the bot AI can also use the ideologies in a smart way. Doesn't have to be super complex. Since they already use weights for policies, it can just be an extra weight added to the relevant policies when they are evaluating them. And add a basic "score system" for ideologies, so they can choose the best one among the 3 offered based on their current policy usage.
+- Add a new tab for this.
 
 
-Pre-Alpha 0.7 - Audio
----------------------------------
-Add sound effects to various actions
-Add background music
 
-Alpha 1.0
---------------------------------
-"Publish" the game and show it to other people
+
+[v0.3 or v0.4]
+- Improve visuals of the map with biomes and mountains that you can always see, even before you see the districts.
+- Tie economic sectors closer to geography so you can anticipate better. Examples:
+  - Fishing only next to coast or river
+  - Mining only in mountainous regions
+  - Farming only in plains, temperate biomes
+  - Hydropower only next to rivers
+  - Solar power boost in deserts and plains
+  - Forestry only in forested biomes
+  - Winter tourism in snowy regions and mountains
+  - Summer tourism at coast and islands, hotter biomes
+
+
+
+
+
+
+
+
+
+Feedback from Stream (self written).
+
+logo in main menu needs to be stylized rather than plain text
+
+MORE VISUAL CUES
+
+TUTORIAL
+start with 2 regions instead of 3 in tutorial
+starting regions should have less information in tutorial, not all traits from start, it's overwhelming.
+make tutorial box a bit bigger
+it wasn't clear to the player that different districts are worth a different amount of seats
+maybe disable randomness in tutorial and make it a fixed map with fixed districts (some more complex cultural traits early on can be confusing)
+
+JUICE / FX
+when election result is close, add some "nailbiter" effect
+snappier district transitions in election
+
+UX
+if pressing end turn with unspent policy points, add a "are you sure" dialog
+use the "star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style (number in star maybe?)
+click on table row in district info should jump to policies and highlight it
+remember animation speed in election animation
+add line breaks in longer tooltips (like voting traits)
+disable map label tooltips during election animation
+
+POLICY SCREEN
+don't use all caps in policy screen
+use icons for economic sectors (additional to text)
+it is not obvious at all that category titles have tooltips, maybe add a hoverable "?" symbol for help
+add tooltips for geography traits with info what they are (like in district info)
+maybe add filter options (maybe not needed idk)
+sort policies alphabetically
+slightly bind policies to geography (no fishing in landlocked)
+
+CULTURAL TRAITS
+cultural traits need to be in a more prominent visual hierarchy, separate from the policy traits, so it's clear they are more important.
+
+GAMEPLAY
+basic gameplay cycle seems to work and streamer got into after a few cycles, making strategies and stuff
+age group is probably not needed, 3 demographic categories seems like enough
+reduce default win condition to 6 wins instead of 7 (at least in tutorial, maybe even 5)
+people seem to really like the stable cultural trait, giving a boost to the governing party
+give SOME kind of indication what other parties focus on, just a hint to strategize around
+an idea that came up is to spend points to smear a party in a district
+
+MISC
+randomly generated district names are hard to parse, a suggestion was to ensure every district starts with a different first letter, would be easily doable with the markov chains i'm using.
+this is definitely a niche game not really fit into a genre (but that's fine to me)
+
+BUGS
+tooltip got stuck once in election animation (not for long but still)
+
+
+FLAVOUR
+maybe add some kind of news stories during election or after that explain WHY the result happened
+flavour is missing, doesn't feel like playing as a political party
+
+STREAMER QUOTE AT THE END that i think sums it up well
+"I think it just has an issue of approachability but I would say that it was very satisfying once I started to get the hang of things"
+
+
+thanks for feedback to
+
+streamer (shiftydev)
+everythingatryans (help in comments)
+
+-----------------------
+Discord Feedback (copy pasted message from Istrandar)
+
+Just started playing ! (I'm writing the little thing as I go and I'll write  more detailed feedback after)
+Some text are slightly outside of my screen (I have a second monitor and I'm using a 1400p monitor)
+Non-linguistic feels a bit hard to understand
+Did you think about using some ease when showing the election results ? (maybe having them be bigger could be cool when are less party)
+I clicked on end turn by accident after the election result thinking I was confirming the result (inattention mistake but did it twice and still won)(maybe asking for confirmation would be cool)
+I really like the stable/growing population trait, I think trait where you can build long term strategies around are really cool 
+I like how more district/policies are introduced as you keep playing, it means complexity start low and increase in a nice way
+The game feels a bit too easy on base settings(but maybe that's just me), won the first game despite skipping 2 turns.
+I had a crash when starting a new run
+Declining population district should maybe start with a bit more population ? I had one with a starting pop of 2 and it felt like I should just ignore it
+left clicking/right clicking on a policy cool increase / decrease it I think
+I think having a little sound effect/visual when you win a district could be cool
+having some visual effect at the start of turn for stuff like increasing/declining populations could be great !
+
+My thoughts after 2 quick game and one bigger one,
+The game is a lot of fun and I really like how organically strategies arise (like focusing on one big stable district or a growing one for the long term, how sometime you abandon some district to focus on others). Adding district as the game keep going is an amazing idea that keeps complexity down at the start, let you time to form a strategy and push you to adapt.
+
+I think the game lacks a bit in flavour sometime. I don't feel like a party with a coherent idea more like an opportunistic leader that just want to win elections for the sake of it. I don't know if it's possible to fix this without modifying a lot the game though.
+
+The tutorial was simple and not to intrusive which is nice. At the end I felt like I was ready to play and could understand everything by myself which is really nice.
+
+Do you think you'll try to add more mechanics to make the game more repayable or keep it as it is ?
+
+When thinking about other mechanics, I was thinking that adding trait to districts or maybe more selecting a more high level direction (like ecology, meritocratic or things like that) that gives bonus/penalty to some specific kind of policies. it probably should not happen every turn and on the first turns though
 
 
 

@@ -32,6 +32,7 @@ namespace ElectionTactics
         public AudioClip Woosh;
         public AudioClip Error;
         public AudioClip Swoosh;
+        public AudioClip Lever;
 
         public AudioClip GraphAnimationSound;
 
