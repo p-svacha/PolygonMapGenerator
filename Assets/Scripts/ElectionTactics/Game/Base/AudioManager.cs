@@ -52,7 +52,9 @@ namespace ElectionTactics
 
         // General
         private static float sfxSpeedModifier = 1f;
-        private bool isMuted;
+        private int volumeLevel = 3; // 0 = mute, 1, 2, 3 = full
+        private static readonly float[] volumeLevelValues = { 0f, 0.33f, 0.66f, 1f };
+        public static int VolumeLevel => Instance != null ? Instance.volumeLevel : 0;
 
         private class ChargingSound
         {
@@ -123,8 +125,8 @@ namespace ElectionTactics
         /// </summary>
         public static void PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f, bool applySpeedModifier = false)
         {
-            Debug.Log($"PlaySound: {clip?.name} (vol={volume}, pitch={pitch})");
-            if (Instance == null || clip == null || Instance.isMuted) return;
+            // Debug.Log($"PlaySound: {clip?.name} (vol={volume}, pitch={pitch})");
+            if (Instance == null || clip == null || IsMuted) return;
 
             AudioSource source = Instance.GetNextOneShotSource();
             source.clip = clip;
@@ -360,7 +362,7 @@ namespace ElectionTactics
         /// </summary>
         public static void StartChargingSound(string id, AudioClip clip, float basePitch = 0.8f, float maxPitch = 2f, float volume = 1f)
         {
-            if (Instance == null || clip == null || Instance.isMuted) return;
+            if (Instance == null || clip == null || IsMuted) return;
 
             // Stop existing one with same id
             StopChargingSound(id);
@@ -414,27 +416,32 @@ namespace ElectionTactics
         // ==================== GLOBAL CONTROLS ====================
 
         /// <summary>
-        /// Toggle mute on/off. Returns the new mute state.
+        /// Cycle through volume levels in the order: 3 → 0 (mute) → 1 → 2 → 3...
+        /// Returns the new level.
         /// </summary>
-        public static bool ToggleMute()
+        public static int CycleVolumeLevel()
         {
-            if (Instance == null) return false;
+            if (Instance == null) return 0;
 
-            Instance.isMuted = !Instance.isMuted;
-
-            if (Instance.isMuted)
+            switch (Instance.volumeLevel)
             {
-                AudioListener.volume = 0f;
-            }
-            else
-            {
-                AudioListener.volume = 1f;
+                case 3: Instance.volumeLevel = 0; break;
+                case 0: Instance.volumeLevel = 1; break;
+                case 1: Instance.volumeLevel = 2; break;
+                case 2: Instance.volumeLevel = 3; break;
             }
 
-            return Instance.isMuted;
+            Instance.ApplyVolumeLevel();
+            return Instance.volumeLevel;
         }
 
-        public static bool IsMuted => Instance != null && Instance.isMuted;
+        private void ApplyVolumeLevel()
+        {
+            SetMasterVolume(volumeLevelValues[volumeLevel]);
+            RefreshMusicVolume();
+        }
+
+        public static bool IsMuted => Instance.MasterVolume <= 0f;
 
         public static void SetMasterVolume(float volume)
         {

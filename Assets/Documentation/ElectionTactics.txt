@@ -1,7 +1,7 @@
 0.2 to-do list:
 
 Menu::
-- Make a stylized logo for the game to use in the main menu and for the itch thumbnail.
+(/) - Make a stylized logo for the game to use in the main menu and for the itch thumbnail.
 
 District Attributes & Info Screen:
 - CHange seats and popularity to icons
@@ -51,7 +51,7 @@ General UX:
 - Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
 - Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
 - Add line breaks in voting trait descriptions.
-- Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
+(/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 
 General Gameplay:
 - Reduce default win condition to 6 wins.

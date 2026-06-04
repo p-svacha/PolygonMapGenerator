@@ -133,17 +133,26 @@ namespace ElectionTactics
 
         private void ToggleAudio()
         {
-            AudioManager.ToggleMute();
+            int newLevel = AudioManager.CycleVolumeLevel();
 
-            if (AudioManager.IsMuted)
+            switch (newLevel)
             {
-                MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOff");
+                case 0:
+                    MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOff");
+                    break;
+                case 1:
+                    MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOn_1");
+                    break;
+                case 2:
+                    MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOn_2");
+                    break;
+                case 3:
+                    MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOn_3");
+                    break;
             }
-            else
-            {
-                MuteAudioButtonIcon.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/AudioOn");
-                AudioManager.PlayStandardClickSound();
-            }
+
+            // Play a click on any non-mute level so there's audible feedback
+            if (newLevel != 0) AudioManager.PlayStandardClickSound();
         }
 
         public void DestroyCurrentGame()
