@@ -65,7 +65,7 @@ namespace ElectionTactics
             AnimationSpeedModifier = speed;
         }
 
-        public void Init(Dictionary<Party, int> values, bool dynamic)
+        public void Init(Dictionary<Party, int> values, bool dynamic, bool useSeatIcons = false)
         {
             // Reset current content
             for (int i = 0; i < ListContainer.transform.childCount; i++) Destroy(ListContainer.transform.GetChild(i).gameObject);
@@ -87,7 +87,7 @@ namespace ElectionTactics
             foreach (KeyValuePair<Party, int> entry in values)
             {
                 UI_PartyListElement elem = Instantiate(PartyListElementPrefab, ListContainer.transform, false);
-                elem.Init(entry.Key, entry.Value.ToString(), UsePartyAcronyms);
+                elem.Init(entry.Key, entry.Value.ToString(), UsePartyAcronyms, useSeatIcons);
                 ListElements.Add(entry.Key, elem);
             }
 

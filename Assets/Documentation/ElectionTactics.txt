@@ -19,6 +19,14 @@ District Attributes & Info Screen:
 - Make cultural trait chips bigger and more prominent, 1 per line
 - make modifiers scrollable
 
+Custom Game:
+- Add option for game length (affects starting influence in BR, elections to win in Classic): very short, (0.5x) short (0.75x), standard, long (1.5x), very long (2x), marathon (3x)
+- Add option for starting districts (1, 2, 3 (default), 5, 10, 20, maximum).)
+
+Population Changes:
+- Make population dynamics a more central aspect of the game.
+- Each district has a basic population growth rate, which is an absolute number, but low. Age group affects it. Indicate as <<, <, -, >, >> beside population row.
+
 
 Post-Election:
 - At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
@@ -35,6 +43,7 @@ Tutorial
 - In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
 - Use fixed and SIMPLE cultural traits for starting districts
 - Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
+- Remove step DURING election
 
 Election animation:
 - After election is done in a district, add a new step for that district "District Event". Only happens if relevant. Shows animations for traits like growing / declining population and "Events" mentioned below.
@@ -51,11 +60,16 @@ General UX:
 - Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
 - Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
 - Add line breaks in voting trait descriptions.
+- Remove white as a party color.
+(/) - don't show margin frame in district label if no margin yet.
+- INSTANT mute doesn't work
+- district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 
 General Gameplay:
 - Reduce default win condition to 6 wins.
 - Ensure each letter is only used once as a starting letter for district names, to make them easier to parse.
+- Ensure the same district name cannot appear twice.
 - Add some constraints for economic sectors (like no fishing in landlocked districts)
 - Add rivers as a geographical trait
 
@@ -63,6 +77,7 @@ Cultural traits:
 - Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population").
 - Lower commonness of Secular, Declining Population, Weak economy
 - Remove non-linguistic
+- Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
 
 Add events (that can happen randomly (rarely) after an election:
 - District gaining a cultural trait
@@ -216,3 +231,24 @@ When thinking about other mechanics, I was thinking that adding trait to distric
 
 
 
+CULTURAL TRAIT IDEAS
+- Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
+- Rival of X. Works the same as partner but with negative effects instead of positive.
+- Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
+- Emigration: Acts as a negative modifier to population growth rate. All adjacent districts gain a positive modifier to population growth. Number of people leaving equals number of people joining in adjacent districts. Distribution is based on border length.
+- Immigration: Opposite of emigration. Positive modifier to population growth in the district, negative modifier in adjacent districts.
+- Capital: +3 seats.
+- Influental: 10% of popularity is applied to adjacent districts as well.
+- <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
+- <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
+- Impressionable: +10 popularity for each party governing an adjacent district.
+- remove non-linguistic and secular.
+
+
+
+IDEOLOGY IDEAS
+- some bonus for when policy points are spead equally across all policy categories
+- an ideology that reduces the cap on ALL policies but makes them more effective
+- an ideology that incrases the cap on ALL policies slightly
+- gain +1 policy point for each 3 unused point.
+- capping a policy gives all points +2 impact

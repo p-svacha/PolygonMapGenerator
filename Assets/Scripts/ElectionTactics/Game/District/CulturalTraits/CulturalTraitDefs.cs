@@ -235,7 +235,7 @@ namespace ElectionTactics
             {
                 DefName = PROPORTIONAL_REPRESENTATION,
                 Label = "Proportional Representation",
-                Description = "Seats in this district are awarded to all parties proportially according to their voter share. Replaces the default winner-takes-it-all system.",
+                Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
                 Commonness = 70,
                 IsSeatDistributionTrait = true,
@@ -244,8 +244,8 @@ namespace ElectionTactics
             new CulturalTraitDef()
             {
                 DefName = MAJORITY_BONUS,
-                Label = "Majority Bonus",
-                Description = "Seats in this district are awarded in a way that the winning party gets the absolute majority, and the rest of the seats are distributed proportionally along the other parties according to their voter share. Replaces the default winner-takes-it-all system.",
+                Label = "Majority Representation",
+                Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_MajorityBonus),
                 Commonness = 25,
                 IsSeatDistributionTrait = true,

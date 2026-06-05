@@ -9,7 +9,7 @@ namespace ElectionTactics
     public class UI_DistrictListElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public Text NameText;
-        public Text SeatsText;
+        public UI_SeatNumber SeatsInfo;
         public Text MarginText;
         public Image PartyIcon;
 
@@ -20,7 +20,7 @@ namespace ElectionTactics
         {
             District = d;
             NameText.text = d.Name;
-            SeatsText.text = d.Seats.ToString();
+            SeatsInfo.InitDistrictSeats(d.Seats, d.GetSeatAllocationMethod(), darkMode: false);
             if(d.CurrentWinnerParty != null)
             {
                 PartyIcon.gameObject.SetActive(true);

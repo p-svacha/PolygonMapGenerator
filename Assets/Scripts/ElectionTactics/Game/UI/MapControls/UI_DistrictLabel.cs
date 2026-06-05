@@ -11,12 +11,13 @@ namespace ElectionTactics
         public Image Background;
         public Image BackgroundTop;
         public Image BackgroundBot;
-        public Text SeatsText;
+        public UI_SeatNumber Seats;
         public Text NameText;
         public Image ReligionIcon;
         public Image LanguageIcon;
         public Image DensityIcon;
         public Text PopularityText;
+        public GameObject MarginContainer;
         public Text MarginText;
 
         // State
@@ -62,7 +63,8 @@ namespace ElectionTactics
                     numSeats = latestResult.Seats;
                 }
             }
-            SeatsText.text = numSeats.ToString();
+            Seats.InitDistrictSeats(numSeats, District.GetSeatAllocationMethod(), darkMode: true);
+
 
             // Dynamic tooltips
             ReligionIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Religion.Label, "The religion of this district.");
@@ -80,11 +82,13 @@ namespace ElectionTactics
 
                     if (District.CurrentWinnerParty != null)
                     {
+                        MarginContainer.gameObject.SetActive(true);
                         SetBackgroundColor(District.CurrentWinnerParty.Color);
                         MarginText.text = District.GetLatestElectionResult().GetMargin(District.Game.LocalPlayerParty);
                     }
                     else
                     {
+                        MarginContainer.gameObject.SetActive(false);
                         SetBackgroundColor(Color.white);
                         MarginText.text = "";
                     }
@@ -92,8 +96,9 @@ namespace ElectionTactics
 
                 case DistrictLabelMode.InElection:
                     DistrictElectionResult currentElectionResult = District.GetLatestElectionResult();
-                    if(currentElectionResult != null ) PopularityText.text = currentElectionResult.PartyPopularities[District.Game.LocalPlayerParty].ToString();
+                    if (currentElectionResult != null ) PopularityText.text = currentElectionResult.PartyPopularities[District.Game.LocalPlayerParty].ToString();
 
+                    MarginContainer.gameObject.SetActive(false);
                     SetBackgroundColor(Color.white);
                     MarginText.text = "";
                     break;
@@ -113,6 +118,7 @@ namespace ElectionTactics
 
         public void SetMargin(string marginText)
         {
+            MarginContainer.gameObject.SetActive(true);
             MarginText.text = marginText;
             LayoutRebuilder.ForceRebuildLayoutImmediate(BackgroundBot.GetComponent<RectTransform>());
         }

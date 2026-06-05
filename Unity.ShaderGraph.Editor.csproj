@@ -344,9 +344,9 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\Input\PBR\MetalReflectanceNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\Texture2DArrayInputMaterialSlot.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\MeshDeformation\LinearBlendSkinningNode.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Interfaces\Graph\GraphDrawingData.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Legacy\StickyNoteData0.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Inspector\PropertyDrawers\Texture3DPropertyDrawer.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Interfaces\Graph\GraphDrawingData.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\Utility\Logic\AndNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Generation\SubTarget.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Nodes\Math\Wave\TriangleWaveNode.cs" />

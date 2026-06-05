@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_Lobby.cs" />
     <Compile Include="Assets\Scripts\EnumHelper.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\ParabolaMath.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_SeatNumber.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\GameSettingDropdownOptionListener.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\GlobalInputManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationHandler.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Assets\Scripts\Helper\StringExtensions.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneSiteEvent.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_LobbySlot.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\SeatAllocationMethod.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\LoadingScreen\UI_LoadingScreen.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Visual\VisualBattle.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Continent.cs" />

@@ -33,10 +33,7 @@ namespace ElectionTactics
         public TooltipTarget CurrentElectionMarginText_Tooltip;
         public Image LastElectionWinnerKnob;
         public TooltipTarget LastElectionWinnerKnob_Tooltip;
-        public Text CurrentElectionSeatsText;
-        public TooltipTarget CurrentElectionSeatsText_Tooltip;
-        public Image CurrentElectionSeatsIcon;
-        public TooltipTarget CurrentElectionSeatsIcon_Tooltip;
+        public UI_SeatNumber CurrentElectionSeatsInfo;
         public WindowGraph CurrentElectionGraph;
         public UI_Trait SeatDistributionTrait;
 
@@ -55,7 +52,7 @@ namespace ElectionTactics
             ParliamentTitle.text = game.ElectionCycle == 1 ? "Parliament" : $"Cycle {game.ElectionCycle - 1} Parliament";
             Dictionary<Party, int> listValues = new Dictionary<Party, int>();
             foreach (Party p in parties.OrderByDescending(x => x.Seats)) listValues.Add(p, p.Seats);
-            ParliamentPartyList.Init(listValues, dynamic: true);
+            ParliamentPartyList.Init(listValues, dynamic: true, useSeatIcons: true);
             
             // Standings party list
             StandingsContainer.SetActive(true);

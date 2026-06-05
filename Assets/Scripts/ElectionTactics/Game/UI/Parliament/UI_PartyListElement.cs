@@ -12,16 +12,34 @@ namespace ElectionTactics
         public TextMeshProUGUI NameText;
         public TextMeshProUGUI ValueText;
         public Party Party;
+        public UI_SeatNumber SeatNumber;
         public GameObject EliminationOverlay;
         public Image PlayerControlledIndicator;
         public TooltipTarget TooltipTarget;
 
-        public void Init(Party p, string value, bool useAcronym)
+        public void Init(Party p, string value, bool useAcronym, bool useSeatIcons = false)
         {
             Party = p;
             NameText.text = useAcronym ? p.Acronym : p.Name;
             NameText.color = p.Color;
-            ValueText.text = value;
+
+            // Value
+            if (useSeatIcons)
+            {
+                SeatNumber.gameObject.SetActive(true);
+                if (ValueText != null) ValueText.gameObject.SetActive(false);
+
+                SeatNumber.InitPartySeats(p, value);
+            }
+            else
+            {
+                if (SeatNumber != null) SeatNumber.gameObject.SetActive(false);
+                ValueText.gameObject.SetActive(true);
+
+                ValueText.text = value;
+            }
+
+
             Background.color = ColorManager.Instance.UiMainLighter1;
             if (EliminationOverlay != null) EliminationOverlay.SetActive(p.IsEliminated);
             if (PlayerControlledIndicator != null)
@@ -30,6 +48,15 @@ namespace ElectionTactics
                 PlayerControlledIndicator.gameObject.SetActive(p.IsLocalPlayer);
             }
             RefreshTooltipContent();
+        }
+
+        public void SetSeats(int value)
+        {
+            if (SeatNumber != null)
+            {
+                SeatNumber.SetValue(value);
+                SeatNumber.gameObject.SetActive(true);
+            }
         }
 
         public void UpdateValue(string value)

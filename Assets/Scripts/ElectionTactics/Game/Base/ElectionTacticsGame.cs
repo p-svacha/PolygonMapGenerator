@@ -95,6 +95,7 @@ namespace ElectionTactics
             DefDatabase<ReligionDef>.AddDefs(ReligionDefs.Defs);
             DefDatabase<DensityDef>.AddDefs(DensityDefs.Defs);
             DefDatabase<EconomicSectorDef>.AddDefs(EconomicSectorDefs.Defs);
+            DefDatabase<SeatAllocationMethodDef>.AddDefs(SeatAllocationMethodDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
 
@@ -269,7 +270,7 @@ namespace ElectionTactics
             foreach (LobbySlot slot in GameSettings.Slots)
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
-                Party party = new Party(this, id++, slot.Name, slot.GetColor(), isAi: slot.SlotType == LobbySlotType.Bot);
+                Party party = new Party(this, id++, slot.Name, slot.GetColor(), HelperFunctions.GetContrastTextColor(slot.GetColor()), isAi: slot.SlotType == LobbySlotType.Bot);
 
                 if (slot.SlotType == LobbySlotType.Human && (GameType == GameType.Singleplayer || slot.ClientId == NetworkPlayer.LocalClientId))
                 {

@@ -378,6 +378,20 @@ public static class HelperFunctions
 
     public static Vector4 ColorToVec4(Color c) => new Vector4(c.r, c.g, c.b, c.a);
 
+    /// <summary>
+    /// Returns either black or white depending on which contrasts better
+    /// with the given background color.
+    /// </summary>
+    public static Color GetContrastTextColor(Color background)
+    {
+        // Perceived luminance formula
+        float luminance = 0.299f * background.r +
+                          0.587f * background.g +
+                          0.114f * background.b;
+
+        return luminance > 0.5f ? Color.black : Color.white;
+    }
+
     #endregion
 
     #region Layers

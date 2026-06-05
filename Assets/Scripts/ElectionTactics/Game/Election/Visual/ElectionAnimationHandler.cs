@@ -271,10 +271,7 @@ namespace ElectionTactics
                 // Update current election graph
                 Game.UI.Parliament.CurrentElectionContainer.SetActive(true);
                 Game.UI.Parliament.CurrentElectionTitle.text = CurrentDistrictResult.District.Name;
-                Game.UI.Parliament.CurrentElectionSeatsText.text = CurrentDistrictResult.Seats.ToString();
-                Game.UI.Parliament.CurrentElectionSeatsText_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Seats", "How many seats will be distributed for this district.");
-                Game.UI.Parliament.CurrentElectionSeatsIcon.gameObject.SetActive(true);
-                Game.UI.Parliament.CurrentElectionSeatsIcon_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Seats", "How many seats will be distributed for this district.");
+                Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.District.Seats, CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
                 Game.UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, Game.UI.Font, GraphAnimationTime, startAnimation: false);
 
                 Game.CameraHandler.MoveToFocusDistricts(new List<District>() { CurrentDistrictResult.District }, DistrictPanTime, OnCameraMoveToNextDistrictDone);
@@ -378,7 +375,7 @@ namespace ElectionTactics
                     int legitimacyChange = CurrentDistrictResult.GetLegitimacyChange(p);
                     if (legitimacyChange != 0)
                     {
-                        ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District.MapLabel.SeatsText.transform.position, p, legitimacyChange);
+                        ScoreTokenAnimationHandler.Instance.AddTokenToNextAnimation(CurrentDistrictResult.District.MapLabel.Seats.transform.position, p, legitimacyChange);
                     }
                 }
                 ScoreTokenAnimationHandler.Instance.StartAnimation(ScoreTokenFlyingTime, callback: OnDistrictResultTokensArrived);

@@ -14,6 +14,7 @@ namespace ElectionTactics {
         public string Name;
         public string Acronym;
         public Color Color;
+        public Color ContrastColor;
         public bool IsHuman;
         public bool IsLocalPlayer;
         public PartyAI AI;
@@ -41,13 +42,14 @@ namespace ElectionTactics {
         public int Seats;
         public bool IsReady;
 
-        public Party(ElectionTacticsGame game, int id, string name, Color c, bool isAi)
+        public Party(ElectionTacticsGame game, int id, string name, Color color, Color contrastColor, bool isAi)
         {
             Id = id;
             Game = game;
             Name = name;
             Acronym = PartyNameGenerator.CreateAcronym(Name);
-            Color = c;
+            Color = color;
+            ContrastColor = contrastColor;
             IsHuman = !isAi;
             if (isAi)
             {
