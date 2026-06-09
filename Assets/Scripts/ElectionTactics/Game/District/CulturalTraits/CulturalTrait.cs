@@ -12,6 +12,7 @@ namespace ElectionTactics
         public CulturalTraitDef Def { get; private set; }
         public District District { get; private set; }
         public ElectionTacticsGame Game => District.Game;
+        public float PopulationGrowthRateModifier => Def.PopulationGrowthRateModifier;
 
         public void Init(CulturalTraitDef def, District district)
         {

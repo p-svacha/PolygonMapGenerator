@@ -18,15 +18,21 @@ namespace ElectionTactics
 
         [Header("Header")]
         public Button BackButton;
-        public Text TitleText;
-        public UI_InfoTableRow PopulationInfo;
-        public UI_InfoTableRow SeatsInfo;
-        public UI_InfoTableRow PopularityInfo;
+        public TextMeshProUGUI TitleText;
+
+        public UI_SeatNumber SeatsInfo;
+        public UI_SeatNumber PopularityInfo;
 
         public GameObject PopularityBreakdown;
         public UI_InfoTable PopularityBreakdownTable;
 
         [Header("Traits")]
+        public UI_InfoTableRow PopulationInfo;
+        public UI_PopulationGrowthIndicator PopulationGrowthIndicator;
+        public GameObject PopulationGrowthInfo;
+        public TextMeshProUGUI PopulationGrowthValueText;
+        public TextMeshProUGUI SeatChangeText;
+
         public UI_InfoTableRow LanguageInfo;
         public UI_InfoTableRow ReligionInfo;
         public UI_InfoTableRow DensityInfo;
@@ -36,7 +42,11 @@ namespace ElectionTactics
         public UI_InfoTableRow Economy2Info;
         public UI_InfoTableRow Economy3Info;
 
-        public UI_TraitContainer GeographyPanel;
+        public GameObject GeographyRowIII;
+        public GameObject GeographyRowII;
+        public GameObject GeographyRowI;
+        public UI_Trait GeographicTraitPrefab;
+
         public UI_TraitContainer CulturalTraitsPanel;
 
         [Header("Modifiers")]
@@ -54,6 +64,11 @@ namespace ElectionTactics
             // Popularity breakdown triggers
             PopularityInfo.SetHoverAction(() => { PopularityBreakdown.gameObject.SetActive(true); PopularityBreakdownTable.InitPopularityBreakdown(CurrentDistrict, UI.Game.LocalPlayerParty); });
             PopularityInfo.SetUnhoverAction(() => PopularityBreakdown.gameObject.SetActive(false));
+
+            // Population
+            PopulationGrowthIndicator.SetHoverAction(ShowPopulationGrowthInfo);
+            PopulationGrowthIndicator.SetUnhoverAction(HidePopulationGrowthInfo);
+            PopulationGrowthInfo.gameObject.SetActive(false);
 
             // Demography
             DensityInfo.SetHoverAction(() => { UI.MapControls.ShowDensityOverlay(CurrentDistrict.Density); });
@@ -88,13 +103,25 @@ namespace ElectionTactics
             // Header
             TitleText.text = district.Name;
 
-            PopulationInfo.SetValue(district.Population.ToString("N0"));
-
-            SeatsInfo.SetValue(district.Seats.ToString());
+            SeatsInfo.InitDistrictSeats(district.Seats, district.GetSeatAllocationMethod(), darkMode: false);
             PopularityInfo.SetValue(district.GetPartyPopularity(UI.Game.LocalPlayerParty).ToString());
 
+            // Population
+            PopulationInfo.SetValue((Mathf.Round(district.Population / 1000f) * 1000).ToString("N0")); // Rounded to the thousands
+
+            float growthRate = district.GetPopulationGrowthRate();
+            PopulationGrowthIndicator.Init(growthRate);
+            PopulationGrowthValueText.text = growthRate.ToString("+0.##;-0.##;0") + "% / cycle";
+            int seatChangeCountdown = district.GetSeatChangeCountdown();
+            if (seatChangeCountdown == -1) SeatChangeText.text = "Seat amount will not change.";
+            else
+            {
+                if (growthRate > 0f) SeatChangeText.text = $"Gains a seat in {seatChangeCountdown} {"cycle".Pluralize(seatChangeCountdown)}";
+                else SeatChangeText.text = $"Loses a seat in {seatChangeCountdown} {"cycle".Pluralize(seatChangeCountdown)}";
+            }
+
             // Geography
-            GeographyPanel.InitGeographyTraits(district);
+            InitGeographyPanel();
 
             // Demography
             DensityInfo.SetValue(district.Density.Label);
@@ -131,9 +158,37 @@ namespace ElectionTactics
             else ElectionGraph.gameObject.SetActive(false);
         }
 
+        private void InitGeographyPanel()
+        {
+            InitGeographyRow(GeographyRowIII, 3);
+            InitGeographyRow(GeographyRowII, 2);
+            InitGeographyRow(GeographyRowI, 1);
+        }
+
+        private void InitGeographyRow(GameObject row, int category)
+        {
+            HelperFunctions.DestroyAllChildredImmediately(row, skipElements: 1);
+            List<GeographyTrait> traits = CurrentDistrict.Geography.Where(t => t.Category == category).OrderByDescending(t => t.Label).ToList();
+
+            foreach (GeographyTrait trait in traits)
+            {
+                UI_Trait elem = Instantiate(GeographicTraitPrefab, row.transform);
+                elem.InitGeographyTrait(trait);
+            }
+        }
+
         private void ClearAllPanels()
         {
             for (int i = 0; i < ModifierContent.transform.childCount; i++) Destroy(ModifierContent.transform.GetChild(i).gameObject);
+        }
+
+        private void ShowPopulationGrowthInfo()
+        {
+            PopulationGrowthInfo.gameObject.SetActive(true);
+        }
+        private void HidePopulationGrowthInfo()
+        {
+            PopulationGrowthInfo.gameObject.SetActive(false);
         }
     }
 }

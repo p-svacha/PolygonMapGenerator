@@ -12,6 +12,7 @@ namespace ElectionTactics
         private int MaxValue = 8;
 
         public TextMeshProUGUI Label;
+        public TooltipTarget LabelTooltipTarget;
         public GameObject ValueContainer;
         public Button MinusButton;
         public Button PlusButton;
@@ -40,12 +41,16 @@ namespace ElectionTactics
             ShowPolicyMapOverlay();
         }
 
-        public void Init(Policy p)
+        public void Init(Policy policy)
         {
-            Policy = p;
-            Label.text = p.Name;
+            Policy = policy;
+            Label.text = policy.Name;
+            if (!string.IsNullOrEmpty(policy.Description))
+            {
+                LabelTooltipTarget.Init(Tooltip.TooltipType.TitleAndText, policy.Name, policy.Description);
+            }
             UpdateValue();
-            p.UIControl = this;
+            policy.UIControl = this;
         }
 
         public void UpdateValue()

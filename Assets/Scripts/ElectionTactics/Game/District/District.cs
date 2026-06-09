@@ -48,6 +48,7 @@ namespace ElectionTactics
         public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
         public int Population;     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
+        private float BasePopulationGrowthRate; // Randomized base growth rate of the district. Between -1% and 2%.
         public int Seats;          // How many seats this district has in the parliament
         public int Voters { get; set; } // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
         public float VoterTurnout; // Value between 0 and 1 of how many people went to vote. This value is only relevant for the vote victory and is not used for calculation of the actual votes.
@@ -110,6 +111,9 @@ namespace ElectionTactics
             Population = (int)(Population * populationModifier);
             Population = (Population / 1000) * 1000;
 
+            // Base population growth rate
+            BasePopulationGrowthRate = Random.Range(ElectionTacticsGame.MIN_BASE_GROWTH_RATE, ElectionTacticsGame.MAX_BASE_GROWTH_RATE);
+
             // Seat calculation
             RecalculateSeats();
 
@@ -125,7 +129,7 @@ namespace ElectionTactics
         {
             int tmpPop = Population;
             int tmpSeatRequirement = RequiredPopulationPerSeat;
-            int tmpSeats = 0;
+            int tmpSeats = 1;
             while (tmpPop >= tmpSeatRequirement)
             {
                 tmpSeats++;
@@ -139,83 +143,93 @@ namespace ElectionTactics
         {
             // Coastal
             if (Region.OceanCoastRatio > 0.6f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 3));
             else if (Region.OceanCoastRatio > 0.3f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 2));
             else if (Region.OceanCoastRatio > 0.05f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Coastal, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 1));
 
             // Landlocked
             if (Region.CoastLength == 0 && Region.LandNeighbours.All(x => x.CoastLength == 0))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Landlocked, 3));
             else if (Region.CoastLength == 0 && Region.LandNeighbours.Where(x => x.CoastLength == 0).Count() >= 2)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Landlocked, 2));
             else if (Region.CoastLength == 0)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Landlocked, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Landlocked, 1));
 
             // Island
             if (Region.Landmass.Size == 1)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Island, 3));
             else if (Region.Landmass.Size <= 4)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Island, 2));
             else if (Region.Landmass.Size <= 7)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Island, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Island, 1));
 
             // Tiny
             if (Region.Area <= 0.12f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Tiny, 3));
             else if (Region.Area <= 0.18f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Tiny, 2));
             else if (Region.Area <= 0.24f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Tiny, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Tiny, 1));
 
             // Large
             if (Region.Area >= 1.4f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Large, 3));
             else if (Region.Area >= 1.25f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Large, 2));
             else if (Region.Area >= 1.1f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Large, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Large, 1));
 
             // Northern
             if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.1f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.North, 3));
             else if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.2f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.North, 2));
             else if (Region.Centroid.y > Game.Map.Attributes.Height - (Game.Map.Attributes.Height * 0.3f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Northern, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.North, 1));
 
             // Southern
             if (Region.Centroid.y < Game.Map.Attributes.Height * 0.1f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.South, 3));
             else if (Region.Centroid.y < Game.Map.Attributes.Height * 0.2f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.South, 2));
             else if (Region.Centroid.y < Game.Map.Attributes.Height * 0.3f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Southern, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.South, 1));
 
             // Eastern
             if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.1f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.East, 3));
             else if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.2f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.East, 2));
             else if (Region.Centroid.x > Game.Map.Attributes.Width - (Game.Map.Attributes.Width * 0.3f))
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Eastern, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.East, 1));
 
             // Western
             if (Region.Centroid.x < Game.Map.Attributes.Width * 0.1f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.West, 3));
             else if (Region.Centroid.x < Game.Map.Attributes.Width * 0.2f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.West, 2));
             else if (Region.Centroid.x < Game.Map.Attributes.Width * 0.3f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Western, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.West, 1));
 
             // Lakeside
             if (Region.LakeCoastRatio > 0.3f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 3));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 3));
             else if (Region.LakeCoastRatio > 0.2f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 2));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 2));
             else if (Region.LakeCoastRatio > 0.1f)
-                Geography.Add(Game.GetGeographyTrait(GeographyTraitType.Lakeside, 1));
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 1));
+
+            // River
+            float riverBorderLength = Region.Borders.Where(x => x.River != null).Sum(x => x.Length);
+            float riverBorderRatio = riverBorderLength / Region.TotalBorderLength;
+            if (riverBorderRatio > 0.2f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.River, 3));
+            else if (riverBorderRatio > 0.1f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.River, 2));
+            else if (riverBorderRatio > 0f)
+                Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.River, 1));
         }
 
         private DensityDef GetDensityForNewRegion() // Denisty is weighted random rural > mixed > urban
@@ -227,7 +241,12 @@ namespace ElectionTactics
         }
         private AgeGroupDef GetAgeGroupForNewRegion() // Age group is fully random
         {
-            return ElectionTacticsGame.GetRandomAgeGroup();
+            Dictionary<AgeGroupDef, int> candidates = new Dictionary<AgeGroupDef, int>();
+            foreach (AgeGroupDef def in DefDatabase<AgeGroupDef>.AllDefs)
+            {
+                candidates.Add(def, def.Commonness);
+            }
+            return candidates.GetWeightedRandomElement();
         }
         private LanguageDef GetLanguageForNewRegion() // Languages can spread over land borders
         {
@@ -329,6 +348,7 @@ namespace ElectionTactics
             (
                 Game.ElectionCycle,
                 Game.Year,
+                Population,
                 Seats,
                 new List<Party>(parties),
                 this,
@@ -345,8 +365,16 @@ namespace ElectionTactics
 
         public void OnElectionEnd()
         {
+            // Population Growth
+            float populationGrowthFactor = 1f + (GetPopulationGrowthRate() / 100f);
+            Population = (int)(Population * populationGrowthFactor);
+
+            // Modifiers
             UpdateModifiers();
+
+            // Cultural traits
             foreach (CulturalTrait trait in CulturalTraits) trait.OnPostElection();
+
             RecalculateSeats();
         }
 
@@ -395,6 +423,78 @@ namespace ElectionTactics
             }
 
             return factors;
+        }
+
+        /// <summary>
+        /// The final calculated population growth rate in %. Applied after every cycle.
+        /// </summary>
+        public float GetPopulationGrowthRate()
+        {
+            float value = BasePopulationGrowthRate;
+            value += AgeGroup.PopulationGrowthRateModifier;
+
+            foreach (CulturalTrait ct in CulturalTraits)
+            {
+                value += ct.PopulationGrowthRateModifier;
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Returns the amount of cycles remaining, until the district gains or loses a seat based on the population growth.
+        /// 1 means it will gain/lose a seat after the next election. -1 means seat amount will not change.
+        /// If growth rate is positive, this corresponds to a seat gain, else to a seat loss.
+        /// </summary>
+        /// <returns></returns>
+        public int GetSeatChangeCountdown()
+        {
+            float growthRate = GetPopulationGrowthRate();
+            if (growthRate == 0f) return -1;
+
+            int currentSeats = Seats;
+            int simulatedPopulation = Population;
+
+            int cap = 50; // if it would take more than this amount of cycles, return as no change.
+
+            if (growthRate > 0f)
+            {
+                // Find the population threshold for gaining the next seat
+                // Threshold for seat N+1: sum of RequiredPopulationPerSeat + RequirementIncreasePerSeat * (0 + 1 + ... + N-1)
+                // = currentSeats * RequiredPopulationPerSeat + RequirementIncreasePerSeat * (currentSeats * (currentSeats - 1) / 2)
+                int nextSeatThreshold = currentSeats * RequiredPopulationPerSeat
+                    + RequirementIncreasePerSeat * (currentSeats * (currentSeats - 1) / 2);
+
+                if (simulatedPopulation >= nextSeatThreshold) return -1; // Already at threshold, RecalculateSeats handles this
+
+                int cycles = 0;
+                while (simulatedPopulation < nextSeatThreshold)
+                {
+                    simulatedPopulation = (int)(simulatedPopulation * (1f + growthRate / 100f));
+                    cycles++;
+                    if (cycles > cap) return -1; // Safety cap
+                }
+                return cycles;
+            }
+            else
+            {
+                // Find the population threshold below which a seat is lost
+                // Threshold for losing a seat: population needed for current seat count
+                // = (currentSeats - 1) * RequiredPopulationPerSeat + RequirementIncreasePerSeat * ((currentSeats-1) * (currentSeats-2) / 2)
+                if (currentSeats <= MinSeats) return -1; // Can't lose seats below minimum
+
+                int lossSeatThreshold = (currentSeats - 1) * RequiredPopulationPerSeat
+                    + RequirementIncreasePerSeat * ((currentSeats - 1) * (currentSeats - 2) / 2);
+
+                int cycles = 0;
+                while (simulatedPopulation > lossSeatThreshold)
+                {
+                    simulatedPopulation = (int)(simulatedPopulation * (1f + growthRate / 100f));
+                    cycles++;
+                    if (cycles > cap) return -1; // Safety cap
+                }
+                return cycles;
+            }
         }
 
         #endregion

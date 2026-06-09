@@ -30,6 +30,11 @@ namespace ElectionTactics
         /// </summary>
         public bool IsSeatDistributionTrait { get; init; }
 
+        /// <summary>
+        /// Additive modifier in % that gets applied to the districts population growth rate.
+        /// </summary>
+        public float PopulationGrowthRateModifier { get; init; } = 0f;
+
 
         public override void ResolveReferences()
         {

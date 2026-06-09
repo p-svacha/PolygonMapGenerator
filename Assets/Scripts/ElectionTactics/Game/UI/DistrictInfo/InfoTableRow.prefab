@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3, y: 0}
-  m_SizeDelta: {x: -6, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6074290208509815309
 CanvasRenderer:
@@ -287,7 +287,6 @@ GameObject:
   - component: {fileID: 3080787654473679754}
   - component: {fileID: 4479111021246939624}
   - component: {fileID: 483297655941166296}
-  - component: {fileID: 6725380711483079668}
   m_Layer: 5
   m_Name: InfoTableRow
   m_TagString: Untagged
@@ -350,24 +349,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_InfoTableRow
   LabelText: {fileID: 7948154541015798474}
   ValueText: {fileID: 2267205185827536529}
-  TooltipTarget: {fileID: 6725380711483079668}
---- !u!114 &6725380711483079668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1742085434661437001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
-  Type: 0
-  Title: 
-  Text: 
-  IsFocussed: 0
-  CurrentDelay: 0
+  LabelTooltipTarget: {fileID: 2694086431586828769}
+  ValueTooltipTarget: {fileID: 15105584276769803}
 --- !u!1 &1942607223648905315
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +438,7 @@ GameObject:
   - component: {fileID: 8292611571992608180}
   - component: {fileID: 2741705858011920723}
   - component: {fileID: 8896281111371413569}
+  - component: {fileID: 2694086431586828769}
   m_Layer: 5
   m_Name: InnerFrame
   m_TagString: Untagged
@@ -520,6 +504,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2694086431586828769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7819718735022490252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
+  Type: 0
+  Title: 
+  Text: 
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1 &9136123267723703267
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,6 +532,7 @@ GameObject:
   - component: {fileID: 5743055408175738453}
   - component: {fileID: 1443841012243001222}
   - component: {fileID: 6995721122878934773}
+  - component: {fileID: 15105584276769803}
   m_Layer: 5
   m_Name: InnerFrame
   m_TagString: Untagged
@@ -596,6 +598,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &15105584276769803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9136123267723703267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
+  Type: 0
+  Title: 
+  Text: 
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1 &9215606188088708236
 GameObject:
   m_ObjectHideFlags: 0

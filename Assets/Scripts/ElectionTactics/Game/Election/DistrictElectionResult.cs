@@ -9,6 +9,7 @@ namespace ElectionTactics
     {
         public int ElectionCycle; // Cycle of the election
         public int Year;          // Year of the election
+        public int Population;    // Population of the district at the time of election
         public int Seats;         // How many seats the district was worth at the time of the election
 
         public int DistrictId;
@@ -33,10 +34,11 @@ namespace ElectionTactics
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
-        public DistrictElectionResult(int electionCycle, int year, int seats, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
+        public DistrictElectionResult(int electionCycle, int year, int population, int seats, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
         {
             ElectionCycle = electionCycle;
             Year = year;
+            Population = population;
             Seats = seats;
             Parties = parties;
             District = district;

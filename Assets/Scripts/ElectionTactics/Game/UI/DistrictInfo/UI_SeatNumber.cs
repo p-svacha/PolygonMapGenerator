@@ -1,10 +1,12 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class UI_SeatNumber : MonoBehaviour
+    public class UI_SeatNumber : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("Elements")]
         public Image Frame;
@@ -55,6 +57,22 @@ namespace ElectionTactics
             if (method == SeatAllocationMethodDefOf.DHondtPR) return ResourceManager.LoadSprite($"ElectionTactics/Icons/{baseName}_Striped_1");
             if (method == SeatAllocationMethodDefOf.HamiltonPR) return ResourceManager.LoadSprite($"ElectionTactics/Icons/{baseName}_Striped_2");
             throw new System.Exception("method not handledl");
+        }
+
+
+        public Action HoverAction { get; private set; }
+        public Action UnhoverAction { get; private set; }
+        public void SetHoverAction(Action action) => HoverAction = action;
+        public void SetUnhoverAction(Action action) => UnhoverAction = action;
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (HoverAction != null) HoverAction.Invoke();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (UnhoverAction != null) UnhoverAction.Invoke();
         }
     }
 }

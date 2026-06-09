@@ -145,9 +145,10 @@ namespace ElectionTactics
             {
                 DefName = GROWING_POPULATION,
                 Label = "Growing Population",
-                Description = "The population of this district grows after every election, leading to it being worth more seats over time.",
+                Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
                 TraitClass = typeof(CT_GrowingPopulation),
                 Commonness = 90,
+                PopulationGrowthRateModifier = +5.0f,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     DECLINING_POPULATION
@@ -158,9 +159,10 @@ namespace ElectionTactics
             {
                 DefName = DECLINING_POPULATION,
                 Label = "Declining Population",
-                Description = "The population of this district decreases after every election, leading to it being fewer more seats over time.", // set by trait
+                Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
                 TraitClass = typeof(CT_DecliningPopulation),
-                Commonness = 80,
+                Commonness = 50,
+                PopulationGrowthRateModifier = -4.0f,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     GROWING_POPULATION

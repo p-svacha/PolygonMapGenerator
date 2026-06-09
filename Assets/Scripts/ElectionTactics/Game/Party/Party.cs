@@ -83,13 +83,13 @@ namespace ElectionTactics {
             return Policies.OfType<DistrictPolicy>().First(x => x.District == district);
         }
 
-        public Policy GetPolicy(GeographyTraitType t)
+        public Policy GetPolicy(GeographyTraitDef def)
         {
-            return Policies.OfType<GeographyPolicy>().First(x => x.Trait == t);
+            return Policies.OfType<GeographyPolicy>().First(x => x.TraitDef == def);
         }
-        public int GetPolicyValueFor(GeographyTraitType t)
+        public int GetPolicyValueFor(GeographyTraitDef def)
         {
-           return GetPolicy(t).Value;
+           return GetPolicy(def).Value;
         }
 
         public Policy GetPolicy(EconomicSectorDef def)

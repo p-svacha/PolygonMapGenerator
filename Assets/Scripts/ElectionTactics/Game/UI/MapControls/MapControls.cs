@@ -249,9 +249,9 @@ namespace ElectionTactics
             }
         }
 
-        public void ShowGeographyOverlay(GeographyTraitType t)
+        public void ShowGeographyOverlay(GeographyTraitDef def)
         {
-            Policy policy = Game.LocalPlayerParty.GetPolicy(t);
+            Policy policy = Game.LocalPlayerParty.GetPolicy(def);
             ShowPolicyImpact(policy);
         }
         public void ShowEconomicSectorOverlay(EconomicSectorDef def)

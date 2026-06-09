@@ -14,10 +14,10 @@ public class UI_Trait : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void InitGeographyTrait(GeographyTrait trait)
     {
-        Text.text = trait.FullName;
-        TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, trait.FullName, trait.Description);
+        Text.text = trait.Label;
+        TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, trait.LabelWithCategory, trait.Description);
 
-        HoverAction = () => UI_ElectionTactics.Instance.MapControls.ShowGeographyOverlay(trait.Type);
+        HoverAction = () => UI_ElectionTactics.Instance.MapControls.ShowGeographyOverlay(trait.Def);
         UnhoverAction = () => UI_ElectionTactics.Instance.MapControls.ClearOverlay();
     }
 

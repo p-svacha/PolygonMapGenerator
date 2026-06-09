@@ -7,19 +7,20 @@ namespace ElectionTactics
 {
     public class GeographyPolicy : Policy
     {
-        public GeographyTraitType Trait;
+        public GeographyTraitDef TraitDef;
 
-        public GeographyPolicy(int id, Party p, GeographyTraitType trait, int maxValue) : base(id, p, maxValue)
+        public GeographyPolicy(int id, Party p, GeographyTraitDef trait, int maxValue) : base(id, p, maxValue)
         {
-            Trait = trait;
-            Name = EnumHelper.GetDescription(trait);
+            TraitDef = trait;
+            Name = trait.Label;
+            Description = trait.Description;
             Type = PolicyType.Geography;
         }
 
         public override int GetSinglePointBaseImpact(District district)
         {
             // Check if district has geography trait of this policy
-            GeographyTrait trait = district.Geography.FirstOrDefault(g => g.Type == Trait);
+            GeographyTrait trait = district.Geography.FirstOrDefault(g => g.Def == TraitDef);
             if (trait != null)
             {
                 if (trait.Category == 3) return HIGH_POPULARITY_IMPACT;

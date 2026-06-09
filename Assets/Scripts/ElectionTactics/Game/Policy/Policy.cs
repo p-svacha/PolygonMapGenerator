@@ -9,6 +9,7 @@ namespace ElectionTactics
         public Party Party { get; private set; }
         public int Id { get; protected set; } // Id to identify a policy, unique per player
         public string Name { get; protected set; }
+        public string Description { get; protected set; }
         public bool IsActive { get; protected set; } // Determines if the policy is active (and therefore visible) in the current game
         public int MaxValue { get; protected set; }
         public int LockedValue { get; protected set; } // The value that is already locked in from a previous cycle - value can't go below this

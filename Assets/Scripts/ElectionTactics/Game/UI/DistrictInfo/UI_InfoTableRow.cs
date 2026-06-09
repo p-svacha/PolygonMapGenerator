@@ -9,9 +9,9 @@ public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExit
     [Header("Elements")]
     public TextMeshProUGUI LabelText;
     public TextMeshProUGUI ValueText;
-    public TooltipTarget TooltipTarget;
-    public Action HoverAction { get; private set; }
-    public Action UnhoverAction { get; private set; }
+
+    public TooltipTarget LabelTooltipTarget;
+    public TooltipTarget ValueTooltipTarget;
 
     public void Init(string label, string value)
     {
@@ -22,6 +22,9 @@ public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void SetLabel(string label) => LabelText.text = label;
     public void SetValue(string value) => ValueText.text = value;
 
+
+    public Action HoverAction { get; private set; }
+    public Action UnhoverAction { get; private set; }
     public void SetHoverAction(Action action) => HoverAction = action;
     public void SetUnhoverAction(Action action) => UnhoverAction = action;
 

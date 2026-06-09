@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace ElectionTactics
 {
     public class UI_DistrictElectionGraph : MonoBehaviour
     {
-        public Text YearText;
+        public TextMeshProUGUI YearText;
         public Button FirstYearButton;
         public Button PrevYearButton;
         public Button NextYearButton;
@@ -18,7 +19,7 @@ namespace ElectionTactics
         public WindowGraph ElectionGraph;
 
         public List<DistrictElectionResult> ElectionResults;
-        public int CurrentIndex;
+        public int CurrentIndex { get; private set; }
 
         public void Init(List<DistrictElectionResult> results)
         {

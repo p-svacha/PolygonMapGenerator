@@ -1,38 +1,62 @@
 0.2 to-do list:
 
+NEXT UP: DEMOGRAPHY
+age group
+density
+district
+economy
+geography
+language
+religion
+
+
 Menu::
 (/) - Make a stylized logo for the game to use in the main menu and for the itch thumbnail.
 
 District Attributes & Info Screen:
-- CHange seats and popularity to icons
-- number in star for seats (make this a standard component that can be reused at different places)
-- number in heart for popularity
+(/) - Change seats and popularity to icons
+(/) - number in star for seats (make this a standard component that can be reused at different places)
+(/) - number in heart for popularity
+(/) - Move population to demography (first line)
+(/) - move geography traits to def system
 
-- Move population to demography (first line)
-- Remove Age Group category
+- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
 - Change density to Low, Medium, High
 - For initial density generation, take size into account (so small districts are more likely to be high density, large districts more likely to be low density)
 - Density should be updated every turn based on population change, so it can change over time.
 - Attributes (Demography, Economy, Geography) on the left
-- Split geography into 3 subcategories by significance (I, II, III)
+- Split geography into 3 subcategories by significance (I, II, III) - label them
 - More complex / dynamic elements on the right (cultural traits, active modifiers)
 - Make cultural trait chips bigger and more prominent, 1 per line
-- make modifiers scrollable
+- make modifiers scrollable or introduce pages for them
+- add recent events section in district info next to active modifiers
 
 Custom Game:
 - Add option for game length (affects starting influence in BR, elections to win in Classic): very short, (0.5x) short (0.75x), standard, long (1.5x), very long (2x), marathon (3x)
 - Add option for starting districts (1, 2, 3 (default), 5, 10, 20, maximum).)
+- Add option to change opponent name
 
-Population Changes:
+Demography General:
+- Change population growth rate to %
 - Make population dynamics a more central aspect of the game.
 - Each district has a basic population growth rate, which is an absolute number, but low. Age group affects it. Indicate as <<, <, -, >, >> beside population row.
+- Hovering the symbol shows exact change per cycle
+- Growth rate is affected by age group
+(/) - Make age groups appear weighted random
+- Add tooltip to demography labels
+- Add description to demography values (def descriptions)
+- add tooltip to economy row labels
+- add description to economy defs
+(/) - first seat requires no pop (less 1-seat districts)
 
 
 Post-Election:
 - At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
 - After that, enable HUD like before.
 - Add a new tab "Newspaper" tab with a letter as an icon.
-- This tab simply shows messages about relevant events in the game, such as election results, changing population, changing attributes, new districts.
+- This tab show all previous yearly newspapers
+- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
+- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
 
 
 Tutorial
@@ -71,7 +95,8 @@ General Gameplay:
 - Ensure each letter is only used once as a starting letter for district names, to make them easier to parse.
 - Ensure the same district name cannot appear twice.
 - Add some constraints for economic sectors (like no fishing in landlocked districts)
-- Add rivers as a geographical trait
+- remove max districts as constant
+(/) - Add rivers as a geographical trait
 
 Cultural traits:
 - Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population").
@@ -87,10 +112,11 @@ Add events (that can happen randomly (rarely) after an election:
 - Random catastrophic event that reduces population instantly.
 
 Policy :
-- Use not all caps for policy names
+(/) - Use not all caps for policy names
 - Add icons for economic sectors (in addition to text) - also use them in district info
 - Add a ? next to each category with an instant tooltip (replaces title tooltips)
-- Add tooltips for geography traits with info what they are (like in district info)
+(/) - Add tooltips for geography traits with info what they are (like in district info)
+- add tooltips to ALL policies (labels)
 - Sort policies alphabetically within their category
 - Left/Rightclicking a policy should increase/decrease it
 
@@ -172,7 +198,6 @@ cultural traits need to be in a more prominent visual hierarchy, separate from t
 
 GAMEPLAY
 basic gameplay cycle seems to work and streamer got into after a few cycles, making strategies and stuff
-age group is probably not needed, 3 demographic categories seems like enough
 reduce default win condition to 6 wins instead of 7 (at least in tutorial, maybe even 5)
 people seem to really like the stable cultural trait, giving a boost to the governing party
 give SOME kind of indication what other parties focus on, just a hint to strategize around
@@ -243,6 +268,8 @@ CULTURAL TRAIT IDEAS
 - <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
 - Impressionable: +10 popularity for each party governing an adjacent district.
 - remove non-linguistic and secular.
+- Very fast growing pop
+- ANother trait that grows pop by a little as a side effect
 
 
 
@@ -252,3 +279,4 @@ IDEOLOGY IDEAS
 - an ideology that incrases the cap on ALL policies slightly
 - gain +1 policy point for each 3 unused point.
 - capping a policy gives all points +2 impact
+- something with water (lakeside, river, coastal)

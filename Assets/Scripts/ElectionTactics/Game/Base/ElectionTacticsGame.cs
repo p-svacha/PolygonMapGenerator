@@ -37,7 +37,7 @@ namespace ElectionTactics
 
         // Traits
         public List<GeographyTrait> GeographyTraits = new List<GeographyTrait>();
-        public List<GeographyTraitType> ActiveGeographyTraits = new List<GeographyTraitType>();
+        public List<GeographyTraitDef> ActiveGeographyTraits = new List<GeographyTraitDef>();
 
         public List<EconomicSectorDef> ActiveEconomicSectors = new List<EconomicSectorDef>();
         public List<DensityDef> ActiveDensityTraits = new List<DensityDef>();
@@ -60,6 +60,9 @@ namespace ElectionTactics
         public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
 
         public const int MAX_NUM_DISTRICTS = 20;
+
+        public const float MIN_BASE_GROWTH_RATE = -1f; // in %
+        public const float MAX_BASE_GROWTH_RATE = +2f; // in %
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions
@@ -89,6 +92,7 @@ namespace ElectionTactics
             DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
+            DefDatabase<GeographyTraitDef>.AddDefs(GeographyTraitDefs.Defs);
             DefDatabase<CulturalTraitDef>.AddDefs(CulturalTraitDefs.Defs);
             DefDatabase<AgeGroupDef>.AddDefs(AgeGroupDefs.Defs);
             DefDatabase<LanguageDef>.AddDefs(LanguageDefs.Defs);
@@ -254,11 +258,11 @@ namespace ElectionTactics
         private void InitGeograhyTraits()
         {
             GeographyTraits.Clear();
-            foreach(GeographyTraitType t in  Enum.GetValues(typeof(GeographyTraitType)))
+            foreach (GeographyTraitDef def in DefDatabase<GeographyTraitDef>.AllDefs)
             {
-                GeographyTraits.Add(new GeographyTrait(t, 1));
-                GeographyTraits.Add(new GeographyTrait(t, 2));
-                GeographyTraits.Add(new GeographyTrait(t, 3));
+                GeographyTraits.Add(new GeographyTrait(def, 1));
+                GeographyTraits.Add(new GeographyTrait(def, 2));
+                GeographyTraits.Add(new GeographyTrait(def, 3));
             }
         }
 
@@ -297,9 +301,9 @@ namespace ElectionTactics
                 foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, p, district, MAX_POLICY_VALUE));
             }
 
-            foreach (GeographyTraitType t in Enum.GetValues(typeof(GeographyTraitType)))
+            foreach (GeographyTraitDef def in DefDatabase<GeographyTraitDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, t, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, def, MAX_POLICY_VALUE));
             }
 
             foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
@@ -678,7 +682,7 @@ namespace ElectionTactics
                     foreach (Party p in Parties) p.GetPolicy(d).Activate();
                 }
 
-                foreach (GeographyTraitType t in d.Geography.Select(x => x.Type))
+                foreach (GeographyTraitDef t in d.Geography.Select(x => x.Def))
                 {
                     if (!ActiveGeographyTraits.Contains(t))
                     {
@@ -730,20 +734,20 @@ namespace ElectionTactics
         {
             foreach (District d in ActiveDistricts)
             {
-                GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.Core);
+                GeographyTrait coreTrait = d.Geography.FirstOrDefault(x => x.Def == GeographyTraitDefOf.Core);
                 if (coreTrait != null) d.Geography.Remove(coreTrait);
-                GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Type == GeographyTraitType.New);
+                GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Def == GeographyTraitDefOf.New);
                 if (newTrait != null) d.Geography.Remove(newTrait);
 
-                if (d.Index < NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 3)); // Starting districts get the Core III trait
-                else if (d.Index == NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 2)); // Following district the Core II
-                else if (d.Index == NUM_STARTING_DISTRICTS + 1) d.Geography.Add(GetGeographyTrait(GeographyTraitType.Core, 1)); // Following district the Core I
+                if (d.Index < NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 3)); // Starting districts get the Core III trait
+                else if (d.Index == NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 2)); // Following district the Core II
+                else if (d.Index == NUM_STARTING_DISTRICTS + 1) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 1)); // Following district the Core I
 
                 int numDistricts = ActiveDistricts.Count;
                 if (d.Index < NUM_STARTING_DISTRICTS) { } // Starting districts (Core III) districts never get the new trait
-                else if (numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 3)); // 2 newest districts get New III
-                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 2)); // 3rd and 4th newest districts get New II
-                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitType.New, 1)); // 5th and 6th newest districts get New I
+                else if (numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 3)); // 2 newest districts get New III
+                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 2)); // 3rd and 4th newest districts get New II
+                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 1)); // 5th and 6th newest districts get New I
             }
         }
 
@@ -922,10 +926,6 @@ namespace ElectionTactics
         {
             return DefDatabase<ReligionDef>.AllDefs.RandomElement();
         }
-        public static AgeGroupDef GetRandomAgeGroup()
-        {
-            return DefDatabase<AgeGroupDef>.AllDefs.RandomElement();
-        }
         public static string GetRandomDistrictName()
         {
             return MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
@@ -948,9 +948,9 @@ namespace ElectionTactics
         public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;
         public bool IsBattleRoyale => GameSettings.GameMode == GameModeDefOf.BattleRoyale;
 
-        public GeographyTrait GetGeographyTrait(GeographyTraitType type, int category)
+        public GeographyTrait GetGeographyTrait(GeographyTraitDef def, int category)
         {
-            return GeographyTraits.First(x => x.Type == type && x.Category == category);
+            return GeographyTraits.First(x => x.Def == def && x.Category == category);
         }
 
         public Party GetParty(int partyId)
