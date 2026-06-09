@@ -29,7 +29,8 @@ District Attributes & Info Screen:
 Custom Game:
 - Add option for game length (affects starting influence in BR, elections to win in Classic): very short, (0.5x) short (0.75x), standard, long (1.5x), very long (2x), marathon (3x)
 - Add option for starting districts (1, 2, 3 (default), 5, 10, 20, maximum).)
-- Add option to change opponent name
+- Add option to change opponent name (own name too)
+- Add moving background from main menu
 
 Demography General:
 (/) - Change population growth rate to %
@@ -45,15 +46,6 @@ Demography General:
 (/) - first seat requires no pop (less 1-seat districts)
 
 
-Post-Election:
-- At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
-- After that, enable HUD like before.
-- Add a new tab "Newspaper" tab with a letter as an icon.
-- This tab show all previous yearly newspapers
-- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
-- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
-
-
 Tutorial
 - Make tutorial box bigger with bigger text.
 - Make tutorial in a fixed seed.
@@ -65,18 +57,29 @@ Tutorial
 - Remove step DURING election
 
 Election animation:
-- After election is done in a district, add a new step for that district "District Event". Only happens if relevant. Shows animations for traits like growing / declining population and "Events" mentioned below.
 - Increase speed of district transition, change from lerp to slerp
 - If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
 - After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternate voting mechanisms clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
-- Remember animation speed
+- Remember animation speed (maybe?)
 - Disable map label tooltips during election animation
 - Make sure tooltip of cultural voting trait doesn't get stuck
 
+Post-Election:
+- After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.
+- At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
+- After that, enable HUD like before.
+
+Newspaper:
+- Add a new tab "Newspaper" tab with a letter as an icon.
+- This tab show all previous yearly newspapers
+- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
+- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
+- add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'"). doesn't always appear. max 1
+
 General UX:
-- Test tooltips on 1400p, they are broken. Fix
+- Test tooltips on 1400p, they are broken at screen edge. Fix
 - When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
-- Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
+-(/) Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
 - Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
 - Add line breaks in voting trait descriptions.
 - Remove white as a party color.
@@ -132,7 +135,7 @@ Optional for v0.2:
 - Add density details similar to population details (with people/sqkm and a row with how long it takes to change)
 
 
-[v0.3]
+[v0.3?]
 Introduce new "Ideology" mechanic:
 - Every 3 cycles (first time at the start of cycle 3, so it fits nicely into the tutorial), each party has gets 3 semi-random "Ideologies" to choose from. Ideologies are a set of passive bonuses and penalties that define the general direction of the party, and also give a bit of flavour. The player can see the ideologies of the other parties. The offered ideologies are somewhat random but also weighted based on the policies the party has been using up to this point.
 - Ideas for first set of ideologies:
@@ -162,7 +165,12 @@ Introduce new "Ideology" mechanic:
 
 
 
-
+itch page changes:
+- SC1: district info in country with many districts, with modifiers and different traits. 5 parties
+- SC2: end-of-cycle newspaper
+- SC3: Policy screen mid-game with impact overlay
+- SC4: parliament screen mid-game
+- SC5: Setup game screenshot
 
 
 
@@ -284,6 +292,9 @@ CULTURAL TRAIT IDEAS
 
 
 IDEOLOGY IDEAS
+
+DESIGN CHALLENGE: picking an ideology shouldn't immediately change popularities too much. Else there will always be a big cut every x cycles where parties choose an ideology. The ideologies should act more as a strategy enabler / supporter from that point on. A little bit of an imediate effect is fine ofc, but shouldnt be the focus. Maybe look at it like Hearthstone Battleground Trinkets as a reference.
+
 - some bonus for when policy points are spead equally across all policy categories
 - an ideology that reduces the cap on ALL policies but makes them more effective
 - an ideology that incrases the cap on ALL policies slightly

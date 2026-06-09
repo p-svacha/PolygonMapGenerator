@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Density.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\VFX\VfxManager.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\Event\Event.cs" />
     <Compile Include="Assets\Scripts\Parrisk\UI\UI_TroopMovementDialog.cs" />
     <Compile Include="Assets\Scripts\MapEditor\BaseMapCameraHandler.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />

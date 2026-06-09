@@ -35,6 +35,9 @@ namespace ElectionTactics
         public Party LocalPlayerParty { get; set; }
         public Party WinnerParty;
 
+        // Events (newspaper articles)
+        public List<Event> Events = new List<Event>();
+
         // Traits
         public List<GeographyTrait> GeographyTraits = new List<GeographyTrait>();
         public List<GeographyTraitDef> ActiveGeographyTraits = new List<GeographyTraitDef>();
