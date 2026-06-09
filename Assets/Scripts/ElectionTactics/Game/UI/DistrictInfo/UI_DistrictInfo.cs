@@ -66,30 +66,39 @@ namespace ElectionTactics
             PopularityInfo.SetUnhoverAction(() => PopularityBreakdown.gameObject.SetActive(false));
 
             // Population
-            PopulationGrowthIndicator.SetHoverAction(ShowPopulationGrowthInfo);
-            PopulationGrowthIndicator.SetUnhoverAction(HidePopulationGrowthInfo);
+            PopulationInfo.SetHoverAction(ShowPopulationGrowthInfo);
+            PopulationInfo.SetUnhoverAction(HidePopulationGrowthInfo);
             PopulationGrowthInfo.gameObject.SetActive(false);
 
             // Demography
+            PopulationInfo.LabelTooltipTarget.Init("Population", "Determines the number of seats this district holds in parliament.\n\nGrows or shrinks each cycle based on the district's growth rate.");
+
+            DensityInfo.LabelTooltipTarget.Init("Density", "Population density, derived from the district's size and population.\n\nUpdates each cycle as population changes.\n\nSmaller districts tend toward higher density.");
             DensityInfo.SetHoverAction(() => { UI.MapControls.ShowDensityOverlay(CurrentDistrict.Density); });
             DensityInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
+            AgeGroupInfo.LabelTooltipTarget.Init("Primary Age Group", "The dominant generation of the population.\n\nSlightly modifies the district's natural population growth rate.");
             AgeGroupInfo.SetHoverAction(() => { UI.MapControls.ShowAgeOverlay(CurrentDistrict.AgeGroup); });
             AgeGroupInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
+            ReligionInfo.LabelTooltipTarget.Init("Religion", "The dominant religion practiced in this district.\n\nSpreads along land and water connections when new districts form.\n\nNever changes once established.");
             ReligionInfo.SetHoverAction(() => { UI.MapControls.ShowReligionOverlay(CurrentDistrict.Religion); });
             ReligionInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
+            LanguageInfo.LabelTooltipTarget.Init("Language", "The dominant language spoken in this district.\n\nSpreads along land borders when new districts form.\n\nNever changes once established.");
             LanguageInfo.SetHoverAction(() => { UI.MapControls.ShowLanguageOverlay(CurrentDistrict.Language); });
             LanguageInfo.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
             // Economy
+            Economy1Info.LabelTooltipTarget.Init("Dominant Industry", "The district's primary and most important economic sector.\n\nSupporting this policy gives +7 popularity here.");
             Economy1Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy1); });
             Economy1Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
+            Economy2Info.LabelTooltipTarget.Init("Major Industry", "The district's second most important economic sector.\n\nSupporting this policy gives +5 popularity here.");
             Economy2Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy2); });
             Economy2Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
 
+            Economy3Info.LabelTooltipTarget.Init("Minor Industry", "The districts third most important economic sector.\n\nSupporting this policy gives +3 popularity here.");
             Economy3Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy3); });
             Economy3Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
         }

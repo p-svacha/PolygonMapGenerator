@@ -71,9 +71,9 @@ namespace ElectionTactics
 
         public Sprite GetDensityIcon(DensityDef density)
         {
-            if (density == DensityDefOf.Urban) return UrbanSprite;
-            if (density == DensityDefOf.Suburban) return SuburbanSprite;
-            if (density == DensityDefOf.Rural) return RuralSprite;
+            if (density == DensityDefOf.High) return UrbanSprite;
+            if (density == DensityDefOf.Medium) return SuburbanSprite;
+            if (density == DensityDefOf.Low) return RuralSprite;
             throw new System.Exception("Density sprite not found for " + density.ToString());
         }
         

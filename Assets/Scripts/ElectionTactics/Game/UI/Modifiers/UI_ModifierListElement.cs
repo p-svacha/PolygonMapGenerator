@@ -27,7 +27,7 @@ namespace ElectionTactics
             if (m.Type == ModifierType.Exclusion) DescriptionText.text = $"<b>EXCLUDED</b> {DescriptionText.text}";
             RemainingDurationText.text = $"{m.RemainingLength} {"cycle".Pluralize(m.RemainingLength)} remaining";
 
-            TooltipTarget.Init(Tooltip.TooltipType.TextOnly, "", $"Source: {m.Source}");
+            TooltipTarget.Init("", $"Source: {m.Source}");
         }
     }
 }

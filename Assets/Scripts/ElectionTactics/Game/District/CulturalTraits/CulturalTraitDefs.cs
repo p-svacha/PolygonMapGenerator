@@ -148,7 +148,7 @@ namespace ElectionTactics
                 Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
                 TraitClass = typeof(CT_GrowingPopulation),
                 Commonness = 90,
-                PopulationGrowthRateModifier = +5.0f,
+                PopulationGrowthRateModifier = +7.0f,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     DECLINING_POPULATION
@@ -162,7 +162,7 @@ namespace ElectionTactics
                 Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
                 TraitClass = typeof(CT_DecliningPopulation),
                 Commonness = 50,
-                PopulationGrowthRateModifier = -4.0f,
+                PopulationGrowthRateModifier = -5.0f,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     GROWING_POPULATION

@@ -80,7 +80,7 @@ namespace ElectionTactics
 
             SetGeographyTraits();
 
-            Density = GetDensityForNewRegion();
+            DensityDef initialDensity = GetDensityForNewRegion();
             AgeGroup = GetAgeGroupForNewRegion();
             Language = GetLanguageForNewRegion();
             Religion = GetReligionForNewRegion();
@@ -105,9 +105,9 @@ namespace ElectionTactics
             // Population calculation
             Population = (int)(Region.Area * 1000000);
             float populationModifier = 0f;
-            if (Density == DensityDefOf.Urban) populationModifier = Random.Range(1.2f, 1.6f);
-            if (Density == DensityDefOf.Suburban) populationModifier = Random.Range(0.8f, 1.2f);
-            if (Density == DensityDefOf.Rural) populationModifier = Random.Range(0.4f, 0.8f);
+            if (initialDensity == DensityDefOf.High) populationModifier = Random.Range(1.2f, 1.6f);
+            if (initialDensity == DensityDefOf.Medium) populationModifier = Random.Range(0.8f, 1.2f);
+            if (initialDensity == DensityDefOf.Low) populationModifier = Random.Range(0.4f, 0.8f);
             Population = (int)(Population * populationModifier);
             Population = (Population / 1000) * 1000;
 
@@ -116,6 +116,7 @@ namespace ElectionTactics
 
             // Seat calculation
             RecalculateSeats();
+            RecalculateDensity();
 
             // Voter calculation
             Voters = NumVoters;
@@ -137,6 +138,15 @@ namespace ElectionTactics
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
             Seats = Mathf.Max(MinSeats, tmpSeats);
+        }
+
+        private void RecalculateDensity()
+        {
+            float populationPerArea = Population / Region.Area;
+
+            if (populationPerArea >= 1200000f) Density = DensityDefOf.High;
+            else if (populationPerArea >= 800000f) Density = DensityDefOf.Medium;
+            else Density = DensityDefOf.Low;
         }
 
         private void SetGeographyTraits()
@@ -234,11 +244,29 @@ namespace ElectionTactics
 
         private DensityDef GetDensityForNewRegion() // Denisty is weighted random rural > mixed > urban
         {
-            float rng = UnityEngine.Random.value;
-            if (rng < 0.25f) return DensityDefOf.Urban; // Urban - 25% chance
-            else if (rng < 0.25f + 0.33f) return DensityDefOf.Suburban; // Mixed - 33% chance
-            else return DensityDefOf.Rural; // Rural  - 42 % chance
+            // Base weights
+            int highWeight = 25;
+            int mediumWeight = 33;
+            int lowWeight = 42;
+
+            // Skew based on area: smaller districts lean High, larger lean Low
+            // Area roughly ranges 0.05 - 2.0. Normalize around 0.5 as neutral.
+            // Tiny III districts get around a +11 high weight and -11 low weight for this
+            float areaBias = (Region.Area - 0.5f) * 30f; // Negative for small, positive for large
+            highWeight = Mathf.Max(5, highWeight - (int)areaBias);
+            mediumWeight = Mathf.Max(5, mediumWeight);
+            lowWeight = Mathf.Max(5, lowWeight + (int)areaBias);
+
+            Dictionary<DensityDef, int> densityCandidates = new Dictionary<DensityDef, int>()
+            {
+                { DensityDefOf.High,   highWeight },
+                { DensityDefOf.Medium, mediumWeight },
+                { DensityDefOf.Low,    lowWeight },
+            };
+
+            return densityCandidates.GetWeightedRandomElement();
         }
+
         private AgeGroupDef GetAgeGroupForNewRegion() // Age group is fully random
         {
             Dictionary<AgeGroupDef, int> candidates = new Dictionary<AgeGroupDef, int>();
@@ -250,29 +278,37 @@ namespace ElectionTactics
         }
         private LanguageDef GetLanguageForNewRegion() // Languages can spread over land borders
         {
-            List<LanguageDef> languageChances = new List<LanguageDef>();
-            languageChances.Add(ElectionTacticsGame.GetRandomLanguage());
+            Dictionary<LanguageDef, int> languageCandidates = new Dictionary<LanguageDef, int>();
+
+            // Add a random language with weight 1
+            languageCandidates.Add(ElectionTacticsGame.GetRandomLanguage(), 1);
+
+            // Add each existing land-neighbouring language with a weight 2
             foreach (Region r in Region.LandNeighbours)
             {
                 District d = Game.GetDistrict(r);
-                if (d != null) languageChances.Add(d.Language);
+                if (d != null) languageCandidates.Increment(d.Language, 2);
             }
-            return languageChances[Random.Range(0, languageChances.Count)];
+
+            // Return
+            return languageCandidates.GetWeightedRandomElement();
         }
         private ReligionDef GetReligionForNewRegion() // Religion can spread over land and water
         {
-            List<ReligionDef> religionChances = new List<ReligionDef>();
+            Dictionary<ReligionDef, int> religionCandidates = new Dictionary<ReligionDef, int>();
+
+            // Add a random religion with weight 2
+            religionCandidates.Add(ElectionTacticsGame.GetRandomReligion(), 2);
+
+            // Add each existing neighbouring religion (including water connections) with a weight 3
             foreach (Region r in Region.Neighbours)
             {
                 District d = Game.GetDistrict(r);
-
-                ReligionDef religion;
-                if (d != null) religion = d.Religion;
-                else religion = ElectionTacticsGame.GetRandomReligion();
-
-                religionChances.Add(religion);
+                if (d != null) religionCandidates.Increment(d.Religion, 2);
             }
-            return religionChances[UnityEngine.Random.Range(0, religionChances.Count)];
+
+            // Return
+            return religionCandidates.GetWeightedRandomElement();
         }
 
         public void Activate()
@@ -375,7 +411,9 @@ namespace ElectionTactics
             // Cultural traits
             foreach (CulturalTrait trait in CulturalTraits) trait.OnPostElection();
 
+            // Recalculate
             RecalculateSeats();
+            RecalculateDensity();
         }
 
         /// <summary>

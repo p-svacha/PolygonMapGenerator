@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class UI_PopulationGrowthIndicator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class UI_PopulationGrowthIndicator : MonoBehaviour
     {
         [Header("Elements")]
         public Image IndicatorIcon;
@@ -23,21 +23,6 @@ namespace ElectionTactics
             else iconPath += "Increase3";
 
             IndicatorIcon.sprite = ResourceManager.LoadSprite(iconPath);
-        }
-
-        public Action HoverAction { get; private set; }
-        public Action UnhoverAction { get; private set; }
-        public void SetHoverAction(Action action) => HoverAction = action;
-        public void SetUnhoverAction(Action action) => UnhoverAction = action;
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (HoverAction != null) HoverAction.Invoke();
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (UnhoverAction != null) UnhoverAction.Invoke();
         }
     }
 }

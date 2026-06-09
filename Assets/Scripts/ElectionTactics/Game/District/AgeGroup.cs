@@ -24,7 +24,7 @@ namespace ElectionTactics
                 Description = "The population skews older. Slightly reduces the district's natural population growth rate.",
                 SortingOrder = 3,
                 Color = new Color(0.30f, 0.80f, 0.75f),
-                PopulationGrowthRateModifier = -1f,
+                PopulationGrowthRateModifier = -1.5f,
                 Commonness = 31,
             },
 
@@ -57,7 +57,7 @@ namespace ElectionTactics
                 Description = "The population is predominantly young. Slightly increases the district's natural population growth rate.",
                 SortingOrder = 0,
                 Color = new Color(0.65f, 0.40f, 0.45f),
-                PopulationGrowthRateModifier = +1f,
+                PopulationGrowthRateModifier = +1.5f,
                 Commonness = 19,
             },
         };

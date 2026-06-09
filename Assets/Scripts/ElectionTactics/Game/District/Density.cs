@@ -16,24 +16,24 @@ namespace ElectionTactics
         {
             new DensityDef()
             {
-                DefName = "Urban",
-                Label = "Urban",
+                DefName = "High",
+                Label = "High",
                 SortingOrder = 2,
                 Color = new Color(0.65f, 0.65f, 0.70f),
             },
 
             new DensityDef()
             {
-                DefName = "Suburban",
-                Label = "Suburban",
+                DefName = "Medium",
+                Label = "Medium",
                 SortingOrder = 1,
                 Color = new Color(0.85f, 0.75f, 0.50f),
             },
 
             new DensityDef()
             {
-                DefName = "Rural",
-                Label = "Rural",
+                DefName = "Low",
+                Label = "Low",
                 SortingOrder = 0,
                 Color = new Color(0.45f, 0.70f, 0.40f),
             },
@@ -43,8 +43,8 @@ namespace ElectionTactics
     [DefOf]
     public static class DensityDefOf
     {
-        public static DensityDef Urban;
-        public static DensityDef Suburban;
-        public static DensityDef Rural;
+        public static DensityDef High;
+        public static DensityDef Medium;
+        public static DensityDef Low;
     }
 }

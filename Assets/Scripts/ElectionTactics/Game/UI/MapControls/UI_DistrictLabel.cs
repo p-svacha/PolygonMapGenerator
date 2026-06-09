@@ -67,8 +67,8 @@ namespace ElectionTactics
 
 
             // Dynamic tooltips
-            ReligionIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Religion.Label, "The religion of this district.");
-            LanguageIcon.GetComponent<TooltipTarget>().Init(Tooltip.TooltipType.TitleAndText, District.Language.Label, "The language spoken in this districts.");
+            ReligionIcon.GetComponent<TooltipTarget>().Init(District.Religion.Label, "The religion of this district.");
+            LanguageIcon.GetComponent<TooltipTarget>().Init(District.Language.Label, "The language spoken in this districts.");
 
             switch(mode)
             {

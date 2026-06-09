@@ -61,8 +61,8 @@ namespace ElectionTactics
 
         public const int MAX_NUM_DISTRICTS = 20;
 
-        public const float MIN_BASE_GROWTH_RATE = -1f; // in %
-        public const float MAX_BASE_GROWTH_RATE = +2f; // in %
+        public const float MIN_BASE_GROWTH_RATE = -0.5f; // in %
+        public const float MAX_BASE_GROWTH_RATE = +1f; // in %
 
         // Global game values
         public float TurnTime;      // How much time players have this turn for their actions

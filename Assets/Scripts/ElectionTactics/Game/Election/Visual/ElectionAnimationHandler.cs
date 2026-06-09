@@ -237,13 +237,13 @@ namespace ElectionTactics
                 {
                     // Margin
                     Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
-                    Game.UI.Parliament.CurrentElectionMarginText_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Margin", "The difference in vote share between your party and the closest opponent in the last cycle's election.\n\nPositive means you won, negative means another party was ahead.");
+                    Game.UI.Parliament.CurrentElectionMarginText_Tooltip.Init("Margin", "The difference in vote share between your party and the closest opponent in the last cycle's election.\n\nPositive means you won, negative means another party was ahead.");
                     Game.UI.Parliament.CurrentElectionMarginText.text = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
 
                     // Leader Knob
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
                     Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).WinnerParty.Color;
-                    Game.UI.Parliament.LastElectionWinnerKnob_Tooltip.Init(Tooltip.TooltipType.TitleAndText, "Previous Winner", "The winning party in the last cycle's election.");
+                    Game.UI.Parliament.LastElectionWinnerKnob_Tooltip.Init("Previous Winner", "The winning party in the last cycle's election.");
                 }
                 else
                 {

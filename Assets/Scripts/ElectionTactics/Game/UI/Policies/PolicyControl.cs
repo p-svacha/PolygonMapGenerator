@@ -47,7 +47,7 @@ namespace ElectionTactics
             Label.text = policy.Name;
             if (!string.IsNullOrEmpty(policy.Description))
             {
-                LabelTooltipTarget.Init(Tooltip.TooltipType.TitleAndText, policy.Name, policy.Description);
+                LabelTooltipTarget.Init(policy.Name, policy.Description);
             }
             UpdateValue();
             policy.UIControl = this;

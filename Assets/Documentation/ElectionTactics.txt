@@ -1,13 +1,8 @@
 0.2 to-do list:
 
 NEXT UP: DEMOGRAPHY
-age group
-density
-district
-economy
-geography
-language
-religion
+- demography tooltips and changes (density)
+¨- cultural trait categories
 
 
 Menu::
@@ -19,13 +14,13 @@ District Attributes & Info Screen:
 (/) - number in heart for popularity
 (/) - Move population to demography (first line)
 (/) - move geography traits to def system
+(/) - Split geography into 3 subcategories by significance (I, II, III) - label them
+(/) - rework how language and religion spreads
+(/) - Change density to Low, Medium, High
+(/) - For initial density generation, take size into account (so small districts are more likely to be high density, large districts more likely to be low density)
+(/) - Density should be updated every turn based on population change, so it can change over time.
 
-- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
-- Change density to Low, Medium, High
-- For initial density generation, take size into account (so small districts are more likely to be high density, large districts more likely to be low density)
-- Density should be updated every turn based on population change, so it can change over time.
 - Attributes (Demography, Economy, Geography) on the left
-- Split geography into 3 subcategories by significance (I, II, III) - label them
 - More complex / dynamic elements on the right (cultural traits, active modifiers)
 - Make cultural trait chips bigger and more prominent, 1 per line
 - make modifiers scrollable or introduce pages for them
@@ -37,11 +32,11 @@ Custom Game:
 - Add option to change opponent name
 
 Demography General:
-- Change population growth rate to %
-- Make population dynamics a more central aspect of the game.
-- Each district has a basic population growth rate, which is an absolute number, but low. Age group affects it. Indicate as <<, <, -, >, >> beside population row.
-- Hovering the symbol shows exact change per cycle
-- Growth rate is affected by age group
+(/) - Change population growth rate to %
+(/) - Make population dynamics a more central aspect of the game.
+(/) - Each district has a basic population growth rate, which is an absolute number, but low. Age group affects it. Indicate as <<, <, -, >, >> beside population row.
+(/) - Hovering the symbol shows exact change per cycle
+(/) - Growth rate is affected by age group
 (/) - Make age groups appear weighted random
 - Add tooltip to demography labels
 - Add description to demography values (def descriptions)
@@ -99,6 +94,7 @@ General Gameplay:
 (/) - Add rivers as a geographical trait
 
 Cultural traits:
+- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
 - Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population").
 - Lower commonness of Secular, Declining Population, Weak economy
 - Remove non-linguistic
@@ -122,6 +118,9 @@ Policy :
 
 Election graph:
 - Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
+
+Optional for v0.2:
+- Add density details similar to population details (with people/sqkm and a row with how long it takes to change)
 
 
 [v0.3]

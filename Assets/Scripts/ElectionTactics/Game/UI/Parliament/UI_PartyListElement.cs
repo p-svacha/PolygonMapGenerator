@@ -82,7 +82,7 @@ namespace ElectionTactics
                 if (Party.IsEliminated) description += " Eliminated.";
             }
 
-            TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, title, description);
+            TooltipTarget.Init(title, description);
         }
     }
 }

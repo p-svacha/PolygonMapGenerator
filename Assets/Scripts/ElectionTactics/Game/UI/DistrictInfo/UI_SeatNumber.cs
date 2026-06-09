@@ -21,7 +21,7 @@ namespace ElectionTactics
             Text.color = darkMode ? Color.white : Color.black;
 
             string tooltipDesc = "How many seats this district is worth.\n\n" + seatAllocationmethod.Description;
-            TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, "Seats", tooltipDesc);
+            TooltipTarget.Init("Seats", tooltipDesc);
         }
 
         public void InitPartySeats(Party p, string value)
@@ -31,7 +31,7 @@ namespace ElectionTactics
             SetColor(new Color(0.45f, 0.45f, 0.45f), Color.white);
 
             string tooltipDesc = "How many seats the party holds in the parliament.";
-            TooltipTarget.Init(Tooltip.TooltipType.TitleAndText, "Seats", tooltipDesc);
+            TooltipTarget.Init("Seats", tooltipDesc);
         }
 
         public void SetValue(int value) => SetValue(value.ToString());
