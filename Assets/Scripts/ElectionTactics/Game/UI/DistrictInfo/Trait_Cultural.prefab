@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2, g: 0.2, b: 0.4, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -160,11 +160,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.4245283, g: 0.23028658, b: 0.37954822, a: 1}
-    m_HighlightedColor: {r: 0.4056604, g: 0.39609292, b: 0.39609292, a: 1}
-    m_PressedColor: {r: 0.4039216, g: 0.39607847, b: 0.39607847, a: 1}
-    m_SelectedColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
-    m_DisabledColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    m_PressedColor: {r: 0.9490197, g: 0.9490197, b: 0.9490197, a: 1}
+    m_SelectedColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    m_DisabledColor: {r: 0.90196085, g: 0.90196085, b: 0.90196085, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Coastal II
+  m_text: Growing Population
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f4276806dee1f0e4caa4c7be32eff4fb, type: 2}
   m_sharedMaterial: {fileID: -7953376075119899350, guid: f4276806dee1f0e4caa4c7be32eff4fb,

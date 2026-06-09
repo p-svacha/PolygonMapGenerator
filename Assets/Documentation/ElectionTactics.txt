@@ -19,10 +19,10 @@ District Attributes & Info Screen:
 (/) - Change density to Low, Medium, High
 (/) - For initial density generation, take size into account (so small districts are more likely to be high density, large districts more likely to be low density)
 (/) - Density should be updated every turn based on population change, so it can change over time.
+(/) - Attributes (Demography, Economy, Geography) on the left
+(/) - More complex / dynamic elements on the right (cultural traits, active modifiers)
+(/) - Make cultural trait chips bigger and more prominent, 1 per line
 
-- Attributes (Demography, Economy, Geography) on the left
-- More complex / dynamic elements on the right (cultural traits, active modifiers)
-- Make cultural trait chips bigger and more prominent, 1 per line
 - make modifiers scrollable or introduce pages for them
 - add recent events section in district info next to active modifiers
 
@@ -38,9 +38,9 @@ Demography General:
 (/) - Hovering the symbol shows exact change per cycle
 (/) - Growth rate is affected by age group
 (/) - Make age groups appear weighted random
-- Add tooltip to demography labels
+(/) - Add tooltip to demography labels
 - Add description to demography values (def descriptions)
-- add tooltip to economy row labels
+(/) - add tooltip to economy row labels
 - add description to economy defs
 (/) - first seat requires no pop (less 1-seat districts)
 
@@ -95,12 +95,21 @@ General Gameplay:
 
 Cultural traits:
 - change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
-- Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population").
+- Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population"). see bottom of page
 - Lower commonness of Secular, Declining Population, Weak economy
 - Remove non-linguistic
 - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
 
-Add events (that can happen randomly (rarely) after an election:
+Add event system:
+- Basically message logs that can optionally be related to a specific party, year, or district.
+- Events show in district info
+- Events show at the end of year newspaper
+- district gaining/losing a seat is an event
+- district density changing is an event
+- events can come from traits too (i.e. unpatient)
+
+
+Add random districts events (that can happen randomly (rarely) after an election):
 - District gaining a cultural trait
 - District losing a cultural trait
 - District adopting the religion of a random neighboring district
@@ -269,6 +278,8 @@ CULTURAL TRAIT IDEAS
 - remove non-linguistic and secular.
 - Very fast growing pop
 - ANother trait that grows pop by a little as a side effect
+- Unpatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently
+- <RELIGION/LANGUAE> Influence: Created adjacent districts will have the same religion/language guaranteed
 
 
 

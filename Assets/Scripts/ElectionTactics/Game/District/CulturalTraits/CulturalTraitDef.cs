@@ -11,6 +11,11 @@ namespace ElectionTactics
         public System.Type TraitClass { get; init; } = typeof(CulturalTrait);
 
         /// <summary>
+        /// The category of this trait. Used to color code in the district info UI.
+        /// </summary>
+        public CulturalTraitCategoryDef Category { get; init; }
+
+        /// <summary>
         /// How likely this trait is to appear in a district. 100 is default.
         /// </summary>
         public int Commonness { get; init; }
@@ -35,6 +40,12 @@ namespace ElectionTactics
         /// </summary>
         public float PopulationGrowthRateModifier { get; init; } = 0f;
 
+
+        public override bool Validate()
+        {
+            if (Category == null) throw new System.Exception("Category must be set.");
+            return base.Validate();
+        }
 
         public override void ResolveReferences()
         {

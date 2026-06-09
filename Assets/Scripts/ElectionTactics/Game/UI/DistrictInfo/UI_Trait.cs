@@ -23,8 +23,14 @@ public class UI_Trait : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void InitCulturalTrait(CulturalTrait trait)
     {
+        Color traitColor = trait.Def.Category.Color;
+
         Text.text = trait.LabelCapWord;
-        TooltipTarget.Init(trait.LabelCapWord, trait.Description);
+        Color titleColor = new Color(traitColor.r + 0.4f, traitColor.g + 0.4f, traitColor.b + 0.4f);
+
+        TooltipTarget.Init(trait.LabelCapWord, trait.Description, titleColor);
+
+        BackgroundImage.color = traitColor;
     }
 
     public Action HoverAction { get; private set; }

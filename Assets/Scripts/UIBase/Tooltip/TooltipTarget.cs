@@ -10,15 +10,17 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Tooltip.TooltipType Type;
     public string Title;
     [TextArea(3, 10)] public string Text;
+    public Color? TitleColor;
 
 
     [HideInInspector] public bool IsFocussed;
     private float Delay = 0.5f;
     [HideInInspector] public float CurrentDelay;
 
-    public void Init(string title, string text)
+    public void Init(string title, string text, Color? titleColor = null)
     {
         Title = title;
+        TitleColor = titleColor;
         Text = text;
 
         if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Text)) Type = Tooltip.TooltipType.TitleAndText;
@@ -51,7 +53,7 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (Tooltip.Instance.gameObject.activeSelf) return;
 
         Tooltip.Instance.gameObject.SetActive(true);
-        Tooltip.Instance.Init(Type, Title, Text);
+        Tooltip.Instance.Init(Type, Title, Text, TitleColor);
     }
 
     public void HideTooltip()

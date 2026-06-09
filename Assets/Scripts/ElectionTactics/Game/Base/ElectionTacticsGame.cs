@@ -93,6 +93,7 @@ namespace ElectionTactics
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
             DefDatabase<GeographyTraitDef>.AddDefs(GeographyTraitDefs.Defs);
+            DefDatabase<CulturalTraitCategoryDef>.AddDefs(CulturalTraitCategoryDefs.Defs);
             DefDatabase<CulturalTraitDef>.AddDefs(CulturalTraitDefs.Defs);
             DefDatabase<AgeGroupDef>.AddDefs(AgeGroupDefs.Defs);
             DefDatabase<LanguageDef>.AddDefs(LanguageDefs.Defs);

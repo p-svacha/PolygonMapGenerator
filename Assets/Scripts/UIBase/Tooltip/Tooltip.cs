@@ -26,12 +26,14 @@ public class Tooltip : MonoBehaviour
     private const int MOUSE_OFFSET = 5; // px
     private const int SCREEN_EDGE_OFFSET = 5; // px
 
-    public void Init(TooltipType type, string title, string text)
+    public void Init(TooltipType type, string title, string text, Color? titleColor = null)
     {
         // Show/hide title text
         Title.gameObject.SetActive(type == TooltipType.TitleAndText);
         Title.text = title;
         Text.text = text;
+        if (titleColor != null) Title.color = (Color)titleColor;
+        else Title.color = new Color(0.05f, 0.89f, 0.53f);
 
         RectTransform rect = GetComponent<RectTransform>();
 

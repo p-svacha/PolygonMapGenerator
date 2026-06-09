@@ -35,6 +35,7 @@ namespace ElectionTactics
                 Label = "Religious",
                 Description = "Base religion policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Religious),
+                Category = CulturalTraitCategoryDefOf.Demographic,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -50,6 +51,7 @@ namespace ElectionTactics
                 Label = "Secular",
                 Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
+                Category = CulturalTraitCategoryDefOf.Demographic,
                 Commonness = 20,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -65,6 +67,7 @@ namespace ElectionTactics
                 Label = "Religion Fanatics",
                 Description = "+10 impact of religion policy of the districts religion. All other religion policies give -3.",
                 TraitClass = typeof(CT_Fanatics),
+                Category = CulturalTraitCategoryDefOf.Demographic,
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -81,6 +84,7 @@ namespace ElectionTactics
                 Label = "Linguistic",
                 Description = "Base language policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Linguistic),
+                Category = CulturalTraitCategoryDefOf.Demographic,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -94,7 +98,8 @@ namespace ElectionTactics
                 Label = "Non-Linguistic",
                 Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
-                Commonness = 50,
+                Category = CulturalTraitCategoryDefOf.Demographic,
+                Commonness = 20,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     LINGUISTIC,
@@ -108,6 +113,7 @@ namespace ElectionTactics
                 Label = "Strong Economy",
                 Description = "Base economy policy impact in this district is doubled.",
                 TraitClass = typeof(CT_StrongEconomy),
+                Category = CulturalTraitCategoryDefOf.Economic,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -120,6 +126,7 @@ namespace ElectionTactics
                 Label = "Weak Economy",
                 Description = "Base economy policy impact in this district is halved.",
                 TraitClass = typeof(CT_WeakEconomy),
+                Category = CulturalTraitCategoryDefOf.Economic,
                 Commonness = 80,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -133,6 +140,7 @@ namespace ElectionTactics
                 Label = "Exporter",
                 Description = "Policy for dominant industry in this district has +7 impact and also gives +3 popularity in all adjacent districts.",
                 TraitClass = typeof(CT_Exporter),
+                Category = CulturalTraitCategoryDefOf.Economic,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -147,6 +155,7 @@ namespace ElectionTactics
                 Label = "Growing Population",
                 Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
                 TraitClass = typeof(CT_GrowingPopulation),
+                Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 90,
                 PopulationGrowthRateModifier = +7.0f,
                 ForbiddenCulturalTraits = new List<string>()
@@ -161,6 +170,7 @@ namespace ElectionTactics
                 Label = "Declining Population",
                 Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
                 TraitClass = typeof(CT_DecliningPopulation),
+                Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 50,
                 PopulationGrowthRateModifier = -5.0f,
                 ForbiddenCulturalTraits = new List<string>()
@@ -176,6 +186,7 @@ namespace ElectionTactics
                 Label = "Patriotic",
                 Description = "Base district policy impact of this district is doubled.",
                 TraitClass = typeof(CT_Patriotic),
+                Category = CulturalTraitCategoryDefOf.Demographic,
                 Commonness = 100,
             },
 
@@ -186,6 +197,7 @@ namespace ElectionTactics
                 Label = "Stable",
                 Description = "The party that won the last election will get a +30 popularity bonus for the next one.",
                 TraitClass = typeof(CT_Stable),
+                Category = CulturalTraitCategoryDefOf.Political,
                 Commonness = 70,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -200,6 +212,7 @@ namespace ElectionTactics
                 Label = "Rebellious",
                 Description = "The party that won the last election will get a -30 popularity penalty for the next one.",
                 TraitClass = typeof(CT_Rebellious),
+                Category = CulturalTraitCategoryDefOf.Political,
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -214,6 +227,7 @@ namespace ElectionTactics
                 Label = "Revolutionary",
                 Description = "The party that won the last election will be excluded for the next one.",
                 TraitClass = typeof(CT_Revolutionary),
+                Category = CulturalTraitCategoryDefOf.Political,
                 Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -230,6 +244,7 @@ namespace ElectionTactics
                 Label = "Swing District",
                 Description = "Election outcomes in this district are less predictable. Results may not fully accurately represent party popularities.",
                 TraitClass = typeof(CT_SwingDistrict),
+                Category = CulturalTraitCategoryDefOf.Political,
                 Commonness = 50,
             },
 
@@ -239,6 +254,7 @@ namespace ElectionTactics
                 Label = "Proportional Representation",
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
+                Category = CulturalTraitCategoryDefOf.SeatDistribution,
                 Commonness = 70,
                 IsSeatDistributionTrait = true,
             },
@@ -249,6 +265,7 @@ namespace ElectionTactics
                 Label = "Majority Representation",
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_MajorityBonus),
+                Category = CulturalTraitCategoryDefOf.SeatDistribution,
                 Commonness = 25,
                 IsSeatDistributionTrait = true,
             },

@@ -47,6 +47,7 @@ namespace ElectionTactics
         public GameObject GeographyRowI;
         public UI_Trait GeographicTraitPrefab;
 
+        public GameObject CulturalTraitsTitle;
         public UI_TraitContainer CulturalTraitsPanel;
 
         [Header("Modifiers")]
@@ -144,6 +145,7 @@ namespace ElectionTactics
             Economy3Info.SetValue(district.Economy3.Label);
 
             // Cultural Traits
+            CulturalTraitsTitle.gameObject.SetActive(district.CulturalTraits.Count > 0);
             CulturalTraitsPanel.InitCulturalTraits(district);
 
             // Modifiers
