@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 51588
+  controlID: 6261
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 51589
+  controlID: 6262
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 51526
+  controlID: 6193
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -258,48 +258,15 @@ MonoBehaviour:
       m_LastClickedID:
         m_rawData: 0
       m_ExpandedIDs:
-      - m_rawData: 568105589211660334
-      - m_rawData: 568105589213630840
-      - m_rawData: 568105589213630842
-      - m_rawData: 568105589213630848
-      - m_rawData: 568105589213630850
-      - m_rawData: 568105589213751322
-      - m_rawData: 568105589213751330
-      - m_rawData: 568105589213751348
-      - m_rawData: 568105589213751356
-      - m_rawData: 568105589213751364
-      - m_rawData: 568105589213751374
-      - m_rawData: 568105589213751386
-      - m_rawData: 568105589213752324
-      - m_rawData: 568105589213752332
-      - m_rawData: 568105589213752336
-      - m_rawData: 568105589213752580
-      - m_rawData: 568105589213752634
-      - m_rawData: 568105589213752646
-      - m_rawData: 568105589213752782
-      - m_rawData: 568105589213753030
-      - m_rawData: 568105589213753040
-      - m_rawData: 568105589213753860
-      - m_rawData: 568105589213753868
-      - m_rawData: 568105589213753898
-      - m_rawData: 568105589213753978
-      - m_rawData: 568105589213756066
-      - m_rawData: 568105584918833832
-      - m_rawData: 568105584918833884
-      - m_rawData: 568105584918834210
-      - m_rawData: 568105584918834840
-      - m_rawData: 568105584918834856
-      - m_rawData: 568105584918834888
-      - m_rawData: 568105584918835148
-      - m_rawData: 568105584918835178
-      - m_rawData: 568105584918835202
-      - m_rawData: 568105584918835266
-      - m_rawData: 568105584918835338
-      - m_rawData: 568105584918835464
-      - m_rawData: 568105584918835552
-      - m_rawData: 568105584918835668
-      - m_rawData: 568105584918835920
-      - m_rawData: 568105584918835932
+      - m_rawData: 568105589213743328
+      - m_rawData: 568105589213744092
+      - m_rawData: 568105589213747420
+      - m_rawData: 568105589213749960
+      - m_rawData: 568105589213750806
+      - m_rawData: 568105589213756050
+      - m_rawData: 568105584918835216
+      - m_rawData: 568105584918835306
+      - m_rawData: 568105584918835972
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -922,9 +889,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 236.93079, y: 146.24648, z: -1.1871728}
+    m_Target: {x: 251.1393, y: 77.00875, z: 1.8161194}
     speed: 2
-    m_Value: {x: 236.93079, y: 146.24648, z: -1.1871728}
+    m_Value: {x: 254.52895, y: 75.62577, z: 1.861405}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -975,9 +942,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 158.02243
+    m_Target: 105.16375
     speed: 2
-    m_Value: 158.02243
+    m_Value: 100.63517
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1037,7 +1004,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 51590
+  controlID: 6263
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1118,7 +1085,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/ElectionTactics/Game/Event
+    - Assets/Resources/ElectionTactics/Newspaper
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1128,33 +1095,33 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/ElectionTactics/Game/Event
+  - Assets/Resources/ElectionTactics/Newspaper
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 426}
+    scrollPos: {x: 0, y: 126}
     m_SelectedIDs:
-    - m_rawData: 568105584918986044
+    - m_rawData: 568105584918844742
     m_LastClickedID:
-      m_rawData: 568105584918986044
+      m_rawData: 568105584918844742
     m_ExpandedIDs:
-    - m_rawData: 568105589213751694
+    - m_rawData: 568105589213751412
     - m_rawData: 0
-    - m_rawData: 568105584918838898
-    - m_rawData: 568105584918838900
-    - m_rawData: 568105584918838902
-    - m_rawData: 568105584918838904
-    - m_rawData: 568105584918838906
-    - m_rawData: 568105584918838908
-    - m_rawData: 568105584918838910
-    - m_rawData: 568105584918838912
-    - m_rawData: 568105584918838914
-    - m_rawData: 568105584918838916
-    - m_rawData: 568105584918838920
-    - m_rawData: 568105584918839020
+    - m_rawData: 568105584918838962
+    - m_rawData: 568105584918838964
+    - m_rawData: 568105584918838966
+    - m_rawData: 568105584918838968
+    - m_rawData: 568105584918838970
+    - m_rawData: 568105584918838972
+    - m_rawData: 568105584918838974
+    - m_rawData: 568105584918838976
+    - m_rawData: 568105584918838978
+    - m_rawData: 568105584918838980
+    - m_rawData: 568105584918838982
+    - m_rawData: 568105584918838984
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1187,20 +1154,20 @@ MonoBehaviour:
     m_LastClickedID:
       m_rawData: 0
     m_ExpandedIDs:
-    - m_rawData: 568105589213751694
+    - m_rawData: 568105589213751412
     - m_rawData: 0
-    - m_rawData: 568105584918838898
-    - m_rawData: 568105584918838900
-    - m_rawData: 568105584918838902
-    - m_rawData: 568105584918838904
-    - m_rawData: 568105584918838906
-    - m_rawData: 568105584918838908
-    - m_rawData: 568105584918838910
-    - m_rawData: 568105584918838912
-    - m_rawData: 568105584918838914
-    - m_rawData: 568105584918838916
-    - m_rawData: 568105584918838920
-    - m_rawData: 568105584918839020
+    - m_rawData: 568105584918838962
+    - m_rawData: 568105584918838964
+    - m_rawData: 568105584918838966
+    - m_rawData: 568105584918838968
+    - m_rawData: 568105584918838970
+    - m_rawData: 568105584918838972
+    - m_rawData: 568105584918838974
+    - m_rawData: 568105584918838976
+    - m_rawData: 568105584918838978
+    - m_rawData: 568105584918838980
+    - m_rawData: 568105584918838982
+    - m_rawData: 568105584918838984
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1231,10 +1198,11 @@ MonoBehaviour:
     m_SelectedInstanceIDs: []
     m_LastClickedEntityId:
       m_rawData: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214
     - m_rawData: 568105584918843216
+    - m_rawData: 568105584918860834
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

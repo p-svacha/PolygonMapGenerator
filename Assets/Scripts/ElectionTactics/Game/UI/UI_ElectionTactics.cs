@@ -20,6 +20,9 @@ namespace ElectionTactics
         [Header("Screens")]
         public UI_LoadingScreen LoadingScreen;
         public UI_PostGameScreen PostGameScreen;
+
+        [Header("Newspaper")]
+        public UI_Newspaper Newspaper;
         
         [Header ("Map Controls")]
         public MapControls MapControls;
@@ -63,6 +66,7 @@ namespace ElectionTactics
 
         public bool IsDistrictSelected;
         public District SelectedDistrict;
+        public bool IsShowingNewspaper => Newspaper.gameObject.activeSelf;
 
         private void Awake()
         {
@@ -78,43 +82,50 @@ namespace ElectionTactics
             // Listeners
             TabPanels.Add(Tab.DistrictList, DistrictList.gameObject);
             TabButtons.Add(Tab.DistrictList, DistrictTabButton);
-            DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList, playClickSound: true));
+            DistrictTabButton.Button.onClick.AddListener(() => SelectTab(Tab.DistrictList));
 
             TabPanels.Add(Tab.DistrictInfo, DistrictInfo.gameObject);
             TabButtons.Add(Tab.DistrictInfo, DistrictTabButton);
 
             TabPanels.Add(Tab.Parliament, Parliament.gameObject);
             TabButtons.Add(Tab.Parliament, ParliamentTabButton);
-            ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament, playClickSound: true));
+            ParliamentTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Parliament));
 
             TabPanels.Add(Tab.Constitution, Constitution.gameObject);
             TabButtons.Add(Tab.Constitution, ConstitutionTabButton);
-            ConstitutionTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Constitution, playClickSound: true));
+            ConstitutionTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Constitution));
 
             TabPanels.Add(Tab.Events, Events.gameObject);
             TabButtons.Add(Tab.Events, EventsTabButton);
-            EventsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Events, playClickSound: true));
+            EventsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Events));
 
             TabPanels.Add(Tab.Policies, PolicySelection.gameObject);
             TabButtons.Add(Tab.Policies, PoliciesTabButton);
-            PoliciesTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies, playClickSound: true));
+            PoliciesTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Policies));
 
             TabPanels.Add(Tab.Campaigns, Campaigns.gameObject);
             TabButtons.Add(Tab.Campaigns, CampaignsTabButton);
-            CampaignsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Campaigns, playClickSound: true));
+            CampaignsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Campaigns));
 
             TabPanels.Add(Tab.Voting, Voting.gameObject);
             TabButtons.Add(Tab.Voting, VotingTabButton);
-            VotingTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Voting, playClickSound: true));
+            VotingTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Voting));
 
             TabPanels.Add(Tab.Settings, Settings.gameObject);
             TabButtons.Add(Tab.Settings, SettingsTabButton);
-            SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings, playClickSound: true));
+            SettingsTabButton.Button.onClick.AddListener(() => SelectTab(Tab.Settings));
 
             // Element initialization
             ElectionControls.Init(Game);
 
             HideAllTabs();
+            Newspaper.Hide();
+        }
+
+        private void SelectTab(Tab tab)
+        {
+            if (IsShowingNewspaper) return;
+            SelectTab(Tab.Settings);
         }
 
         private void HideAllTabs()

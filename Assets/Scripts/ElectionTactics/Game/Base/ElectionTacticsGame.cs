@@ -36,7 +36,8 @@ namespace ElectionTactics
         public Party WinnerParty;
 
         // Events (newspaper articles)
-        public List<Event> Events = new List<Event>();
+        public List<RandomEvent> RandomEvents = new List<RandomEvent>();
+        public List<Newspaper> Newspapers = new List<Newspaper>(); // index corresponds to cycle, 1 per cycle
 
         // Traits
         public List<GeographyTrait> GeographyTraits = new List<GeographyTrait>();
@@ -63,6 +64,8 @@ namespace ElectionTactics
         public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
 
         public const int MAX_NUM_DISTRICTS = 20;
+
+        public const float RANDOM_EVENT_CHANCE = 0.3f;
 
         public const float MIN_BASE_GROWTH_RATE = -0.5f; // in %
         public const float MAX_BASE_GROWTH_RATE = +1f; // in %
@@ -103,6 +106,7 @@ namespace ElectionTactics
             DefDatabase<ReligionDef>.AddDefs(ReligionDefs.Defs);
             DefDatabase<DensityDef>.AddDefs(DensityDefs.Defs);
             DefDatabase<EconomicSectorDef>.AddDefs(EconomicSectorDefs.Defs);
+            DefDatabase<RandomEventDef>.AddDefs(RandomEventDefs.Defs);
             DefDatabase<SeatAllocationMethodDef>.AddDefs(SeatAllocationMethodDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
@@ -885,10 +889,33 @@ namespace ElectionTactics
             // District effects
             foreach (District d in VisibleDistricts.Values) d.OnElectionEnd();
 
+            // Random events
+            ExecuteRandomEvent();
+
             // Handle next election start
             StartNextElectionCycle();
 
+            // Generate newspaper
+            Newspapers.Add(NewspaperGenerator.GenerateYearNewspaper());
+
             ElectionAnimationHandler.StartAnimation(electionResult);
+        }
+
+        private void ExecuteRandomEvent()
+        {
+            if (UnityEngine.Random.value > RANDOM_EVENT_CHANCE) return;
+
+            Dictionary<RandomEventDef, int> eventCandidates = new Dictionary<RandomEventDef, int>();
+            foreach(RandomEventDef def in DefDatabase<RandomEventDef>.AllDefs)
+            {
+                if (!def.CanExecute()) continue;
+                eventCandidates.Add(def, def.Commonness);
+            }
+            RandomEventDef chosenEventDef = eventCandidates.GetWeightedRandomElement();
+
+            RandomEvent newEvent = new RandomEvent(chosenEventDef);
+            newEvent.Execute();
+            RandomEvents.Add(newEvent);
         }
 
         public void AddGeneralElectionResult(GeneralElectionResult electionResult)

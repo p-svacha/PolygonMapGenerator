@@ -11,6 +11,7 @@ namespace ElectionTactics
         public int Year;          // Year of the election
         public int Population;    // Population of the district at the time of election
         public int Seats;         // How many seats the district was worth at the time of the election
+        public DensityDef Density;
 
         public int DistrictId;
         public District District; // Reference to the district
@@ -34,12 +35,13 @@ namespace ElectionTactics
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
-        public DistrictElectionResult(int electionCycle, int year, int population, int seats, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
+        public DistrictElectionResult(int electionCycle, int year, int population, int seats, DensityDef density, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
         {
             ElectionCycle = electionCycle;
             Year = year;
             Population = population;
             Seats = seats;
+            Density = density;
             Parties = parties;
             District = district;
             DistrictId = district.Region.Id;

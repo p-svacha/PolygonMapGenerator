@@ -386,6 +386,7 @@ namespace ElectionTactics
                 Game.Year,
                 Population,
                 Seats,
+                Density,
                 new List<Party>(parties),
                 this,
                 partyPopularities,
