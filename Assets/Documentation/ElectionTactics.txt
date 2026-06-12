@@ -27,9 +27,12 @@ Custom Game:
 (/) - cycling through colors is now consistent
 (/) - you can cycle back colors with right click
 (/) - add option to randomize names in custom game setup
+(/) - add option for default voting system (default is "mixed" using the current system, other options are "Only 'Winner takes it all'", "Only 'proportional representation'", and "only 'majority bonus'"). add descriptions for them
+(/) - add random event frequency setting
+(/) - add the descriptions to what the settings mean
 
 Parliament:
-- make party names not all caps
+(/) - make party names not all caps
 
 Demography General:
 (/) - Change population growth rate to %
@@ -39,78 +42,15 @@ Demography General:
 (/) - Growth rate is affected by age group
 (/) - Make age groups appear weighted random
 (/) - Add tooltip to demography labels
-- Add description to demography values (def descriptions)
 (/) - add tooltip to economy row labels
-- add description to economy defs
 (/) - first seat requires no pop (less 1-seat districts)
 
-
-Election animation:
-- Increase speed of district transition, change from lerp to slerp
-- If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
-- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternate voting mechanisms clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
-- Remember animation speed (maybe?)
-- Disable map label tooltips during election animation
-- Make sure tooltip of cultural voting trait doesn't get stuck
-- When a modifier value gets modified (i.e. increased through historical legacy), it already shows the updated value during the animation, which is wrong. the election result needs to store the current value (make a copy of the modifier)
-
-Post-Election:
-- After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.
-- At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
-- After that, enable HUD like before.
-- during final zoom out before newspaper comes, disallow UI interactions and selecting districts on the map
-
-Newspaper:
-- Add a new tab "Newspaper" tab with a letter as an icon.
-- This tab show all previous yearly newspapers
-- make newspapers selectable
-- while newspaper is open or OPENING with animation, disallow interacting with the map
-- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
-- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
-- add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'"). doesn't always appear. max 1
-
-General UX:
-- Test tooltips on 1400p, they are broken at screen edge. Fix
-- When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
--(/) Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
-- Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
-- Add line breaks in voting trait descriptions.
-- Remove white as a party color.
-(/) - don't show margin frame in district label if no margin yet.
-(/) - INSTANT mute doesn't work (only for music)
-- district list needs tooltips on margin and last election winner
-(/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
-
-General Gameplay:
-- Reduce default win condition to 6 wins.
-(/) - Ensure the same district name cannot appear twice.
-(/) - Ensure district names start with a capital letter
-- Add some constraints for economic sectors (like no fishing in landlocked districts)
-- remove max districts as constant
-(/) - Add rivers as a geographical trait
-
-Cultural traits:
-- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
-- Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population"). see bottom of page
-- Lower commonness of Secular, Declining Population, Weak economy
-- Remove non-linguistic
-(/) - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
-
-Add event system:
-- Basically message logs that can optionally be related to a specific party, year, or district.
-- Events show in district info
-- Events show at the end of year newspaper
-- district gaining/losing a seat is an event
-- district density changing is an event
-- events can come from traits too (i.e. unpatient)
-
-
-Add random districts events (that can happen randomly (rarely) after an election):
-- District gaining a cultural trait
-- District losing a cultural trait
-- District adopting the religion of a random neighboring district
-- District adopting the language of a random neighboring district
-- Random catastrophic event that reduces population instantly.
+Economy:
+- remove pharmancy, defense
+- rename health to healthcare
+- add tourism, farming 
+- add description to economy defs, show them in district info and policy screen
+- tie economy sectors a little to geography (like no fishing in landlocked districts), reflect that in descriptions
 
 Policy :
 (/) - Use not all caps for policy names
@@ -121,19 +61,61 @@ Policy :
 - Sort policies alphabetically within their category
 - Left/Rightclicking a policy should increase/decrease it
 
+General UX:
+- Test tooltips on 1400p, they are broken at screen edge. Fix
+- When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
+(/) - Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
+- Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
+- Add line breaks in voting trait descriptions.
+(/) - Remove white as a party color.
+(/) - Added pink, teal and crimson as colors.
+(/) - don't show margin frame in district label if no margin yet.
+(/) - INSTANT mute doesn't work (only for music)
+- district list needs tooltips on margin and last election winner
+(/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
+
 Election graph:
 - Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
 
-Optional for v0.2:
-- Add density details similar to population details (with people/sqkm and a row with how long it takes to change)
+Election animation:
+- Increase speed of district transition, change from lerp to slerp to make it snappier
+- If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
+- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternate voting mechanisms clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
+- Disable map label tooltips during election animation
+- Make sure tooltip of cultural voting trait doesn't get stuck
+- When a modifier value gets modified (i.e. increased through historical legacy), it already shows the updated value during the animation, which is wrong. the election result needs to store the current value (make a copy of the modifier)
 
-New Cultural Traits:
+Post-Election:
+(/) - After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.
+(/) - At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
+(/) - After that, enable HUD like before.
+- during final zoom out before newspaper comes, disallow UI interactions and selecting districts on the map
+
+Add news-event system:
+- Basically a log system that different modules can call, so the newspaper generates an articles about these events
+- NewsEvents show at the end of year newspaper
+- events can come from traits too (i.e. unpatient)!!
+- move seat changes / density changes / added district to this newsevent system
+- districts can create news event
+- Cultural traits can create news events too
+- basically everything can, should be modular
+- news event classes declare their structure of the newspaper articles
+- minor article generator then only needs to handle random events, news events, and fun articles.
+
+Cultural traits:
+- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
+- Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population"). see bottom of page
+- Lower commonness of Secular, Declining Population, Weak economy
+- Remove non-linguistic
+(/) - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
+
+New Cultural Traits (just ideas so far, review them):
 - Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
 - Rival of X. Works the same as partner but with negative effects instead of positive.
 (/) - Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
 - Emigration: Acts as a negative modifier to population growth rate. All adjacent districts gain a positive modifier to population growth. Number of people leaving equals number of people joining in adjacent districts. Distribution is based on border length.
 - Immigration: Opposite of emigration. Positive modifier to population growth in the district, negative modifier in adjacent districts.
-- Capital: +3 seats.
+- Capital: +5 seats. (only 1 district has it. added to a random one of the first 10)
 - Influental: 10% of popularity is applied to adjacent districts as well.
 - <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
 - <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
@@ -144,6 +126,50 @@ New Cultural Traits:
 - Unpatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently
 - <RELIGION/LANGUAE> Influence: Created adjacent districts will have the same religion/language guaranteed
 
+Add random districts events (that can happen randomly (rarely) after an election):
+(/) - add framework for them to exist, appear, and have effects
+
+Random Events:
+(/) - disaster
+- trait gain
+- trait loss
+- capital move
+- district removed
+- language change
+- religion change
+- age group change
+
+Newspaper:
+(/) - Add newspaper framework
+- implement graph type creator for parliament seat distribution iconography (base it on graph framework)
+- show parliament in main article
+- move general election result tag identification to the result class
+- expand/properly implement main article generator
+- properly implement main chapter 2 generator
+- add different icons for minor articles
+- fix icon hiding for minor articles
+- expand/properly implement seat added article generator
+- expand/properly implement density change article generator
+- expand/properly implement new district article generator
+- move these 3 above to news event system
+- expand/properly implement random event articles
+- implement fun article generator
+- Add a new tab "Newspaper" tab with a newspaper as an icon.
+- This tab show all previous yearly newspapers
+- make newspapers selectable
+- while newspaper is open or OPENING with animation, disallow interacting with the map
+- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
+- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
+- adjust SFX
+- more intro animations (maybe 3, 1 chosen at random)
+- option to disable animations in settings (might get annoying with time)
+
+General Gameplay:
+(/) - Ensure the same district name cannot appear twice.
+(/) - Ensure district names start with a capital letter
+(/) - remove max districts as constant
+(/) - Add rivers as a geographical trait
+
 Tutorial
 - Make tutorial box bigger with bigger text.
 - Make tutorial in a fixed seed.
@@ -153,6 +179,9 @@ Tutorial
 - Use fixed and SIMPLE cultural traits for starting districts
 - Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
 - Remove step DURING election
+- make sure it works with the newspaper
+
+PERSONAL PLAYTESTS
 
 itch page changes:
 - SC1: district info in country with many districts, with modifiers and different traits. 5 parties
@@ -161,6 +190,17 @@ itch page changes:
 - SC4: parliament screen mid-game
 - SC5: Setup game screenshot
 
+Publish!
+
+
+
+
+
+
+- add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'"). doesn't always appear. max 1
+
+
+--------------------
 
 
 

@@ -394,7 +394,7 @@ namespace ElectionTactics
             new Color(0.90f, 0.30f, 0.55f), // 0 - Pink
             new Color(0.00f, 0.50f, 0.00f), // 1 - Green
             new Color(0.10f, 0.40f, 0.90f), // 2 - Blue
-            new Color(0.80f, 0.00f, 0.00f), // 3 - Red
+            new Color(0.85f, 0.05f, 0.05f), // 3 - Red
             new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
             new Color(0.10f, 0.10f, 0.10f), // 5 - Black
             new Color(0.85f, 0.60f, 0.16f), // 6 - Orange
@@ -403,7 +403,7 @@ namespace ElectionTactics
             new Color(0.00f, 0.80f, 0.90f), // 9 - Light Blue
             new Color(0.00f, 0.90f, 0.00f), // 10 - Light Green
             new Color(0.00f, 0.65f, 0.60f), // 11 - Teal
-            new Color(0.75f, 0.05f, 0.20f), // 12 - Crimson
+            new Color(0.45f, 0.00f, 0.05f), // 12 - Crimson
         };
 
 

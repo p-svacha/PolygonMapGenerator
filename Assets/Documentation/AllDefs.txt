@@ -237,7 +237,7 @@
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
-                Commonness = 70,
+                Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
 
@@ -248,7 +248,7 @@
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_MajorityBonus),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
-                Commonness = 25,
+                Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
         };
@@ -303,35 +303,35 @@
             {
                 DefName = "Short",
                 Label = "Short (x0.75)",
-                ModifierFactor = 0.5f,
+                ModifierFactor = 0.75f,
             },
 
             new GameLengthDef()
             {
                 DefName = "Standard",
                 Label = "Standard",
-                ModifierFactor = 0.5f,
+                ModifierFactor = 1f,
             },
 
             new GameLengthDef()
             {
                 DefName = "Long",
                 Label = "Long (x1.5)",
-                ModifierFactor = 0.5f,
+                ModifierFactor = 1.5f,
             },
 
             new GameLengthDef()
             {
                 DefName = "VeryLong",
                 Label = "Very Long (x2)",
-                ModifierFactor = 0.5f,
+                ModifierFactor = 2f,
             },
 
             new GameLengthDef()
             {
                 DefName = "Marathon",
                 Label = "Marathon (x3)",
-                ModifierFactor = 0.5f,
+                ModifierFactor = 3f,
             },
         };
 
@@ -352,6 +352,84 @@
             Description = "All parties start the game with 100 influence. Each election and seat will affect influence. A party is eliminated when influence goes below 0. The game ends when there is one party left."
         }
     };
+
+--- RandomEventFrequencyDefs.cs ---
+        public static List<RandomEventFrequencyDef> Defs => new List<RandomEventFrequencyDef>()
+        {
+            new RandomEventFrequencyDef()
+            {
+                DefName = "Never",
+                Label = "Never",
+                RandomEventChance = 0f,
+            },
+
+            new RandomEventFrequencyDef()
+            {
+                DefName = "Rare",
+                Label = "Rare (15%)",
+                RandomEventChance = 0.15f,
+            },
+
+            new RandomEventFrequencyDef()
+            {
+                DefName = "Standard",
+                Label = "Standard (30%)",
+                RandomEventChance = 0.3f,
+            },
+
+            new RandomEventFrequencyDef()
+            {
+                DefName = "Often",
+                Label = "Often (50%)",
+                RandomEventChance = 0.5f,
+            },
+
+            new RandomEventFrequencyDef()
+            {
+                DefName = "VeryOften",
+                Label = "Very Often (75%)",
+                RandomEventChance = 0.75f,
+            },
+
+            new RandomEventFrequencyDef()
+            {
+                DefName = "Always",
+                Label = "Always",
+                RandomEventChance = 1f,
+            },
+        };
+
+--- SeatDistributionDefs.cs ---
+        public static List<SeatDistributionGameSettingDef> Defs => new List<SeatDistributionGameSettingDef>()
+        {
+            new SeatDistributionGameSettingDef()
+            {
+                DefName = "Mixed",
+                Label = "Mixed (Standard)",
+                AllocationMethod = null,
+            },
+
+            new SeatDistributionGameSettingDef()
+            {
+                DefName = "WTA",
+                Label = "Winner Takes All",
+                AllocationMethod = SeatAllocationMethodDefOf.WinnerTakesAll,
+            },
+
+            new SeatDistributionGameSettingDef()
+            {
+                DefName = "Hamilton",
+                Label = "Proportional Representation",
+                AllocationMethod = SeatAllocationMethodDefOf.HamiltonPR,
+            },
+
+            new SeatDistributionGameSettingDef()
+            {
+                DefName = "DHondt",
+                Label = "Majority Representation",
+                AllocationMethod = SeatAllocationMethodDefOf.DHondtPR,
+            },
+        };
 
 --- StartingDistrictDefs.cs ---
         public static List<StartingDistrictsDef> Defs => new List<StartingDistrictsDef>()

@@ -33,12 +33,6 @@ namespace ElectionTactics
 
             new EconomicSectorDef()
             {
-                DefName = "Pharmacy",
-                Label = "Pharmacy",
-            },
-
-            new EconomicSectorDef()
-            {
                 DefName = "Defense",
                 Label = "Defense",
             },
@@ -93,7 +87,6 @@ namespace ElectionTactics
         public static EconomicSectorDef Mining;
         public static EconomicSectorDef Fishing;
         public static EconomicSectorDef Forestry;
-        public static EconomicSectorDef Pharmacy;
         public static EconomicSectorDef Arts;
         public static EconomicSectorDef Defense;
         public static EconomicSectorDef Health;

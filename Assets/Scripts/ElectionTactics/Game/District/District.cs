@@ -97,10 +97,25 @@ namespace ElectionTactics
             while (CulturalTraits.Count < numCulturalTraits)
             {
                 CulturalTraitDef def = Game.GetRandomAdoptableCulturalTraitDef(this);
-                CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
-                trait.Init(def, this);
-                CulturalTraits.Add(trait);
+                AddCulturalTrait(def);
             }
+
+            // Seat allocation method
+            Dictionary<SeatAllocationMethodDef, int> samCandidates = new Dictionary<SeatAllocationMethodDef, int>();
+            foreach(SeatAllocationMethodDef def in DefDatabase<SeatAllocationMethodDef>.AllDefs)
+            {
+                samCandidates.Add(def, def.Commonness);
+            }
+            SeatAllocationMethodDef chosenMethod = samCandidates.GetWeightedRandomElement();
+
+            // Check overrides through game settings
+            if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.WTA) chosenMethod = SeatAllocationMethodDefOf.WinnerTakesAll;
+            if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.Hamilton) chosenMethod = SeatAllocationMethodDefOf.HamiltonPR;
+            if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.DHondt) chosenMethod = SeatAllocationMethodDefOf.DHondtPR;
+
+            // Apply fitting cultural traits
+            if (chosenMethod == SeatAllocationMethodDefOf.HamiltonPR) AddCulturalTrait(CulturalTraitDefOf.ProportionalRepresentation);
+            if (chosenMethod == SeatAllocationMethodDefOf.DHondtPR) AddCulturalTrait(CulturalTraitDefOf.MajorityBonus);
 
             // Population calculation
             Population = (int)(Region.Area * 1000000);
@@ -124,6 +139,13 @@ namespace ElectionTactics
 
             // Set initially inactive
             IsActive = false;
+        }
+
+        public void AddCulturalTrait(CulturalTraitDef def)
+        {
+            CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
+            trait.Init(def, this);
+            CulturalTraits.Add(trait);
         }
 
         private void RecalculateSeats()
@@ -156,7 +178,7 @@ namespace ElectionTactics
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 3));
             else if (Region.OceanCoastRatio > 0.3f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 2));
-            else if (Region.OceanCoastRatio > 0.05f)
+            else if (Region.OceanCoastRatio > 0.01f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 1));
 
             // Landlocked
@@ -226,9 +248,9 @@ namespace ElectionTactics
             // Lakeside
             if (Region.LakeCoastRatio > 0.3f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 3));
-            else if (Region.LakeCoastRatio > 0.2f)
+            else if (Region.LakeCoastRatio > 0.15f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 2));
-            else if (Region.LakeCoastRatio > 0.1f)
+            else if (Region.LakeCoastRatio > 0.011f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Lake, 1));
 
             // River

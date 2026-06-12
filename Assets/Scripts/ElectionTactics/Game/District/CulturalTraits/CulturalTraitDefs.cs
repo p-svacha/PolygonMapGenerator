@@ -263,7 +263,7 @@ namespace ElectionTactics
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_ProportionalRepresentation),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
-                Commonness = 70,
+                Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
 
@@ -274,7 +274,7 @@ namespace ElectionTactics
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 TraitClass = typeof(CT_MajorityBonus),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
-                Commonness = 25,
+                Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
         };

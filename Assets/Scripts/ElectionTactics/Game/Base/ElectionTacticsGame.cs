@@ -64,8 +64,6 @@ namespace ElectionTactics
 
         public const int MAX_CULTURAL_TRAITS = 4;
 
-        public const float RANDOM_EVENT_CHANCE = 0.3f;
-
         public const float MIN_BASE_GROWTH_RATE = -0.5f; // in %
         public const float MAX_BASE_GROWTH_RATE = +1f; // in %
 
@@ -111,6 +109,8 @@ namespace ElectionTactics
             DefDatabase<EconomicSectorDef>.AddDefs(EconomicSectorDefs.Defs);
             DefDatabase<RandomEventDef>.AddDefs(RandomEventDefs.Defs);
             DefDatabase<SeatAllocationMethodDef>.AddDefs(SeatAllocationMethodDefs.Defs);
+            DefDatabase<SeatDistributionGameSettingDef>.AddDefs(SeatDistributionGameSettingDefs.Defs);
+            DefDatabase<RandomEventFrequencyDef>.AddDefs(RandomEventFrequencyDefs.Defs);
             DefDatabaseRegistry.ResolveAllReferences();
             DefDatabaseRegistry.OnLoadingDone();
 
@@ -440,7 +440,7 @@ namespace ElectionTactics
             // Add new district
             int numStartingDistricts = GetNumStartingDistricts();
             int indexToActivate = ElectionCycle + numStartingDistricts - 2; // -2 because cycle starts at 1 and we already have starting districts
-            if (indexToActivate < numStartingDistricts) Districts.Values.ToList()[indexToActivate].Activate();
+            if (indexToActivate < Districts.Count) Districts.Values.ToList()[indexToActivate].Activate();
 
             // Update stuff according to district state changes
             UpdateDistrictAges();
@@ -683,6 +683,7 @@ namespace ElectionTactics
                 bool canAdopt = true;
 
                 // Exclusion criteria
+                if (def.Commonness <= 0) canAdopt = false;
                 if (district.CulturalTraits.Any(t => t.Def == def)) canAdopt = false;
                 if (district.CulturalTraits.Any(t => def.ForbiddenCulturalTraits.Contains(t.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
@@ -932,7 +933,7 @@ namespace ElectionTactics
 
         private void ExecuteRandomEvent()
         {
-            if (UnityEngine.Random.value > RANDOM_EVENT_CHANCE) return;
+            if (UnityEngine.Random.value > GameSettings.RandomEventFrequency.RandomEventChance) return;
 
             Dictionary<RandomEvent, int> eventCandidates = new Dictionary<RandomEvent, int>();
             foreach(RandomEventDef def in DefDatabase<RandomEventDef>.AllDefs)

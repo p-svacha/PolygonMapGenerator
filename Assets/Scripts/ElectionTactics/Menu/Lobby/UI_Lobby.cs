@@ -32,17 +32,22 @@ namespace ElectionTactics
         List<Color> UsedColors = new List<Color>();
 
         // Game settings
-        public TMP_Dropdown GameModeDropdown;
-        public TMP_Dropdown TurnLengthDropdown;
-        public TMP_Dropdown BotDifficultyDropdown;
-        public TMP_Dropdown GameLengthDropdown;
-        public TMP_Dropdown StartingDistrictsDropdown;
-        public Dictionary<int, TMP_Dropdown> GameSettingDropdowns { get; private set; }
+        public UI_GameSetting GameModeDropdown;
+        public UI_GameSetting TurnLengthDropdown;
+        public UI_GameSetting BotDifficultyDropdown;
+        public UI_GameSetting GameLengthDropdown;
+        public UI_GameSetting StartingDistrictsDropdown;
+        public UI_GameSetting SeatDistributionDropdown;
+        public UI_GameSetting RandomEventFrequencyDropdown;
+
+        public Dictionary<int, UI_GameSetting> GameSettingDropdowns { get; private set; }
         public const int GAME_MODE = 0;
         public const int TURN_LENGTH = 1;
         public const int BOT_DIFFICULTY = 2;
         public const int GAME_LENGTH = 3;
         public const int STARTING_DISTRICTS = 4;
+        public const int SEAT_DISTRIBUTION = 5;
+        public const int EVENT_FREQUENCY = 6;
 
         public TextMeshProUGUI HoveredItemDescriptionText;
 
@@ -57,27 +62,17 @@ namespace ElectionTactics
 
         #region Init
 
-        private void Start()
-        {
-            Instance = this;
-        }
-
         /// <summary>
         /// Gets executed once when game program is started
         /// </summary>
         public void Init(MenuNavigator nav)
         {
+            Instance = this;
+
             MenuNavigator = nav;
 
             // Create settings dropdown map
-            GameSettingDropdowns = new Dictionary<int, TMP_Dropdown>()
-            {
-                { GAME_MODE, GameModeDropdown },
-                { TURN_LENGTH, TurnLengthDropdown },
-                { BOT_DIFFICULTY, BotDifficultyDropdown },
-                { GAME_LENGTH, GameLengthDropdown },
-                { STARTING_DISTRICTS, StartingDistrictsDropdown },
-            };
+            GameSettingDropdowns = new Dictionary<int, UI_GameSetting>();
 
             // Buttons
             StartGameButton.onClick.AddListener(StartGameButton_OnClick);
@@ -94,34 +89,21 @@ namespace ElectionTactics
             }
 
             // Init game setting dropdowns
-            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.ClearOptions();
-
-            GameModeDropdown.AddOptions(DefDatabase<GameModeDef>.AllDefs.Select(x => x.LabelCap).ToList());
-            GameModeDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
-
-            TurnLengthDropdown.AddOptions(DefDatabase<TurnLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
-            TurnLengthDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
-
-            BotDifficultyDropdown.AddOptions(DefDatabase<BotDifficultyDef>.AllDefs.Select(x => x.LabelCap).ToList());
-            BotDifficultyDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
-
-            GameLengthDropdown.AddOptions(DefDatabase<GameLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
-            GameLengthDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
-
-            StartingDistrictsDropdown.AddOptions(DefDatabase<StartingDistrictsDef>.AllDefs.Select(x => x.LabelCap).ToList());
-            StartingDistrictsDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
-
-            // Add listeners to all setting changes for multiplayer
-            foreach (var setting in GameSettingDropdowns)
-            {
-                setting.Value.onValueChanged.AddListener((x) => OnRuleChanged(setting.Key, x));
-            }
+            GameModeDropdown.Init(GAME_MODE, DefDatabase<GameModeDef>.AllDefs.Select(x => (Def)x).ToList());
+            TurnLengthDropdown.Init(TURN_LENGTH, DefDatabase<TurnLengthDef>.AllDefs.Select(x => (Def)x).ToList());
+            BotDifficultyDropdown.Init(BOT_DIFFICULTY, DefDatabase<BotDifficultyDef>.AllDefs.Select(x => (Def)x).ToList());
+            GameLengthDropdown.Init(GAME_LENGTH, DefDatabase<GameLengthDef>.AllDefs.Select(x => (Def)x).ToList());
+            StartingDistrictsDropdown.Init(STARTING_DISTRICTS, DefDatabase<StartingDistrictsDef>.AllDefs.Select(x => (Def)x).ToList());
+            SeatDistributionDropdown.Init(SEAT_DISTRIBUTION, DefDatabase<SeatDistributionGameSettingDef>.AllDefs.Select(x => (Def)x).ToList());
+            RandomEventFrequencyDropdown.Init(EVENT_FREQUENCY, DefDatabase<RandomEventFrequencyDef>.AllDefs.Select(x => (Def)x).ToList());
 
             // Default values
             SettingsDescriptionText.text = "";
             BotDifficultyDropdown.SetValueWithoutNotify(1); // Medium difficulty
             GameLengthDropdown.SetValueWithoutNotify(2);
             StartingDistrictsDropdown.SetValueWithoutNotify(2);
+            SeatDistributionDropdown.SetValueWithoutNotify(0);
+            RandomEventFrequencyDropdown.SetValueWithoutNotify(2);
         }
 
         /// <summary>
@@ -130,7 +112,7 @@ namespace ElectionTactics
         public void Show(GameType gameType)
         {
             gameObject.SetActive(true);
-            TurnLengthDropdown.transform.parent.gameObject.SetActive(gameType != GameType.Singleplayer);
+            TurnLengthDropdown.transform.gameObject.SetActive(gameType != GameType.Singleplayer);
         }
 
         public void InitSingleplayerGame(string playerName)
@@ -160,7 +142,7 @@ namespace ElectionTactics
 
             StartGameButtonText.text = "Start";
             StartGameButton.enabled = true;
-            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.enabled = true;
+            foreach (UI_GameSetting setting in GameSettingDropdowns.Values) setting.Dropdown.enabled = true;
         }
 
         public void InitJoinMultiplayerGame()
@@ -168,7 +150,7 @@ namespace ElectionTactics
             Type = GameType.MultiplayerClient;
             StartGameButtonText.text = "Waiting";
             StartGameButton.enabled = false;
-            foreach (TMP_Dropdown dropdown in GameSettingDropdowns.Values) dropdown.enabled = false;
+            foreach (UI_GameSetting setting in GameSettingDropdowns.Values) setting.Dropdown.enabled = false;
         }
 
         #endregion
@@ -192,7 +174,7 @@ namespace ElectionTactics
                 NetworkPlayer.Server.UpdateLobbySlotsServerRpc();
                 foreach (var setting in GameSettingDropdowns)
                 {
-                    if (setting.Value.value != 0) NetworkPlayer.Server.LobbyRuleChangedServerRpc(setting.Key, setting.Value.value);
+                    if (setting.Value.GetValue() != 0) NetworkPlayer.Server.LobbyRuleChangedServerRpc(setting.Key, setting.Value.GetValue());
                 }
             }
         }
@@ -291,7 +273,7 @@ namespace ElectionTactics
 
         #region Game Settings
 
-        private void OnRuleChanged(int ruleId, int value)
+        public void OnRuleChanged(int ruleId, int value)
         {
             if (Type == GameType.Singleplayer) return;
             else if (Type == GameType.MultiplayerHost) NetworkPlayer.Server.LobbyRuleChangedServerRpc(ruleId, value);
@@ -300,7 +282,7 @@ namespace ElectionTactics
         public void GetRuleChangeFromServer(int ruleId, int value)
         {
             Debug.Log("Client: Rule " + ruleId + " changed to " + value);
-            GameSettingDropdowns[ruleId].value = value;
+            GameSettingDropdowns[ruleId].SetValue(value);
         }
 
         public void OnHoveredGameSettingsOptionChanged(string key, string label)

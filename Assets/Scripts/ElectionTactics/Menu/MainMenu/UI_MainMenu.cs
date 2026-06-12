@@ -263,8 +263,10 @@ namespace ElectionTactics
             BotDifficultyDef botDifficulty = BotDifficultyDefOf.Standard;
             GameLengthDef gameLength = isTutorialEnabled ? GameLengthDefOf.Short : GameLengthDefOf.Standard;
             StartingDistrictsDef startingDistricts = isTutorialEnabled ? StartingDistrictsDefOf.Two : StartingDistrictsDefOf.Three;
+            SeatDistributionGameSettingDef sam = SeatDistributionGameSettingDefOf.Mixed;
+            RandomEventFrequencyDef eventFreq = RandomEventFrequencyDefOf.Standard;
 
-            return new GameSettings(slots, mode, turnLength, botDifficulty, gameLength, startingDistricts, isTutorialEnabled);
+            return new GameSettings(slots, isTutorialEnabled, mode, turnLength, botDifficulty, gameLength, startingDistricts, sam, eventFreq);
         }
 
         #endregion

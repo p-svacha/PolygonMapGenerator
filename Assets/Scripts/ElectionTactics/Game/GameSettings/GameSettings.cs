@@ -17,6 +17,9 @@ namespace ElectionTactics
         public BotDifficultyDef BotDifficulty;
         public GameLengthDef GameLength;
         public StartingDistrictsDef StartingDistricts;
+        public SeatDistributionGameSettingDef SeatDistribution;
+        public RandomEventFrequencyDef RandomEventFrequency;
+
         public bool IsTutorialEnabled { get; private set; }
 
         /// <summary>
@@ -25,23 +28,28 @@ namespace ElectionTactics
         public GameSettings()
         {
             Slots = new List<LobbySlot>(UI_Lobby.Instance.Slots);
-            TurnLength = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.value];
-            GameMode = DefDatabase<GameModeDef>.AllDefs[UI_Lobby.Instance.GameModeDropdown.value];
-            BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.value];
-            GameLength = DefDatabase<GameLengthDef>.AllDefs[UI_Lobby.Instance.GameLengthDropdown.value];
-            StartingDistricts = DefDatabase<StartingDistrictsDef>.AllDefs[UI_Lobby.Instance.StartingDistrictsDropdown.value];
+            TurnLength = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.GetValue()];
+            GameMode = DefDatabase<GameModeDef>.AllDefs[UI_Lobby.Instance.GameModeDropdown.GetValue()];
+            BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.GetValue()];
+            GameLength = DefDatabase<GameLengthDef>.AllDefs[UI_Lobby.Instance.GameLengthDropdown.GetValue()];
+            StartingDistricts = DefDatabase<StartingDistrictsDef>.AllDefs[UI_Lobby.Instance.StartingDistrictsDropdown.GetValue()];
+            SeatDistribution = DefDatabase<SeatDistributionGameSettingDef>.AllDefs[UI_Lobby.Instance.SeatDistributionDropdown.GetValue()];
+            RandomEventFrequency = DefDatabase<RandomEventFrequencyDef>.AllDefs[UI_Lobby.Instance.RandomEventFrequencyDropdown.GetValue()];
             IsTutorialEnabled = false;
         }
 
-        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty, GameLengthDef gameLength, StartingDistrictsDef numStartingDistricts, bool isTutorialEnabled)
+        public GameSettings(List<LobbySlot> slots, bool isTutorialEnabled, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty, GameLengthDef gameLength, StartingDistrictsDef numStartingDistricts, SeatDistributionGameSettingDef seatDistribution, RandomEventFrequencyDef randomEventFreq)
         {
             Slots = slots;
+            IsTutorialEnabled = isTutorialEnabled;
+
             GameMode = gameMode;
             TurnLength = turnLength;
             BotDifficulty = botDifficulty;
             GameLength = gameLength;
             StartingDistricts = numStartingDistricts;
-            IsTutorialEnabled = isTutorialEnabled;
+            SeatDistribution = seatDistribution;
+            RandomEventFrequency = randomEventFreq;
         }
 
 

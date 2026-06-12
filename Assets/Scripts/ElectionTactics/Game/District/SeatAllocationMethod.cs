@@ -11,6 +11,11 @@ namespace ElectionTactics
         /// Calculates and returns the amount of seats each party gets.
         /// </summary>
         public abstract Dictionary<Party, int> AllocateSeats(int numSeats, Dictionary<Party, float> voterShares);
+
+        /// <summary>
+        /// How likely the method is to appear in a district (relative to each other).
+        /// </summary>
+        public int Commonness { get; init; }
     }
 
     public class SAM_WinnerTakesAll : SeatAllocationMethodDef
@@ -108,6 +113,7 @@ namespace ElectionTactics
                 DefName = "WinnerTakesAll",
                 Label = "Winner Takes All",
                 Description = "The party with the most votes receives every seat.",
+                Commonness = 65,
             },
 
             new SAM_HamiltonPR()
@@ -115,6 +121,7 @@ namespace ElectionTactics
                 DefName = "HamiltonPR",
                 Label = "Proportional Representation",
                 Description = "Seats are distributed proportionally to each party's vote share.",
+                Commonness = 25,
             },
 
             new SAM_DHondtPR()
@@ -122,6 +129,7 @@ namespace ElectionTactics
                 DefName = "DHondtPR",
                 Label = "Majority Representation",
                 Description = "Seats are distributed proportionally to each party's vote share, with an advantage for larger parties.",
+                Commonness = 10,
             }
         };
     }
