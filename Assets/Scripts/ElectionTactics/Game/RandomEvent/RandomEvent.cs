@@ -5,15 +5,23 @@ namespace ElectionTactics
     /// <summary>
     /// Random events represent random rare events that can happen at the end of an election in a district.
     /// </summary>
-    public class RandomEvent
+    public abstract class RandomEvent
     {
-        protected ElectionTacticsGame Game => ElectionTacticsGame.Instance;
+        protected static ElectionTacticsGame Game => ElectionTacticsGame.Instance;
 
         public RandomEventDef Def { get; private set; }
         public int Year { get; private set; }
         public int Cycle { get; private set; }
 
-        public RandomEvent(RandomEventDef def)
+        // Newspaper
+        public Sprite ArticleIcon { get; private set; }
+        public string ArticleHeadline { get; protected set; }
+        public string ArticleBody { get; protected set; }
+
+
+        public RandomEvent() { } // Empty constructor for activator
+
+        public void Init(RandomEventDef def)
         {
             Def = def;
         }
@@ -22,7 +30,14 @@ namespace ElectionTactics
         {
             Year = Game.Year;
             Cycle = Game.ElectionCycle;
-            Def.Execute();
+            ExecuteEffect();
         }
+
+        /// <summary>
+        /// Checks if this random event can happen for the current game state.
+        /// <br/>This function is not allowed to depend on any internal event state and returns purely on game state.
+        /// </summary>
+        public virtual bool CanExecute() => true;
+        protected abstract void ExecuteEffect();
     }
 }

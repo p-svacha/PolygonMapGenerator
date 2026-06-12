@@ -11,12 +11,18 @@ namespace ElectionTactics
         public TextMeshProUGUI Headline;
         public TextMeshProUGUI Body;
 
-        public void ShowArticle(NewspaperMinorArticle article)
+        public void ShowArticle(NewspaperMinorArticle article, bool showBody)
         {
-            // todo: show icon if headline is short enough to not overlap
-            ArticleIcon.sprite = article.IconSprite;
             Headline.text = article.Headline;
-            Body.text = article.BodyText;
+
+            Body.gameObject.SetActive(showBody && !string.IsNullOrEmpty(article.BodyText));
+            if (showBody) Body.text = article.BodyText;
+
+            // Show icon only when there's room: title-only short headline, or body present with a short headline
+            bool headlineShort = article.Headline == null ? true : article.Headline.Length <= 24;
+            bool showIcon = article.IconSprite != null && headlineShort;
+            ArticleIcon.gameObject.SetActive(showIcon);
+            if (showIcon) ArticleIcon.sprite = article.IconSprite;
         }
     }
 }

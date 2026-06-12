@@ -2,16 +2,11 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class RE_CapitalMove : RandomEventDef
+    public class RE_CapitalMove : RandomEvent
     {
-        public override bool CanExecute()
+        protected override void ExecuteEffect()
         {
-            return true;
-        }
-
-        public override void Execute()
-        {
-            throw new System.NotImplementedException();
+            Debug.Log("RANDOM EVENT HAPPENING (not implemented)");
         }
     }
 }

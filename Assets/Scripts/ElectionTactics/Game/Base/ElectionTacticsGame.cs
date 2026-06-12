@@ -37,6 +37,7 @@ namespace ElectionTactics
 
         // Events (newspaper articles)
         public List<RandomEvent> RandomEvents = new List<RandomEvent>();
+        public Newspaper CurrentNewspaper;
         public List<Newspaper> Newspapers = new List<Newspaper>(); // index corresponds to cycle, 1 per cycle
 
         // Traits
@@ -64,6 +65,7 @@ namespace ElectionTactics
         public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
 
         public const int MAX_NUM_DISTRICTS = 20;
+        public const int MAX_CULTURAL_TRAITS = 4;
 
         public const float RANDOM_EVENT_CHANCE = 0.3f;
 
@@ -85,8 +87,10 @@ namespace ElectionTactics
         private void Awake()
         {
             // Vote experiment
+            /*
             ExecuteVotingExperiment(3000, 10);
             ExecuteVotingExperiment(222, 10);
+            */
 
             Instance = this;
 
@@ -429,6 +433,8 @@ namespace ElectionTactics
             // Add new district
             int indexToActivate = ElectionCycle + NUM_STARTING_DISTRICTS - 2; // -2 because cycle starts at 1 and we already have starting districts
             if (indexToActivate < MAX_NUM_DISTRICTS) Districts.Values.ToList()[indexToActivate].Activate();
+
+            // Update stuff according to district state changes
             UpdateDistrictAges();
             UpdateActivePolicies();
 
@@ -895,9 +901,11 @@ namespace ElectionTactics
             // Handle next election start
             StartNextElectionCycle();
 
-            // Generate newspaper
-            Newspapers.Add(NewspaperGenerator.GenerateYearNewspaper());
+            // Generate newspaper (after everything else happened so we have all information)
+            CurrentNewspaper = NewspaperGenerator.GenerateYearNewspaper();
+            Newspapers.Add(CurrentNewspaper);
 
+            // Start election animation
             ElectionAnimationHandler.StartAnimation(electionResult);
         }
 
@@ -905,17 +913,19 @@ namespace ElectionTactics
         {
             if (UnityEngine.Random.value > RANDOM_EVENT_CHANCE) return;
 
-            Dictionary<RandomEventDef, int> eventCandidates = new Dictionary<RandomEventDef, int>();
+            Dictionary<RandomEvent, int> eventCandidates = new Dictionary<RandomEvent, int>();
             foreach(RandomEventDef def in DefDatabase<RandomEventDef>.AllDefs)
             {
-                if (!def.CanExecute()) continue;
-                eventCandidates.Add(def, def.Commonness);
-            }
-            RandomEventDef chosenEventDef = eventCandidates.GetWeightedRandomElement();
+                RandomEvent eventCandidate = (RandomEvent)System.Activator.CreateInstance(def.RandomEventClass);
+                eventCandidate.Init(def);
+                if (!eventCandidate.CanExecute()) continue;
 
-            RandomEvent newEvent = new RandomEvent(chosenEventDef);
-            newEvent.Execute();
-            RandomEvents.Add(newEvent);
+                eventCandidates.Add(eventCandidate, def.Commonness);
+            }
+
+            RandomEvent chosenEvent = eventCandidates.GetWeightedRandomElement();
+            chosenEvent.Execute();
+            RandomEvents.Add(chosenEvent);
         }
 
         public void AddGeneralElectionResult(GeneralElectionResult electionResult)
@@ -935,6 +945,10 @@ namespace ElectionTactics
 
             // Update all map labels
             foreach (District d in ActiveDistricts) d.MapLabel.Refresh();
+
+            // Show the newspaper
+            UI.Newspaper.ShowNewspaper(CurrentNewspaper, withAnimation: true);
+            CurrentNewspaper = null;
         }
 
         #endregion

@@ -34,6 +34,11 @@ namespace ElectionTactics
         public AudioClip Swoosh;
         public AudioClip Lever;
 
+        public AudioClip NewspaperSpin;
+        public AudioClip NewspaperSpinEnd;
+        public AudioClip NewspaperRustle1;
+        public AudioClip NewspaperRustle2;
+
         public AudioClip GraphAnimationSound;
 
         // Music

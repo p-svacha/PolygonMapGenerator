@@ -384,6 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8651677852775160774}
   - component: {fileID: 7666764269363242369}
+  - component: {fileID: 6116691102681152307}
   m_Layer: 5
   m_Name: MinorArticle1
   m_TagString: Untagged
@@ -438,3 +439,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &6116691102681152307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8031065092116981593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f2fd7736ad308e43aa5debb0eaedf8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElectionTactics.UI_NewspaperMinorArticle
+  ArticleIcon: {fileID: 4228310374767829238}
+  Headline: {fileID: 7529567183595067086}
+  Body: {fileID: 6631929052052265743}

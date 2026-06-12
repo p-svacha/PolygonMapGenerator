@@ -1,17 +1,18 @@
+using System.Linq;
 using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class RE_TraitLost : RandomEventDef
+    public class RE_TraitLost : RandomEvent
     {
-        public override bool CanExecute()
+        protected override void ExecuteEffect()
         {
-            return true;
+            Debug.Log("RANDOM EVENT HAPPENING (not implemented)");
         }
 
-        public override void Execute()
+        public override bool CanExecute()
         {
-            throw new System.NotImplementedException();
+            return Game.ActiveDistricts.Any(d => d.CulturalTraits.Count > 0);
         }
     }
 }
