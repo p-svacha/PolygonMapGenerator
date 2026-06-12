@@ -1,10 +1,5 @@
 0.2 to-do list:
 
-NEXT UP: DEMOGRAPHY
-- demography tooltips and changes (density)
-¨- cultural trait categories
-
-
 Menu::
 (/) - Make a stylized logo for the game to use in the main menu and for the itch thumbnail.
 
@@ -22,15 +17,19 @@ District Attributes & Info Screen:
 (/) - Attributes (Demography, Economy, Geography) on the left
 (/) - More complex / dynamic elements on the right (cultural traits, active modifiers)
 (/) - Make cultural trait chips bigger and more prominent, 1 per line
-
-- make modifiers scrollable or introduce pages for them
-- add recent events section in district info next to active modifiers
+(/) - make modifiers scrollable or introduce pages for them
 
 Custom Game:
-- Add option for game length (affects starting influence in BR, elections to win in Classic): very short, (0.5x) short (0.75x), standard, long (1.5x), very long (2x), marathon (3x)
-- Add option for starting districts (1, 2, 3 (default), 5, 10, 20, maximum).)
-- Add option to change opponent name (own name too)
-- Add moving background from main menu
+(/) - Add option for game length (affects starting influence in BR, elections to win in Classic): very short, (0.5x) short (0.75x), standard, long (1.5x), very long (2x), marathon (3x)
+(/) - Add option for starting districts (1, 2, 3 (default), 5, 10, 20, maximum).)
+(/) - Add option to change opponent name (own name too)
+(/) - make dropdowns bigger
+(/) - cycling through colors is now consistent
+(/) - you can cycle back colors with right click
+(/) - add option to randomize names in custom game setup
+
+Parliament:
+- make party names not all caps
 
 Demography General:
 (/) - Change population growth rate to %
@@ -46,16 +45,6 @@ Demography General:
 (/) - first seat requires no pop (less 1-seat districts)
 
 
-Tutorial
-- Make tutorial box bigger with bigger text.
-- Make tutorial in a fixed seed.
-- Start with 2 districts only.
-- Split district info into 2 steps: attributes and cultural traits.
-- In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
-- Use fixed and SIMPLE cultural traits for starting districts
-- Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
-- Remove step DURING election
-
 Election animation:
 - Increase speed of district transition, change from lerp to slerp
 - If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
@@ -63,15 +52,19 @@ Election animation:
 - Remember animation speed (maybe?)
 - Disable map label tooltips during election animation
 - Make sure tooltip of cultural voting trait doesn't get stuck
+- When a modifier value gets modified (i.e. increased through historical legacy), it already shows the updated value during the animation, which is wrong. the election result needs to store the current value (make a copy of the modifier)
 
 Post-Election:
 - After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.
 - At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
 - After that, enable HUD like before.
+- during final zoom out before newspaper comes, disallow UI interactions and selecting districts on the map
 
 Newspaper:
 - Add a new tab "Newspaper" tab with a letter as an icon.
 - This tab show all previous yearly newspapers
+- make newspapers selectable
+- while newspaper is open or OPENING with animation, disallow interacting with the map
 - maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
 - maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
 - add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'"). doesn't always appear. max 1
@@ -84,14 +77,14 @@ General UX:
 - Add line breaks in voting trait descriptions.
 - Remove white as a party color.
 (/) - don't show margin frame in district label if no margin yet.
-- INSTANT mute doesn't work
+(/) - INSTANT mute doesn't work (only for music)
 - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 
 General Gameplay:
 - Reduce default win condition to 6 wins.
-- Ensure each letter is only used once as a starting letter for district names, to make them easier to parse.
-- Ensure the same district name cannot appear twice.
+(/) - Ensure the same district name cannot appear twice.
+(/) - Ensure district names start with a capital letter
 - Add some constraints for economic sectors (like no fishing in landlocked districts)
 - remove max districts as constant
 (/) - Add rivers as a geographical trait
@@ -101,7 +94,7 @@ Cultural traits:
 - Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population"). see bottom of page
 - Lower commonness of Secular, Declining Population, Weak economy
 - Remove non-linguistic
-- Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
+(/) - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
 
 Add event system:
 - Basically message logs that can optionally be related to a specific party, year, or district.
@@ -134,6 +127,42 @@ Election graph:
 Optional for v0.2:
 - Add density details similar to population details (with people/sqkm and a row with how long it takes to change)
 
+New Cultural Traits:
+- Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
+- Rival of X. Works the same as partner but with negative effects instead of positive.
+(/) - Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
+- Emigration: Acts as a negative modifier to population growth rate. All adjacent districts gain a positive modifier to population growth. Number of people leaving equals number of people joining in adjacent districts. Distribution is based on border length.
+- Immigration: Opposite of emigration. Positive modifier to population growth in the district, negative modifier in adjacent districts.
+- Capital: +3 seats.
+- Influental: 10% of popularity is applied to adjacent districts as well.
+- <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
+- <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
+- Impressionable: +10 popularity for each party governing an adjacent district.
+- remove non-linguistic and secular.
+- Very fast growing pop
+- ANother trait that grows pop by a little as a side effect
+- Unpatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently
+- <RELIGION/LANGUAE> Influence: Created adjacent districts will have the same religion/language guaranteed
+
+Tutorial
+- Make tutorial box bigger with bigger text.
+- Make tutorial in a fixed seed.
+- Start with 2 districts only.
+- Split district info into 2 steps: attributes and cultural traits.
+- In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
+- Use fixed and SIMPLE cultural traits for starting districts
+- Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
+- Remove step DURING election
+
+itch page changes:
+- SC1: district info in country with many districts, with modifiers and different traits. 5 parties
+- SC2: end-of-cycle newspaper
+- SC3: Policy screen mid-game with impact overlay
+- SC4: parliament screen mid-game
+- SC5: Setup game screenshot
+
+
+
 
 [v0.3?]
 Introduce new "Ideology" mechanic:
@@ -147,6 +176,16 @@ Introduce new "Ideology" mechanic:
 - Make sure the bot AI can also use the ideologies in a smart way. Doesn't have to be super complex. Since they already use weights for policies, it can just be an extra weight added to the relevant policies when they are evaluating them. And add a basic "score system" for ideologies, so they can choose the best one among the 3 offered based on their current policy usage.
 - Add a new tab for this.
 
+IDEOLOGY IDEAS
+
+DESIGN CHALLENGE: picking an ideology shouldn't immediately change popularities too much. Else there will always be a big cut every x cycles where parties choose an ideology. The ideologies should act more as a strategy enabler / supporter from that point on. A little bit of an imediate effect is fine ofc, but shouldnt be the focus. Maybe look at it like Hearthstone Battleground Trinkets as a reference.
+
+- some bonus for when policy points are spead equally across all policy categories
+- an ideology that reduces the cap on ALL policies but makes them more effective
+- an ideology that incrases the cap on ALL policies slightly
+- gain +1 policy point for each 3 unused point.
+- capping a policy gives all points +2 impact
+- something with water (lakeside, river, coastal)
 
 
 
@@ -161,143 +200,3 @@ Introduce new "Ideology" mechanic:
   - Forestry only in forested biomes
   - Winter tourism in snowy regions and mountains
   - Summer tourism at coast and islands, hotter biomes
-
-
-
-
-itch page changes:
-- SC1: district info in country with many districts, with modifiers and different traits. 5 parties
-- SC2: end-of-cycle newspaper
-- SC3: Policy screen mid-game with impact overlay
-- SC4: parliament screen mid-game
-- SC5: Setup game screenshot
-
-
-
-
-Feedback from Stream (self written).
-
-logo in main menu needs to be stylized rather than plain text
-
-MORE VISUAL CUES
-
-TUTORIAL
-start with 2 regions instead of 3 in tutorial
-starting regions should have less information in tutorial, not all traits from start, it's overwhelming.
-make tutorial box a bit bigger
-it wasn't clear to the player that different districts are worth a different amount of seats
-maybe disable randomness in tutorial and make it a fixed map with fixed districts (some more complex cultural traits early on can be confusing)
-
-JUICE / FX
-when election result is close, add some "nailbiter" effect
-snappier district transitions in election
-
-UX
-if pressing end turn with unspent policy points, add a "are you sure" dialog
-use the "star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style (number in star maybe?)
-click on table row in district info should jump to policies and highlight it
-remember animation speed in election animation
-add line breaks in longer tooltips (like voting traits)
-disable map label tooltips during election animation
-
-POLICY SCREEN
-don't use all caps in policy screen
-use icons for economic sectors (additional to text)
-it is not obvious at all that category titles have tooltips, maybe add a hoverable "?" symbol for help
-add tooltips for geography traits with info what they are (like in district info)
-maybe add filter options (maybe not needed idk)
-sort policies alphabetically
-slightly bind policies to geography (no fishing in landlocked)
-
-CULTURAL TRAITS
-cultural traits need to be in a more prominent visual hierarchy, separate from the policy traits, so it's clear they are more important.
-
-GAMEPLAY
-basic gameplay cycle seems to work and streamer got into after a few cycles, making strategies and stuff
-reduce default win condition to 6 wins instead of 7 (at least in tutorial, maybe even 5)
-people seem to really like the stable cultural trait, giving a boost to the governing party
-give SOME kind of indication what other parties focus on, just a hint to strategize around
-an idea that came up is to spend points to smear a party in a district
-
-MISC
-randomly generated district names are hard to parse, a suggestion was to ensure every district starts with a different first letter, would be easily doable with the markov chains i'm using.
-this is definitely a niche game not really fit into a genre (but that's fine to me)
-
-BUGS
-tooltip got stuck once in election animation (not for long but still)
-
-
-FLAVOUR
-maybe add some kind of news stories during election or after that explain WHY the result happened
-flavour is missing, doesn't feel like playing as a political party
-
-STREAMER QUOTE AT THE END that i think sums it up well
-"I think it just has an issue of approachability but I would say that it was very satisfying once I started to get the hang of things"
-
-
-thanks for feedback to
-
-streamer (shiftydev)
-everythingatryans (help in comments)
-
------------------------
-Discord Feedback (copy pasted message from Istrandar)
-
-Just started playing ! (I'm writing the little thing as I go and I'll write  more detailed feedback after)
-Some text are slightly outside of my screen (I have a second monitor and I'm using a 1400p monitor)
-Non-linguistic feels a bit hard to understand
-Did you think about using some ease when showing the election results ? (maybe having them be bigger could be cool when are less party)
-I clicked on end turn by accident after the election result thinking I was confirming the result (inattention mistake but did it twice and still won)(maybe asking for confirmation would be cool)
-I really like the stable/growing population trait, I think trait where you can build long term strategies around are really cool 
-I like how more district/policies are introduced as you keep playing, it means complexity start low and increase in a nice way
-The game feels a bit too easy on base settings(but maybe that's just me), won the first game despite skipping 2 turns.
-I had a crash when starting a new run
-Declining population district should maybe start with a bit more population ? I had one with a starting pop of 2 and it felt like I should just ignore it
-left clicking/right clicking on a policy cool increase / decrease it I think
-I think having a little sound effect/visual when you win a district could be cool
-having some visual effect at the start of turn for stuff like increasing/declining populations could be great !
-
-My thoughts after 2 quick game and one bigger one,
-The game is a lot of fun and I really like how organically strategies arise (like focusing on one big stable district or a growing one for the long term, how sometime you abandon some district to focus on others). Adding district as the game keep going is an amazing idea that keeps complexity down at the start, let you time to form a strategy and push you to adapt.
-
-I think the game lacks a bit in flavour sometime. I don't feel like a party with a coherent idea more like an opportunistic leader that just want to win elections for the sake of it. I don't know if it's possible to fix this without modifying a lot the game though.
-
-The tutorial was simple and not to intrusive which is nice. At the end I felt like I was ready to play and could understand everything by myself which is really nice.
-
-Do you think you'll try to add more mechanics to make the game more repayable or keep it as it is ?
-
-When thinking about other mechanics, I was thinking that adding trait to districts or maybe more selecting a more high level direction (like ecology, meritocratic or things like that) that gives bonus/penalty to some specific kind of policies. it probably should not happen every turn and on the first turns though
-
-
-
-
-
-CULTURAL TRAIT IDEAS
-- Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
-- Rival of X. Works the same as partner but with negative effects instead of positive.
-- Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
-- Emigration: Acts as a negative modifier to population growth rate. All adjacent districts gain a positive modifier to population growth. Number of people leaving equals number of people joining in adjacent districts. Distribution is based on border length.
-- Immigration: Opposite of emigration. Positive modifier to population growth in the district, negative modifier in adjacent districts.
-- Capital: +3 seats.
-- Influental: 10% of popularity is applied to adjacent districts as well.
-- <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
-- <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
-- Impressionable: +10 popularity for each party governing an adjacent district.
-- remove non-linguistic and secular.
-- Very fast growing pop
-- ANother trait that grows pop by a little as a side effect
-- Unpatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently
-- <RELIGION/LANGUAE> Influence: Created adjacent districts will have the same religion/language guaranteed
-
-
-
-IDEOLOGY IDEAS
-
-DESIGN CHALLENGE: picking an ideology shouldn't immediately change popularities too much. Else there will always be a big cut every x cycles where parties choose an ideology. The ideologies should act more as a strategy enabler / supporter from that point on. A little bit of an imediate effect is fine ofc, but shouldnt be the focus. Maybe look at it like Hearthstone Battleground Trinkets as a reference.
-
-- some bonus for when policy points are spead equally across all policy categories
-- an ideology that reduces the cap on ALL policies but makes them more effective
-- an ideology that incrases the cap on ALL policies slightly
-- gain +1 policy point for each 3 unused point.
-- capping a policy gives all points +2 impact
-- something with water (lakeside, river, coastal)

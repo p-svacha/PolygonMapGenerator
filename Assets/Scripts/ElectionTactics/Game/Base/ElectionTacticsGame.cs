@@ -51,8 +51,6 @@ namespace ElectionTactics
         public List<ReligionDef> ActiveReligionTraits = new List<ReligionDef>();
         public List<District> ActiveDistrictTraits = new List<District>();
         // Constant Rules
-        private const int NUM_STARTING_DISTRICTS = 3;
-
         public const int PP_PER_CYCLE = 4;
         public const int MAX_POLICY_VALUE = 8;
 
@@ -64,7 +62,6 @@ namespace ElectionTactics
         public const int BR_BASE_HEAL_PER_ELECTION_WON = 0; // Base healing amount from winning elections
         public const int BR_HEAL_PER_ELECTION_WON_PER_TURN = 2; // The healing from won elections increases by this every election.
 
-        public const int MAX_NUM_DISTRICTS = 20;
         public const int MAX_CULTURAL_TRAITS = 4;
 
         public const float RANDOM_EVENT_CHANCE = 0.3f;
@@ -102,6 +99,8 @@ namespace ElectionTactics
             DefDatabase<TurnLengthDef>.AddDefs(TurnLengthDefs.Defs);
             DefDatabase<GameModeDef>.AddDefs(GameModeDefs.Defs);
             DefDatabase<BotDifficultyDef>.AddDefs(BotDifficultyDefs.Defs);
+            DefDatabase<GameLengthDef>.AddDefs(GameLengthDefs.Defs);
+            DefDatabase<StartingDistrictsDef>.AddDefs(StartingDistrictsDefs.Defs);
             DefDatabase<GeographyTraitDef>.AddDefs(GeographyTraitDefs.Defs);
             DefDatabase<CulturalTraitCategoryDef>.AddDefs(CulturalTraitCategoryDefs.Defs);
             DefDatabase<CulturalTraitDef>.AddDefs(CulturalTraitDefs.Defs);
@@ -176,7 +175,7 @@ namespace ElectionTactics
             MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(mapSeed, StartGameSeed);
 
-            // settings.Seed = -346576213;
+            // settings.Seed = ####;
             PMG.GenerateMap(settings, callback: OnMapGenerationDone);
         }
 
@@ -243,13 +242,14 @@ namespace ElectionTactics
             UI.SidePanelFooter.Init(this);
 
             // Add starting districts (-1 because 1 is added in StartNextElectionCycle)
-            for (int i = 0; i < NUM_STARTING_DISTRICTS - 1; i++)
+            int numStartingDistricts = GetNumStartingDistricts();
+            for (int i = 0; i < numStartingDistricts - 1; i++)
             {
                 Districts.Values.ToList()[i].Activate();
             }
 
             // Battle royale
-            foreach (Party party in Parties) party.Legitimacy = BR_START_LEGITIMACY;
+            foreach (Party party in Parties) party.Legitimacy = (int) (BR_START_LEGITIMACY * GameSettings.GameLength.ModifierFactor);
 
             Constitution = new Constitution(this);
             UI.Constitution.Init(Constitution);
@@ -265,6 +265,13 @@ namespace ElectionTactics
             // Tutorial
             if (GameSettings.IsTutorialEnabled) TutorialManager.Instance.StartTutorial();
             else TutorialManager.Instance.EndTutorial();
+        }
+
+        private int GetNumStartingDistricts()
+        {
+            int numStartingDistricts = GameSettings.StartingDistricts.Value;
+            if (numStartingDistricts == -1) numStartingDistricts = Map.LandRegions.Count;
+            return numStartingDistricts;
         }
 
         private void InitGeograhyTraits()
@@ -354,7 +361,7 @@ namespace ElectionTactics
         {
             Districts.Clear();
 
-            for (int i = 0; i < MAX_NUM_DISTRICTS; i++)
+            for (int i = 0; i < Map.LandRegions.Count; i++)
             {
                 AddRandomDistrict();
             }
@@ -431,8 +438,9 @@ namespace ElectionTactics
             Debug.Log($"Starting cycle {ElectionCycle} in Year {Year}.");
 
             // Add new district
-            int indexToActivate = ElectionCycle + NUM_STARTING_DISTRICTS - 2; // -2 because cycle starts at 1 and we already have starting districts
-            if (indexToActivate < MAX_NUM_DISTRICTS) Districts.Values.ToList()[indexToActivate].Activate();
+            int numStartingDistricts = GetNumStartingDistricts();
+            int indexToActivate = ElectionCycle + numStartingDistricts - 2; // -2 because cycle starts at 1 and we already have starting districts
+            if (indexToActivate < numStartingDistricts) Districts.Values.ToList()[indexToActivate].Activate();
 
             // Update stuff according to district state changes
             UpdateDistrictAges();
@@ -753,12 +761,15 @@ namespace ElectionTactics
                 GeographyTrait newTrait = d.Geography.FirstOrDefault(x => x.Def == GeographyTraitDefOf.New);
                 if (newTrait != null) d.Geography.Remove(newTrait);
 
-                if (d.Index < NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 3)); // Starting districts get the Core III trait
-                else if (d.Index == NUM_STARTING_DISTRICTS) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 2)); // Following district the Core II
-                else if (d.Index == NUM_STARTING_DISTRICTS + 1) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 1)); // Following district the Core I
+                int numStartingDistricts = GetNumStartingDistricts();
+                if (numStartingDistricts > 3) numStartingDistricts = 3; // Make sure not more than 3 districts get the core 3 trait
+
+                if (d.Index < numStartingDistricts) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 3)); // Starting districts get the Core III trait
+                else if (d.Index == numStartingDistricts) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 2)); // Following district the Core II
+                else if (d.Index == numStartingDistricts + 1) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.Core, 1)); // Following district the Core I
 
                 int numDistricts = ActiveDistricts.Count;
-                if (d.Index < NUM_STARTING_DISTRICTS) { } // Starting districts (Core III) districts never get the new trait
+                if (d.Index < numStartingDistricts) { } // Starting districts (Core III) districts never get the new trait
                 else if (numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 3)); // 2 newest districts get New III
                 else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 2)); // 3rd and 4th newest districts get New II
                 else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 1)); // 5th and 6th newest districts get New I
@@ -981,9 +992,14 @@ namespace ElectionTactics
         {
             return DefDatabase<ReligionDef>.AllDefs.RandomElement();
         }
-        public static string GetRandomDistrictName()
+        public string GetRandomDistrictName()
         {
-            return MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
+            string name = "";
+            do
+            {
+                name = MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
+            } while (Districts.Values.Any(d => d.Name == name));
+            return name.CapitalizeEachWord();
         }
         public static int GetRandomSeed()
         {

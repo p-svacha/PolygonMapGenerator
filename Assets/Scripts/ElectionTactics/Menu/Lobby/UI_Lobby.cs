@@ -21,6 +21,7 @@ namespace ElectionTactics
         public Button StartGameButton;
         public Text StartGameButtonText;
         public Text StartGameWarningText;
+        public TextMeshProUGUI SettingsDescriptionText;
         private float StartGameWarningTextDelay;
         private const float StartGameWarningTextDisplayTime = 3f;
 
@@ -34,10 +35,14 @@ namespace ElectionTactics
         public TMP_Dropdown GameModeDropdown;
         public TMP_Dropdown TurnLengthDropdown;
         public TMP_Dropdown BotDifficultyDropdown;
+        public TMP_Dropdown GameLengthDropdown;
+        public TMP_Dropdown StartingDistrictsDropdown;
         public Dictionary<int, TMP_Dropdown> GameSettingDropdowns { get; private set; }
         public const int GAME_MODE = 0;
         public const int TURN_LENGTH = 1;
         public const int BOT_DIFFICULTY = 2;
+        public const int GAME_LENGTH = 3;
+        public const int STARTING_DISTRICTS = 4;
 
         public TextMeshProUGUI HoveredItemDescriptionText;
 
@@ -70,6 +75,8 @@ namespace ElectionTactics
                 { GAME_MODE, GameModeDropdown },
                 { TURN_LENGTH, TurnLengthDropdown },
                 { BOT_DIFFICULTY, BotDifficultyDropdown },
+                { GAME_LENGTH, GameLengthDropdown },
+                { STARTING_DISTRICTS, StartingDistrictsDropdown },
             };
 
             // Buttons
@@ -98,6 +105,12 @@ namespace ElectionTactics
             BotDifficultyDropdown.AddOptions(DefDatabase<BotDifficultyDef>.AllDefs.Select(x => x.LabelCap).ToList());
             BotDifficultyDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
 
+            GameLengthDropdown.AddOptions(DefDatabase<GameLengthDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            GameLengthDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
+
+            StartingDistrictsDropdown.AddOptions(DefDatabase<StartingDistrictsDef>.AllDefs.Select(x => x.LabelCap).ToList());
+            StartingDistrictsDropdown.onValueChanged.AddListener(_ => AudioManager.PlayStandardClickSound());
+
             // Add listeners to all setting changes for multiplayer
             foreach (var setting in GameSettingDropdowns)
             {
@@ -105,7 +118,10 @@ namespace ElectionTactics
             }
 
             // Default values
+            SettingsDescriptionText.text = "";
             BotDifficultyDropdown.SetValueWithoutNotify(1); // Medium difficulty
+            GameLengthDropdown.SetValueWithoutNotify(2);
+            StartingDistrictsDropdown.SetValueWithoutNotify(2);
         }
 
         /// <summary>
@@ -192,7 +208,7 @@ namespace ElectionTactics
 
         public void AddBot()
         {
-            string botName = PartyNameGenerator.GetRandomPartyName(maxLength: 36);
+            string botName = PartyNameGenerator.GetRandomPartyName();
             Color botColor = PartyNameGenerator.GetPartyColor(botName, UsedColors);
             UsedColors.Add(botColor);
             FillNextFreeSlot(botName, botColor, LobbySlotType.Bot);
@@ -208,22 +224,22 @@ namespace ElectionTactics
             else OrganizeSlots();
         }
 
-        public void ChangeSlotColor(UI_LobbySlot slot)
+        public void ChangeSlotColor(UI_LobbySlot slot, bool backwards)
         {
-            if (Type == GameType.Singleplayer) UpdatePlayerColor(slot.Slot.Id, GetRandomNewColorFor(slot.Slot.Id));
+            if (Type == GameType.Singleplayer) UpdatePlayerColor(slot.Slot.Id, GetRandomNewColorFor(slot.Slot.Id, backwards));
             else
             {
-                NetworkPlayer.Server.RequestColorChangeServerRpc(slot.Slot.Id);
+                NetworkPlayer.Server.RequestColorChangeServerRpc(slot.Slot.Id, backwards);
             }
         }
 
         /// <summary>
         /// Server method for color change
         /// </summary>
-        public Color GetRandomNewColorFor(int slotId)
+        public Color GetRandomNewColorFor(int slotId, bool backwards)
         {
             Color oldColor = UiSlots[slotId].Slot.GetColor();
-            Color newColor = PartyNameGenerator.GetRandomColor(UsedColors);
+            Color newColor = backwards ? PartyNameGenerator.GetRandomColorBackward(UsedColors, oldColor) : PartyNameGenerator.GetRandomColor(UsedColors, oldColor);
             UsedColors.Remove(oldColor);
             UsedColors.Add(newColor);
             return newColor;

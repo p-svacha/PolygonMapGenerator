@@ -15,6 +15,8 @@ namespace ElectionTactics
         public GameModeDef GameMode;
         public TurnLengthDef TurnLength;
         public BotDifficultyDef BotDifficulty;
+        public GameLengthDef GameLength;
+        public StartingDistrictsDef StartingDistricts;
         public bool IsTutorialEnabled { get; private set; }
 
         /// <summary>
@@ -26,15 +28,19 @@ namespace ElectionTactics
             TurnLength = DefDatabase<TurnLengthDef>.AllDefs[UI_Lobby.Instance.TurnLengthDropdown.value];
             GameMode = DefDatabase<GameModeDef>.AllDefs[UI_Lobby.Instance.GameModeDropdown.value];
             BotDifficulty = DefDatabase<BotDifficultyDef>.AllDefs[UI_Lobby.Instance.BotDifficultyDropdown.value];
+            GameLength = DefDatabase<GameLengthDef>.AllDefs[UI_Lobby.Instance.GameLengthDropdown.value];
+            StartingDistricts = DefDatabase<StartingDistrictsDef>.AllDefs[UI_Lobby.Instance.StartingDistrictsDropdown.value];
             IsTutorialEnabled = false;
         }
 
-        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty, bool isTutorialEnabled)
+        public GameSettings(List<LobbySlot> slots, GameModeDef gameMode, TurnLengthDef turnLength, BotDifficultyDef botDifficulty, GameLengthDef gameLength, StartingDistrictsDef numStartingDistricts, bool isTutorialEnabled)
         {
             Slots = slots;
             GameMode = gameMode;
             TurnLength = turnLength;
             BotDifficulty = botDifficulty;
+            GameLength = gameLength;
+            StartingDistricts = numStartingDistricts;
             IsTutorialEnabled = isTutorialEnabled;
         }
 

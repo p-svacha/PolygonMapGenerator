@@ -46,6 +46,7 @@ namespace ElectionTactics
             { "Pink", 100 },
             { "Brown", 100 },
             { "Crimson", 100 },
+            { "Teal", 50 },
             { "Reformist", 100 },
             { "Capitalist", 100 },
             { "Anti-Capitalist", 100 },
@@ -198,6 +199,7 @@ namespace ElectionTactics
             { "Dominion", 100 },
             { "Victory", 100 },
             { "Everything", 100 },
+            { "Glory", 100 },
 
             { "Hope", 70 },
             { "Grace", 70 },
@@ -230,6 +232,7 @@ namespace ElectionTactics
             { "Iron", 40 },
             { "Steel", 40 },
             { "Disco", 40 },
+            { "Party", 40 },
 
             { "Fellowship", 30 },
             { "Calm", 30 },
@@ -388,7 +391,7 @@ namespace ElectionTactics
 
         private static List<Color> Colors = new List<Color>()
         {
-            new Color(0.80f, 0.80f, 0.80f), // 0 - White
+            new Color(0.90f, 0.30f, 0.55f), // 0 - Pink
             new Color(0.00f, 0.50f, 0.00f), // 1 - Green
             new Color(0.10f, 0.40f, 0.90f), // 2 - Blue
             new Color(0.80f, 0.00f, 0.00f), // 3 - Red
@@ -399,10 +402,12 @@ namespace ElectionTactics
             new Color(0.66f, 0.32f, 0.10f), // 8 - Brown
             new Color(0.00f, 0.80f, 0.90f), // 9 - Light Blue
             new Color(0.00f, 0.90f, 0.00f), // 10 - Light Green
+            new Color(0.00f, 0.65f, 0.60f), // 11 - Teal
+            new Color(0.75f, 0.05f, 0.20f), // 12 - Crimson
         };
 
 
-        public static string GetRandomPartyName(int maxLength = 36, bool log = true)
+        public static string GetRandomPartyName(int maxLength = 32, bool log = true)
         {
             string name = "";
 
@@ -423,7 +428,7 @@ namespace ElectionTactics
                     // If word is the template for a randomly generated name, generate a name and use it as the word
                     if (word == GeneratedNameTemplate)
                     {
-                        word = ElectionTacticsGame.GetRandomDistrictName();
+                        word = ElectionTacticsGame.Instance.GetRandomDistrictName();
                         word = word.Trim();
                         if (log) Debug.Log($"Generated name '{word}' for party name template.");
                     }
@@ -449,19 +454,21 @@ namespace ElectionTactics
 
         public static Color GetPartyColor(string partyName, List<Color> alreadyTaken)
         {
-            if (partyName.Contains("White") && !alreadyTaken.Contains(Colors[0])) return Colors[0];
+            if (partyName.Contains("Pink") && !alreadyTaken.Contains(Colors[0])) return Colors[0];
             if (partyName.Contains("Green") && !alreadyTaken.Contains(Colors[1])) return Colors[1];
             if (partyName.Contains("Blue") && !alreadyTaken.Contains(Colors[2])) return Colors[2];
             if (partyName.Contains("Red") && !alreadyTaken.Contains(Colors[3])) return Colors[3];
             if (partyName.Contains("Yellow") && !alreadyTaken.Contains(Colors[4])) return Colors[4];
             if (partyName.Contains("Black") && !alreadyTaken.Contains(Colors[5])) return Colors[5];
             if (partyName.Contains("Orange") && !alreadyTaken.Contains(Colors[6])) return Colors[6];
-            if ((partyName.Contains("Purple") || partyName.Contains("Pink")) && !alreadyTaken.Contains(Colors[7])) return Colors[7];
+            if (partyName.Contains("Purple") && !alreadyTaken.Contains(Colors[7])) return Colors[7];
             if (partyName.Contains("Brown") && !alreadyTaken.Contains(Colors[8])) return Colors[8];
+            if (partyName.Contains("Teal") && !alreadyTaken.Contains(Colors[8])) return Colors[11];
+            if (partyName.Contains("Crimson") && !alreadyTaken.Contains(Colors[8])) return Colors[12];
             else return GetRandomColor(alreadyTaken);
         }
 
-        public static Color GetRandomColor(List<Color> forbiddenColors)
+        public static Color GetRandomColor(List<Color> forbiddenColors, Color? oldColor = null)
         {
             // Check if we have run out of unique colors
             if (forbiddenColors.Count >= Colors.Count)
@@ -470,12 +477,51 @@ namespace ElectionTactics
                 return Color.white;
             }
 
-            // Return random remaining color
-            Color c = Colors.RandomElement();
-            while(forbiddenColors.Contains(c))
+            // Return next available color in list from oldColor
+            if (oldColor != null)
             {
-                c = Colors.RandomElement();
+                Color newColor = Color.white;
+                int id = Colors.IndexOf(oldColor.Value);
+                do
+                {
+                    id++;
+                    if (id >= Colors.Count) id = 0;
+                    newColor = Colors[id];
+                } while (forbiddenColors.Contains(newColor));
+                return newColor;
             }
+
+            // Return random color if no old color set
+            else
+            {
+                Color c = Colors.RandomElement();
+                while (forbiddenColors.Contains(c))
+                {
+                    c = Colors.RandomElement();
+                }
+                return c;
+            }
+        }
+        public static Color GetRandomColorBackward(List<Color> forbiddenColors, Color? oldColor = null)
+        {
+            if (forbiddenColors.Count >= Colors.Count)
+                return Color.white;
+
+            if (oldColor != null)
+            {
+                int id = Colors.IndexOf(oldColor.Value);
+                Color newColor;
+                do
+                {
+                    id--;
+                    if (id < 0) id = Colors.Count - 1;
+                    newColor = Colors[id];
+                } while (forbiddenColors.Contains(newColor));
+                return newColor;
+            }
+
+            Color c = Colors.RandomElement();
+            while (forbiddenColors.Contains(c)) c = Colors.RandomElement();
             return c;
         }
 

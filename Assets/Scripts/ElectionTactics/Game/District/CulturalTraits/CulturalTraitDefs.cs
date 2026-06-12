@@ -241,7 +241,7 @@ namespace ElectionTactics
                 Description = "The most popular party gets a permanent popularity bonus.",
                 TraitClass = typeof(CT_HistoricalLegacy),
                 Category = CulturalTraitCategoryDefOf.Political,
-                Commonness = 700,
+                Commonness = 70,
             },
 
 

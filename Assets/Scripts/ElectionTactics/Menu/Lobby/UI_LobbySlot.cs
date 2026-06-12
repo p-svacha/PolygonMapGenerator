@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,10 @@ namespace ElectionTactics
     {
         [Header("Active Form")]
         public GameObject ActivePanel;
-        public Text PlayerText;
+        public TMP_InputField PartyNameInput;
+        public TextMeshProUGUI PartyNameText;
         public Button PlayerColorButton;
+        public Button RandomizeNameButton;
         public Image PlayerColor;
         public Button RemovePlayerButton;
 
@@ -25,8 +28,14 @@ namespace ElectionTactics
 
         void Start()
         {
-            PlayerColorButton.onClick.AddListener(() => Lobby.ChangeSlotColor(this));
+            PartyNameInput.onValueChanged.AddListener(OnNameChanged);
+
+            RandomizeNameButton.onClick.AddListener(RandomizeName);
+            RandomizeNameButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.Chimes));
+
+            PlayerColorButton.onClick.AddListener(() => Lobby.ChangeSlotColor(this, backwards: false));
             PlayerColorButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+            PlayerColorButton.GetComponent<RightClickHandler>().OnRightClick = () => Lobby.ChangeSlotColor(this, backwards: true);
 
             RemovePlayerButton.onClick.AddListener(() => Lobby.RemovePlayer(this));
             RemovePlayerButton.onClick.AddListener(() => AudioManager.PlaySound(AudioManager.Instance.RemoveBot));
@@ -42,14 +51,24 @@ namespace ElectionTactics
             SetInactive();
         }
 
+        private void OnNameChanged(string newName)
+        {
+            Slot.Name = newName;
+        }
+
+        private void RandomizeName()
+        {
+            PartyNameInput.text = PartyNameGenerator.GetRandomPartyName();
+        }
+
         public void SetActive(string playerName, Color c, LobbySlotType type, ulong clientId)
         {
             Slot.SetActive(playerName, c, type, clientId);
 
             AddPlayerPanel.SetActive(false);
             ActivePanel.SetActive(true);
-            PlayerText.text = playerName;
-            PlayerText.color = c;
+            PartyNameInput.text = playerName;
+            PartyNameText.color = c;
 
             PlayerColor.color = c;
             bool canChangeColor = Slot.ClientId == NetworkPlayer.LocalClientId;
@@ -77,7 +96,7 @@ namespace ElectionTactics
 
         public void SetColor(Color c)
         {
-            PlayerText.color = c;
+            PartyNameText.color = c;
             PlayerColor.color = c;
             Slot.SetColor(c);
         }

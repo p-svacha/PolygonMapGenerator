@@ -51,6 +51,9 @@ namespace ElectionTactics
                 else if (Type == WinConditionType.TotalDistrictsWon) ConditionValue = GetRandomConditionValue(MinDistrictWins, MaxDistrictWins, StepDistrictWins);
                 else if (Type == WinConditionType.TotalVotes) ConditionValue = GetRandomConditionValue(MinTotalVotes, MaxTotalVotes, StepTotalVotes);
             }
+
+            // Modify condition value based on game settings
+            ConditionValue = (int)(Game.GameSettings.GameLength.ModifierFactor * ConditionValue);
         }
 
         public override string GetConstitutionText()

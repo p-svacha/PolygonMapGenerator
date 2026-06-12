@@ -89,9 +89,9 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Window\TimelineNavigator.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\treeview\Drawers\AnimationTrackDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Actions\TrackActions.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Window\TimelineWindow_TrackGui.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Tooltip.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Manipulators\Sequence\TrimClip.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Window\TimelineWindow_TrackGui.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Actions\IMenuChecked.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\inspectors\TimelineAssetInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@8cd8509afae5\Editor\Actions\Menus\TimelineContextMenu.cs" />

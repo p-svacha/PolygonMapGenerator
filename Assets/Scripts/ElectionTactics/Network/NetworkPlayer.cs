@@ -60,9 +60,9 @@ namespace ElectionTactics
         }
 
         [ServerRpc]
-        public void RequestColorChangeServerRpc(int slotId)
+        public void RequestColorChangeServerRpc(int slotId, bool backwards)
         {
-            Color newColor = ET_NetworkManager.Singleton.MenuNavigator.Lobby.GetRandomNewColorFor(slotId);
+            Color newColor = ET_NetworkManager.Singleton.MenuNavigator.Lobby.GetRandomNewColorFor(slotId, backwards);
             RequestColorChangeClientRpc(slotId, newColor.r, newColor.g, newColor.b);
         }
         [ClientRpc]

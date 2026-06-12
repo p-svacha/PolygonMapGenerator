@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\Visual\ElectionAnimationHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\TabButton\TabButton.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\StartingDistrictDefs.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_DecliningPopulation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Network\ET_NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\SidePanel\UI_SidePanelFooter.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\MenuUI.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_HistoricalLegacy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Newspaper\UI_NewspaperMinorArticle.cs" />
     <Compile Include="Assets\Scripts\Helper\ConsoleToGUI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\AgeGroup.cs" />
@@ -218,6 +220,7 @@
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Settings\GlobalSettings.cs" />
+    <Compile Include="Assets\Scripts\Helper\RightClickHandler.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyListElement.cs" />
     <Compile Include="Assets\Scripts\MapEditor2\UI_MapEditor2.cs" />
@@ -274,8 +277,8 @@
     <Compile Include="Assets\Scripts\Def\DefDatabaseRegistry.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Newspaper\Newspaper.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_Parliament.cs" />
-    <Compile Include="Assets\Scripts\Map\Display\MapTextureMode.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Newspaper\NewspaperMinorArticle.cs" />
+    <Compile Include="Assets\Scripts\Map\Display\MapTextureMode.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\TemperatureNoise.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Newspaper\NewspaperMainArticle.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_NonLinguistic.cs" />
@@ -297,6 +300,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\Noise\Noise.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WindNoise.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameLengthDefs.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\EconomyPolicy.cs" />

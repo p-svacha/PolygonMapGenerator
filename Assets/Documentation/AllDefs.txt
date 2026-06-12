@@ -180,7 +180,6 @@
                     REVOLUTIONARY,
                 },
             },
-
             new CulturalTraitDef()
             {
                 DefName = REBELLIOUS,
@@ -195,7 +194,6 @@
                     REVOLUTIONARY,
                 },
             },
-
             new CulturalTraitDef()
             {
                 DefName = REVOLUTIONARY,
@@ -209,6 +207,15 @@
                     STABLE,
                     REBELLIOUS,
                 },
+            },
+            new CulturalTraitDef()
+            {
+                DefName = HISTORICAL_LEGACY,
+                Label = "Historical Legacy",
+                Description = "The most popular party gets a permanent popularity bonus.",
+                TraitClass = typeof(CT_HistoricalLegacy),
+                Category = CulturalTraitCategoryDefOf.Political,
+                Commonness = 70,
             },
 
 
@@ -282,6 +289,52 @@
         },
     };
 
+--- GameLengthDefs.cs ---
+        public static List<GameLengthDef> Defs => new List<GameLengthDef>()
+        {
+            new GameLengthDef()
+            {
+                DefName = "VeryShort",
+                Label = "Very Short (x0.5)",
+                ModifierFactor = 0.5f,
+            },
+
+            new GameLengthDef()
+            {
+                DefName = "Short",
+                Label = "Short (x0.75)",
+                ModifierFactor = 0.5f,
+            },
+
+            new GameLengthDef()
+            {
+                DefName = "Standard",
+                Label = "Standard",
+                ModifierFactor = 0.5f,
+            },
+
+            new GameLengthDef()
+            {
+                DefName = "Long",
+                Label = "Long (x1.5)",
+                ModifierFactor = 0.5f,
+            },
+
+            new GameLengthDef()
+            {
+                DefName = "VeryLong",
+                Label = "Very Long (x2)",
+                ModifierFactor = 0.5f,
+            },
+
+            new GameLengthDef()
+            {
+                DefName = "Marathon",
+                Label = "Marathon (x3)",
+                ModifierFactor = 0.5f,
+            },
+        };
+
 --- GameModeDefs.cs ---
     public static List<GameModeDef> Defs => new List<GameModeDef>()
     {
@@ -299,6 +352,59 @@
             Description = "All parties start the game with 100 influence. Each election and seat will affect influence. A party is eliminated when influence goes below 0. The game ends when there is one party left."
         }
     };
+
+--- StartingDistrictDefs.cs ---
+        public static List<StartingDistrictsDef> Defs => new List<StartingDistrictsDef>()
+        {
+            new StartingDistrictsDef()
+            {
+                DefName = "One",
+                Label = "1",
+                Value = 1,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "Two",
+                Label = "2",
+                Value = 2,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "Three",
+                Label = "3 (Standard)",
+                Value = 3,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "Five",
+                Label = "5",
+                Value = 5,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "Ten",
+                Label = "10",
+                Value = 10,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "Twenty",
+                Label = "20",
+                Value = 20,
+            },
+
+            new StartingDistrictsDef()
+            {
+                DefName = "All",
+                Label = "All (not recommended)",
+                Value = -1,
+            },
+        };
 
 --- TurnLengthDefs.cs ---
     public static List<TurnLengthDef> Defs => new List<TurnLengthDef>()

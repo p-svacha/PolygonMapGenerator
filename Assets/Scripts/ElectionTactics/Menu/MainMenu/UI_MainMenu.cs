@@ -72,6 +72,7 @@ namespace ElectionTactics
 
             PlayerColorButton.onClick.AddListener(RandomizePlayerPartyColor);
             PlayerColorButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
+            PlayerColorButton.GetComponent<RightClickHandler>().OnRightClick = CyclePlayerColorBackward;
 
             TutorialButton.onClick.AddListener(ToggleTutorial);
             TutorialButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound());
@@ -115,18 +116,24 @@ namespace ElectionTactics
 
         private void RandomizePlayerPartyName()
         {
-            PlayerNameInput.text = PartyNameGenerator.GetRandomPartyName(maxLength: 32);
+            PlayerNameInput.text = PartyNameGenerator.GetRandomPartyName();
         }
 
         private void RandomizePlayerPartyColor()
         {
-            Color newColor = PartyNameGenerator.GetRandomColor(new List<Color>() { PlayerNameText.color });
+            Color newColor = PartyNameGenerator.GetRandomColor(new List<Color>(), PlayerNameText.color);
             SetPlayerColor(newColor);
         }
         private void SetPlayerColor(Color color)
         {
             PlayerNameText.color = color;
             PlayerColorButton.GetComponent<Image>().color = color;
+        }
+        private void CyclePlayerColorBackward()
+        {
+            Color newColor = PartyNameGenerator.GetRandomColorBackward(new List<Color>(), PlayerNameText.color);
+            SetPlayerColor(newColor);
+            AudioManager.PlayStandardClickSound();
         }
 
         private void ToggleTutorial()
@@ -247,15 +254,17 @@ namespace ElectionTactics
                 usedColors.Add(slots[i].GetColor());
             }
 
+            // Tutorial
+            bool isTutorialEnabled = TutorialCheckmark.gameObject.activeSelf;
+
             // Other default settings
             GameModeDef mode = GameModeDefOf.Classic;
             TurnLengthDef turnLength = TurnLengthDefOf.Medium;
             BotDifficultyDef botDifficulty = BotDifficultyDefOf.Standard;
+            GameLengthDef gameLength = isTutorialEnabled ? GameLengthDefOf.Short : GameLengthDefOf.Standard;
+            StartingDistrictsDef startingDistricts = isTutorialEnabled ? StartingDistrictsDefOf.Two : StartingDistrictsDefOf.Three;
 
-            // Tutorial
-            bool isTutorialEnabled = TutorialCheckmark.gameObject.activeSelf;
-
-            return new GameSettings(slots, mode, turnLength, botDifficulty, isTutorialEnabled);
+            return new GameSettings(slots, mode, turnLength, botDifficulty, gameLength, startingDistricts, isTutorialEnabled);
         }
 
         #endregion
