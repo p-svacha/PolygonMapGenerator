@@ -10,7 +10,7 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "Stable Mentality"));
+                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "'Stable' Cultural Trait"));
             }
         }
 

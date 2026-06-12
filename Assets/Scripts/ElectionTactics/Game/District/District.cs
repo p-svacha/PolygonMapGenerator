@@ -542,8 +542,8 @@ namespace ElectionTactics
 
         private void UpdateModifiers()
         {
-            foreach(Modifier modifier in Modifiers) modifier.RemainingLength--;
-            Modifiers = Modifiers.Where(x => x.RemainingLength > 0).ToList();
+            foreach (Modifier modifier in Modifiers.Where(m => !m.IsPermanent)) modifier.RemainingLength--;
+            Modifiers = Modifiers.Where(m => m.RemainingLength > 0 || m.IsPermanent).ToList();
         }
 
         #endregion

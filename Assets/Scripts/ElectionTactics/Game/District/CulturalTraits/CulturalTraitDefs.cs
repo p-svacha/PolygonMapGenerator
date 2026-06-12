@@ -23,6 +23,7 @@ namespace ElectionTactics
         private static string PROPORTIONAL_REPRESENTATION = "ProportionalRepresentation";
         private static string MAJORITY_BONUS = "MajorityBonus";
         private static string SWING_DISTRICT = "SwingDistrict";
+        private static string HISTORICAL_LEGACY = "HistoricalLegacy";
 
         // Note: The labels and descriptions defined here are often overriden by the trait class itself with more instance-specific details. Here they are very general. "Impact" refers to the popularity gain by the policy.
 
@@ -205,7 +206,6 @@ namespace ElectionTactics
                     REVOLUTIONARY,
                 },
             },
-
             new CulturalTraitDef()
             {
                 DefName = REBELLIOUS,
@@ -220,7 +220,6 @@ namespace ElectionTactics
                     REVOLUTIONARY,
                 },
             },
-
             new CulturalTraitDef()
             {
                 DefName = REVOLUTIONARY,
@@ -234,6 +233,15 @@ namespace ElectionTactics
                     STABLE,
                     REBELLIOUS,
                 },
+            },
+            new CulturalTraitDef()
+            {
+                DefName = HISTORICAL_LEGACY,
+                Label = "Historical Legacy",
+                Description = "The most popular party gets a permanent popularity bonus.",
+                TraitClass = typeof(CT_HistoricalLegacy),
+                Category = CulturalTraitCategoryDefOf.Political,
+                Commonness = 700,
             },
 
 

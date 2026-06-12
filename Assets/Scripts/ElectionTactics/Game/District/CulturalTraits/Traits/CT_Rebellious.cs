@@ -10,7 +10,7 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Negative, PENALTY_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "Rebellious"));
+                Game.AddModifier(District, new Modifier(ModifierType.Negative, PENALTY_VALUE, District.CurrentWinnerParty, 1, "for winning last election", "'Rebellious' Cultural Trait"));
             }
         }
 

@@ -85,6 +85,10 @@ namespace ElectionTactics
             { "Supreme", 100 },
             { "Nationalized", 100 },
 
+
+            { "Mega", 60 },
+            { "Super", 60 },
+
             { "Evil", 50 },
             { "First", 50 },
             { "Second", 50 },
@@ -314,6 +318,8 @@ namespace ElectionTactics
             { "for", 100 },
             { "for the", 40 },
             { "through", 20 },
+            { "beyond", 15 },
+            { "over", 10 },
         };
 
 

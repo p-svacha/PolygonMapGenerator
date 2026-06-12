@@ -802,8 +802,18 @@ namespace ElectionTactics
 
         public void AddModifier(District d, Modifier mod)
         {
-            d.Modifiers.Add(mod);
             mod.SetDistrict(d);
+
+            // Check if modifier can be combined with existing
+            Modifier existingIdenticalModifier = d.Modifiers.FirstOrDefault(m => m.RemainingLength ==  mod.RemainingLength && m.Description == mod.Description && m.Source == mod.Source && m.PartyId == mod.PartyId && m.RegionId == mod.RegionId);
+
+            if (existingIdenticalModifier != null)
+            {
+                existingIdenticalModifier.ModifyValue(mod.Value);
+            }
+
+            // Else just add it
+            else d.Modifiers.Add(mod);
         }
 
         public void DoIncreasePolicy(int playerId, int policyId)

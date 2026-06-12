@@ -172,6 +172,7 @@ namespace ElectionTactics
         public static void StartMusic()
         {
             if (Instance == null || Instance.AmbientTracks.Length == 0) return;
+
             Instance.isPlayingSpecialTrack = false;
             Instance.PlayNextTrack();
         }
@@ -280,6 +281,14 @@ namespace ElectionTactics
                 float t = timer / duration;
                 fadeOut.volume = Mathf.Lerp(startVolumeOut, 0f, t);
                 fadeIn.volume = Mathf.Lerp(0f, targetVolume, t);
+
+                // Make sure it's muted if muted
+                if (IsMuted)
+                {
+                    fadeOut.volume = 0;
+                    fadeIn.volume = 0;
+                }
+
                 yield return null;
             }
 
@@ -287,6 +296,8 @@ namespace ElectionTactics
             fadeOut.volume = 0f;
             fadeIn.volume = targetVolume;
             crossfadeCoroutine = null;
+
+            RefreshMusicVolume();
         }
 
         /// <summary>

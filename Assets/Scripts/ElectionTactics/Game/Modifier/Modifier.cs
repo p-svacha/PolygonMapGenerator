@@ -20,6 +20,7 @@ namespace ElectionTactics
         public int RemainingLength;
         public string Description;
         public string Source;
+        public bool IsPermanent => RemainingLength == -1;
 
         public Modifier(ModifierType type, int value, Party p, int length, string description, string source)
         {
@@ -39,6 +40,11 @@ namespace ElectionTactics
         {
             District = d;
             RegionId = d.Region.Id;
+        }
+
+        public void ModifyValue(int value)
+        {
+            Value += value;
         }
     }
 }
