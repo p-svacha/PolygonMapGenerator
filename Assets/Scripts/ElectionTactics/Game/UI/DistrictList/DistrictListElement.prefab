@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 5193809922712284276}
   - component: {fileID: 5193809922712284278}
   - component: {fileID: 5193809922712284277}
+  - component: {fileID: 6447364382060550135}
   m_Layer: 5
   m_Name: MarginText
   m_TagString: Untagged
@@ -284,6 +285,29 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: -23.5 %
+--- !u!114 &6447364382060550135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193809922712284275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
+  Type: 0
+  Title: Margin
+  Text: 'The difference in vote share between your party and the winning party in
+    the last cycle''s election.
+
+
+    Positive means you won, negative means another
+    party was ahead.'
+  InstantTooltip: 0
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1 &5193809923064726878
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +433,7 @@ GameObject:
   - component: {fileID: 5193809923450102613}
   - component: {fileID: 5193809923450102615}
   - component: {fileID: 5193809923450102614}
+  - component: {fileID: 5713517943676064843}
   m_Layer: 5
   m_Name: PartyIcon
   m_TagString: Untagged
@@ -473,6 +498,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5713517943676064843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193809923450102612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b03f11ef72be1408c5aaa353a56c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TooltipTarget
+  Type: 0
+  Title: Previous Winner
+  Text: The winning party in the last election.
+  InstantTooltip: 0
+  IsFocussed: 0
+  CurrentDelay: 0
 --- !u!1001 &5929857147801347811
 PrefabInstance:
   m_ObjectHideFlags: 0

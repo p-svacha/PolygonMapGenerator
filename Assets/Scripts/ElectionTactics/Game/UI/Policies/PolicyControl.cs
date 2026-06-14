@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ namespace ElectionTactics
 {
     public class PolicyControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
+        public Image Background;
         public TextMeshProUGUI Label;
         public TooltipTarget LabelTooltipTarget;
         public GameObject ValueContainer;
@@ -101,6 +103,40 @@ namespace ElectionTactics
 
             if (eventData.button == PointerEventData.InputButton.Left) PlusButton_OnClick();
             else if (eventData.button == PointerEventData.InputButton.Right) MinusButton_OnClick();
+        }
+
+        public void PlayHighlightAnimation()
+        {
+            StartCoroutine(HighlightCoroutine());
+        }
+
+        private IEnumerator HighlightCoroutine()
+        {
+            Color sourceColor = Background.color;
+            Color highlightColor = new Color(0.72f, 0.60f, 0.18f);
+            float duration = 0.8f;
+            float halfDuration = duration / 2f;
+            float t = 0f;
+
+            // Fade to highlight
+            while (t < halfDuration)
+            {
+                t += Time.deltaTime;
+                Background.color = Color.Lerp(sourceColor, highlightColor, t / halfDuration);
+                yield return null;
+            }
+
+            t = 0f;
+
+            // Fade back
+            while (t < halfDuration)
+            {
+                t += Time.deltaTime;
+                Background.color = Color.Lerp(highlightColor, sourceColor, t / halfDuration);
+                yield return null;
+            }
+
+            Background.color = sourceColor;
         }
     }
 }

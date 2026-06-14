@@ -24,13 +24,14 @@ namespace ElectionTactics
             if(d.CurrentWinnerParty != null)
             {
                 PartyIcon.gameObject.SetActive(true);
+                MarginText.gameObject.SetActive(true);
                 PartyIcon.color = d.CurrentWinnerParty.Color;
                 MarginText.text = d.GetLatestElectionResult().GetMargin(District.Game.LocalPlayerParty);
             }
             else
             {
                 PartyIcon.gameObject.SetActive(false);
-                MarginText.text = "";
+                MarginText.gameObject.SetActive(false);
             }
 
             GetComponent<Button>().onClick.AddListener(() => { d.Region.SetAnimatedHighlight(false); UI.SelectDistrict(d); });

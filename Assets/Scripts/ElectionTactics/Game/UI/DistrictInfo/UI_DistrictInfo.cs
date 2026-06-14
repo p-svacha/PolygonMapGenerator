@@ -102,6 +102,18 @@ namespace ElectionTactics
             Economy3Info.LabelTooltipTarget.Init("Minor Industry", "The districts third most important economic sector.\n\nSupporting this policy gives +3 popularity here.");
             Economy3Info.SetHoverAction(() => { UI.MapControls.ShowEconomicSectorOverlay(CurrentDistrict.Economy3); });
             Economy3Info.SetUnhoverAction(() => { UI.MapControls.ClearOverlay(); });
+
+            // Wire up clicking to policy shortcuts
+            // Demography
+            DensityInfo.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Density)));
+            AgeGroupInfo.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.AgeGroup)));
+            ReligionInfo.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Religion)));
+            LanguageInfo.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Language)));
+
+            // Economy
+            Economy1Info.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Economy1)));
+            Economy2Info.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Economy2)));
+            Economy3Info.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(CurrentDistrict.Economy3)));
         }
 
         public void Init(District district)
@@ -189,6 +201,8 @@ namespace ElectionTactics
             {
                 UI_Trait elem = Instantiate(GeographicTraitPrefab, row.transform);
                 elem.InitGeographyTrait(trait);
+                GeographyTrait captured = trait; // capture for lambda
+                elem.SetClickAction(() => JumpToPolicy(UI.Game.LocalPlayerParty.GetPolicy(captured.Def)));
             }
         }
 
@@ -204,6 +218,13 @@ namespace ElectionTactics
         private void HidePopulationGrowthInfo()
         {
             PopulationGrowthInfo.gameObject.SetActive(false);
+        }
+
+        private void JumpToPolicy(Policy policy)
+        {
+            if (policy == null || !policy.IsActive) return;
+            AudioManager.PlayStandardClickSound();
+            UI.ShowAndHighlightPolicy(policy);
         }
     }
 }

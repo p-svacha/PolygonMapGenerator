@@ -938,6 +938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccbd80ccfe9cea34ab34c2dd2b2cf4d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Background: {fileID: 2351363683306993343}
   Label: {fileID: 4078559504938347835}
   LabelTooltipTarget: {fileID: 3344867807333246597}
   ValueContainer: {fileID: 2351363682851864907}
@@ -1215,6 +1216,7 @@ MonoBehaviour:
   Type: 0
   Title: 
   Text: 
+  InstantTooltip: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &5657359622064367220

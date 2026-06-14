@@ -79,21 +79,41 @@ public class Tooltip : MonoBehaviour
     private void RepositionTooltip()
     {
         RectTransform rect = GetComponent<RectTransform>();
-        Vector3 position = Input.mousePosition + new Vector3(MOUSE_OFFSET, MOUSE_OFFSET, 0);
+        Canvas canvas = GetComponentInParent<Canvas>();
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
-        // Fit on screen
+        // Convert mouse position to canvas local space
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            Input.mousePosition,
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+            out localPoint
+        );
+
+        // Offset from cursor
+        localPoint += new Vector2(MOUSE_OFFSET, MOUSE_OFFSET);
+
         Width = rect.rect.width;
         Height = rect.rect.height;
 
-        // If tooltip would go off the right edge, nudge left
-        if (position.x + Width > Screen.width - SCREEN_EDGE_OFFSET)
-            position.x = Screen.width - Width - SCREEN_EDGE_OFFSET;
+        float canvasWidth = canvasRect.rect.width;
+        float canvasHeight = canvasRect.rect.height;
 
-        // If it would go off the top
-        if (position.y + Height > Screen.height - SCREEN_EDGE_OFFSET)
-            position.y = Screen.height - Height - SCREEN_EDGE_OFFSET;
+        // Clamp within canvas bounds (canvas local space is centered at 0,0)
+        float halfW = canvasWidth / 2f;
+        float halfH = canvasHeight / 2f;
 
-        transform.position = position;
+        if (localPoint.x + Width > halfW - SCREEN_EDGE_OFFSET)
+            localPoint.x = halfW - Width - SCREEN_EDGE_OFFSET;
+        if (localPoint.x < -halfW + SCREEN_EDGE_OFFSET)
+            localPoint.x = -halfW + SCREEN_EDGE_OFFSET;
+        if (localPoint.y + Height > halfH - SCREEN_EDGE_OFFSET)
+            localPoint.y = halfH - Height - SCREEN_EDGE_OFFSET;
+        if (localPoint.y < -halfH + SCREEN_EDGE_OFFSET)
+            localPoint.y = -halfH + SCREEN_EDGE_OFFSET;
+
+        rect.anchoredPosition = localPoint;
     }
 
 

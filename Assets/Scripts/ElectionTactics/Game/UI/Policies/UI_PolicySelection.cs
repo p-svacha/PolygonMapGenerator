@@ -8,6 +8,8 @@ namespace ElectionTactics
 {
     public class UI_PolicySelection : MonoBehaviour
     {
+        public ScrollRect ScrollRect;
+
         public PolicyControl PolicyControlPrefab;
         public VerticalLayoutGroup VLG;
 
@@ -49,7 +51,7 @@ namespace ElectionTactics
                 for (int i = 1; i < container.transform.childCount; i++) Destroy(container.transform.GetChild(i).gameObject);
             }
 
-            foreach(Policy policy in p.ActivePolicies.OrderBy(x => x.SortingOrder))
+            foreach(Policy policy in p.ActivePolicies.OrderBy(x => x.SortingOrder).ThenBy(x => x.Name))
             {
                 AddPolicyControl(policy);
             }
@@ -63,6 +65,34 @@ namespace ElectionTactics
             PolicyControl pc = Instantiate(PolicyControlPrefab, PolicyContainers[p.Type].transform);
             pc.GetComponent<RectTransform>().sizeDelta = new Vector2(pc.GetComponent<RectTransform>().sizeDelta.x, 40);
             pc.Init(p);
+        }
+
+        public void ShowAndHighlight(Policy p)
+        {
+            if (p.UIControl == null) return;
+
+            // Force layout so positions are accurate
+            Canvas.ForceUpdateCanvases();
+            VLG.SetLayoutVertical();
+
+            // Scroll to the policy control
+            RectTransform target = p.UIControl.GetComponent<RectTransform>();
+            RectTransform content = ScrollRect.content;
+
+            // Convert target position to content local space
+            Vector2 localPos = (Vector2)content.InverseTransformPoint(target.position);
+            float contentHeight = content.rect.height;
+            float viewportHeight = ScrollRect.viewport.rect.height;
+
+            // Center the item in the viewport, clamped to scroll limits
+            float targetY = -localPos.y - viewportHeight / 2f;
+            float maxScroll = contentHeight - viewportHeight;
+            float normalizedY = Mathf.Clamp01(targetY / maxScroll);
+
+            ScrollRect.verticalNormalizedPosition = 1f - normalizedY;
+
+            // Highlight it
+            p.UIControl.PlayHighlightAnimation();
         }
     }
 }

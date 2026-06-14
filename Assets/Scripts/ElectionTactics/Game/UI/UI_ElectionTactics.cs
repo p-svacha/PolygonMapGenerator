@@ -296,6 +296,19 @@ namespace ElectionTactics
         {
             StandingsPanel.Slide(new Vector2(0, 0), slideTime);
         }
+
+
+        public void ShowAndHighlightPolicy(Policy policy)
+        {
+            // Switch to policy screen
+            if (ActiveTab != Tab.Policies)
+            {
+                SelectTab(Tab.Policies, playClickSound: false);
+            }
+
+            Tooltip.Instance.Hide();
+            PolicySelection.ShowAndHighlight(policy);
+        }
     }
 
     public enum Tab

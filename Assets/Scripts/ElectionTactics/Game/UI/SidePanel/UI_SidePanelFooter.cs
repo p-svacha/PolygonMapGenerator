@@ -15,10 +15,16 @@ namespace ElectionTactics {
         public Text EndTurnButtonText;
         public Text CountdownText;
         public GameObject CountdownOverlay;
+        public GameObject PPWarning;
+
+        private bool awaitingConfirmation = false;
+        private float confirmationTimer = 0f;
+        private const float CONFIRMATION_DURATION = 3f;
 
         void Start()
         {
             NextActionButton.onClick.AddListener(DoNextAction);
+            PPWarning.gameObject.SetActive(false);
         }
 
         public void Init(ElectionTacticsGame game)
@@ -36,17 +42,49 @@ namespace ElectionTactics {
                 CountdownText.gameObject.SetActive(true);
             }
         }
-    
+
+        protected override void Update()
+        {
+            base.Update();
+            if (awaitingConfirmation)
+            {
+                confirmationTimer -= Time.deltaTime;
+                if (confirmationTimer <= 0f) CancelConfirmation();
+            }
+        }
+
         private void DoNextAction()
         {
             if (Game.State != GameState.PreparationPhase) return;
 
+            bool hasRemainingPP = Game.LocalPlayerParty.PolicyPoints > 0;
+
+            if (hasRemainingPP && !awaitingConfirmation)
+            {
+                // First click with remaining PP — show warning and wait for confirmation
+                awaitingConfirmation = true;
+                confirmationTimer = CONFIRMATION_DURATION;
+                AudioManager.PlaySound(AudioManager.Instance.AddBot);
+                PPWarning.SetActive(true);
+                return;
+            }
+
+            // Either no remaining PP, or this is the confirmation click
+            CancelConfirmation();
             Game.EndTurn();
+        }
+
+        private void CancelConfirmation()
+        {
+            awaitingConfirmation = false;
+            confirmationTimer = 0f;
+            PPWarning.SetActive(false);
         }
 
         public void SetBackgroundColor(Color c)
         {
             Background.color = c;
+            CancelConfirmation();
         }
 
         /// <summary>

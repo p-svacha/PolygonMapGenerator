@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [Header("Elements")]
     public TextMeshProUGUI LabelText;
@@ -54,5 +54,13 @@ public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerExit(PointerEventData eventData)
     {
         if (UnhoverAction != null) UnhoverAction.Invoke();
+    }
+
+    public Action ClickAction { get; private set; }
+    public void SetClickAction(Action action) => ClickAction = action;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (ClickAction != null) ClickAction.Invoke();
     }
 }

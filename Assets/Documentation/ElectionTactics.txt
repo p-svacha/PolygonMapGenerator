@@ -68,22 +68,23 @@ Policy :
 (/) - play seperate click sound when policy cannot be changed
 
 General UX:
-- Test tooltips on 1400p, they are broken at screen edge. Fix
-- When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
+(/) - Test tooltips on 1400p, they are broken at screen edge. Fix tooltips going out of screen at higher resolutions.
+(/) - When pressing End Turn with remaining PP, make a sound and add a small popup above the button that says like "You have unspent policy points. To confirm click again)
 (/) - Use the "number in star" symbol everywhere for seats, and also use the same tooltip everywhere (district info, district list, district map label, parliament, etc.). always use same style.
-- Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
-- Add line breaks in voting trait descriptions.
+(/) - Clicking on a district attribute in district info screen should jump to the policy screen and highlight it for a second.
+(/) - Add line breaks in voting trait descriptions.
 (/) - Remove white as a party color.
-(/) - Added pink, teal and crimson as colors.
+(/) - Added pink, teal and crimson as colors. 
 (/) - don't show margin frame in district label if no margin yet.
 (/) - INSTANT mute doesn't work (only for music)
-- district list needs tooltips on margin and last election winner
+(/) - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 - Redesign loading screen
 
 Election graph:
 - Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
 - show more info in tooltip of modifiers
+- Election bar sound gets stuck if canceling district while its going
 
 Election animation:
 - Increase speed of district transition, change from lerp to slerp to make it snappier
@@ -171,6 +172,7 @@ Newspaper:
 - adjust SFX
 - more intro animations (maybe 3, 1 chosen at random)
 - option to disable animations in settings (might get annoying with time)
+- Make sure newspaper is hidden when starting new game
 
 General Gameplay:
 (/) - Ensure the same district name cannot appear twice.
