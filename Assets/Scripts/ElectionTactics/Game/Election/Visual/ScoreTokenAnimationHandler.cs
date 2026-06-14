@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ElectionTactics
@@ -21,6 +22,7 @@ namespace ElectionTactics
         private float CurrentAnimationTime;
         private float AnimationSpeedModifier = 1f;
         private Action Callback;
+        private float TokenTravelTime;
 
         private void Awake()
         {
@@ -38,10 +40,26 @@ namespace ElectionTactics
             }
             else
             {
-                float ratio = CurrentAnimationTime / AnimationTime;
-                foreach (UI_ScoreToken token in Tokens) token.transform.position = Vector2.Lerp(token.StartPosition, token.TargetPosition, ratio);
+                foreach (UI_ScoreToken token in Tokens)
+                {
+                    float tokenTime = CurrentAnimationTime - token.StartDelay;
+                    if (tokenTime < 0f)
+                    {
+                        token.transform.position = token.StartPosition;
+                        continue;
+                    }
+
+                    float ratio = Mathf.Clamp01(tokenTime / TokenTravelTime);
+                    token.transform.position = Vector2.Lerp(token.StartPosition, token.TargetPosition, ratio);
+                    if (!token.HasArrived && ratio >= 1f)
+                    {
+                        token.HasArrived = true;
+                        token.ArrivalCallback?.Invoke();
+                    }
+                }
 
                 CurrentAnimationTime += Time.deltaTime * AnimationSpeedModifier;
+
             }
         }
 
@@ -59,6 +77,20 @@ namespace ElectionTactics
             Tokens.Add(token);
         }
 
+        public void AddSeatTokenToNextAnimation(Vector2 startPosition, Vector2 targetPosition, float startDelay, Action arrivalCallback = null)
+        {
+            if (IsAnimating) StopAnimation();
+            UI_ScoreToken token = Instantiate(ScoreTokenPrefab, TokenContainer.transform);
+            token.StartPosition = startPosition;
+            token.TargetPosition = targetPosition;
+            token.ValueText.text = "";
+            token.Background.color = Color.white;
+            token.StartDelay = startDelay;
+            token.ArrivalCallback = arrivalCallback;
+            token.gameObject.SetActive(false);
+            Tokens.Add(token);
+        }
+
         public void StartAnimation(float duration, Action callback = null)
         {
             if (Tokens.Count == 0) throw new System.Exception("Can't start animation when there are no tokens.");
@@ -66,7 +98,10 @@ namespace ElectionTactics
             Callback = callback;
             IsAnimating = true;
             CurrentAnimationTime = 0f;
-            AnimationTime = duration;
+            TokenTravelTime = duration;
+
+            float maxStartDelay = Tokens.Max(t => t.StartDelay);
+            AnimationTime = duration + maxStartDelay;
 
             foreach (UI_ScoreToken token in Tokens)
             {

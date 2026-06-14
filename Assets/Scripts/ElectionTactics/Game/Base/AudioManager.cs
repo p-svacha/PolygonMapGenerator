@@ -23,6 +23,7 @@ namespace ElectionTactics
         public AudioClip ButtonClick;
         public AudioClip ButtonClick_NoEffect;
         public AudioClip Chimes;
+        public AudioClip Ding;
         public AudioClip DiceClack;
         public AudioClip AddBot;
         public AudioClip RemoveBot;

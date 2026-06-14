@@ -443,6 +443,8 @@ MonoBehaviour:
   Type: 0
   Title: 
   Text: 
+  InstantTooltip: 0
+  DisableDuringElectionAnimation: 1
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &4546746219903878990
@@ -571,6 +573,8 @@ MonoBehaviour:
   Type: 0
   Title: 
   Text: 
+  InstantTooltip: 0
+  DisableDuringElectionAnimation: 1
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &5241057896585122575
@@ -710,6 +714,8 @@ MonoBehaviour:
   Title: Margin
   Text: The difference in vote share between your party and the closest opponent.\n\nPositive
     means you won, negative means another party was ahead.
+  InstantTooltip: 0
+  DisableDuringElectionAnimation: 1
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &5680352630836146151
@@ -848,6 +854,8 @@ MonoBehaviour:
   Type: 0
   Title: Popularity
   Text: The popularity of your party in this district.
+  InstantTooltip: 0
+  DisableDuringElectionAnimation: 1
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &6174942564305551873
@@ -976,6 +984,8 @@ MonoBehaviour:
   Type: 0
   Title: 
   Text: 
+  InstantTooltip: 0
+  DisableDuringElectionAnimation: 1
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &6926867943656368108
@@ -1264,6 +1274,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Title
       value: Seats
+      objectReference: {fileID: 0}
+    - target: {fileID: 353061723583440786, guid: 494c2ebb5d82bb24782521a90294b16d,
+        type: 3}
+      propertyPath: DisableDuringElectionAnimation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2004980134800844588, guid: 494c2ebb5d82bb24782521a90294b16d,
         type: 3}

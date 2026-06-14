@@ -5699,6 +5699,7 @@ MonoBehaviour:
   Title: 
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!114 &178131237
@@ -7546,6 +7547,7 @@ MonoBehaviour:
   Title: 
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &273255856
@@ -9133,6 +9135,7 @@ MonoBehaviour:
   Title: Settings
   Text: General game settings.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &328100539
@@ -13402,6 +13405,7 @@ MonoBehaviour:
   Title: 
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &543809222
@@ -13699,6 +13703,7 @@ MonoBehaviour:
   Title: Year
   Text: The current year.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &555610296
@@ -17202,6 +17207,7 @@ MonoBehaviour:
   Title: Constitution
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &776751874
@@ -19681,6 +19687,7 @@ MonoBehaviour:
   Text: 'Set your policies here that will affect your party''s popularity in different
     districts. '
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &901965831
@@ -20987,6 +20994,7 @@ MonoBehaviour:
   Title: Campaign Points
   Text: ??
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &969915733
@@ -22903,6 +22911,7 @@ MonoBehaviour:
   Title: 
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &1054728080
@@ -22974,6 +22983,7 @@ MonoBehaviour:
   Title: Districts
   Text: Overview over all districts.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &1056232020
@@ -26139,6 +26149,7 @@ MonoBehaviour:
   Title: Parliament
   Text: Distribution of seats in the current parliament and game leaderboard.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &1250079963
@@ -27511,6 +27522,7 @@ MonoBehaviour:
   Title: 
   Text: Randomize
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &1279692172
@@ -30015,6 +30027,7 @@ MonoBehaviour:
   Text: The amount of policies that can still be increased this cycle.\n\nUnused
     points will carry over to the next cycle.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &1386510168
@@ -34147,6 +34160,7 @@ MonoBehaviour:
   Title: Seats
   Text: The total amount of seats of the parliament on the upcoming election.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!114 &1527616906
@@ -38293,6 +38307,7 @@ MonoBehaviour:
   Title: Election Cycle
   Text: How many elections will have passed after the next one.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1 &1682152624
@@ -40194,6 +40209,7 @@ MonoBehaviour:
   Title: 
   Text: 
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!114 &1808392287
@@ -43479,6 +43495,7 @@ MonoBehaviour:
   ButtonClick_NoEffect: {fileID: 8300000, guid: 47eecb0e92d48c74b9fe8eee6b17619d,
     type: 3}
   Chimes: {fileID: 8300000, guid: f27c258edecec804683de02ecccfbbf8, type: 3}
+  Ding: {fileID: 8300000, guid: 976777ee32bd27f42b97bb34dd86dec6, type: 3}
   DiceClack: {fileID: 8300000, guid: fe76ebc9c1f68a343a7d5a3f567a8c41, type: 3}
   AddBot: {fileID: 8300000, guid: 21d80933c38a8fa4c872a91affd10efa, type: 3}
   RemoveBot: {fileID: 8300000, guid: b073ee7f10e0cd14b90fdadd8bcc4a1f, type: 3}
@@ -44852,6 +44869,7 @@ MonoBehaviour:
   Title: Map Overlays
   Text: Choose a lens to color the districts to show something specific.
   InstantTooltip: 0
+  DisableDuringElectionAnimation: 0
   IsFocussed: 0
   CurrentDelay: 0
 --- !u!1001 &2102679670

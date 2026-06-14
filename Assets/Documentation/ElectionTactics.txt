@@ -89,14 +89,13 @@ Election graph:
 
 
 Election animation:
-- Increase speed of district transition, change from lerp to slerp to make it snappier
-- Make district transition snappier
-- If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
-- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternative seat distribution methods clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
-- Disable district label tooltips on the map during election animation
-- Make sure tooltip of cultural voting trait doesn't get stuck. Tooltip might stay even when trait display gets hidden.
-- Election bar sound gets stuck if skipping district/election while its going. It will then never stop.
-- during final zoom out, disallow UI interactions and selecting districts on the map
+(T) - Make district transition snappier (a bit quicker, maybe from lerp to slerp? not sure, feel free to decide)
+(WIP) - If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
+(T) - After bars are done and before the parliament list changes, add a new step/effect where small tokens (just plain white circles) fly to the parties in rapid order (ScoreTokenAnimationHandler can prob be reused for this). This should also make alternative seat distribution methods clear. Mini-delay between parties. Also add sound for that effect (AudioManager.Ding, start at low pitch, increasing pitch per seat only play sound for player party).
+(T) - Disable district label tooltips on the map during election animation
+(T) - Make sure tooltip of cultural voting trait doesn't get stuck. Tooltip might stay even when trait display gets hidden.
+(T) - Election bar sound gets stuck if skipping district/election while its going. It will then never stop.
+(T) - during final zoom out, disallow UI interactions and selecting districts on the map
 
 Post-Election:
 (/) - After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.

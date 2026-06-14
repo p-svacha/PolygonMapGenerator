@@ -261,6 +261,12 @@ public class WindowGraph : MonoBehaviour
         return -1;
     }
 
+    public Vector2 GetBarWorldPosition(int barIndex)
+    {
+        if (barIndex < 0 || barIndex >= Bars.Count) return Vector2.zero;
+        return Bars[barIndex].transform.position;
+    }
+
     #endregion
 
     #region GraphElements

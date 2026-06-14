@@ -208,6 +208,8 @@ namespace ElectionTactics
 
         public void SelectDistrict(District d)
         {
+            if (IsShowingNewspaper) return;
+
             if (SelectedDistrict == d && SelectedDistrict != null) // Clicking the already selected district or clicking away from district unselects it
             {
                 AudioManager.PlayStandardClickSound();

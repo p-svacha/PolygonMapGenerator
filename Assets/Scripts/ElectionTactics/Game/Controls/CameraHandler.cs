@@ -50,7 +50,9 @@ namespace ElectionTactics
                 }
                 else
                 {
-                    transform.position = Vector3.Lerp(MoveStartPosition, MoveTargetPosition, MoveDelay / MoveTime);
+                    float t = MoveDelay / MoveTime;
+                    float eased = 1f - Mathf.Pow(1f - t, 3f); // cubic ease-out: fast start, gentle settle
+                    transform.position = Vector3.Lerp(MoveStartPosition, MoveTargetPosition, eased);
                     MoveDelay += Time.deltaTime * MoveSpeedModifier;
                 }
             }

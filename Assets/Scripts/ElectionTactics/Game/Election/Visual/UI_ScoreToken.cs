@@ -1,6 +1,7 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace ElectionTactics
 {
@@ -12,5 +13,10 @@ namespace ElectionTactics
 
         public Vector2 StartPosition;
         public Vector2 TargetPosition;
+
+        public float StartDelay { get; set; }
+        public bool HasArrived { get; set; }
+
+        public Action ArrivalCallback;
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using ElectionTactics;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
@@ -12,6 +10,7 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [TextArea(3, 10)] public string Text;
     public Color? TitleColor;
     public bool InstantTooltip = false;
+    public bool DisableDuringElectionAnimation = false;
 
 
     [HideInInspector] public bool IsFocussed;
@@ -43,9 +42,15 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Update()
     {
-        if(IsFocussed)
+        if (ElectionTacticsGame.Instance.State == GameState.Election && DisableDuringElectionAnimation)
         {
-            if(CurrentDelay < Delay) CurrentDelay += Time.deltaTime;
+            if (IsFocussed) HideTooltip();
+            return;
+        }
+
+        if (IsFocussed)
+        {
+            if (CurrentDelay < Delay) CurrentDelay += Time.deltaTime;
             else ShowTooltip();
         }
     }
@@ -63,6 +68,11 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         IsFocussed = false;
         CurrentDelay = 0;
         Tooltip.Instance.gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        if (IsFocussed) HideTooltip();
     }
 }
 

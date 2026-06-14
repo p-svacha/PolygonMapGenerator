@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -229,7 +228,7 @@ namespace ElectionTactics
             UI.LoadingScreen.gameObject.SetActive(false);
             Year = 1999;
             ElectionCycle = 0;
-            
+
             Map.InitializeMap(showRegionBorders: true, showShorelineBorders: true, showContinentBorders: false, showWaterConnections: false, MapColorMode.Basic, MapTextureMode.MinorNoise);
             UI.MapControls.Init(this, MapDisplayMode.NoOverlay, DistrictLabelMode.Default);
             VfxManager.Init(this);
@@ -249,7 +248,7 @@ namespace ElectionTactics
             }
 
             // Battle royale
-            foreach (Party party in Parties) party.Legitimacy = (int) (BR_START_LEGITIMACY * GameSettings.GameLength.ModifierFactor);
+            foreach (Party party in Parties) party.Legitimacy = (int)(BR_START_LEGITIMACY * GameSettings.GameLength.ModifierFactor);
 
             Constitution = new Constitution(this);
             UI.Constitution.Init(Constitution);
@@ -375,7 +374,7 @@ namespace ElectionTactics
         void Update()
         {
             // Timer
-            if(GameType != GameType.Singleplayer && (State == GameState.PreparationPhase || State == GameState.Election))
+            if (GameType != GameType.Singleplayer && (State == GameState.PreparationPhase || State == GameState.Election))
             {
                 UI.SidePanelFooter.UpdateButton();
 
@@ -390,7 +389,7 @@ namespace ElectionTactics
                 }
             }
 
-            switch(State)
+            switch (State)
             {
                 case GameState.PreparationPhase:
                     // Mouse click
@@ -504,7 +503,7 @@ namespace ElectionTactics
             {
                 if (Parties.Where(x => x.IsHuman).All(x => x.IsReady)) ConcludePreparationPhaseServer();
             }
-            
+
         }
 
         /// <summary>
@@ -654,13 +653,13 @@ namespace ElectionTactics
                 // 1. Find regions which have the highest ratio of (neighbouring active districts : neighbouring inactive districts)
                 List<Region> candidates = new List<Region>();
                 float highestRatio = 0;
-                foreach(Region r in Map.LandRegions.Where(x => !Districts.Keys.Contains(x)))
+                foreach (Region r in Map.LandRegions.Where(x => !Districts.Keys.Contains(x)))
                 {
                     int activeNeighbours = r.Neighbours.Where(x => Districts.Keys.Contains(x)).Count();
                     int totalNeighbours = r.Neighbours.Count;
                     float ratio = 1f * activeNeighbours / totalNeighbours;
                     if (ratio == highestRatio) candidates.Add(r);
-                    else if(ratio > highestRatio)
+                    else if (ratio > highestRatio)
                     {
                         candidates.Clear();
                         candidates.Add(r);
@@ -689,7 +688,7 @@ namespace ElectionTactics
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;
                 if (district.CulturalTraits.Any(t => t.Def.IsSeatDistributionTrait && def.IsSeatDistributionTrait)) canAdopt = false;
 
-                if(canAdopt) candidates.Add(def, def.Commonness);
+                if (canAdopt) candidates.Add(def, def.Commonness);
             }
 
             return candidates.GetWeightedRandomElement();
@@ -772,12 +771,12 @@ namespace ElectionTactics
                 int numDistricts = ActiveDistricts.Count;
                 if (d.Index < numStartingDistricts) { } // Starting districts (Core III) districts never get the new trait
                 else if (numDistricts - d.Index - 1 < 2) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 3)); // 2 newest districts get New III
-                else if(numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 2)); // 3rd and 4th newest districts get New II
-                else if(numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 1)); // 5th and 6th newest districts get New I
+                else if (numDistricts - d.Index - 1 < 4) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 2)); // 3rd and 4th newest districts get New II
+                else if (numDistricts - d.Index - 1 < 6) d.Geography.Add(GetGeographyTrait(GeographyTraitDefOf.New, 1)); // 5th and 6th newest districts get New I
             }
         }
 
-    #endregion
+        #endregion
 
         #region Game Commands
         // This chapter contains all functions that local players can trigger in their turn through their actions.
@@ -833,7 +832,7 @@ namespace ElectionTactics
             mod.SetDistrict(d);
 
             // Check if modifier can be combined with existing
-            Modifier existingIdenticalModifier = d.Modifiers.FirstOrDefault(m => m.RemainingLength ==  mod.RemainingLength && m.Description == mod.Description && m.Source == mod.Source && m.PartyId == mod.PartyId && m.RegionId == mod.RegionId);
+            Modifier existingIdenticalModifier = d.Modifiers.FirstOrDefault(m => m.RemainingLength == mod.RemainingLength && m.Description == mod.Description && m.Source == mod.Source && m.PartyId == mod.PartyId && m.RegionId == mod.RegionId);
 
             if (existingIdenticalModifier != null)
             {
@@ -851,7 +850,7 @@ namespace ElectionTactics
 
             if (party.PolicyPoints == 0 || policy.Value == policy.MaxValue) return;
             Debug.Log($"{party.Name} increased {policy.Name} policy. It is now at {policy.Value}/{policy.MaxValue}.");
-            
+
             party.PolicyPoints--;
             policy.IncreaseValue();
             if (party == LocalPlayerParty)
@@ -952,7 +951,7 @@ namespace ElectionTactics
             if (UnityEngine.Random.value > GameSettings.RandomEventFrequency.RandomEventChance) return;
 
             Dictionary<RandomEvent, int> eventCandidates = new Dictionary<RandomEvent, int>();
-            foreach(RandomEventDef def in DefDatabase<RandomEventDef>.AllDefs)
+            foreach (RandomEventDef def in DefDatabase<RandomEventDef>.AllDefs)
             {
                 RandomEvent eventCandidate = (RandomEvent)System.Activator.CreateInstance(def.RandomEventClass);
                 eventCandidate.Init(def);
@@ -1085,7 +1084,7 @@ namespace ElectionTactics
 
             Dictionary<ReligionDef, int> counts = new Dictionary<ReligionDef, int>();
             foreach (District d in ActiveDistricts)
-                if(d.Religion != ReligionDefOf.None)
+                if (d.Religion != ReligionDefOf.None)
                     counts.Increment(d.Religion);
 
             if (counts.Count == 0) return new List<ReligionDef>();
