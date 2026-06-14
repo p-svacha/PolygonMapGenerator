@@ -79,26 +79,29 @@ General UX:
 (/) - INSTANT mute doesn't work (only for music)
 (/) - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
-- Redesign loading screen
+(/) - Redesign loading screen
+- Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color.
 
 Election graph:
-- Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
-- show more info in tooltip of modifiers
-- Election bar sound gets stuck if canceling district while its going
+(/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.
+(/) - show more info about the modifiers in tooltip of modifier icons
+(/) - when showing seats, show minor lines on every value.
+
 
 Election animation:
 - Increase speed of district transition, change from lerp to slerp to make it snappier
+- Make district transition snappier
 - If a result is really close (between you and another party), slow down the animation at the very end and add some FX (maybe a little shake or smth). Make sure this happens not too often, only when really close (i.e. within x%, where x = 1f - (0.1*number of parties))!
-- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternate voting mechanisms clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
-- Disable map label tooltips during election animation
-- Make sure tooltip of cultural voting trait doesn't get stuck
-- When a modifier value gets modified (i.e. increased through historical legacy), it already shows the updated value during the animation, which is wrong. the election result needs to store the current value (make a copy of the modifier)
+- After bars are done and before the parliament list changes, add a new effect where small tokens (seat stars) fly to the parties in rapid order. This should also make alternative seat distribution methods clear. Mini-delay between parties. Also add sound for that effect (increasing pitch per party, extra sound for player party).
+- Disable district label tooltips on the map during election animation
+- Make sure tooltip of cultural voting trait doesn't get stuck. Tooltip might stay even when trait display gets hidden.
+- Election bar sound gets stuck if skipping district/election while its going. It will then never stop.
+- during final zoom out, disallow UI interactions and selecting districts on the map
 
 Post-Election:
 (/) - After final zoomout, before the newspaper appears, add a new step to show district events (seat changes, disasters, etc.), all while fully zoomed out, but one after another.
 (/) - At the very end of the election animation, show a summary screen with the new parliament composition, maybe with a little blurb about what happened (like "The Green Party made big gains in the industrial districts...). Use classic parliament iconography (colored circles for seats in a half circle. This dialogue has to be confirmed. Maybe use a newspaper style for flavour with a big headline ELECTION RESULTS and also minor articles about district events. The minor articles can be smaller or on separate pages, see what works best. Make a nice animation for this.
 (/) - After that, enable HUD like before.
-- during final zoom out before newspaper comes, disallow UI interactions and selecting districts on the map
 
 Add news-event system:
 - Basically a log system that different modules can call, so the newspaper generates an articles about these events
@@ -173,6 +176,7 @@ Newspaper:
 - more intro animations (maybe 3, 1 chosen at random)
 - option to disable animations in settings (might get annoying with time)
 - Make sure newspaper is hidden when starting new game
+- increase swirl speed
 
 General Gameplay:
 (/) - Ensure the same district name cannot appear twice.

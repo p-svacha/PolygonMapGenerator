@@ -36,6 +36,21 @@ namespace ElectionTactics
             if (type == ModifierType.Exclusion && value != 0) throw new System.Exception($"Exclusion modifiers cannot have a value.");
         }
 
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        public Modifier(Modifier orig)
+        {
+            Type = orig.Type;
+            Value = orig.Value;
+            Party = orig.Party;
+            PartyId = orig.PartyId;
+            TotalLength = orig.TotalLength;
+            RemainingLength = orig.RemainingLength;
+            Description = orig.Description;
+            Source = orig.Source;
+        }
+
         public void SetDistrict(District d)
         {
             District = d;

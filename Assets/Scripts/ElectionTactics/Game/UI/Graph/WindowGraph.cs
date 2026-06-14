@@ -1,6 +1,4 @@
-﻿using ElectionTactics;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +20,8 @@ public class WindowGraph : MonoBehaviour
     private float XStep;
     private float BarSpacing;
     private float BarWidth;
-    private int FontSize;
+    private int YAxisLabelFontSize;
+    private int BarFontSize;
     private float YMax;
     private float YStep;
     private float YMarginTop;
@@ -46,17 +45,13 @@ public class WindowGraph : MonoBehaviour
     private float SourceYMax;
     private float TargetYMax;
 
-    void Start()
+    private void Update()
     {
-    }
-
-    void Update()
-    {
-        if(AnimationType != GraphAnimationType.None)
+        if (AnimationType != GraphAnimationType.None)
         {
             if (AnimationDelay >= AnimationTime) // Animation is done
             {
-                if(AnimationType == GraphAnimationType.Update)
+                if (AnimationType == GraphAnimationType.Update)
                 {
                     YMax = TargetYMax;
                     DataPoints = TargetDataPoints;
@@ -97,7 +92,7 @@ public class WindowGraph : MonoBehaviour
                             rect.anchoredPosition = pos;
                             rect.sizeDelta = size;
 
-                            float barLabelY = barHeight + FontSize;
+                            float barLabelY = barHeight + BarFontSize;
                             BarLabels[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(barX, barLabelY);
                             BarLabels[i].text = FormatBarLabel(barValue);
                         }
@@ -106,7 +101,7 @@ public class WindowGraph : MonoBehaviour
                     case GraphAnimationType.Update:
                         float currentYMax = SourceYMax + (TargetYMax - SourceYMax) * r;
 
-                        for(int i = 0; i < TargetDataPoints.Count; i++)
+                        for (int i = 0; i < TargetDataPoints.Count; i++)
                         {
                             // Calculate the value (height) of data point
                             GraphDataPoint matchingSource = SourceDataPoints.FirstOrDefault(x => x.Label == TargetDataPoints[i].Label);
@@ -129,7 +124,7 @@ public class WindowGraph : MonoBehaviour
 
                                 // Update Label
                                 RectTransform labelRect = BarLabels[i].GetComponent<RectTransform>();
-                                labelRect.anchoredPosition = new Vector2(barX, barHeight + FontSize);
+                                labelRect.anchoredPosition = new Vector2(barX, barHeight + BarFontSize);
                                 BarLabels[i].text = FormatBarLabel(currentVal);
                             }
                         }
@@ -151,7 +146,7 @@ public class WindowGraph : MonoBehaviour
         foreach (Transform t in GraphContainer) Destroy(t.gameObject);
         Bars.Clear();
         BarLabels.Clear();
-        if(stopAnimation) AnimationType = GraphAnimationType.None;
+        if (stopAnimation) AnimationType = GraphAnimationType.None;
     }
 
     /// <summary>
@@ -172,10 +167,14 @@ public class WindowGraph : MonoBehaviour
         YMax = yMax;
         YStep = yStep;
         AxisWidth = Mathf.Min(GraphWidth, GraphHeight) * 0.01f;
-        FontSize = (int)(GraphHeight * 0.06f);
         YMarginTop = GraphHeight * 0.05f;
         AxisColor = axisColor;
         AxisStepColor = axisStepColor;
+
+        // Font size: Base size (6%) fits 8 bars; scale up smoothly for fewer bars, capped at 1.5x
+        YAxisLabelFontSize = (int)(GraphHeight * 0.06f); // Fixed, never scales with bar count
+        float barCountFactor = Mathf.Clamp(8f / Mathf.Max(dataPoints.Count, 1), 1f, 1.5f);
+        BarFontSize = (int)(GraphHeight * 0.06f * barCountFactor);
 
         DrawAxis();
 
@@ -186,10 +185,10 @@ public class WindowGraph : MonoBehaviour
             float height = (dataPoints[i].Value / yMax) * (GraphHeight - YMarginTop);
             if (zeroed) height = 0;
             Bars.Add(CreateBar(xPos, BarWidth, height, dataPoints[i].Color)); // Bars
-            BarLabels.Add(DrawText(zeroed ? "" : FormatBarLabel(dataPoints[i].Value), new Vector2(xPos, height + FontSize), new Vector2(BarWidth, FontSize), dataPoints[i].Color, font, FontSize)); // Bar value labels
+            BarLabels.Add(DrawText(zeroed ? "" : FormatBarLabel(dataPoints[i].Value), new Vector2(xPos, height + BarFontSize), new Vector2(BarWidth, BarFontSize), dataPoints[i].Color, font, BarFontSize)); // Bar value labels
         }
     }
-    
+
     /// <summary>
     /// Displays an empty bar graph and initializes an animation that can either be instantly started with startAnimation = true or by calling StartInitAnimation()
     /// </summary>
@@ -322,7 +321,7 @@ public class WindowGraph : MonoBehaviour
         rect.anchorMax = new Vector2(0, 0);
 
         // Tooltip
-        if(tooltipTitle != "")
+        if (tooltipTitle != "")
         {
             TooltipTarget tooltipTarget = obj.AddComponent<TooltipTarget>();
             tooltipTarget.Title = tooltipTitle;
@@ -349,14 +348,15 @@ public class WindowGraph : MonoBehaviour
         for (int i = 0; i < DataPoints.Count; i++)
         {
             float xPos = (i + 1) * XStep + 1;
-            DrawText(DataPoints[i].Label, new Vector2(xPos, -FontSize), new Vector2(BarWidth, FontSize), DataPoints[i].Color, Font, FontSize); // X-axis labels
-            for(int j = 0; j < DataPoints[i].Icons.Count; j++) // X-axis label icons
+            DrawText(DataPoints[i].Label, new Vector2(xPos, -BarFontSize), new Vector2(BarWidth, BarFontSize), DataPoints[i].Color, Font, BarFontSize); // X-axis labels
+
+            for (int j = 0; j < DataPoints[i].Icons.Count; j++) // X-axis label icons
             {
                 Vector2 dimensions = new Vector2(20, 20);
                 float iconXStep = 25;
                 float iconXStart = xPos - (DataPoints[i].Icons.Count - 1) * iconXStep * 0.5f;
                 float iconX = iconXStart + j * iconXStep;
-                float iconY = -FontSize * 2;
+                float iconY = -BarFontSize * 2;
                 DrawImage(DataPoints[i].Icons[j], new Vector2(iconX, iconY), dimensions, DataPoints[i].IconTooltipTitles[j], DataPoints[i].IconTooltipTexts[j]);
             }
         }
@@ -364,24 +364,23 @@ public class WindowGraph : MonoBehaviour
         // Y-axis
         DrawRectangle(new Vector2(-AxisWidth / 2, GraphHeight / 2), new Vector2(AxisWidth, GraphHeight), AxisColor);
         DrawRectangle(new Vector2(GraphWidth / 2, GraphHeight - YMarginTop), new Vector2(GraphWidth, AxisWidth), AxisStepColor);
-        DrawText(((int)YMax).ToString(), new Vector2(-FontSize, GraphHeight - YMarginTop), new Vector2(4 * FontSize, FontSize), AxisColor, Font, FontSize);
-        int yAxisSteps = (int)(YMax / YStep);
-        if (YMax % YStep == 0) yAxisSteps--;
+        DrawText(((int)YMax).ToString(), new Vector2(-YAxisLabelFontSize, GraphHeight - YMarginTop), new Vector2(4 * YAxisLabelFontSize, YAxisLabelFontSize), AxisColor, Font, YAxisLabelFontSize);
+        int yAxisSteps = Mathf.Max(0, (int)(YMax / YStep) - 1);
         for (int i = 0; i < yAxisSteps; i++)
         {
             float yStepValue = (i + 1) * YStep;
             float y = (yStepValue / YMax) * (GraphHeight - YMarginTop);
             DrawRectangle(new Vector2(GraphWidth / 2, y), new Vector2(GraphWidth, AxisWidth), AxisStepColor);
             string label = yStepValue.ToString();
-            DrawText(label, new Vector2(-FontSize, y), new Vector2(4 * FontSize, FontSize), AxisColor, Font, FontSize);
+            DrawText(label, new Vector2(-YAxisLabelFontSize, y), new Vector2(4 * YAxisLabelFontSize, YAxisLabelFontSize), AxisColor, Font, YAxisLabelFontSize);
         }
     }
 
     private void ShowLineGraph(List<float> valueList)
     {
         float yMaximum = 100f;
-        float xStep = GraphWidth / (valueList.Count+1);
-        for(int i = 0; i < valueList.Count; i++)
+        float xStep = GraphWidth / (valueList.Count + 1);
+        for (int i = 0; i < valueList.Count; i++)
         {
             float xPos = (i + 1) * xStep + 1;
             float yPos = (valueList[i] / yMaximum) * GraphHeight;

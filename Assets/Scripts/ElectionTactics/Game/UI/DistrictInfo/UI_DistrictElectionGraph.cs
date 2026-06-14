@@ -41,14 +41,28 @@ namespace ElectionTactics
             {
                 if (NonEliminatedToggle.isOn && kvp.Key.IsEliminated) continue;
 
+                // Modifier icons
                 List<Sprite> modifierIcons = new List<Sprite>();
                 List<string> iconTooltipTitles = new List<string>();
                 List<string> iconTooltipTexts = new List<string>();
                 foreach (Modifier m in result.Modifiers.Where(x => x.Party == kvp.Key))
                 {
                     modifierIcons.Add(IconManager.Singleton.GetModifierIcon(m.Type));
-                    iconTooltipTitles.Add(m.Type.ToString());
-                    iconTooltipTexts.Add(m.Description + "\n\nSource: " + m.Source);
+
+                    // Human-readable title based on modifier type
+                    string typeLabel = m.Type switch
+                    {
+                        ModifierType.Positive => "Bonus",
+                        ModifierType.Negative => "Penalty",
+                        ModifierType.Exclusion => "Exclusion",
+                        _ => m.Type.ToString()
+                    };
+
+                    string title = $"{typeLabel}";
+                    string body = $"{(m.Value > 0 ? "+" : "-")} {m.Value} {m.Description}";
+
+                    iconTooltipTitles.Add(title);
+                    iconTooltipTexts.Add(body);
                 }
 
                 string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + "|" + result.PartyPopularities[kvp.Key] : kvp.Key.Acronym;
@@ -59,7 +73,7 @@ namespace ElectionTactics
             if (showSeats)
             {
                 int yMax = Mathf.Max(result.Seats, 1);
-                float yStep = yMax <= 5 ? 1 : yMax <= 20 ? 5 : 10;
+                float yStep = yMax <= 9 ? 1 : 2;
                 if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, yStep, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
             }

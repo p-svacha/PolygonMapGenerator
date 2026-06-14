@@ -387,8 +387,8 @@ namespace ElectionTactics
                 partyVotes.Add(p, 0);
             }
 
-            // Add modifiers to result
-            List<Modifier> electionModifiers = Modifiers.Where(m => parties.Contains(m.Party)).ToList(); 
+            // Add modifiers to result (as a copy)
+            List<Modifier> electionModifiers = Modifiers.Where(m => parties.Contains(m.Party)).Select(m => new Modifier(m)).ToList(); 
 
             // Exclude parties with exclusion modifiers
             foreach (Modifier m in electionModifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
