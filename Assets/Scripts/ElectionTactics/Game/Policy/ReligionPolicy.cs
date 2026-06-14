@@ -12,6 +12,7 @@ namespace ElectionTactics
         {
             Religion = religion;
             Name = religion.Label;
+            Sprite = religion == ReligionDefOf.None ? null : religion.Sprite;
             Type = PolicyType.Religion;
         }
 

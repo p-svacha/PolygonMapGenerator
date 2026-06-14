@@ -21,6 +21,7 @@ namespace ElectionTactics
 
         [Header("SFX")]
         public AudioClip ButtonClick;
+        public AudioClip ButtonClick_NoEffect;
         public AudioClip Chimes;
         public AudioClip DiceClack;
         public AudioClip AddBot;

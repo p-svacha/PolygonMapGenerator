@@ -51,7 +51,7 @@ namespace ElectionTactics
             if (District.Religion != ReligionDefOf.None) ReligionIcon.sprite = IconManager.Singleton.GetReligionIcon(District.Religion);
 
             // Seats
-            Debug.Log($"Refreshing seats ({District.Name}): Current number: {District.Seats}");
+            // Debug.Log($"Refreshing seats ({District.Name}): Current number: {District.Seats}");
             int numSeats = District.Seats;
 
             if (ElectionTacticsGame.Instance.State == GameState.Election) // Show seats of previous cycle when in election
@@ -59,7 +59,7 @@ namespace ElectionTactics
                 DistrictElectionResult latestResult = ElectionTacticsGame.Instance.GetLatestElectionResult().GetDistrictResult(District);
                 if (latestResult != null)
                 {
-                    Debug.Log($"Number from prev election ({District.Name}): {latestResult.Seats}");
+                    // Debug.Log($"Number from prev election ({District.Name}): {latestResult.Seats}");
                     numSeats = latestResult.Seats;
                 }
             }

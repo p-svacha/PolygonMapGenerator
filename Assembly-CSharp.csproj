@@ -220,10 +220,10 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RandomEventDef.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEventHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\CulturalTrait.cs" />
+    <Compile Include="Assets\Scripts\Helper\RightClickHandler.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LogPanel.cs" />
     <Compile Include="Assets\Scripts\Map\Map.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Settings\GlobalSettings.cs" />
-    <Compile Include="Assets\Scripts\Helper\RightClickHandler.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\RiverCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Parliament\UI_PartyListElement.cs" />
     <Compile Include="Assets\Scripts\MapEditor2\UI_MapEditor2.cs" />

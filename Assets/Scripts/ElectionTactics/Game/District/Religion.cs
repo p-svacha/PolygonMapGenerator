@@ -6,6 +6,8 @@ namespace ElectionTactics
 {
     public class ReligionDef : Def
     {
+        public override Sprite Sprite => DefName == "None" ? null : ResourceManager.LoadSprite($"ElectionTactics/Icons/Religion/{DefName}");
+
         public Color Color { get; init; }
         public int SortingOrder { get; init; } // Used in policy list and map control legend, highest on top
     }

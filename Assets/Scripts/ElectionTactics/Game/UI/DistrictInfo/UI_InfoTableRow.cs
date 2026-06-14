@@ -3,24 +3,42 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UI_InfoTableRow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Elements")]
     public TextMeshProUGUI LabelText;
+    public Image ValueIcon;
     public TextMeshProUGUI ValueText;
 
     public TooltipTarget LabelTooltipTarget;
     public TooltipTarget ValueTooltipTarget;
 
-    public void Init(string label, string value)
+    public void Init(string label, string value, Sprite sprite = null)
     {
         SetLabel(label);
         SetValue(value);
+
+        if (ValueIcon != null)
+        {
+            ValueIcon.gameObject.SetActive(sprite != null);
+            ValueIcon.sprite = sprite;
+        }
+    }
+
+    public void InitDefWithSprite(Def def)
+    {
+        SetValue(def.Label);
+        SetValueIcon(def.Sprite);
+        ValueIcon.gameObject.SetActive(def.Sprite != null);
     }
 
     public void SetLabel(string label) => LabelText.text = label;
     public void SetValue(string value) => ValueText.text = value;
+    public void SetValueIcon(Sprite sprite) => ValueIcon.sprite = sprite;
+
+
 
 
     public Action HoverAction { get; private set; }

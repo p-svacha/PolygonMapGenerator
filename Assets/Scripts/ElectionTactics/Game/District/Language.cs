@@ -6,6 +6,7 @@ namespace ElectionTactics
 {
     public class LanguageDef : Def
     {
+        public override Sprite Sprite => ResourceManager.LoadSprite($"ElectionTactics/Icons/Language/{DefName}");
         public Color Color { get; init; }
     }
 

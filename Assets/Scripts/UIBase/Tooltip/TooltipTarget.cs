@@ -11,6 +11,7 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public string Title;
     [TextArea(3, 10)] public string Text;
     public Color? TitleColor;
+    public bool InstantTooltip = false;
 
 
     [HideInInspector] public bool IsFocussed;
@@ -31,6 +32,7 @@ public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (Title == "" && Text == "") return;
         IsFocussed = true;
+        if (InstantTooltip) CurrentDelay = Delay;
     }
 
     public void OnPointerExit(PointerEventData eventData)

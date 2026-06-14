@@ -12,6 +12,7 @@ namespace ElectionTactics
         {
             Language = language;
             Name = language.Label;
+            Sprite = language.Sprite;
             Type = PolicyType.Language;
         }
 

@@ -136,13 +136,17 @@ namespace ElectionTactics
             // Demography
             DensityInfo.SetValue(district.Density.Label);
             AgeGroupInfo.SetValue(district.AgeGroup.Label);
-            ReligionInfo.SetValue(district.Religion.Label);
-            LanguageInfo.SetValue(district.Language.Label);
+            ReligionInfo.InitDefWithSprite(district.Religion);
+            LanguageInfo.InitDefWithSprite(district.Language);
 
             // Economy
-            Economy1Info.SetValue(district.Economy1.Label);
-            Economy2Info.SetValue(district.Economy2.Label);
-            Economy3Info.SetValue(district.Economy3.Label);
+            Economy1Info.InitDefWithSprite(district.Economy1);
+            Economy2Info.InitDefWithSprite(district.Economy2);
+            Economy3Info.InitDefWithSprite(district.Economy3);
+
+            Economy1Info.ValueTooltipTarget.Init(CurrentDistrict.Economy1.Label, CurrentDistrict.Economy1.Description);
+            Economy2Info.ValueTooltipTarget.Init(CurrentDistrict.Economy2.Label, CurrentDistrict.Economy2.Description);
+            Economy3Info.ValueTooltipTarget.Init(CurrentDistrict.Economy3.Label, CurrentDistrict.Economy3.Description);
 
             // Cultural Traits
             CulturalTraitsTitle.gameObject.SetActive(district.CulturalTraits.Count > 0);

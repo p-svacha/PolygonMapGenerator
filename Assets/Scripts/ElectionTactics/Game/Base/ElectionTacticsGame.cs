@@ -782,9 +782,17 @@ namespace ElectionTactics
         #region Game Commands
         // This chapter contains all functions that local players can trigger in their turn through their actions.
 
+        public bool CanIncreaseLocalPlayerPolicy(Policy p)
+        {
+            if (LocalPlayerParty.PolicyPoints == 0) return false;
+            if (p.Value == p.MaxValue) return false;
+
+            return true;
+        }
+
         public void IncreaseLocalPlayerPolicy(Policy p)
         {
-            if (LocalPlayerParty.PolicyPoints == 0 || p.Value == p.MaxValue) return;
+            if (!CanIncreaseLocalPlayerPolicy(p)) return;
 
             if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
@@ -792,9 +800,17 @@ namespace ElectionTactics
             foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
         }
 
+
+        public bool CanDecreaseLocalPlayerPolicy(Policy p)
+        {
+            if (p.Value == p.LockedValue) return false;
+
+            return true;
+        }
+
         public void DecreaseLocalPlayerPolicy(Policy p)
         {
-            if (p.Value == p.LockedValue) return;
+            if (!CanDecreaseLocalPlayerPolicy(p)) return;
 
             if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
@@ -1043,6 +1059,41 @@ namespace ElectionTactics
         {
             return Parties.OrderBy(p => p.FinalRank).ThenByDescending(p => p.GetGameScore()).ToDictionary(p => p, p => p.GetGameScore());
         }
+
+        /// <summary>
+        /// Returns the most common languages in the currently active districts.
+        /// </summary>
+        public List<LanguageDef> GetMostCommonLanguages()
+        {
+            if (ActiveDistricts.Count == 0) return new List<LanguageDef>();
+
+            Dictionary<LanguageDef, int> counts = new Dictionary<LanguageDef, int>();
+            foreach (District d in ActiveDistricts)
+                counts.Increment(d.Language);
+
+            int maxCount = counts.Values.Max();
+            return counts.Where(x => x.Value == maxCount).Select(x => x.Key).ToList();
+        }
+        public bool IsMostCommonLanguage(LanguageDef language) => GetMostCommonLanguages().Contains(language);
+
+        /// <summary>
+        /// Returns the most common religions in the currently active districts.
+        /// </summary>
+        public List<ReligionDef> GetMostCommonReligions()
+        {
+            if (ActiveDistricts.Count == 0) return new List<ReligionDef>();
+
+            Dictionary<ReligionDef, int> counts = new Dictionary<ReligionDef, int>();
+            foreach (District d in ActiveDistricts)
+                if(d.Religion != ReligionDefOf.None)
+                    counts.Increment(d.Religion);
+
+            if (counts.Count == 0) return new List<ReligionDef>();
+
+            int maxCount = counts.Values.Max();
+            return counts.Where(x => x.Value == maxCount).Select(x => x.Key).ToList();
+        }
+        public bool IsMostCommonReligion(ReligionDef religion) => GetMostCommonReligions().Contains(religion);
 
         #endregion
     }

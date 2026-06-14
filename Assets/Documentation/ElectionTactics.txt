@@ -46,20 +46,26 @@ Demography General:
 (/) - first seat requires no pop (less 1-seat districts)
 
 Economy:
-- remove pharmancy, defense
-- rename health to healthcare
-- add tourism, farming 
-- add description to economy defs, show them in district info and policy screen
-- tie economy sectors a little to geography (like no fishing in landlocked districts), reflect that in descriptions
+(/) - remove pharmancy, defense
+(/) - rename health to healthcare
+(/) - add tourism, farming 
+(/) - add description to economy defs
+(/) - show them in district info and policy screen
+(/) - tie economy sectors a little to geography (like no fishing in landlocked districts), reflect that in descriptions
+(/) - Add icons for economic sectors (in addition to text) - also use them in district info
 
 Policy :
 (/) - Use not all caps for policy names
-- Add icons for economic sectors (in addition to text) - also use them in district info
-- Add a ? next to each category with an instant tooltip (replaces title tooltips)
+(/) - Add a ? next to each category with an instant tooltip (replaces title tooltips)
 (/) - Add tooltips for geography traits with info what they are (like in district info)
-- add tooltips to ALL policies (labels)
-- Sort policies alphabetically within their category
-- Left/Rightclicking a policy should increase/decrease it
+(/) - add tooltips for economies
+(/) - Sort policies alphabetically within their category
+(/) - Left/Rightclicking a policy should increase/decrease it
+(/) - show icons for economy
+(/) - show icons for language
+(/) - show icons for religion
+(/) - add dividers between categories
+(/) - play seperate click sound when policy cannot be changed
 
 General UX:
 - Test tooltips on 1400p, they are broken at screen edge. Fix
@@ -73,9 +79,11 @@ General UX:
 (/) - INSTANT mute doesn't work (only for music)
 - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
+- Redesign loading screen
 
 Election graph:
 - Make bar label and bar value text size slightly dynamic based on number of bars. Can be bigger with just 4 bars.
+- show more info in tooltip of modifiers
 
 Election animation:
 - Increase speed of district transition, change from lerp to slerp to make it snappier
@@ -180,6 +188,8 @@ Tutorial
 - Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
 - Remove step DURING election
 - make sure it works with the newspaper
+
+Remove log spams
 
 PERSONAL PLAYTESTS
 

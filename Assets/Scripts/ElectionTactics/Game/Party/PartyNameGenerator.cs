@@ -233,6 +233,7 @@ namespace ElectionTactics
             { "Steel", 40 },
             { "Disco", 40 },
             { "Party", 40 },
+            { "Blood", 40 },
 
             { "Fellowship", 30 },
             { "Calm", 30 },

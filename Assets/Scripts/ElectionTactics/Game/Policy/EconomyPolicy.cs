@@ -12,6 +12,8 @@ namespace ElectionTactics
         {
             Trait = trait;
             Name = trait.Label;
+            Sprite = trait.Sprite;
+            Description = trait.Description;
             Type = PolicyType.Economy;
         }
 

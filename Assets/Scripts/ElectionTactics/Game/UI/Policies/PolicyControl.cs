@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ElectionTactics
 {
-    public class PolicyControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class PolicyControl : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-        private int MaxValue = 8;
-
         public TextMeshProUGUI Label;
         public TooltipTarget LabelTooltipTarget;
         public GameObject ValueContainer;
         public Button MinusButton;
         public Button PlusButton;
+        public Image Icon;
 
         public Policy Policy;
 
@@ -23,21 +20,30 @@ namespace ElectionTactics
         void Start()
         {
             PlusButton.onClick.AddListener(PlusButton_OnClick);
-            PlusButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 1.3f));
-
             MinusButton.onClick.AddListener(MinusButton_OnClick);
-            MinusButton.onClick.AddListener(() => AudioManager.PlayStandardClickSound(pitch: 0.85f));
         }
 
         private void PlusButton_OnClick()
         {
-            Policy.Party.Game.IncreaseLocalPlayerPolicy(Policy);
+            if (Policy.Party.Game.CanIncreaseLocalPlayerPolicy(Policy))
+            {
+                AudioManager.PlayStandardClickSound(pitch: 1.3f);
+                Policy.Party.Game.IncreaseLocalPlayerPolicy(Policy);
+            }
+            else AudioManager.PlaySound(AudioManager.Instance.ButtonClick_NoEffect, volume: 0.6f);
+
             ShowPolicyMapOverlay();
         }
 
         private void MinusButton_OnClick()
         {
-            Policy.Party.Game.DecreaseLocalPlayerPolicy(Policy);
+            if (Policy.Party.Game.CanDecreaseLocalPlayerPolicy(Policy))
+            {
+                AudioManager.PlayStandardClickSound(pitch: 0.85f);
+                Policy.Party.Game.DecreaseLocalPlayerPolicy(Policy);
+            }
+            else AudioManager.PlaySound(AudioManager.Instance.ButtonClick_NoEffect, volume: 0.6f);
+
             ShowPolicyMapOverlay();
         }
 
@@ -45,6 +51,8 @@ namespace ElectionTactics
         {
             Policy = policy;
             Label.text = policy.Name;
+            Icon.sprite = policy.Sprite;
+            Icon.gameObject.SetActive(policy.Sprite != null);
             if (!string.IsNullOrEmpty(policy.Description))
             {
                 LabelTooltipTarget.Init(policy.Name, policy.Description);
@@ -55,9 +63,9 @@ namespace ElectionTactics
 
         public void UpdateValue()
         {
-            for (int i = 0; i < MaxValue; i++)
+            for (int i = 0; i < Policy.MaxValue; i++)
             {
-                if(i < Policy.Value)
+                if (i < Policy.Value)
                 {
                     ValueContainer.transform.GetChild(i).gameObject.SetActive(true);
                     if (i < Policy.LockedValue) ValueContainer.transform.GetChild(i).GetComponent<Image>().color = ColorManager.Instance.UiMainLighter2;
@@ -83,6 +91,16 @@ namespace ElectionTactics
         public void OnPointerExit(PointerEventData eventData)
         {
             Policy.Party.Game.UI.MapControls.ClearOverlay();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // Ignore clicks that originated on the plus/minus buttons themselves
+            if (eventData.pointerPress == MinusButton.gameObject ||
+                eventData.pointerPress == PlusButton.gameObject) return;
+
+            if (eventData.button == PointerEventData.InputButton.Left) PlusButton_OnClick();
+            else if (eventData.button == PointerEventData.InputButton.Right) MinusButton_OnClick();
         }
     }
 }

@@ -85,13 +85,6 @@ namespace ElectionTactics
             Language = GetLanguageForNewRegion();
             Religion = GetReligionForNewRegion();
 
-            // Economy
-            Economy1 = ElectionTacticsGame.GetRandomEconomicSector();
-            Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
-            while (Economy2 == Economy1) Economy2 = ElectionTacticsGame.GetRandomEconomicSector();
-            Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
-            while (Economy3 == Economy2 || Economy3 == Economy1) Economy3 = ElectionTacticsGame.GetRandomEconomicSector();
-
             // Cultural Traits
             int numCulturalTraits = NumCulturalTraitWeights.GetWeightedRandomElement();
             while (CulturalTraits.Count < numCulturalTraits)
@@ -129,9 +122,12 @@ namespace ElectionTactics
             // Base population growth rate
             BasePopulationGrowthRate = Random.Range(ElectionTacticsGame.MIN_BASE_GROWTH_RATE, ElectionTacticsGame.MAX_BASE_GROWTH_RATE);
 
-            // Seat calculation
+            // Calculations based on previous values
             RecalculateSeats();
             RecalculateDensity();
+
+            // Economy (requires all previous attributes)
+            AssignEconomicSectors();
 
             // Voter calculation
             Voters = NumVoters;
@@ -331,6 +327,34 @@ namespace ElectionTactics
 
             // Return
             return religionCandidates.GetWeightedRandomElement();
+        }
+
+        private void AssignEconomicSectors()
+        {
+            List<EconomicSectorDef> chosen = new List<EconomicSectorDef>();
+            for (int i = 0; i < 3; i++)
+            {
+                Dictionary<EconomicSectorDef, int> candidates = new Dictionary<EconomicSectorDef, int>();
+                foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
+                {
+                    if (chosen.Contains(def)) continue;
+                    int weight = def.GetWeight(this);
+                    if (weight <= 0) continue; // respects hard requirements (e.g. Fishing with no water)
+                    candidates.Add(def, weight);
+                }
+
+                // Fallback: if everything got filtered out (rare), allow any unused sector at neutral weight
+                if (candidates.Count == 0)
+                {
+                    foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
+                        if (!chosen.Contains(def)) candidates.Add(def, 100);
+                }
+
+                chosen.Add(candidates.GetWeightedRandomElement());
+            }
+            Economy1 = chosen[0];
+            Economy2 = chosen[1];
+            Economy3 = chosen[2];
         }
 
         public void Activate()
@@ -594,6 +618,9 @@ namespace ElectionTactics
             if (HasCulturalTrait(CulturalTraitDefOf.MajorityBonus)) return SeatAllocationMethodDefOf.DHondtPR;
             return SeatAllocationMethodDefOf.WinnerTakesAll;
         }
+
+        public bool IsMinorityLanguage => !Game.IsMostCommonLanguage(Language);
+        public bool IsMinorityReligion => Religion != ReligionDefOf.None && !Game.IsMostCommonReligion(Religion);
 
         #endregion
 
