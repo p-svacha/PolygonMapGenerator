@@ -36,10 +36,10 @@ namespace ElectionTactics
             LockedValue = 0;
         }
 
-        public void SetValue(int value)
+        public void SetValue(int value, bool silent = false)
         {
             Value = value;
-            if(UIControl != null) UIControl.UpdateValue();
+            if (UIControl != null && !silent) UIControl.UpdateValue();
         }
         public void LockValue()
         {
@@ -97,6 +97,25 @@ namespace ElectionTactics
             int impact = 0;
             impact += Value * GetSinglePointImpactOn(district);
             return impact;
+        }
+
+        /// <summary>
+        /// Returns the actual change in the party's own popularity in the district that adding one
+        /// more point to this policy would cause. Accounts for all trait/threshold/clamp nonlinearities
+        /// by measuring the real popularity difference, not just the per-point policy impact.
+        /// </summary>
+        public int GetSinglePointPopularityDelta(District district)
+        {
+            if (Value >= MaxValue) return 0; // No point available to add
+
+            int before = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: false);
+
+            int original = Value;
+            SetValue(Value + 1, silent: true);
+            int after = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: false);
+            SetValue(original, silent: true);
+
+            return after - before;
         }
     }
 }

@@ -120,7 +120,7 @@ Moxico
 Namibe
 Uige
 Zaire
-Barbuda
+Barbudon
 Redonda
 Saint Mary
 Buenos Aires
@@ -655,8 +655,6 @@ Chongqing
 Shanghai
 Tianjin
 Hong Kong
-Macau
-Taiwan
 Antioquia
 Arauca
 Atlantico
@@ -906,7 +904,6 @@ Chimborazo
 Cotopaxi
 El Oro
 Esmeraldas
-Galapagos
 Guayas
 Imbabura
 Loja
@@ -1189,11 +1186,10 @@ Grand Est
 Grand East
 Guadeloupe
 Guyane
-French Guiana
+Guiana
 Hauts de France
 Upper France
 Ile de France
-Martinique
 Mayotte
 Normandie
 Normandy
@@ -1606,12 +1602,15 @@ North Sumatra
 Yogyakarta
 Alborz
 Ardabil
-Azarbayjan e Gharbi
-Azerbaijan
-Azarbayjan e Sharqi
-East Azerbaijan
+Gharbi
+Azeri
+Azarbayjan
+Sharqi
 Bushehr
 Chahar Mahal va Bakhtiari
+Chahar
+Mahal
+Bakhitari
 Esfahan
 Fars
 Gilan
@@ -3744,7 +3743,6 @@ Haapai
 Ongo Niua
 Tongatapu
 Vavau
-Tobago
 Port of Spain
 San Fernando
 Arima
@@ -4546,3 +4544,222 @@ Mashonaland
 Masvingo
 Matabeleland
 Midlands
+Saudi
+Arabia
+Afghanistan
+Albania
+Algeria
+Andorra
+Angola
+Antigua
+Barbuda
+Argentina
+Armenia
+Australia
+Austria
+Azerbaijan
+Bahamas
+Bahrain
+Bangladesh
+Barbados
+Belarus
+Belgium
+Beliz
+Benin
+Bhutan
+Bolivia
+Herzenburg
+Botswana
+Brazil
+Brunei
+Bulgaria
+Burkina Faso
+Burundi
+Cambodia
+Cameroon
+Canada
+Cape Verde
+Central African Republic
+Chad
+Chile
+China
+Colombia
+Comoros
+Congo
+Costa Rica
+Croatia
+Cuba
+Cyprus
+Czech Republic
+Democratic Republic of the Congo
+Denmark
+Djibooti
+Dominica
+Dominican Republic
+East Timor
+Ecuador
+Egypt
+El Salvador
+Equatorial Guinea
+Eritrea
+Estonia
+Eswatini
+Ethiopia
+Fiji
+Suomi
+France
+Gabon
+Gambia
+Germany
+Ghana
+Hellas
+Grenada
+Guinea
+Guinea Bissau
+Guyana
+Haiti
+Honduras
+Hungary
+Iceland
+India
+Indonesia
+Iran
+Iraq
+Ireland
+Israel
+Italy
+Ivory Coast
+Jamaica
+Japan
+Jordan
+Kazakhstan
+Kenya
+Kiribati
+Kosovo
+Kuwait
+Kyrgyzstan
+Laos
+Latvia
+Lebanon
+Lesotho
+Liberia
+Libya
+Liechtenstein
+Lithuania
+Luxembourg
+Madagascar
+Malawi
+Malaysia
+Maldives
+Mali
+Malta
+Marshall Islands
+Mauritania
+Mauritius
+Micronesia
+Moldova
+Monaco
+Mongolia
+Montenegro
+Morocco
+Mozambique
+Myanmar
+Namibia
+Nauru
+Nepal
+Netherlands
+New Zealand
+Nicaragua
+Nigeria
+North Korea
+North Macedonia
+Norway
+Oman
+Pakistan
+Palau
+Palestine
+Papua New Guinea
+Paraguay
+Peru
+Philippines
+Poland
+Portugal
+Qatar
+Romania
+Russia
+Rwanda
+Saint KittsNevis
+Lucia
+Saint Vincent 
+The Grenadines
+Samoa
+San Marino
+Sao Tome
+Saudi Arabia
+Senegal
+Serbia
+Seychelles
+Sierra Leone
+Singapore
+Slovakia
+Slovenia
+Solomon Islands
+Somalia
+South Africa
+South Korea
+South Sudan
+Spain
+Sri Lanka
+Sudan
+Suriname
+Sweden
+Switzerland
+Syria
+Taiwan
+Tajikistan
+Tanzania
+Thailand
+Togo
+Tonga
+Trinidad
+Tobago
+Tunisia
+Turkey
+Turkmenistan
+Tuvalu
+Uganda
+Ukraine
+United Arab Emirates
+United Kingdom
+United States
+Uruguay
+Uzbekistan
+Vanuatu
+Vatican City
+Venezuela
+Vietnam
+Yemen
+Zambia
+Zimbabwe
+Aruba
+Bermuda
+Cayman Islands
+Faroe Islands
+French Guiana
+French Polynesia
+Gibraltar
+Greenland
+Galapagos
+Guam
+Hong
+Kong
+Isle of Man
+Jersey
+Macau
+Martinique
+New Caledonia
+Northern Cyprus
+Northern Mariana Islands
+Puerto Rico
+Sint Maarten
+Western Sahara

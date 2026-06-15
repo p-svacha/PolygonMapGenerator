@@ -542,6 +542,8 @@ namespace ElectionTactics
 
         public static string CreateAcronym(string partyName)
         {
+            if (partyName.Length <= 5) return partyName;
+
             // Acronym is first letter of each capitalized word
             string acronym = "";
             foreach (string word in partyName.Split(' ', StringSplitOptions.RemoveEmptyEntries))

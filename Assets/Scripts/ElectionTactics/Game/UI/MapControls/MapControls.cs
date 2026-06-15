@@ -285,7 +285,7 @@ namespace ElectionTactics
         private void ColorDistrictByPolicyImpact(Region region, Policy policy)
         {
             District district = Game.VisibleDistricts[region];
-            int policyImpact = policy.GetSinglePointImpactOn(district);
+            int policyImpact = policy.GetSinglePointPopularityDelta(district);
             Color impactColor = ColorManager.Instance.GetImpactColor(policyImpact);
             region.SetColor(impactColor);
         }

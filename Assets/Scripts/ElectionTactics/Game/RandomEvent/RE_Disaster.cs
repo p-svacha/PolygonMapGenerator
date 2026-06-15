@@ -6,8 +6,8 @@ namespace ElectionTactics
     public class RE_Disaster : RandomEvent
     {
         private const float MIN_POPULATION = 100000;
-        private const float MIN_CASUALTIES = 0.05f; // in % of district population
-        private const float MAX_CASUALTIES = 0.15f; // in % of district population
+        private const float MIN_CASUALTIES = 0.10f; // in % of district population
+        private const float MAX_CASUALTIES = 0.30f; // in % of district population
 
         protected override void ExecuteEffect()
         {

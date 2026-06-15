@@ -570,8 +570,8 @@ namespace ElectionTactics
 
             foreach (Modifier m in relevantModifiers)
             {
-                if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", m.Value);
-                else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -m.Value);
+                if (m.Type == ModifierType.Positive) factors.Add(m.Description, m.Value);
+                else if (m.Type == ModifierType.Negative) factors.Add(m.Description, -m.Value);
             }
 
             // Modifiers from cultural traits

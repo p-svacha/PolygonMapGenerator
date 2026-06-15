@@ -693,6 +693,7 @@ namespace ElectionTactics
 
                 // Exclusion criteria
                 if (def.Commonness <= 0) canAdopt = false;
+                if (Districts.Count < 2 && def.RequiresMultipleDistricts) canAdopt = false;
                 if (district.CulturalTraits.Any(t => t.Def == def)) canAdopt = false;
                 if (district.CulturalTraits.Any(t => def.ForbiddenCulturalTraits.Contains(t.Def.DefName))) canAdopt = false;
                 if (def.RequiresReligion && district.Religion == ReligionDefOf.None) canAdopt = false;

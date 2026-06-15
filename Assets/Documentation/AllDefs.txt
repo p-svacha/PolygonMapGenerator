@@ -3,7 +3,7 @@
 --- CulturalTraitDefs.cs ---
         public static List<CulturalTraitDef> Defs => new List<CulturalTraitDef>()
         {
-            #region Demographic
+            #region Policy Impact
 
             // Religion
             new CulturalTraitDef()
@@ -12,7 +12,7 @@
                 Label = "Religious",
                 Description = "Base religion policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Religious),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -28,7 +28,7 @@
                 Label = "Secular",
                 Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -44,7 +44,7 @@
                 Label = "Religion Fanatics",
                 Description = "+10 impact of religion policy of the districts religion. All other religion policies give -3.",
                 TraitClass = typeof(CT_Fanatics),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -61,7 +61,7 @@
                 Label = "Linguistic",
                 Description = "Base language policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Linguistic),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -75,7 +75,7 @@
                 Label = "Non-Linguistic",
                 Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -83,9 +83,16 @@
                 },
             },
 
-            #endregion
-
-            #region Economic
+            // Geography
+            new CulturalTraitDef()
+            {
+                DefName = GEOCENTRIC,
+                Label = "Geocentric",
+                Description = "Base geography policy impact in this district is doubled.",
+                TraitClass = typeof(CT_Geocentric),
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
+                Commonness = 100,
+            },
 
             // Economy
             new CulturalTraitDef()
@@ -94,7 +101,7 @@
                 Label = "Strong Economy",
                 Description = "Base economy policy impact in this district is doubled.",
                 TraitClass = typeof(CT_StrongEconomy),
-                Category = CulturalTraitCategoryDefOf.Economic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -107,7 +114,7 @@
                 Label = "Weak Economy",
                 Description = "Base economy policy impact in this district is halved.",
                 TraitClass = typeof(CT_WeakEconomy),
-                Category = CulturalTraitCategoryDefOf.Economic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 80,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -119,9 +126,9 @@
             {
                 DefName = EXPORTER,
                 Label = "Exporter",
-                Description = "Policy for dominant industry in this district has +7 impact and also gives +3 popularity in all adjacent districts.",
+                Description = "Policy for dominant industry in this district has +3 impact and also gives +3 popularity in all adjacent districts.",
                 TraitClass = typeof(CT_Exporter),
-                Category = CulturalTraitCategoryDefOf.Economic,
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
                 Commonness = 100,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -173,6 +180,16 @@
                 NeighbourPopulationGrowthModifier = -2.0f,
             },
 
+            new CulturalTraitDef()
+            {
+                DefName = IMPERIALISTIC,
+                Label = "Imperialistic",
+                Description = "Newly added districts adjacent to this will have guaranteed the same language/religion.",
+                TraitClass = typeof(CT_Imperialistic),
+                Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
+                Commonness = 80,
+            },
+
             #endregion
 
             #region Popularity
@@ -196,6 +213,16 @@
                 TraitClass = typeof(CT_Impressionable),
                 Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 80,
+            },
+
+            new CulturalTraitDef()
+            {
+                DefName = FOCAL_POINT,
+                Label = "Focal Point",
+                Description = "This district has a strong preference for [Language/Religion/etc.] policy. If you have invested at least 5 points into the policy, you gain +30 popularity here.",
+                TraitClass = typeof(CT_FocalPoint),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 100,
             },
 
             // Modifiers
@@ -241,6 +268,17 @@
                     REBELLIOUS,
                 },
             },
+
+            new CulturalTraitDef()
+            {
+                DefName = IMPATIENT,
+                Label = "Impatient",
+                Description = $"Parties that don't win any seat in {CT_Impatient.THRESHOLD} consecutive cycles get permanently excluded from competing in elections.",
+                TraitClass = typeof(CT_Impatient),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 50,
+            },
+
             new CulturalTraitDef()
             {
                 DefName = HISTORICAL_LEGACY,
@@ -272,6 +310,7 @@
                 TraitClass = typeof(CT_PartnerDistrict),
                 Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 50,
+                RequiresMultipleDistricts = true,
             },
 
             new CulturalTraitDef()
@@ -282,6 +321,7 @@
                 TraitClass = typeof(CT_RivalDistrict),
                 Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 50,
+                RequiresMultipleDistricts = true,
             },
 
             new CulturalTraitDef()

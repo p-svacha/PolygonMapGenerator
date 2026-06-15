@@ -713,8 +713,8 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Colors\HeatmapColors.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Graphs\Vector4MaterialSlot.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Inspector\PropertyDrawers\AbstractMaterialNodePropertyDrawer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Inspector\PropertyDrawerUtils.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Legacy\SpriteLitMasterNode1.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Inspector\PropertyDrawerUtils.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Drawing\Interfaces\IRectInterface.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Data\Interfaces\IMayRequireTangent.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@0ccb1650b2c5\Editor\Util\CreateSerializableGraph.cs" />

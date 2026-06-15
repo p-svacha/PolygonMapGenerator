@@ -128,7 +128,7 @@ namespace ElectionTactics
         /// </summary>
         public void ShowPolicyImpact(Policy p)
         {
-            PopularityImpact = p.GetSinglePointImpactOn(District);
+            PopularityImpact = p.GetSinglePointPopularityDelta(District);
             Refresh();
         }
         public void HidePolicyImpact()

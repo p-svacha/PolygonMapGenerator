@@ -25,6 +25,8 @@ namespace ElectionTactics
 
         public override Dictionary<string, int> GetPopularityChange(Party p)
         {
+            if (p.Policies.Count == 0) return base.GetPopularityChange(p);
+
             Policy policy = GetRelevantPolicy(p);
             if (policy.Value >= THRESHOLD)
             {

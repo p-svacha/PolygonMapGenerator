@@ -45,7 +45,7 @@ namespace ElectionTactics
             if (value == 0) return ColorManager.Instance.NoImpactColor;
             if (value <= 3) return ColorManager.Instance.LowImpactColor;
             if (value <= 6) return ColorManager.Instance.MediumImpactColor;
-            if (value <= 9) return ColorManager.Instance.HighImpactColor;
+            if (value <= 10) return ColorManager.Instance.HighImpactColor;
             else return ColorManager.Instance.VeryHighImpactColor;
         }
 

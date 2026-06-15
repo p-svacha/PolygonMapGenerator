@@ -141,7 +141,7 @@ namespace ElectionTactics
             // Column x-ranges
             float[] x1 = { 0f, 1f };                       // single column spans full width
             float[][] x2 = { new[] { 0f, 0.48f }, new[] { 0.55f, 1f } };
-            float[][] x3 = { new[] { 0f, 0.32f }, new[] { 0.35f, 0.67f }, new[] { 0.68f, 1f } };
+            float[][] x3 = { new[] { 0f, 0.32f }, new[] { 0.35f, 0.67f }, new[] { 0.70f, 1f } };
 
             // y-ranges: top row vs bottom row when a column holds two
             float[] yFull = { 0f, 0.33f };       // alone in column (your comment caps minor section at ~0.33 height)
