@@ -74,13 +74,13 @@ namespace ElectionTactics
             {
                 int yMax = Mathf.Max(result.Seats, 1);
                 float yStep = yMax <= 9 ? 1 : 2;
-                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, yStep, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
+                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, yStep, 0.1f, Color.white, new Color(0.2f, 0.2f, 0.2f), PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
             }
             else
             {
                 int yMax = (((int)result.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
-                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
+                if (fullRefresh) ElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, new Color(0.2f, 0.2f, 0.2f), PrefabManager.Singleton.GraphFont, 0.25f, startAnimation: true);
                 else ElectionGraph.UpdateAnimatedBarGraph(dataPoints, yMax, 0.25f);
             }
 

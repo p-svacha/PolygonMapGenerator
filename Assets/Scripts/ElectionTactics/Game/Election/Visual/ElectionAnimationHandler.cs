@@ -114,7 +114,7 @@ namespace ElectionTactics
             if (State != LastState)
             {
                 string toString = State == AnimationState.Wait ? $"{State} ({PostWaitState})" : State.ToString();
-                Debug.Log("Changing animation state : " + LastState.ToString() + " --> " + toString);
+                // Debug.Log("Changing animation state : " + LastState.ToString() + " --> " + toString);
                 LastState = State;
             }
             
@@ -296,7 +296,7 @@ namespace ElectionTactics
 
                 // Init animation
                 float graphTime = GraphAnimationTime;
-                Game.UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, Game.UI.Font, graphTime, startAnimation: false);
+                Game.UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, new Color(0.2f, 0.2f, 0.2f), Game.UI.Font, graphTime, startAnimation: false);
 
                 Game.CameraHandler.MoveToFocusDistricts(new List<District>() { CurrentDistrictResult.District }, DistrictPanTime, OnCameraMoveToNextDistrictDone);
                 State = AnimationState.MoveToNextDistrict;

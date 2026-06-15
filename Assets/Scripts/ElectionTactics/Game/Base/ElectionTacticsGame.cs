@@ -36,6 +36,7 @@ namespace ElectionTactics
 
         // Events (newspaper articles)
         public List<RandomEvent> RandomEvents = new List<RandomEvent>();
+        public List<NewsEvent> NewsEvents = new List<NewsEvent>();
         public Newspaper CurrentNewspaper;
         public List<Newspaper> Newspapers = new List<Newspaper>(); // index corresponds to cycle, 1 per cycle
 
@@ -439,7 +440,12 @@ namespace ElectionTactics
             // Add new district
             int numStartingDistricts = GetNumStartingDistricts();
             int indexToActivate = ElectionCycle + numStartingDistricts - 2; // -2 because cycle starts at 1 and we already have starting districts
-            if (indexToActivate < Districts.Count) Districts.Values.ToList()[indexToActivate].Activate();
+            if (indexToActivate < Districts.Count)
+            {
+                District districtToActivate = Districts.Values.ToList()[indexToActivate];
+                districtToActivate.Activate();
+                RegisterNewsEvent(new NewsEvent_DistrictAdded(districtToActivate));
+            }
 
             // Update stuff according to district state changes
             UpdateDistrictAges();
@@ -849,7 +855,7 @@ namespace ElectionTactics
             Policy policy = party.GetPolicy(policyId);
 
             if (party.PolicyPoints == 0 || policy.Value == policy.MaxValue) return;
-            Debug.Log($"{party.Name} increased {policy.Name} policy. It is now at {policy.Value}/{policy.MaxValue}.");
+            // Debug.Log($"{party.Name} increased {policy.Name} policy. It is now at {policy.Value}/{policy.MaxValue}.");
 
             party.PolicyPoints--;
             policy.IncreaseValue();
@@ -963,6 +969,11 @@ namespace ElectionTactics
             RandomEvent chosenEvent = eventCandidates.GetWeightedRandomElement();
             chosenEvent.Execute();
             RandomEvents.Add(chosenEvent);
+        }
+
+        public void RegisterNewsEvent(NewsEvent newsEvent)
+        {
+            NewsEvents.Add(newsEvent);
         }
 
         public void AddGeneralElectionResult(GeneralElectionResult electionResult)

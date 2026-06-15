@@ -33,8 +33,8 @@ namespace ElectionTactics
         {
             { 0, 15 },
             { 1, 30 },
-            { 2, 35 },
-            { 3, 15 },
+            { 2, 36 },
+            { 3, 14 },
             { 4, 5 },
         };
 
@@ -146,6 +146,8 @@ namespace ElectionTactics
 
         private void RecalculateSeats()
         {
+            int seatsBefore = Seats;
+
             int tmpPop = Population;
             int tmpSeatRequirement = RequiredPopulationPerSeat;
             int tmpSeats = 1;
@@ -156,15 +158,25 @@ namespace ElectionTactics
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
             Seats = Mathf.Max(MinSeats, tmpSeats);
+
+            int seatsAfter = Seats;
+
+            if (seatsBefore != seatsAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictSeatChange(this, seatsBefore, seatsAfter));
         }
 
         private void RecalculateDensity()
         {
+            DensityDef densityBefore = Density;
+
             float populationPerArea = Population / Region.Area;
 
             if (populationPerArea >= 1200000f) Density = DensityDefOf.High;
             else if (populationPerArea >= 800000f) Density = DensityDefOf.Medium;
             else Density = DensityDefOf.Low;
+
+            DensityDef densityAfter = Density;
+
+            if (densityBefore != densityAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictDensityChange(this, densityBefore, densityAfter));
         }
 
         private void SetGeographyTraits()
@@ -606,7 +618,7 @@ namespace ElectionTactics
 
         #region Getters
 
-        public List<District> AdjacentActiveDistricts => Region.AdjacentRegions.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
+        public List<District> AdjacentActiveDistricts => Region.LandNeighbours.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
 
         public CulturalTrait GetSeatDistributionTrait() => CulturalTraits.FirstOrDefault(t => t.Def.IsSeatDistributionTrait);
 

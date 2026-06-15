@@ -81,6 +81,11 @@ General UX:
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 (/) - Redesign loading screen
 - Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color.
+- Show amount of seats won in previous election during election animation
+- add a new party name category "fixed names" that appears in like 5% of cases, and fill it with party names from big countries.
+- Make sure vote shares all have exactly one decimal (XX.X%)
+- Make sure vote shares add up to 100%.
+- Make sure vote shares give a single winner.
 
 Election graph:
 (/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.
@@ -104,45 +109,40 @@ Post-Election:
 (/) - After that, enable HUD like before.
 
 Add news-event system:
-- Basically a log system that different modules can call, so the newspaper generates an articles about these events
-- NewsEvents show at the end of year newspaper
-- events can come from traits too (i.e. unpatient)!!
-- move seat changes / density changes / added district to this newsevent system
-- districts can create news event
-- Cultural traits can create news events too
-- basically everything can, should be modular
-- news event classes declare their structure of the newspaper articles
-- minor article generator then only needs to handle random events, news events, and fun articles.
+(/) - Basically a log system that different modules can call, so the newspaper generates an articles about these events
+(/) - NewsEvents show at the end of year newspaper
+(/) - events can come from traits too (i.e. unpatient)!!
+(/) - move seat changes / density changes / added district to this newsevent system
+(/) - districts can create news event
+(/) - Cultural traits can create news events too
+(/) - basically everything can, should be modular
+(/) - news event classes declare their structure of the newspaper articles
+(/) - minor article generator then only needs to handle random events, news events, and fun articles.
 
 Cultural traits:
-- change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
+(/) - change seat allocation method choice back to commonnes in the def, so it doesn't change with other cultural trait changes. then just apply the traits accordingly
 - Add more traits that allow for interesting long-term strategies (like "Stable", "Growing Population"). see bottom of page
-- Lower commonness of Secular, Declining Population, Weak economy
-- Remove non-linguistic
+(/) - Lower commonness of Secular, Declining Population, Weak economy
 (/) - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
 
 New Cultural Traits (just ideas so far, review them):
 - Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
 - Rival of X. Works the same as partner but with negative effects instead of positive.
 (/) - Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
-- Emigration: Acts as a negative modifier to population growth rate. All adjacent districts gain a positive modifier to population growth. Number of people leaving equals number of people joining in adjacent districts. Distribution is based on border length.
-- Immigration: Opposite of emigration. Positive modifier to population growth in the district, negative modifier in adjacent districts.
-- Capital: +5 seats. (only 1 district has it. added to a random one of the first 10)
+- Capital: +3 seats. (only 1 district has it. added to a random one of the first 10)
 - Influental: 10% of popularity is applied to adjacent districts as well.
 - <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
 - <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
 - Impressionable: +10 popularity for each party governing an adjacent district.
-- remove non-linguistic and secular.
-- Very fast growing pop
-- ANother trait that grows pop by a little as a side effect
-- Unpatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently
-- <RELIGION/LANGUAE> Influence: Created adjacent districts will have the same religion/language guaranteed
+- Immigration Hub: +5% population growth, -2% population growth in adjacent districts
+- Impatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently. Should be trackable in tooltip. Exclusion should generate news article.
+- <RELIGION/LANGUAGE> Imperialism: Created adjacent districts will have the same religion/language guaranteed
 
 Add random districts events (that can happen randomly (rarely) after an election):
 (/) - add framework for them to exist, appear, and have effects
 
-Random Events:
-(/) - disaster
+Random Events (both logic & newspaper article gen):
+- disaster
 - trait gain
 - trait loss
 - capital move
@@ -258,3 +258,5 @@ DESIGN CHALLENGE: picking an ideology shouldn't immediately change popularities 
   - Forestry only in forested biomes
   - Winter tourism in snowy regions and mountains
   - Summer tourism at coast and islands, hotter biomes
+
+Future Cultural trait ideas:

@@ -26,7 +26,6 @@ namespace ElectionTactics
 
         public void InitPartySeats(Party p, string value)
         {
-            Debug.Log("setting value to " + value);
             SetValue(value);
             // SeatNumber.SetColor(p.Color, p.ContrastColor);
             SetColor(new Color(0.45f, 0.45f, 0.45f), Color.white);

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public abstract class CulturalTrait
+    public class CulturalTrait
     {
         /// <summary>
         /// Empty constructor is needed for System.Activator.

@@ -27,7 +27,7 @@
                 Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
                 Category = CulturalTraitCategoryDefOf.Demographic,
-                Commonness = 20,
+                Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     RELIGIOUS,
@@ -74,7 +74,7 @@
                 Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
                 Category = CulturalTraitCategoryDefOf.Demographic,
-                Commonness = 20,
+                Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     LINGUISTIC,

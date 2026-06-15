@@ -116,34 +116,21 @@ namespace ElectionTactics
         /// Looks at the comparison between the current game state and the one before the election and creates articles about events (i.e. change of seats). Also looks at the event list and generates articles about events of the year. Can also in some cases include a procedurally generated gameplay-unrelevant fun article.
         /// <br/>List is always sorted by importance. And most important article will always get column 1, so the first shared columns are for unimportant articles.
         /// </summary>
-        /// <returns></returns>
         private static List<NewspaperMinorArticle> GenerateMinorArticles()
         {
             List<NewspaperMinorArticle> articles = new List<NewspaperMinorArticle>();
 
             // Generate articles about random district events
-            foreach(RandomEvent randomEvent in Game.RandomEvents.Where(e => e.Year == Game.Year))
+            foreach (RandomEvent randomEvent in Game.RandomEvents.Where(e => e.Year == Game.Year - 1))
             {
                 articles.Add(GenerateRandomEventArticle(randomEvent));
             }
 
-            // Generate articles about seat changes in districts
-            foreach(District d in Game.ActiveDistricts.Where(d => ElectionResult.DistrictResults.Any(dr => dr.District == d) && ElectionResult.GetDistrictResult(d).Seats != d.Seats))
+            // Generate articles about news events
+            foreach (NewsEvent newsEvent in Game.NewsEvents.Where(e => e.Year == Game.Year - 1))
             {
-                int seatsBefore = ElectionResult.GetDistrictResult(d).Seats;
-                int seatsAfter = d.Seats;
-                articles.Add(GenerateSeatChangeArticle(d, seatsBefore, seatsAfter));
+                articles.Add(GenerateNewsEventArticle(newsEvent));
             }
-
-            // Generate articles about density changes
-            foreach (District d in Game.ActiveDistricts.Where(d => ElectionResult.DistrictResults.Any(dr => dr.District == d) && ElectionResult.GetDistrictResult(d).Density != d.Density))
-            {
-                articles.Add(GenerateDensityChangeArticle(d));
-            }
-
-            // Generate article about newly added district
-            District addedDistrict = Game.ActiveDistricts.Last();
-            articles.Add(GenerateDistrictAddedArticle(addedDistrict));
 
             // Generate fun article
             if (Random.value < 0.3f)
@@ -160,47 +147,21 @@ namespace ElectionTactics
         {
             var article = new NewspaperMinorArticle(Newspaper);
             article.SetSprite(e.ArticleIcon);
-            article.SetHeadline(e.ArticleHeadline);  // e.g. "Meteor Impact in Cauca"
-            article.SetBodyText(e.ArticleBody);      // e.g. "...around 50,000 fatalities."
+            article.SetHeadline(e.ArticleHeadline);
+            article.SetBodyText(e.ArticleBody);
             article.Priority = 200;
             return article;
         }
 
-        private static NewspaperMinorArticle GenerateSeatChangeArticle(District d, int seatsBefore, int seatsAfter)
-        {
-            var article = new NewspaperMinorArticle(Newspaper);
-            bool gained = seatsAfter > seatsBefore;
-            article.SetSprite(ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star"));
-            article.SetHeadline($"{d.Name} {(gained ? "gains" : "loses")} a seat");
-            article.SetBodyText(
-                $"The population of {d.Name} continues to {(gained ? "grow" : "shrink")}. " +
-                $"In next year's parliament, the district will seat {(gained ? "an additional" : "one fewer")} " +
-                $"representative, with a new total of {seatsAfter}.");
-            article.Priority = 60; // seat changes are fairly important
-            return article;
-        }
-
-        private static NewspaperMinorArticle GenerateDensityChangeArticle(District district)
+        private static NewspaperMinorArticle GenerateNewsEventArticle(NewsEvent e)
         {
             NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper);
 
-            article.SetHeadline($"Density Change In {district.Name}");
-            article.SetBodyText("Oh my god there is a new density can you believe it!");
-            article.Priority = 1;
+            article.SetSprite(e.ArticleIcon);
+            article.SetHeadline(e.GetArticleHeadline());
+            article.SetBodyText(e.GetArticleBody());
+            article.Priority = e.GetArticlePriority();
 
-            return article;
-        }
-
-        private static NewspaperMinorArticle GenerateDistrictAddedArticle(District district)
-        {
-            var article = new NewspaperMinorArticle(Newspaper);
-            article.SetSprite(ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star"));
-            article.SetHeadline($"{district.Name} joins the nation");
-            article.SetBodyText(
-                $"The district of {district.Name} has officially joined the country and will take part " +
-                $"in elections from next cycle onward. Early reports describe a {district.Density.Label.ToLower()}-density " +
-                $"region where {district.Economy1.Label.ToLower()} dominates the local economy.");
-            article.Priority = 30; // lowest — it's always present, so genuine events should outrank it
             return article;
         }
 

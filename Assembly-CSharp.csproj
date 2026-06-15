@@ -80,7 +80,6 @@
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraphVertex.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\StartingDistrictDefs.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\Nation.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_DecliningPopulation.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\GeographyTraitType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Density.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\VFX\VfxManager.cs" />
@@ -103,7 +102,6 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Events\UI_Events.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RiverInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Base\ElectionTacticsGame.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_ProportionalRepresentation.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Region.cs" />
     <Compile Include="Assets\Scripts\Helper\HelperFunctions.cs" />
@@ -119,13 +117,13 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\District.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\UI_ElectionTactics.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Properties\AssemblyInfo.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_GrowingPopulation.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\VEdge.cs" />
     <Compile Include="Assets\Scripts\VoronoiLib\Structures\FortuneEvent.cs" />
     <Compile Include="Assets\Scripts\UIBase\Tooltip\TooltipTarget.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Border.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Biome.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierSlider.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_DistrictDensityChange.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\AgeGroupPolicy.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WaterTopologyNoise.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\WaterCreator.cs" />
@@ -172,6 +170,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Modifiers\UI_ModifierListElement.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\TopologyCreator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\ContinentCreation\KargerGraph.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_DistrictSeatChange.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\CulturalTraitDefOf.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_TraitContainer.cs" />
     <Compile Include="Assets\Scripts\Parrisk\ParriskGame.cs" />
@@ -214,9 +213,11 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\SeatDistributionDefs.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\DensityPolicy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\ColorManager.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Linguistic.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_ReligionChange.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\Landmass.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_HistoricalLegacy100.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RandomEventDef.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEventHandler.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\CulturalTrait.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_LanguageChange.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_CapitalMove.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_DistrictAdded.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\Language.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Party\Party.cs" />
@@ -249,7 +251,6 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Newspaper\NewspaperGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Rebellious.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\PostGame\UI_PostGameScreen.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_MajorityBonus.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphAnimationType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_TraitRow.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />

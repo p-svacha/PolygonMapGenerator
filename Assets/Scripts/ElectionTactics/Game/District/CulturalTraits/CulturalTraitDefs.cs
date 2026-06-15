@@ -53,7 +53,7 @@ namespace ElectionTactics
                 Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
                 Category = CulturalTraitCategoryDefOf.Demographic,
-                Commonness = 20,
+                Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     RELIGIOUS,
@@ -100,7 +100,7 @@ namespace ElectionTactics
                 Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
                 Category = CulturalTraitCategoryDefOf.Demographic,
-                Commonness = 20,
+                Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
                     LINGUISTIC,
@@ -155,7 +155,6 @@ namespace ElectionTactics
                 DefName = GROWING_POPULATION,
                 Label = "Growing Population",
                 Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
-                TraitClass = typeof(CT_GrowingPopulation),
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 90,
                 PopulationGrowthRateModifier = +7.0f,
@@ -170,7 +169,6 @@ namespace ElectionTactics
                 DefName = DECLINING_POPULATION,
                 Label = "Declining Population",
                 Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
-                TraitClass = typeof(CT_DecliningPopulation),
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 50,
                 PopulationGrowthRateModifier = -5.0f,
@@ -261,7 +259,6 @@ namespace ElectionTactics
                 DefName = PROPORTIONAL_REPRESENTATION,
                 Label = "Proportional Representation",
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
-                TraitClass = typeof(CT_ProportionalRepresentation),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
                 Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
@@ -272,7 +269,6 @@ namespace ElectionTactics
                 DefName = MAJORITY_BONUS,
                 Label = "Majority Representation",
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
-                TraitClass = typeof(CT_MajorityBonus),
                 Category = CulturalTraitCategoryDefOf.SeatDistribution,
                 Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,

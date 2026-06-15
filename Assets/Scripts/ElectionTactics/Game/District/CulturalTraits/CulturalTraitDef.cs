@@ -40,6 +40,16 @@ namespace ElectionTactics
         /// </summary>
         public float PopulationGrowthRateModifier { get; init; } = 0f;
 
+        /// <summary>
+        /// Additive modifier in % that gets applied to the population growth rate of all land neighbours.
+        /// </summary>
+        public float NeighbourPopulationGrowthModifier { get; init; } = 0f;
+
+        /// <summary>
+        /// Modifier on amount of seats the district is worth, regardless of population.
+        /// </summary>
+        public int SeatModifier { get; init;  } = 0;
+
 
         public override bool Validate()
         {
