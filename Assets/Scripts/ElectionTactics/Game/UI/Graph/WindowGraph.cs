@@ -267,6 +267,12 @@ public class WindowGraph : MonoBehaviour
         return Bars[barIndex].transform.position;
     }
 
+    public float GetAnimationProgress()
+    {
+        if (AnimationType != GraphAnimationType.Init || AnimationTime <= 0f) return 1f;
+        return Mathf.Clamp01(AnimationDelay / AnimationTime);
+    }
+
     #endregion
 
     #region GraphElements

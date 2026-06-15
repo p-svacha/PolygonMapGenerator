@@ -139,6 +139,10 @@ namespace ElectionTactics
             ListElements[p].Background.color = ColorManager.Instance.UiMainLighter1;
         }
 
+        public void SetPartySeats(Party party, int seats)
+        {
+            if (ListElements.ContainsKey(party)) ListElements[party].SetSeats(seats);
+        }
 
         private void UpdatePartyPosition(List<Party> parties)
         {
@@ -210,6 +214,11 @@ namespace ElectionTactics
         public Vector3 GetElementCenter(Party party)
         {
             return ListElements[party].transform.position + new Vector3(ListElementWidth * 0.5f, ListElementHeight * 0.5f, 0f);
+        }
+
+        public Vector3 GetSeatScreenPosition(Party party)
+        {
+            return ListElements[party].GetSeatInfoScreenPosition();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ElectionTactics
         {
             if (!IsAnimating) return;
 
-            if (CurrentAnimationTime >= AnimationTime)
+            if (Tokens.Count == 0)
             {
                 StopAnimation();
                 if (Callback != null) Callback();
@@ -49,15 +49,23 @@ namespace ElectionTactics
                         continue;
                     }
 
+                    if (!token.gameObject.activeSelf)
+                    {
+                        token.gameObject.SetActive(true);
+                        AudioManager.PlaySound(AudioManager.Instance.Swoosh, volume: 0.2f, applySpeedModifier: true);
+                    }
+
                     float ratio = Mathf.Clamp01(tokenTime / TokenTravelTime);
                     token.transform.position = Vector2.Lerp(token.StartPosition, token.TargetPosition, ratio);
                     if (!token.HasArrived && ratio >= 1f)
                     {
                         token.HasArrived = true;
                         token.ArrivalCallback?.Invoke();
+                        GameObject.Destroy(token.gameObject);
                     }
                 }
 
+                Tokens = Tokens.Where(t => !t.HasArrived).ToList(); // Remove arrived tokens
                 CurrentAnimationTime += Time.deltaTime * AnimationSpeedModifier;
 
             }
@@ -81,13 +89,13 @@ namespace ElectionTactics
         {
             if (IsAnimating) StopAnimation();
             UI_ScoreToken token = Instantiate(ScoreTokenPrefab, TokenContainer.transform);
+            token.gameObject.SetActive(false);
             token.StartPosition = startPosition;
             token.TargetPosition = targetPosition;
             token.ValueText.text = "";
             token.Background.color = Color.white;
             token.StartDelay = startDelay;
             token.ArrivalCallback = arrivalCallback;
-            token.gameObject.SetActive(false);
             Tokens.Add(token);
         }
 
@@ -105,7 +113,6 @@ namespace ElectionTactics
 
             foreach (UI_ScoreToken token in Tokens)
             {
-                token.gameObject.SetActive(true);
                 token.transform.position = token.StartPosition;
             }
         }

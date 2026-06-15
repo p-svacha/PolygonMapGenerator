@@ -43507,6 +43507,8 @@ MonoBehaviour:
   Error: {fileID: 8300000, guid: 4ed11d760e1e2744f9fa0deca53e9982, type: 3}
   Swoosh: {fileID: 8300000, guid: 0387f745980c93e49b988ff5d1f7d5d6, type: 3}
   Lever: {fileID: 8300000, guid: ba95d720d72e9824aba24b84f9581a1e, type: 3}
+  Heartbeat: {fileID: 8300000, guid: a99129f83125c9443b2d35a0301f085f, type: 3}
+  HeartbeatEnd: {fileID: 8300000, guid: f9cb9ed000493034f94f051ab7b5f591, type: 3}
   NewspaperSpin: {fileID: 8300000, guid: ea16792abafb9f543b3bd7b830f54b5a, type: 3}
   NewspaperSpinEnd: {fileID: 8300000, guid: e768f4e6410207a4e97efd7d64ffa9bc, type: 3}
   NewspaperRustle1: {fileID: 8300000, guid: 3812f96d82a0bb546bbcadaa860f48d8, type: 3}

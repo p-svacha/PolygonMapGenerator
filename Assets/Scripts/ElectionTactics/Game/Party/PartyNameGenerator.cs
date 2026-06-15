@@ -322,8 +322,8 @@ namespace ElectionTactics
             { "for", 100 },
             { "for the", 40 },
             { "through", 20 },
-            { "beyond", 15 },
-            { "over", 10 },
+            { "beyond", 8 },
+            { "over", 8 },
         };
 
 

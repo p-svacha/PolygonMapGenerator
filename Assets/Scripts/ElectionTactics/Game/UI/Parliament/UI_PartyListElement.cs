@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using NUnit.Framework;
 
 namespace ElectionTactics
 {
@@ -17,8 +18,12 @@ namespace ElectionTactics
         public Image PlayerControlledIndicator;
         public TooltipTarget TooltipTarget;
 
+        private bool IsUsingSeatIcons;
+
         public void Init(Party p, string value, bool useAcronym, bool useSeatIcons = false)
         {
+            IsUsingSeatIcons = useSeatIcons;
+
             Party = p;
             NameText.text = useAcronym ? p.Acronym : p.Name;
             NameText.color = p.Color;
@@ -61,7 +66,8 @@ namespace ElectionTactics
 
         public void UpdateValue(string value)
         {
-            ValueText.text = value;
+            if (IsUsingSeatIcons) SeatNumber.SetValue(value);
+            else ValueText.text = value;
             RefreshTooltipContent();
         }
 
@@ -73,6 +79,8 @@ namespace ElectionTactics
             string description = "";
             if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.Classic)
             {
+                if (ValueText.text == "") return; // safeguard
+
                 int numElectionsWon = int.Parse(ValueText.text);
                 description = $"{numElectionsWon} {"election".Pluralize(numElectionsWon)} won.";
             }
@@ -83,6 +91,11 @@ namespace ElectionTactics
             }
 
             TooltipTarget.Init(title, description, Party.Color);
+        }
+
+        public Vector3 GetSeatInfoScreenPosition()
+        {
+            return SeatNumber.transform.position;
         }
     }
 }

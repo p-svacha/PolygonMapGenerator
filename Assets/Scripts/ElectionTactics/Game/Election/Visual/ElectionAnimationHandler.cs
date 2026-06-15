@@ -81,12 +81,21 @@ namespace ElectionTactics
             { ElectionAnimationSpeed.VeryFast, 5f },
         };
 
+        // Seat token animation 
+        private const float SEAT_TOKEN_DELAY_PER_SEAT = 0.1f;
+        private const float SEAT_TOKEN_PAUSE_BETWEEN_PARTIES = 0.35f;
+        private const float SEAT_TOKEN_FLY_DURATION = 0.8f;
+
+        // Nailbiter effect
+        private const float NAILBITER_SLOWDOWN_START = 0.70f; // progress at which slowdown begins
+        private const float NAILBITER_SLOWDOWN_END = 0.85f;   // progress at which full slow is reached
+        private const float NAILBITER_SLOW_SPEED = 0.10f;     // graph speed during the slow phase
+        private bool isNailbiterActive = false;
+        private bool isPlayingHeartbeat = false;
+
         // Sound
         private int playerBarIndex = -1;
         private bool isPlayingBarSound = false;
-
-        // Special effects
-        private bool isNailbiter = false;
 
         public ElectionAnimationHandler(ElectionTacticsGame game)
         {
@@ -150,7 +159,7 @@ namespace ElectionTactics
                     break;
 
                 case AnimationState.GraphAnimation:
-                    UpdateGraphAnimationSound();
+                    UpdateGraphAnimation();
                     // Wait for callback from graph animation
                     break;
 
@@ -212,7 +221,7 @@ namespace ElectionTactics
             // Clear visual seats
             TempSeats.Clear();
             foreach (Party p in Game.Parties) TempSeats.Add(p, 0);
-            Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true);
+            Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true, useSeatIcons: true);
 
             // Init visual standings
             TempStandingsScore.Clear();
@@ -239,15 +248,10 @@ namespace ElectionTactics
                 CurrentDistrictResult = DistrictOrder[CurElectionDistrictIndex].GetLatestElectionResult();
                 CurrentDistrictResult.District.Region.SetAnimatedHighlight(true);
 
-                // Award seats
-                foreach (Party p in CurrentDistrictResult.Parties)
-                    TempSeats[p] += CurrentDistrictResult.SeatsWon[p];
-
                 // BR mode
                 if (Game.IsBattleRoyale)
                     foreach (Party p in CurrentDistrictResult.Parties)
                         TempStandingsScore[p] += CurrentDistrictResult.GetLegitimacyChange(p);
-
 
                 // Prepare graph for next district
                 if (CurrentDistrictResult.District.ElectionResults.Count > 1)
@@ -291,7 +295,7 @@ namespace ElectionTactics
                 Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.District.Seats, CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
 
                 // Init animation
-                float graphTime = isNailbiter ? GraphAnimationTime * 1.6f : GraphAnimationTime;
+                float graphTime = GraphAnimationTime;
                 Game.UI.Parliament.CurrentElectionGraph.InitAnimatedBarGraph(dataPoints, yMax, 10, 0.1f, Color.white, Color.grey, Game.UI.Font, graphTime, startAnimation: false);
 
                 Game.CameraHandler.MoveToFocusDistricts(new List<District>() { CurrentDistrictResult.District }, DistrictPanTime, OnCameraMoveToNextDistrictDone);
@@ -329,22 +333,10 @@ namespace ElectionTactics
         // Graph animation
         private void InitGraphAnimation()
         {
-            // Detect nailbiter: player involved AND within threshold of an adjacent-rank party
-            isNailbiter = false;
-            var shares = CurrentDistrictResult.VoteShare.OrderByDescending(x => x.Value).ToList();
-            float threshold = 1f - (0.1f * CurrentDistrictResult.Parties.Count);
-            for (int i = 0; i < shares.Count - 1; i++)
-            {
-                float gap = shares[i].Value - shares[i + 1].Value;
-                bool playerInvolved = shares[i].Key == Game.LocalPlayerParty || shares[i + 1].Key == Game.LocalPlayerParty;
-                if (playerInvolved && gap <= threshold)
-                {
-                    isNailbiter = true;
-                    break;
-                }
-            }
+            isNailbiterActive = CurrentDistrictResult.IsNailbiter;
 
             // Start animation
+            Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(AnimationSpeedModifier); // ensure it's reset
             Game.UI.Parliament.CurrentElectionGraph.StartAnimation(OnGraphAnimationDone);
 
             // Start charging sound for player party bar
@@ -362,19 +354,38 @@ namespace ElectionTactics
             }
         }
 
-        private void UpdateGraphAnimationSound()
+        private void UpdateGraphAnimation()
         {
-            // Update charging sound pitch based on player bar progress
+            // Existing charging-sound pitch update
             if (isPlayingBarSound && playerBarIndex >= 0)
             {
-                float progress = Game.UI.Parliament.CurrentElectionGraph.GetBarProgress(playerBarIndex);
-                AudioManager.SetChargingProgress("electionBar", progress);
-
-                // Stop sound when player bar reaches its target
-                if (progress >= 1f)
+                float barProgress = Game.UI.Parliament.CurrentElectionGraph.GetBarProgress(playerBarIndex);
+                AudioManager.SetChargingProgress("electionBar", barProgress);
+                if (barProgress >= 1f)
                 {
                     AudioManager.StopChargingSound("electionBar");
                     isPlayingBarSound = false;
+                }
+            }
+
+            // Nailbiter slowdown + heartbeat
+            if (isNailbiterActive)
+            {
+                float progress = Game.UI.Parliament.CurrentElectionGraph.GetAnimationProgress();
+
+                if (progress >= NAILBITER_SLOWDOWN_START)
+                {
+                    // Blend speed from normal down to NAILBITER_SLOW_SPEED across the start→end window
+                    float t = Mathf.InverseLerp(NAILBITER_SLOWDOWN_START, NAILBITER_SLOWDOWN_END, progress);
+                    float blendedSpeed = Mathf.Lerp(AnimationSpeedModifier, AnimationSpeedModifier * NAILBITER_SLOW_SPEED, t);
+                    Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(blendedSpeed);
+
+                    // Start heartbeat once when we enter the window
+                    if (!isPlayingHeartbeat)
+                    {
+                        AudioManager.StartChargingSound("heartbeat", AudioManager.Instance.Heartbeat, basePitch: 1f, maxPitch: 1f, volume: 0.7f);
+                        isPlayingHeartbeat = true;
+                    }
                 }
             }
         }
@@ -387,41 +398,58 @@ namespace ElectionTactics
                 isPlayingBarSound = false;
             }
 
+            if (isNailbiterActive)
+            {
+                if (isPlayingHeartbeat)
+                {
+                    AudioManager.StopChargingSound("heartbeat");
+                    isPlayingHeartbeat = false;
+                }
+                // Reset graph speed for the next district
+                Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(AnimationSpeedModifier);
+                AudioManager.PlaySound(AudioManager.Instance.HeartbeatEnd, volume: 0.8f, applySpeedModifier: true);
+                isNailbiterActive = false;
+            }
+
             InitWaitTime(PostGraphPauseTime, AnimationState.InitSeatTokenAnimation);
         }
 
         private void InitSeatTokenAnimation()
         {
-            float delayPerSeat = 0.08f;
             float startDelay = 0f;
-            float pauseBetweenParties = 0.3f;
-            foreach (Party p in CurrentDistrictResult.GetPartiesThatWonSeats())
+            foreach (Party party in CurrentDistrictResult.GetPartiesThatWonSeats().OrderByDescending(p => CurrentDistrictResult.VoteShare[p]))
             {
-                int barIndex = Game.UI.Parliament.CurrentElectionGraph.GetBarIndex(p.Acronym);
+                int barIndex = Game.UI.Parliament.CurrentElectionGraph.GetBarIndex(party.Acronym);
                 Vector2 source = Game.UI.Parliament.CurrentElectionGraph.GetBarWorldPosition(barIndex);
-                Vector2 target = Game.UI.Parliament.ParliamentPartyList.GetElementCenter(p);
+                Vector2 target = Game.UI.Parliament.ParliamentPartyList.GetSeatScreenPosition(party);
 
-                for (int s = 0; s < CurrentDistrictResult.SeatsWon[p]; s++)
+                for (int s = 0; s < CurrentDistrictResult.SeatsWon[party]; s++)
                 {
                     int capturedSeat = s;
+                    Party capturedParty = party;
 
-                    Action tokenArrivalCallback = null;
-                    if (p == Game.LocalPlayerParty)
+                    Action tokenArrivalCallback = () =>
                     {
-                        tokenArrivalCallback = () => AudioManager.PlaySound(AudioManager.Instance.Ding, pitch: 0.8f + capturedSeat * 0.1f, volume: 0.6f);
-                    }
+                        // Bump the displayed seat count for this party by one
+                        TempSeats[capturedParty]++;
+                        Game.UI.Parliament.ParliamentPartyList.SetPartySeats(capturedParty, TempSeats[capturedParty]);
+
+                        // Player gets the ascending ding
+                        bool isPlayerParty = capturedParty == Game.LocalPlayerParty;
+                        AudioClip arrivalSound = isPlayerParty ? AudioManager.Instance.Ding : AudioManager.Instance.AddBot;
+                        float volume = 0.4f;
+                        float pitch = 0.8f + capturedSeat * 0.1f;
+
+                        AudioManager.PlaySound(arrivalSound, volume, pitch, applySpeedModifier: true);
+                    };
 
                     ScoreTokenAnimationHandler.Instance.AddSeatTokenToNextAnimation(source, target, startDelay, tokenArrivalCallback);
-                    
-                    startDelay += delayPerSeat;
+                    startDelay += SEAT_TOKEN_DELAY_PER_SEAT;
                 }
-
-                startDelay += pauseBetweenParties;
+                startDelay += SEAT_TOKEN_PAUSE_BETWEEN_PARTIES;
             }
 
-            float duration = 0.2f;
-            // todo: make sure the duration is handled correctly with the start delays. duration should be handled as the duration for one token from source to target. total duration can therefore change based on start delays of individual tokens
-            ScoreTokenAnimationHandler.Instance.StartAnimation(duration, OnSeatTokensAnimationDone);
+            ScoreTokenAnimationHandler.Instance.StartAnimation(SEAT_TOKEN_FLY_DURATION, OnSeatTokensAnimationDone);
         }
 
         private void OnSeatTokensAnimationDone()
@@ -532,11 +560,7 @@ namespace ElectionTactics
         private void InitEndAnimation()
         {
             // Reset audio
-            if (isPlayingBarSound)
-            {
-                AudioManager.StopChargingSound("electionBar");
-                isPlayingBarSound = false;
-            }
+            ForceEndSpecialEffects();
             AudioManager.SetSfxSpeedModifier(1f);
             AudioManager.ResumeAmbient();
 
@@ -605,12 +629,8 @@ namespace ElectionTactics
 
             Debug.Log("Concluding District early.");
 
-            // Stop any ongoing sounds
-            if (isPlayingBarSound)
-            {
-                AudioManager.StopChargingSound("electionBar");
-                isPlayingBarSound = false;
-            }
+            // End special effects
+            ForceEndSpecialEffects();
 
             // Color district
             SetColorOfCurrentDistrictResult();
@@ -619,13 +639,23 @@ namespace ElectionTactics
             Game.CameraHandler.StopMovement();
 
             // Update party lists with result from current district
-            Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true);
+            foreach (Party p in CurrentDistrictResult.Parties) TempSeats[p] += CurrentDistrictResult.SeatsWon[p];
+            Game.UI.Parliament.ParliamentPartyList.Init(TempSeats, dynamic: true, useSeatIcons: true);
             Game.UI.StandingsPanel.Init(TempStandingsScore, dynamic: true);
 
             State = AnimationState.InitNextDistrict;
         }
 
         public void ConcludeElection()
+        {
+            State = AnimationState.InitEndAnimation;
+        }
+
+        #endregion
+
+        #region Internal Helpers
+
+        private void ForceEndSpecialEffects()
         {
             // Stop any ongoing sounds
             if (isPlayingBarSound)
@@ -634,12 +664,15 @@ namespace ElectionTactics
                 isPlayingBarSound = false;
             }
 
-            State = AnimationState.InitEndAnimation;
+            // Reset nailbiter
+            if (isPlayingHeartbeat)
+            {
+                AudioManager.StopChargingSound("heartbeat");
+                isPlayingHeartbeat = false;
+            }
+            isNailbiterActive = false;
+            Game.UI.Parliament.CurrentElectionGraph.SetAnimationSpeedModifier(AnimationSpeedModifier);
         }
-
-        #endregion
-
-        #region Helpers
 
         #endregion
 

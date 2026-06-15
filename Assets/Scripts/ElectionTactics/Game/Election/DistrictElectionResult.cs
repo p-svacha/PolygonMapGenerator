@@ -7,6 +7,8 @@ namespace ElectionTactics
 {
     public class DistrictElectionResult
     {
+        private ElectionTacticsGame Game => ElectionTacticsGame.Instance;
+
         public int ElectionCycle; // Cycle of the election
         public int Year;          // Year of the election
         public int Population;    // Population of the district at the time of election
@@ -35,6 +37,9 @@ namespace ElectionTactics
 
         public List<Modifier> Modifiers = new List<Modifier>();
 
+        // Calculated attributes
+        public bool IsNailbiter { get; private set; }
+
         public DistrictElectionResult(int electionCycle, int year, int population, int seats, DensityDef density, List<Party> parties, District district, Dictionary<Party, int> partyPoints, Dictionary<Party, int> votes, Dictionary<Party, float> voteShare, Dictionary<Party, int> seatsWon, Party winner, List<Modifier> modifiers)
         {
             ElectionCycle = electionCycle;
@@ -55,6 +60,8 @@ namespace ElectionTactics
             WinnerParty = winner;
             WinnerPartyId = winner.Id;
             Modifiers = modifiers;
+
+            IsNailbiter = GetIsNailbiter();
         }
 
         /// <summary>
@@ -130,6 +137,20 @@ namespace ElectionTactics
         public List<Party> GetPartiesThatWonSeats()
         {
             return Parties.Where(p => SeatsWon[p] > 0).ToList();
+        }
+
+        private bool GetIsNailbiter()
+        {
+            var shares = VoteShare.OrderByDescending(x => x.Value).ToList();
+            if (shares.Count < 2) return false;
+
+            float threshold = 1f - (0.1f * Parties.Count);
+            float topShare = shares[0].Value;
+            float playerShare = shares.First(s => s.Key == Game.LocalPlayerParty).Value;
+
+            // If player is leading, check gap to second place instead
+            float referenceShare = playerShare == topShare ? shares[1].Value : topShare;
+            return Mathf.Abs(referenceShare - playerShare) < threshold;
         }
     }
 }
