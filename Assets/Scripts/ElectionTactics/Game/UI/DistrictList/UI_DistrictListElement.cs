@@ -20,7 +20,7 @@ namespace ElectionTactics
         {
             District = d;
             NameText.text = d.Name;
-            SeatsInfo.InitDistrictSeats(d.Seats, d.GetSeatAllocationMethod(), darkMode: false);
+            SeatsInfo.InitDistrictSeats(d.GetSeats(), d.GetSeatAllocationMethod(), darkMode: false);
             if(d.CurrentWinnerParty != null)
             {
                 PartyIcon.gameObject.SetActive(true);

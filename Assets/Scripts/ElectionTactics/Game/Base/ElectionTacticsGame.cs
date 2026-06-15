@@ -28,6 +28,7 @@ namespace ElectionTactics
 
         // Districts
         private Dictionary<Region, District> Districts = new Dictionary<Region, District>();   // Contains districts that will be added after the election animation
+        public District Capital { get; private set; }
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -247,6 +248,9 @@ namespace ElectionTactics
             {
                 Districts.Values.ToList()[i].Activate();
             }
+
+            // Assign a random capital district
+            Districts.Values.Take(10).ToList().RandomElement().AddCulturalTrait(CulturalTraitDefOf.Capital);
 
             // Battle royale
             foreach (Party party in Parties) party.Legitimacy = (int)(BR_START_LEGITIMACY * GameSettings.GameLength.ModifierFactor);
@@ -1041,6 +1045,7 @@ namespace ElectionTactics
 
         public bool HasDistrict(Region r) => Districts.ContainsKey(r);
         public District GetDistrict(Region r) => Districts.ContainsKey(r) ? Districts[r] : null;
+        public List<District> AllDistricts => Districts.Values.ToList();
         public List<District> ActiveDistricts => Districts.Values.Where(d => d.IsActive).ToList();
 
         public bool IsClassicMode => GameSettings.GameMode == GameModeDefOf.Classic;
@@ -1060,7 +1065,7 @@ namespace ElectionTactics
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
 
-        public int GetNextElectionNumSeats() => ActiveDistricts.Sum(d => d.Seats);
+        public int GetNextElectionNumSeats() => ActiveDistricts.Sum(d => d.GetSeats());
 
         /// <summary>
         /// Returns the current standings as an ordered dictionary with the value representing the party score (varies by gamemode).

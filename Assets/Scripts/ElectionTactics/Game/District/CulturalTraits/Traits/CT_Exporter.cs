@@ -4,8 +4,8 @@ namespace ElectionTactics
 {
     public class CT_Exporter : CulturalTrait
     {
-        private const int INCREASE = Policy.HIGH_POPULARITY_IMPACT;
-        private const int NEIGHBOUR_IMPACT = Policy.LOW_POPULARITY_IMPACT;
+        public const int INCREASE = 3;
+        public const int NEIGHBOUR_IMPACT = 3;
 
         public override void ModifyPolicyPointImpact(District targetDistrict, Policy policy, ref int impact)
         {

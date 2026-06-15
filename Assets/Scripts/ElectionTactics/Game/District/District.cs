@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -27,15 +26,16 @@ namespace ElectionTactics
         public EconomicSectorDef Economy1;
         public EconomicSectorDef Economy2;
         public EconomicSectorDef Economy3;
-        public List<CulturalTrait> CulturalTraits = new List<CulturalTrait>();
+        public List<CulturalTrait> CulturalTraits { get; set; } = new List<CulturalTrait>();
+        public List<CulturalTrait> ActiveCulturalTraits => CulturalTraits.Where(t => t.IsActive).ToList();
 
         private Dictionary<int, int> NumCulturalTraitWeights = new Dictionary<int, int>() // Probabilities for how many cultural traits
         {
             { 0, 15 },
-            { 1, 30 },
-            { 2, 36 },
-            { 3, 14 },
-            { 4, 5 },
+            { 1, 37 },
+            { 2, 32 },
+            { 3, 12 },
+            { 4, 4 },
         };
 
         // Election
@@ -43,13 +43,13 @@ namespace ElectionTactics
         public Party CurrentWinnerParty;
         public float CurrentWinnerShare;
 
-        public const int MinSeats = 1;
+        public const int MIN_SEATS = 1;
         public const int RequiredPopulationPerSeat = 40000;
         public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
         public int Population;     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
         private float BasePopulationGrowthRate; // Randomized base growth rate of the district. Between -1% and 2%.
-        public int Seats;          // How many seats this district has in the parliament
+        private int SeatsFromPopulation { get; set; }          // Base amount of seats this district is worth
         public int Voters { get; set; } // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
         public float VoterTurnout; // Value between 0 and 1 of how many people went to vote. This value is only relevant for the vote victory and is not used for calculation of the actual votes.
 
@@ -95,7 +95,7 @@ namespace ElectionTactics
 
             // Seat allocation method
             Dictionary<SeatAllocationMethodDef, int> samCandidates = new Dictionary<SeatAllocationMethodDef, int>();
-            foreach(SeatAllocationMethodDef def in DefDatabase<SeatAllocationMethodDef>.AllDefs)
+            foreach (SeatAllocationMethodDef def in DefDatabase<SeatAllocationMethodDef>.AllDefs)
             {
                 samCandidates.Add(def, def.Commonness);
             }
@@ -123,7 +123,7 @@ namespace ElectionTactics
             BasePopulationGrowthRate = Random.Range(ElectionTacticsGame.MIN_BASE_GROWTH_RATE, ElectionTacticsGame.MAX_BASE_GROWTH_RATE);
 
             // Calculations based on previous values
-            RecalculateSeats();
+            RecalculateSeatsFromPopulation();
             RecalculateDensity();
 
             // Economy (requires all previous attributes)
@@ -137,16 +137,29 @@ namespace ElectionTactics
             IsActive = false;
         }
 
-        public void AddCulturalTrait(CulturalTraitDef def)
+        public CulturalTrait AddCulturalTrait(CulturalTraitDef def, bool skipOnInit = false)
         {
             CulturalTrait trait = (CulturalTrait)System.Activator.CreateInstance(def.TraitClass);
-            trait.Init(def, this);
+            trait.Init(def, this, skipOnInit);
             CulturalTraits.Add(trait);
+            return trait;
         }
 
-        private void RecalculateSeats()
+        public void RemoveCulturalTrait(CulturalTraitDef def)
         {
-            int seatsBefore = Seats;
+            CulturalTrait toRemove = CulturalTraits.FirstOrDefault(t => t.Def == def);
+            if (toRemove != null) RemoveCulturalTrait(toRemove);
+        }
+
+        public void RemoveCulturalTrait(CulturalTrait trait)
+        {
+            CulturalTraits.Remove(trait);
+            trait.OnRemoved();
+        }
+
+        private void RecalculateSeatsFromPopulation()
+        {
+            int totalSeatsBefore = GetSeats();
 
             int tmpPop = Population;
             int tmpSeatRequirement = RequiredPopulationPerSeat;
@@ -157,11 +170,11 @@ namespace ElectionTactics
                 tmpPop -= tmpSeatRequirement;
                 tmpSeatRequirement += RequirementIncreasePerSeat;
             }
-            Seats = Mathf.Max(MinSeats, tmpSeats);
+            SeatsFromPopulation = Mathf.Max(MIN_SEATS, tmpSeats);
 
-            int seatsAfter = Seats;
+            int seatsAfter = GetSeats();
 
-            if (seatsBefore != seatsAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictSeatChange(this, seatsBefore, seatsAfter));
+            if (totalSeatsBefore != seatsAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictSeatChange(this, totalSeatsBefore, seatsAfter));
         }
 
         private void RecalculateDensity()
@@ -308,6 +321,21 @@ namespace ElectionTactics
         }
         private LanguageDef GetLanguageForNewRegion() // Languages can spread over land borders
         {
+            // Check if any active adjacent district has linguistic imperialism
+            List<LanguageDef> forcedLanguages = new List<LanguageDef>();
+            foreach (District d in Region.LandNeighbours.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)))
+            {
+                foreach(CulturalTrait trait in d.ActiveCulturalTraits)
+                {
+                    if (trait is CT_Imperialistic impTrait && impTrait.PolicyType == PolicyType.Language)
+                    {
+                        forcedLanguages.Add(d.Language);
+                    }
+                }
+            }
+            if (forcedLanguages.Count > 0) return forcedLanguages.RandomElement();
+
+            // Choose semi-randomly
             Dictionary<LanguageDef, int> languageCandidates = new Dictionary<LanguageDef, int>();
 
             // Add a random language with weight 1
@@ -325,6 +353,21 @@ namespace ElectionTactics
         }
         private ReligionDef GetReligionForNewRegion() // Religion can spread over land and water
         {
+            // Check if any active adjacent district has religious imperialism
+            List<ReligionDef> forcedReligions = new List<ReligionDef>();
+            foreach (District d in Region.LandNeighbours.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)))
+            {
+                foreach (CulturalTrait trait in d.ActiveCulturalTraits)
+                {
+                    if (trait is CT_Imperialistic impTrait && impTrait.PolicyType == PolicyType.Religion)
+                    {
+                        forcedReligions.Add(d.Religion);
+                    }
+                }
+            }
+            if (forcedReligions.Count > 0) return forcedReligions.RandomElement();
+
+            // Choose semi-randomly
             Dictionary<ReligionDef, int> religionCandidates = new Dictionary<ReligionDef, int>();
 
             // Add a random religion with weight 2
@@ -393,6 +436,13 @@ namespace ElectionTactics
             Dictionary<Party, int> partyVotes = new Dictionary<Party, int>();
             Dictionary<Party, int> seatsWon = new Dictionary<Party, int>();
 
+            // Apply ad-hoc modifiers from cultural traits
+            foreach (CulturalTrait trait in ActiveCulturalTraits)
+            {
+                trait.OnPreElection();
+            }
+
+            // Calculate party popularities
             foreach (Party p in parties)
             {
                 partyPopularities.Add(p, GetPartyPopularity(p));
@@ -400,7 +450,7 @@ namespace ElectionTactics
             }
 
             // Add modifiers to result (as a copy)
-            List<Modifier> electionModifiers = Modifiers.Where(m => parties.Contains(m.Party)).Select(m => new Modifier(m)).ToList(); 
+            List<Modifier> electionModifiers = Modifiers.Where(m => parties.Contains(m.Party)).Select(m => new Modifier(m)).ToList();
 
             // Exclude parties with exclusion modifiers
             foreach (Modifier m in electionModifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
@@ -427,23 +477,24 @@ namespace ElectionTactics
             Party winner = voterShares.OrderByDescending(x => x.Value).First().Key;
 
             // Calculate number of "game" votes based on voter turnout
-            foreach(Party p in parties)
+            foreach (Party p in parties)
             {
                 partyVotes[p] = (int)((Population * VoterTurnout) * voterShares[p] / 100f);
             }
 
             // Calculate number of seats won for each party
             SeatAllocationMethodDef allocationMethod = GetSeatAllocationMethod();
-            seatsWon = allocationMethod.AllocateSeats(Seats, voterShares);
+            int numTotalSeats = GetSeats();
+            seatsWon = allocationMethod.AllocateSeats(numTotalSeats, voterShares);
 
             // Create result
-            Debug.Log($"Saving district election result for {Name} for cycle {Game.ElectionCycle} with {Seats} seats.");
+            Debug.Log($"Saving district election result for {Name} for cycle {Game.ElectionCycle} with {numTotalSeats} seats.");
             DistrictElectionResult result = new DistrictElectionResult
             (
                 Game.ElectionCycle,
                 Game.Year,
                 Population,
-                Seats,
+                numTotalSeats,
                 Density,
                 new List<Party>(parties),
                 this,
@@ -468,10 +519,10 @@ namespace ElectionTactics
             UpdateModifiers();
 
             // Cultural traits
-            foreach (CulturalTrait trait in CulturalTraits) trait.OnPostElection();
+            foreach (CulturalTrait trait in ActiveCulturalTraits) trait.OnPostElection();
 
             // Recalculate
-            RecalculateSeats();
+            RecalculateSeatsFromPopulation();
             RecalculateDensity();
         }
 
@@ -489,19 +540,21 @@ namespace ElectionTactics
         #region Popularity Calculations
 
         /// <summary>
-        /// Returns the popularity a party has in this district
+        /// Returns the popularity a party has in this district.
+        /// <br/>If includeOtherDistrictPopularityInfluence is false, all popularity impacts based on the popularity of other districts are excluded. Used to prevent circular/chained popularity impacts.
         /// </summary>
-        public int GetPartyPopularity(Party party)
+        public int GetPartyPopularity(Party party, bool includeOtherDistrictPopularityInfluence = true)
         {
-            int popularity = GetPartyPopularityBreakdown(party).Sum(x => x.Value);
+            int popularity = GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence).Sum(x => x.Value);
             if (popularity < 0) popularity = 0;
             return popularity;
         }
 
         /// <summary>
         /// Returns all factors that affect the party popularity in this district. The sum all factors equals the absolute popularity.
+        /// /// <br/>If includeOtherDistrictPopularityInfluence is false, all popularity impacts based on the popularity of other districts are excluded. Used to prevent circular/chained popularity impacts.
         /// </summary>
-        public Dictionary<string, int> GetPartyPopularityBreakdown(Party party)
+        public Dictionary<string, int> GetPartyPopularityBreakdown(Party party, bool includeOtherDistrictPopularityInfluence)
         {
             Dictionary<string, int> factors = new Dictionary<string, int>();
 
@@ -510,13 +563,43 @@ namespace ElectionTactics
             factors.Add("Base Popularity", basePopularity);
 
             // Policies
-            foreach (Policy policy in party.ActivePolicies) factors.Add($"{policy.Name } Policy ({policy.Value})", policy.GetCurrentImpactOn(this) );
+            foreach (Policy policy in party.ActivePolicies) factors.Add($"{policy.Name} Policy ({policy.Value})", policy.GetCurrentImpactOn(this));
 
             // Positive & Negative Modifiers
-            foreach (Modifier m in Modifiers.Where(x => x.Party == party))
+            List<Modifier> relevantModifiers = Modifiers.Where(m => m.Party == party).ToList();
+
+            foreach (Modifier m in relevantModifiers)
             {
                 if (m.Type == ModifierType.Positive) factors.Add(m.Source + " Modifier", m.Value);
                 else if (m.Type == ModifierType.Negative) factors.Add(m.Source + " Modifier", -m.Value);
+            }
+
+            // Modifiers from cultural traits
+            foreach (CulturalTrait trait in ActiveCulturalTraits)
+            {
+                Dictionary<string, int> f = trait.GetPopularityChange(party);
+                foreach (var x in f) factors.Add(x.Key, x.Value);
+            }
+
+            // Modifiers from the popularity of other districts
+            if (includeOtherDistrictPopularityInfluence)
+            {
+                // Effects from own traits
+                foreach (CulturalTrait trait in ActiveCulturalTraits)
+                {
+                    Dictionary<string, int> f = trait.GetPopularityChangeFromOtherDistrictPopularities(party);
+                    foreach (var x in f) factors.Add(x.Key, x.Value);
+                }
+
+                // Effects from neighbouring traits
+                foreach(District neighbour in ActiveLandNeighbours)
+                {
+                    foreach(CulturalTrait trait in neighbour.ActiveCulturalTraits)
+                    {
+                        Dictionary<string, int> f = trait.GetPopularityChangeInNeighbours(party);
+                        foreach (var x in f) factors.Add(x.Key, x.Value);
+                    }
+                }
             }
 
             return factors;
@@ -530,9 +613,16 @@ namespace ElectionTactics
             float value = BasePopulationGrowthRate;
             value += AgeGroup.PopulationGrowthRateModifier;
 
-            foreach (CulturalTrait ct in CulturalTraits)
+            foreach (CulturalTrait ct in ActiveCulturalTraits)
             {
-                value += ct.PopulationGrowthRateModifier;
+                value += ct.Def.PopulationGrowthRateModifier;
+            }
+            foreach (District neighbour in ActiveLandNeighbours)
+            {
+                foreach (CulturalTrait ct in neighbour.ActiveCulturalTraits)
+                {
+                    value += ct.Def.NeighbourPopulationGrowthModifier;
+                }
             }
 
             return value;
@@ -549,7 +639,7 @@ namespace ElectionTactics
             float growthRate = GetPopulationGrowthRate();
             if (growthRate == 0f) return -1;
 
-            int currentSeats = Seats;
+            int currentSeats = SeatsFromPopulation;
             int simulatedPopulation = Population;
 
             int cap = 50; // if it would take more than this amount of cycles, return as no change.
@@ -578,7 +668,7 @@ namespace ElectionTactics
                 // Find the population threshold below which a seat is lost
                 // Threshold for losing a seat: population needed for current seat count
                 // = (currentSeats - 1) * RequiredPopulationPerSeat + RequirementIncreasePerSeat * ((currentSeats-1) * (currentSeats-2) / 2)
-                if (currentSeats <= MinSeats) return -1; // Can't lose seats below minimum
+                if (currentSeats <= MIN_SEATS) return -1; // Can't lose seats below minimum
 
                 int lossSeatThreshold = (currentSeats - 1) * RequiredPopulationPerSeat
                     + RequirementIncreasePerSeat * ((currentSeats - 1) * (currentSeats - 2) / 2);
@@ -618,11 +708,27 @@ namespace ElectionTactics
 
         #region Getters
 
-        public List<District> AdjacentActiveDistricts => Region.LandNeighbours.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
+        /// <summary>
+        /// Returns the actual amount of seats this district is worth, including all modifiers.
+        /// </summary>
+        /// <returns></returns>
+        public int GetSeats()
+        {
+            int numSeats = SeatsFromPopulation;
+
+            foreach (CulturalTrait ct in ActiveCulturalTraits) numSeats += ct.Def.SeatModifier;
+
+            if (numSeats < MIN_SEATS) numSeats = MIN_SEATS;
+            return numSeats;
+        }
+
+        public List<District> ActiveLandNeighbours => Region.LandNeighbours.Where(r => Game.HasDistrict(r)).Select(r => Game.GetDistrict(r)).Where(d => d.IsActive).ToList();
 
         public CulturalTrait GetSeatDistributionTrait() => CulturalTraits.FirstOrDefault(t => t.Def.IsSeatDistributionTrait);
 
         public bool HasCulturalTrait(CulturalTraitDef def) => CulturalTraits.Any(t => t.Def == def);
+
+        public bool HasReligion => Religion != ReligionDefOf.None;
 
         public SeatAllocationMethodDef GetSeatAllocationMethod()
         {

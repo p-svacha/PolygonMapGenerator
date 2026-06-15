@@ -72,15 +72,15 @@ namespace ElectionTactics
             int impact = GetSinglePointBaseImpact(district);
 
             // Impact from own traits
-            foreach (CulturalTrait trait in district.CulturalTraits)
+            foreach (CulturalTrait trait in district.ActiveCulturalTraits)
             {
                 trait.ModifyPolicyPointImpact(district, this, ref impact);
             }
 
             // Impact from neighbour traits
-            foreach (District neighbour in district.AdjacentActiveDistricts)
+            foreach (District neighbour in district.ActiveLandNeighbours)
             {
-                foreach (CulturalTrait neighbourTrait in neighbour.CulturalTraits)
+                foreach (CulturalTrait neighbourTrait in neighbour.ActiveCulturalTraits)
                 {
                     neighbourTrait.ModifyNeighbourPolicyPointImpact(district, this, neighbour, ref impact);
                 }

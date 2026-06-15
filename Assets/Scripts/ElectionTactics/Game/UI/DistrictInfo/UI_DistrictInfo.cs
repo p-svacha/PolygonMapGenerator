@@ -125,7 +125,7 @@ namespace ElectionTactics
             // Header
             TitleText.text = district.Name;
 
-            SeatsInfo.InitDistrictSeats(district.Seats, district.GetSeatAllocationMethod(), darkMode: false);
+            SeatsInfo.InitDistrictSeats(district.GetSeats(), district.GetSeatAllocationMethod(), darkMode: false);
             PopularityInfo.SetValue(district.GetPartyPopularity(UI.Game.LocalPlayerParty).ToString());
 
             // Population

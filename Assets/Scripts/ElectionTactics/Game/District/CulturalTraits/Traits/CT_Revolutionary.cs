@@ -8,7 +8,7 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Exclusion, 0, District.CurrentWinnerParty, 1, "for winning last election", "'Revolutionary' Cultural Trait"));
+                Game.AddModifier(District, new Modifier(ModifierType.Exclusion, 0, District.CurrentWinnerParty, 1, "for winning last election", "Revolutionary Cultural Trait"));
             }
         }
 

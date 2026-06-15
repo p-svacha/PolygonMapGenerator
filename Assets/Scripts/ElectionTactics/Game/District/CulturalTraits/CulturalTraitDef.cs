@@ -50,6 +50,11 @@ namespace ElectionTactics
         /// </summary>
         public int SeatModifier { get; init;  } = 0;
 
+        /// <summary>
+        /// If true, this trait cannot be applied on the first district.
+        /// </summary>
+        public bool RequiresMultipleDistricts { get; init; } = false;
+
 
         public override bool Validate()
         {

@@ -12,7 +12,7 @@ namespace ElectionTactics
         {
             if (District.CurrentWinnerParty != null)
             {
-                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, -1, MODIFIER_DESC, source: "'Historical Legacy' Cultural Trait"));
+                Game.AddModifier(District, new Modifier(ModifierType.Positive, BONUS_VALUE, District.CurrentWinnerParty, -1, MODIFIER_DESC, source: "Historical Legacy Cultural Trait"));
 
                 // Write an article if a party reaches 100
                 if (District.Modifiers.Any(m => m.Value == 100 && m.Party == District.CurrentWinnerParty && m.Description == MODIFIER_DESC))

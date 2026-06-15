@@ -12,7 +12,7 @@ namespace ElectionTactics
 
         public override bool CanExecute()
         {
-            return Game.ActiveDistricts.Any(d => d.CulturalTraits.Count > 0);
+            return Game.ActiveDistricts.Any(d => d.ActiveCulturalTraits.Count > 0);
         }
     }
 }

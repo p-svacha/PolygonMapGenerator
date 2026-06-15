@@ -3,6 +3,8 @@
 --- CulturalTraitDefs.cs ---
         public static List<CulturalTraitDef> Defs => new List<CulturalTraitDef>()
         {
+            #region Demographic
+
             // Religion
             new CulturalTraitDef()
             {
@@ -81,6 +83,10 @@
                 },
             },
 
+            #endregion
+
+            #region Economic
+
             // Economy
             new CulturalTraitDef()
             {
@@ -123,13 +129,16 @@
                 },
             },
 
+            #endregion
+
+            #region Population Development
+
             // Population
             new CulturalTraitDef()
             {
                 DefName = GROWING_POPULATION,
                 Label = "Growing Population",
                 Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
-                TraitClass = typeof(CT_GrowingPopulation),
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 90,
                 PopulationGrowthRateModifier = +7.0f,
@@ -144,7 +153,6 @@
                 DefName = DECLINING_POPULATION,
                 Label = "Declining Population",
                 Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
-                TraitClass = typeof(CT_DecliningPopulation),
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 50,
                 PopulationGrowthRateModifier = -5.0f,
@@ -154,6 +162,21 @@
                 },
             },
 
+            new CulturalTraitDef()
+            {
+                DefName = IMMIGRATION_HUB,
+                Label = "Immigration Hub",
+                Description = "+5% to population growth in this district, but -2% population growth every adjacent district.",
+                Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
+                Commonness = 80,
+                PopulationGrowthRateModifier = +5.0f,
+                NeighbourPopulationGrowthModifier = -2.0f,
+            },
+
+            #endregion
+
+            #region Popularity
+
             // Popularity General
             new CulturalTraitDef()
             {
@@ -161,8 +184,18 @@
                 Label = "Patriotic",
                 Description = "Base district policy impact of this district is doubled.",
                 TraitClass = typeof(CT_Patriotic),
-                Category = CulturalTraitCategoryDefOf.Demographic,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 100,
+            },
+
+            new CulturalTraitDef()
+            {
+                DefName = IMPRESSIONABLE,
+                Label = "Impressionable",
+                Description = "Each party gains a +10 popularity bonus for each adjacent district where they won the last election.",
+                TraitClass = typeof(CT_Impressionable),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 80,
             },
 
             // Modifiers
@@ -172,7 +205,7 @@
                 Label = "Stable",
                 Description = "The party that won the last election will get a +30 popularity bonus for the next one.",
                 TraitClass = typeof(CT_Stable),
-                Category = CulturalTraitCategoryDefOf.Political,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 70,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -186,7 +219,7 @@
                 Label = "Rebellious",
                 Description = "The party that won the last election will get a -30 popularity penalty for the next one.",
                 TraitClass = typeof(CT_Rebellious),
-                Category = CulturalTraitCategoryDefOf.Political,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 30,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -200,7 +233,7 @@
                 Label = "Revolutionary",
                 Description = "The party that won the last election will be excluded for the next one.",
                 TraitClass = typeof(CT_Revolutionary),
-                Category = CulturalTraitCategoryDefOf.Political,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 10,
                 ForbiddenCulturalTraits = new List<string>()
                 {
@@ -214,7 +247,7 @@
                 Label = "Historical Legacy",
                 Description = "The most popular party gets a permanent popularity bonus.",
                 TraitClass = typeof(CT_HistoricalLegacy),
-                Category = CulturalTraitCategoryDefOf.Political,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 70,
             },
 
@@ -226,17 +259,51 @@
                 Label = "Swing District",
                 Description = "Election outcomes in this district are less predictable. Results may not fully accurately represent party popularities.",
                 TraitClass = typeof(CT_SwingDistrict),
-                Category = CulturalTraitCategoryDefOf.Political,
+                Category = CulturalTraitCategoryDefOf.Popularity,
                 Commonness = 50,
             },
+
+            // Other district influences
+            new CulturalTraitDef()
+            {
+                DefName = PARTNER_DISTRICT,
+                Label = "Partner District",
+                Description = "This district has a partnership with <PARTNER>. 20% of your popularity in <PARTNER> is applied as a popularity bonus here, and vice versa.",
+                TraitClass = typeof(CT_PartnerDistrict),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 50,
+            },
+
+            new CulturalTraitDef()
+            {
+                DefName = RIVAL_DISTRICT,
+                Label = "Rival District",
+                Description = "This district has a rivalry with <PARTNER>. 20% of your popularity in <PARTNER> is applied as a popularity penalty here, and vice versa.",
+                TraitClass = typeof(CT_RivalDistrict),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 50,
+            },
+
+            new CulturalTraitDef()
+            {
+                DefName = INFLUENTAL,
+                Label = "Influental",
+                Description = "10% of your popularity in this district is applied as a popularity bonus in all adjacent districts.",
+                TraitClass = typeof(CT_Influental),
+                Category = CulturalTraitCategoryDefOf.Popularity,
+                Commonness = 80,
+            },
+
+            #endregion
+
+            #region Seats
 
             new CulturalTraitDef()
             {
                 DefName = PROPORTIONAL_REPRESENTATION,
                 Label = "Proportional Representation",
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
-                TraitClass = typeof(CT_ProportionalRepresentation),
-                Category = CulturalTraitCategoryDefOf.SeatDistribution,
+                Category = CulturalTraitCategoryDefOf.Seats,
                 Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
@@ -246,11 +313,23 @@
                 DefName = MAJORITY_BONUS,
                 Label = "Majority Representation",
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
-                TraitClass = typeof(CT_MajorityBonus),
-                Category = CulturalTraitCategoryDefOf.SeatDistribution,
+                Category = CulturalTraitCategoryDefOf.Seats,
                 Commonness = 0, // applied separately through seat distribution method choice
                 IsSeatDistributionTrait = true,
             },
+
+            // Seats
+            new CulturalTraitDef()
+            {
+                DefName = CAPITAL,
+                Label = "Capital",
+                Description = "This district is the nation's capital and holds 3 additional seats in parliament.",
+                Category = CulturalTraitCategoryDefOf.Seats,
+                Commonness = 0, // applied separately
+                SeatModifier = +3,
+            }
+
+            #endregion
         };
 
 --- BotDifficultyDefs.cs ---

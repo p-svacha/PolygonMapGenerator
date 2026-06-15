@@ -86,6 +86,7 @@ General UX:
 - Make sure vote shares all have exactly one decimal (XX.X%)
 - Make sure vote shares add up to 100%.
 - Make sure vote shares give a single winner.
+- Make so that influental / partner / rival traits also get reflected in the map policy impact overlay, might need some rework.
 
 Election graph:
 (/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.
@@ -126,29 +127,29 @@ Cultural traits:
 (/) - Add categories. The chip color of the trait should be colored according to the category. Category should be shown in tooltip.
 
 New Cultural Traits (just ideas so far, review them):
-- Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
-- Rival of X. Works the same as partner but with negative effects instead of positive.
+(T) - Partner of X, where X is another district. If applied, the partner district gets the same trait. Partner districts gain 20% of each other's popularity as a bonus.
+(T) - Rival of X. Works the same as partner but with negative effects instead of positive.
 (/) - Historical Legacy: The winning party in a district gains a permanent +10 popularity bonus.
-- Capital: +3 seats. (only 1 district has it. added to a random one of the first 10)
-- Influental: 10% of popularity is applied to adjacent districts as well.
-- <POLICY CATEGORY> Absolutist: (Religion/Language/Density/AgeGroup/Economy/District). +30 popularity bonus for parties where their matching policy in the category is the single highest among all policies in the same category.
-- <POLICY> dependant: Having spent a point in <POLICY> in the last cycle gives a permanent +5 popularity bonus.
-- Impressionable: +10 popularity for each party governing an adjacent district.
-- Immigration Hub: +5% population growth, -2% population growth in adjacent districts
-- Impatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently. Should be trackable in tooltip. Exclusion should generate news article.
-- <RELIGION/LANGUAGE> Imperialism: Created adjacent districts will have the same religion/language guaranteed
+(T) - Capital: +3 seats. (only 1 district has it. added to a random one of the first 10)
+(T) - Influental: 10% of popularity is applied to adjacent districts as well.
+(T) - Impressionable: +10 popularity for each party governing an adjacent district.
+(T) - Immigration Hub: +5% population growth, -2% population growth in adjacent districts
+(T) - Impatient: if a party doesn't win any seat for 6 cycles, it gets excluded permanently. Should be trackable in tooltip. Exclusion should generate news article. com 50
+(T) - [Religious / Linguistic] Imperialism: Created adjacent districts will have the same religion/language guaranteed  com 80
+(T) - Focal Point
+(T) - geocentric
 
 Add random districts events (that can happen randomly (rarely) after an election):
 (/) - add framework for them to exist, appear, and have effects
 
 Random Events (both logic & newspaper article gen):
 - disaster
-- trait gain
-- trait loss
+- trait gain (can't affect traits with commonness 0)
+- trait loss (can't affect traits with commonness 0)
 - capital move
 - district removed
 - language change
-- religion change
+- religion change (cannot apply if fanatics trait is present)
 - age group change
 
 Newspaper:
@@ -183,8 +184,8 @@ General Gameplay:
 (/) - Ensure district names start with a capital letter
 (/) - remove max districts as constant
 (/) - Add rivers as a geographical trait
-- Make sure district names don't start with '
-- Add some more district names
+(/) - Make sure district names don't start with '
+(/) - Clean up district names
 
 Tutorial
 - Make tutorial box bigger with bigger text.

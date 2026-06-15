@@ -15,7 +15,7 @@ namespace ElectionTactics
             // Clear list
             for (int i = 0; i < transform.childCount; i++) Destroy(transform.GetChild(i).gameObject);
 
-            Dictionary<string, int> popularityBreakdown = district.GetPartyPopularityBreakdown(party);
+            Dictionary<string, int> popularityBreakdown = district.GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence: true);
             foreach(KeyValuePair<string, int> factor in popularityBreakdown.Where(x => x.Value != 0))
             {
                 UI_PopularityBreakdownEntry entry = Instantiate(Entry, transform);

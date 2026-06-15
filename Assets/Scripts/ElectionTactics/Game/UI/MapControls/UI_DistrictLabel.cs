@@ -52,7 +52,7 @@ namespace ElectionTactics
 
             // Seats
             // Debug.Log($"Refreshing seats ({District.Name}): Current number: {District.Seats}");
-            int numSeats = District.Seats;
+            int numSeats = District.GetSeats();
 
             if (ElectionTacticsGame.Instance.State == GameState.Election) // Show seats of previous cycle when in election
             {

@@ -92,6 +92,7 @@ public static class MarkovChainWordGenerator
         // Remove special characters at the end
         word = word.Trim();
 
+        word = word.TrimStart('\'');
         word = word.TrimEnd('\'');
         word = word.TrimEnd('-');
         word = word.TrimEnd('.');
@@ -128,7 +129,8 @@ public static class MarkovChainWordGenerator
 
         TextAsset mytxtData = (TextAsset)Resources.Load("NameGeneration/Province");
         string[] lines = mytxtData.text.Split('\n');
-        foreach(string line in lines)
+        lines = lines.Select(l => l.Trim().ToLower()).ToArray();
+        foreach (string line in lines)
         {
             if (!InputWords[category].Contains(line))
             {

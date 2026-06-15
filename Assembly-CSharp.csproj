@@ -52,6 +52,10 @@
     <Analyzer Include="C:\Program Files\6000.5.0b3\Editor\Data\BCLExtensions\TargetingPacks\netstandard2.1\analyzers\dotnet\roslyn4.0\cs\System.Text.Json.SourceGeneration.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_FocalPoint.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Geocentric.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Impatient.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Imperialistic.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Network\NetworkPlayer.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvents\E02_NationExpand.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\LanguagePolicy.cs" />
@@ -89,10 +93,12 @@
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphNode.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_PopularityBreakdown.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Modifier\Modifier.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Impressionable.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_GameSetting.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Exporter.cs" />
     <Compile Include="Assets\Scripts\Helper\ResourceManager.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Resources\IconManager.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Influental.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Secular.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_RegionInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_InfoTableRow.cs" />
@@ -126,6 +132,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_DistrictDensityChange.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\AgeGroupPolicy.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WaterTopologyNoise.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_RivalDistrict.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\WaterCreator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Constitution\WinCondition.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\Triangulator.cs" />
@@ -239,6 +246,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictList\UI_DistrictListElement.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\EconomyTrait.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_LanguageChange.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_PartnerDistrict.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_CapitalMove.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_DistrictAdded.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_NationInfo.cs" />

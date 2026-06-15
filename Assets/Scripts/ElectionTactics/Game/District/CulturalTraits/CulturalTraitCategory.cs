@@ -14,29 +14,22 @@ namespace ElectionTactics
         {
             new CulturalTraitCategoryDef()
             {
-                DefName = "Demographic",
-                Label = "Demographic",
+                DefName = "PolicyImpact",
+                Label = "Policy Impact",
                 Color = new Color(0.4f, 0.4f, 0.2f),
             },
 
             new CulturalTraitCategoryDef()
             {
-                DefName = "Economic",
-                Label = "Economic",
-                Color = new Color(0.2f, 0.4f, 0.4f),
-            },
-
-            new CulturalTraitCategoryDef()
-            {
-                DefName = "SeatDistribution",
-                Label = "Seat Distribution",
+                DefName = "Seats",
+                Label = "Seats",
                 Color = new Color(0.4f, 0.2f, 0.4f),
             },
 
             new CulturalTraitCategoryDef()
             {
-                DefName = "Political",
-                Label = "Political",
+                DefName = "Popularity",
+                Label = "Popularity",
                 Color = new Color(0.4f, 0.2f, 0.2f),
             },
 
@@ -52,10 +45,9 @@ namespace ElectionTactics
     [DefOf]
     public static class CulturalTraitCategoryDefOf
     {
-        public static CulturalTraitCategoryDef Demographic;
-        public static CulturalTraitCategoryDef Economic;
-        public static CulturalTraitCategoryDef SeatDistribution;
-        public static CulturalTraitCategoryDef Political;
+        public static CulturalTraitCategoryDef PolicyImpact;
+        public static CulturalTraitCategoryDef Seats;
+        public static CulturalTraitCategoryDef Popularity;
         public static CulturalTraitCategoryDef PopulationDevelopment;
     }
 }

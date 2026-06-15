@@ -1,4 +1,4 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace ElectionTactics
 {
@@ -12,13 +12,12 @@ namespace ElectionTactics
         public CulturalTraitDef Def { get; private set; }
         public District District { get; private set; }
         public ElectionTacticsGame Game => District.Game;
-        public float PopulationGrowthRateModifier => Def.PopulationGrowthRateModifier;
 
-        public void Init(CulturalTraitDef def, District district)
+        public void Init(CulturalTraitDef def, District district, bool skipOnInit = false)
         {
             Def = def;
             District = district;
-            OnInit();
+            if (!skipOnInit) OnInit();
         }
 
         #region Mentality effect
@@ -29,9 +28,34 @@ namespace ElectionTactics
         protected virtual void OnInit() { }
 
         /// <summary>
+        /// Called once when this trait gets removed from a district.
+        /// </summary>
+        public virtual void OnRemoved() { }
+
+        /// <summary>
+        /// Gets called right before the party popularities get calculated during the district election.
+        /// </summary>
+        public virtual void OnPreElection() { }
+
+        /// <summary>
         /// Gets called at the very end of a turn after an election has ended.
         /// </summary>
         public virtual void OnPostElection() { }
+
+        /// <summary>
+        /// Returns all modifiers within the popularity calculation for the given party.
+        /// </summary>
+        public virtual Dictionary<string, int> GetPopularityChange(Party p) => new Dictionary<string, int>();
+
+        /// <summary>
+        /// Returns all modifiers within the popularity calculation, that change the popularity of a party in this district based on the popularity of the party in other districts. Defined this specific way to avoid chained/circular dependencies.
+        /// </summary>
+        public virtual Dictionary<string, int> GetPopularityChangeFromOtherDistrictPopularities(Party p) => new Dictionary<string, int>();
+
+        /// <summary>
+        /// Returns all modifiers within the popularity calculation, that are applied to neighbouring districts, that change the popularity of a party in the neighbour district based on the popularity of the party in other districts. Defined this specific way to avoid chained/circular dependencies.
+        /// </summary>
+        public virtual Dictionary<string, int> GetPopularityChangeInNeighbours(Party p) => new Dictionary<string, int>();
 
         /// <summary>
         /// Gets called when calculating the impact of a single policy point of a policy on a district with this trait.
@@ -50,5 +74,10 @@ namespace ElectionTactics
         public virtual string Label => Def.Label;
         public string LabelCapWord => Label.CapitalizeEachWord();
         public virtual string Description => Def.Description;
+
+        /// <summary>
+        /// Flag if this trait is currently active.
+        /// </summary>
+        public virtual bool IsActive => true;
     }
 }

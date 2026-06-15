@@ -40,7 +40,7 @@ namespace ElectionTactics
         {
             HelperFunctions.DestroyAllChildredImmediately(RowContainer);
 
-            List<CulturalTrait> traits = d.CulturalTraits;
+            List<CulturalTrait> traits = d.ActiveCulturalTraits;
 
             UI_TraitRow currentRow = null;
             for (int i = 0; i < traits.Count; i++)

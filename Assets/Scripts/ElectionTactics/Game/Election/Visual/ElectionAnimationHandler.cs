@@ -292,7 +292,7 @@ namespace ElectionTactics
                 // Update current election graph
                 Game.UI.Parliament.CurrentElectionContainer.SetActive(true);
                 Game.UI.Parliament.CurrentElectionTitle.text = CurrentDistrictResult.District.Name;
-                Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.District.Seats, CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
+                Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.District.GetSeats(), CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
 
                 // Init animation
                 float graphTime = GraphAnimationTime;
