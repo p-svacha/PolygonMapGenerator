@@ -33,6 +33,7 @@ Custom Game:
 
 Parliament:
 (/) - make party names not all caps
+(/) - improve party acronym generation
 
 Demography General:
 (/) - Change population growth rate to %
@@ -80,8 +81,12 @@ General UX:
 (/) - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 (/) - Redesign loading screen
-- Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color.
-- Show amount of seats won in previous election during election animation
+
+UX pass from testing:
+- Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color. maybe also adjust colors a little
+- Show amount of seats won  in previous election during election animation
+- During animation, also show vote share from prev election rather than margin
+  - like 16.5% (4)
 - add a new party name category "fixed names" that appears in like 5% of cases, and fill it with party names from big countries.
 - Make sure vote shares all have exactly one decimal (XX.X%)
 - Make sure vote shares add up to 100%.
@@ -92,8 +97,15 @@ General UX:
 - added district article: minority language/religion clause
 - added district article: falvour for rapidly growing or falling population
 - added district article: falvour for cultural traits
-- clicking on focal point CT should go to that policy
 - graph in election animation already shows seats from next cycle
+- cultural traits should be able to support jumping to a policy if clicked
+- add support for strong economy / religious / linguistic / focal point / Patriotic
+- add handling when all parties have a popularity of 0 in a district
+- in loading screen, show current step of map generation
+- Impressionable trait should act immediately when district is actibvated
+- election animation ordering needs to order by seats FIRST (because of capital)
+- fix district policy names. they are not allowed to be the same as other policies, but also shouldn't have "district" in the name. because popularity breakdown duplicate keys
+- winning sound plays twice
 
 Election graph:
 (/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.
@@ -185,6 +197,12 @@ Newspaper:
 - option to disable animations in settings (might get annoying with time)
 - Make sure newspaper is hidden when starting new game
 - increase swirl speed
+- review all news event classes
+- add an icon to all news event classes
+- review all random event classes
+- add an icon to all random event classes
+- add slight paper texture to background
+- add some text fx for more newspaper effect
 
 General Gameplay:
 (/) - Ensure the same district name cannot appear twice.

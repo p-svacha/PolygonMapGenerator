@@ -28,7 +28,7 @@ namespace ElectionTactics
 
         // Districts
         private Dictionary<Region, District> Districts = new Dictionary<Region, District>();   // Contains districts that will be added after the election animation
-        public District Capital { get; private set; }
+        public District Capital { get; set; }
 
         // Parties
         public List<Party> Parties = new List<Party>();
@@ -250,7 +250,8 @@ namespace ElectionTactics
             }
 
             // Assign a random capital district
-            Districts.Values.Take(10).ToList().RandomElement().AddCulturalTrait(CulturalTraitDefOf.Capital);
+            Capital = Districts.Values.Take(10).ToList().RandomElement();
+            Capital.AddCulturalTrait(CulturalTraitDefOf.Capital);
 
             // Battle royale
             foreach (Party party in Parties) party.Legitimacy = (int)(BR_START_LEGITIMACY * GameSettings.GameLength.ModifierFactor);
@@ -804,10 +805,10 @@ namespace ElectionTactics
         {
             if (!CanIncreaseLocalPlayerPolicy(p)) return;
 
+            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointPopularityDelta(d));
+
             if (GameType == GameType.Singleplayer) DoIncreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, 1);
-
-            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointImpactOn(d));
         }
 
 
@@ -822,10 +823,10 @@ namespace ElectionTactics
         {
             if (!CanDecreaseLocalPlayerPolicy(p)) return;
 
+            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, p.GetSinglePointPopularityDelta(d, isIncrease: false));
+
             if (GameType == GameType.Singleplayer) DoDecreasePolicy(LocalPlayerParty.Id, p.Id);
             else NetworkPlayer.Server.ChangePolicyServerRpc(LocalPlayerParty.Id, p.Id, -1);
-
-            foreach (District d in ActiveDistricts) VfxManager.ShowDistrictPopularityImpactParticles(d, -p.GetSinglePointImpactOn(d));
         }
 
         #endregion
@@ -1030,8 +1031,10 @@ namespace ElectionTactics
             do
             {
                 name = MarkovChainWordGenerator.GenerateWord("Province", 4, 10);
+                name = name.CapitalizeEachWord();
             } while (Districts.Values.Any(d => d.Name == name));
-            return name.CapitalizeEachWord();
+
+            return name;
         }
         public static int GetRandomSeed()
         {

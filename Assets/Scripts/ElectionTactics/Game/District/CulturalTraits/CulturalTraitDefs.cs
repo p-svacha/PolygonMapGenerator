@@ -173,6 +173,17 @@ namespace ElectionTactics
                 },
             },
 
+            // District
+            new CulturalTraitDef()
+            {
+                DefName = PATRIOTIC,
+                Label = "Patriotic",
+                Description = "Base district policy impact of this district is doubled.",
+                TraitClass = typeof(CT_Patriotic),
+                Category = CulturalTraitCategoryDefOf.PolicyImpact,
+                Commonness = 100,
+            },
+
             #endregion
 
             #region Population Development
@@ -230,17 +241,6 @@ namespace ElectionTactics
             #endregion
 
             #region Popularity
-
-            // Popularity General
-            new CulturalTraitDef()
-            {
-                DefName = PATRIOTIC,
-                Label = "Patriotic",
-                Description = "Base district policy impact of this district is doubled.",
-                TraitClass = typeof(CT_Patriotic),
-                Category = CulturalTraitCategoryDefOf.Popularity,
-                Commonness = 100,
-            },
 
             new CulturalTraitDef()
             {

@@ -17,6 +17,9 @@ namespace ElectionTactics
             DensityAfter = densityAfter;
         }
 
+        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override int GetArticlePriority() => 40;
+
         public override string GetArticleHeadline()
         {
             List<string> denser = new List<string>()
@@ -67,7 +70,5 @@ namespace ElectionTactics
 
             return $"{facts.RandomElement()} {string.Join(" ", pool.RandomElement())}";
         }
-
-        public override int GetArticlePriority() => 40;
     }
 }

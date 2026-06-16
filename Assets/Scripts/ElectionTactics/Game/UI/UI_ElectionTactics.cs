@@ -197,7 +197,7 @@ namespace ElectionTactics
                     break;
 
                 case Tab.DistrictList:
-                    DistrictList.Init(this, Game.VisibleDistricts.Values.OrderByDescending(x => x.Population).ToList());
+                    DistrictList.Init(this, Game.VisibleDistricts.Values.OrderByDescending(x => x.GetSeats()).ThenByDescending(x => x.Population).ToList());
                     break;
 
                 case Tab.Parliament:

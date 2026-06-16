@@ -42,7 +42,7 @@ namespace ElectionTactics
         }
 
         public override string Label => $"Partnership with {Partner.Name}";
-        public override string Description => $"This district has a partnership with {Partner.Name}. 20% of your popularity in {Partner.Name} is applied as a popularity bonus here, and vice versa.";
+        public override string Description => $"This district has a partnership with {Partner.Name}.\n\n20% of your popularity in {Partner.Name} is applied as a popularity bonus here, and vice versa.";
         public override bool IsActive => District.IsActive && Partner.IsActive;
     }
 }

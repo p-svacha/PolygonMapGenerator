@@ -17,6 +17,9 @@ namespace ElectionTactics
             Cycle--;
         }
 
+        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override int GetArticlePriority() => 30;
+
         public override string GetArticleHeadline()
         {
             // Template pool — {0} is the district name. Picked by stable per-district variety.
@@ -104,7 +107,5 @@ namespace ElectionTactics
         }
 
         private bool HasGeo(GeographyTraitDef def) => District.Geography.Any(g => g.Def == def);
-
-        public override int GetArticlePriority() => 30;
     }
 }

@@ -9,7 +9,7 @@ namespace ElectionTactics
         public DistrictPolicy(int id, Party p, District district, int maxValue) : base(id, p, maxValue)
         {
             District = district;
-            Name = district.Name;
+            Name = district.Name + " District";
             Type = PolicyType.District;
         }
 

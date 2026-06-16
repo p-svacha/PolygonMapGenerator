@@ -13,12 +13,6 @@ namespace ElectionTactics
         public int Year { get; private set; }
         public int Cycle { get; private set; }
 
-        // Newspaper
-        public Sprite ArticleIcon { get; private set; }
-        public string ArticleHeadline { get; protected set; }
-        public string ArticleBody { get; protected set; }
-
-
         public RandomEvent() { } // Empty constructor for activator
 
         public void Init(RandomEventDef def)
@@ -39,5 +33,11 @@ namespace ElectionTactics
         /// </summary>
         public virtual bool CanExecute() => true;
         protected abstract void ExecuteEffect();
+
+
+        public abstract Sprite GetArticleIcon();
+        public abstract string GetArticleHeadline();
+        public abstract string GetArticleBody();
+        public abstract int GetArticlePriority();
     }
 }

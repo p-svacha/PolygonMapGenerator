@@ -161,7 +161,7 @@ namespace ElectionTactics
             Economy3Info.ValueTooltipTarget.Init(CurrentDistrict.Economy3.Label, CurrentDistrict.Economy3.Description);
 
             // Cultural Traits
-            CulturalTraitsTitle.gameObject.SetActive(district.CulturalTraits.Count > 0);
+            CulturalTraitsTitle.gameObject.SetActive(district.ActiveCulturalTraits.Count > 0);
             CulturalTraitsPanel.InitCulturalTraits(district);
 
             // Modifiers

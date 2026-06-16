@@ -416,6 +416,10 @@ namespace ElectionTactics
         {
             IsActive = true;
         }
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
 
         #endregion
 
@@ -661,6 +665,8 @@ namespace ElectionTactics
                     cycles++;
                     if (cycles > cap) return -1; // Safety cap
                 }
+
+                if (cycles == 0) cycles = 1; // Safety for when exactly at threshold
                 return cycles;
             }
             else
@@ -680,6 +686,8 @@ namespace ElectionTactics
                     cycles++;
                     if (cycles > cap) return -1; // Safety cap
                 }
+
+                if (cycles == 0) cycles = 1; // Safety for when exactly at threshold
                 return cycles;
             }
         }

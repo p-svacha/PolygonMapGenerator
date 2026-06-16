@@ -104,15 +104,16 @@ namespace ElectionTactics
         /// more point to this policy would cause. Accounts for all trait/threshold/clamp nonlinearities
         /// by measuring the real popularity difference, not just the per-point policy impact.
         /// </summary>
-        public int GetSinglePointPopularityDelta(District district)
+        public int GetSinglePointPopularityDelta(District district, bool isIncrease = true)
         {
             if (Value >= MaxValue) return 0; // No point available to add
 
-            int before = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: false);
+            int before = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: true);
 
             int original = Value;
-            SetValue(Value + 1, silent: true);
-            int after = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: false);
+            int newValue = isIncrease ? Value + 1 : Value - 1;
+            SetValue(newValue, silent: true);
+            int after = district.GetPartyPopularity(Party, includeOtherDistrictPopularityInfluence: true);
             SetValue(original, silent: true);
 
             return after - before;

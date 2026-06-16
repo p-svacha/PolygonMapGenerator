@@ -32,7 +32,7 @@ namespace ElectionTactics
             {
                 return new Dictionary<string, int>()
                 {
-                    { $"Focal Point", POPULARITY_BONUS }
+                    { Label, POPULARITY_BONUS }
                 };
             }
             return base.GetPopularityChange(p);

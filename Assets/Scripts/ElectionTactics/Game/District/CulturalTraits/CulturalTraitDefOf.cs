@@ -11,5 +11,7 @@ namespace ElectionTactics
 
         public static CulturalTraitDef PartnerDistrict;
         public static CulturalTraitDef RivalDistrict;
+
+        public static CulturalTraitDef Fanatics;
     }
 }

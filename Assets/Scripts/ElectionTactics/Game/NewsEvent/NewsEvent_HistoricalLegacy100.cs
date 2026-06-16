@@ -14,6 +14,9 @@ namespace ElectionTactics
             Party = party;
         }
 
+        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override int GetArticlePriority() => 50;
+
         public override string GetArticleHeadline()
         {
             List<string> templates = new List<string>()
@@ -50,7 +53,5 @@ namespace ElectionTactics
             // Two fragments here, shuffled, since this is a 'big' event worth a longer article
             return $"{milestone.RandomElement()} {string.Join(" ", pool.RandomElements(2))}";
         }
-
-        public override int GetArticlePriority() => 50;
     }
 }
