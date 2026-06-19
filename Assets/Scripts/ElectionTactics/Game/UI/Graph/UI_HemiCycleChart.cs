@@ -9,15 +9,20 @@ using UnityEngine;
 /// </summary>
 public class UI_HemicycleChart : GraphBase
 {
-    [Header("Layout")]
-    [Tooltip("Higher = more rows for a given seat count.")]
+    // Higher = more rows for a given seat count.
     private float RowDensityFactor = 0.5f;
-    [Tooltip("Fraction of a circle's diameter used as the gap between circles.")]
+
+    // Fraction of a circle's diameter used as the gap between circles.
     private float CircleSpacing = 0.25f;
-    [Tooltip("Higher = more even seat distribution between inner and outer rows.")]
+
+    // Higher = more even seat distribution between inner and outer rows.
     private float RowStartOffset = 2f;
-    [Tooltip("Smallest allowed inner hole as a fraction of outer radius. Prevents center overlap.")]
+
+    // Smallest allowed inner hole as a fraction of outer radius. Prevents center overlap.
     private float MinInnerRadiusRatio = 0.35f;
+
+    // Maximum radius of seat circles
+    private float MaxCircleRadius = 25f;
 
     /// <summary>
     /// Draws the parliament for the given seat distribution.
@@ -47,6 +52,8 @@ public class UI_HemicycleChart : GraphBase
         int[] bestSeatsPerRow = null;
 
         int maxRows = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(totalSeats))); // generous upper bound
+        if (totalSeats <= 12) maxRows = 1; // Looks better
+
         for (int rows = 1; rows <= maxRows; rows++)
         {
             // Distribute seats across rows weighted by (r + RowStartOffset).
@@ -88,6 +95,13 @@ public class UI_HemicycleChart : GraphBase
         int[] seatsPerRow = bestSeatsPerRow;
         float diameter = bestDiameter;
         float circleRadius = diameter / 2f;
+        
+        if (circleRadius > MaxCircleRadius)
+        {
+            circleRadius = MaxCircleRadius;
+            diameter = 2 * circleRadius;
+        }
+
         float radialStep = diameter * spacingFactor;
 
         Vector2 origin = new Vector2(GraphWidth / 2f, circleRadius);

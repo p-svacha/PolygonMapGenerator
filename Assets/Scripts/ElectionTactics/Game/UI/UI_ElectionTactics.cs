@@ -37,6 +37,7 @@ namespace ElectionTactics
         [Header("Tab Buttons")]
         public TabButton DistrictTabButton;
         public TabButton ParliamentTabButton;
+        public TabButton NewspaperTabButton;
         public TabButton ConstitutionTabButton;
         public TabButton EventsTabButton;
         public TabButton PoliciesTabButton;
@@ -54,6 +55,7 @@ namespace ElectionTactics
         public UI_DistrictList DistrictList;
         public UI_DistrictInfo DistrictInfo;
         public UI_Parliament Parliament;
+        public UI_NewspaperTab NewspaperTab;
         public UI_Constitution Constitution;
         public UI_Events Events;
         public UI_PolicySelection PolicySelection;
@@ -90,6 +92,10 @@ namespace ElectionTactics
             TabPanels.Add(Tab.Parliament, Parliament.gameObject);
             TabButtons.Add(Tab.Parliament, ParliamentTabButton);
             ParliamentTabButton.Button.onClick.AddListener(() => ClickSelectTab(Tab.Parliament));
+
+            TabPanels.Add(Tab.Newspaper, NewspaperTab.gameObject);
+            TabButtons.Add(Tab.Newspaper, NewspaperTabButton);
+            NewspaperTabButton.Button.onClick.AddListener(() => ClickSelectTab(Tab.Newspaper));
 
             TabPanels.Add(Tab.Constitution, Constitution.gameObject);
             TabButtons.Add(Tab.Constitution, ConstitutionTabButton);
@@ -202,6 +208,10 @@ namespace ElectionTactics
 
                 case Tab.Parliament:
                     Parliament.Init(Game, Game.Parties);
+                    break;
+
+                case Tab.Newspaper:
+                    NewspaperTab.Show();
                     break;
             }
         }
@@ -336,6 +346,7 @@ namespace ElectionTactics
         DistrictList,
         DistrictInfo,
         Parliament,
+        Newspaper,
         Constitution,
         Events,
         Policies,

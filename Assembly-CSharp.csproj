@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_FocalPoint.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Policy.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Newspaper\UI_NewspaperPartyRow.cs" />
     <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_Disaster.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_Lobby.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameModeDefs.cs" />
     <Compile Include="Assets\Scripts\UIBase\Tooltip\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Parrisk\InputHandler.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Newspaper\UI_NewspaperButton.cs" />
     <Compile Include="Assets\Scripts\Parrisk\Battle\Battle.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphDataPoint.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictElectionGraph.cs" />
@@ -276,6 +278,7 @@
     <Compile Include="Assets\Scripts\Map\Elements\WaterConnection.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\MapControls\LegendEntryData.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\GameEvent.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Newspaper\UI_NewspaperTab.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Impatient.cs" />
     <Compile Include="Assets\Scripts\Map\Elements\BorderPointType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_WeakEconomy.cs" />

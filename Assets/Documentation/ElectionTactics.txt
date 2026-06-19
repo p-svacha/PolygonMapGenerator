@@ -179,14 +179,14 @@ Newspaper:
 
 (/) - implement graph type creator for parliament seat distribution iconography (base it on graph framework)
 (/) - show parliament in main article
-- show text label below chart
-- show list with knobs and party names next to chart
+(/) - show text label below chart
+(/) - show list with knobs and party names next to chart
 
 (/) - add many article icons for all current minor articles (incl. quote)
 
-- Add a new tab "Newspaper" tab with a newspaper as an icon.
-- This tab show all previous yearly newspapers
-- make newspapers selectable
+(/) - Add a new tab "Newspaper" tab with a newspaper as an icon.
+(/) - This tab show all previous yearly newspapers
+(/) - make newspapers selectable
 
 - make icon and headline smaller in 2 articles per column. if still not enough space, add a "generateshortbodytext" to each one that cna be used for half-column.
 

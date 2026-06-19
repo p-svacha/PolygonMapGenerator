@@ -347,17 +347,17 @@ namespace ElectionTactics
         private static Dictionary<string, int> NameLanguage = new Dictionary<string, int>()
         {
             // Doubles
-            { "AP", 150 },
-            { "TP", 80 },
-            { "UP", 150 },
-            { "AU", 120 },
-            { "UU", 35 },
+            { "AP", 170 },
+            { "TP", 90 },
+            { "UP", 160 },
+            { "AU", 130 },
+            { "UU", 40 },
 
             { "PfU", 80 },
             { "U&U", 50 },
             { "A&A", 25 },
 
-            { "tP", 10 },
+            { "tP", 11 },
 
             // Triples
             { "ATP", 70 },

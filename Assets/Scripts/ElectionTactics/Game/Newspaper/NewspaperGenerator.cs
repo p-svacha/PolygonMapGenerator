@@ -14,7 +14,7 @@ namespace ElectionTactics
         {
             ElectionResult = Game.GetLatestElectionResult();
 
-            Newspaper = new Newspaper(Game.Year - 1, Game.ElectionCycle - 1);
+            Newspaper = new Newspaper(ElectionResult);
             Newspaper.SetMainArticle(GenerateMainArticle());
             Newspaper.SetMinorArticles(GenerateMinorArticles());
             return Newspaper;

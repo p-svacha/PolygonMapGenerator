@@ -5,15 +5,15 @@ namespace ElectionTactics
 {
     public class Newspaper
     {
-        public int Year { get; private set; }
-        public int Cycle { get; private set; }
+        public int Year => ElectionResult.Year;
+        public int Cycle => ElectionResult.ElectionCycle;
+        public GeneralElectionResult ElectionResult { get; private set; }
         public NewspaperMainArticle MainArticle { get; private set; }
         public List<NewspaperMinorArticle> MinorArticles { get; private set; } // Each newspaper has 1-6 of those
 
-        public Newspaper(int year, int cycle)
+        public Newspaper(GeneralElectionResult electionResult)
         {
-            Year = year;
-            Cycle = cycle;
+            ElectionResult = electionResult;
         }
 
         public void SetMainArticle(NewspaperMainArticle mainArticle)

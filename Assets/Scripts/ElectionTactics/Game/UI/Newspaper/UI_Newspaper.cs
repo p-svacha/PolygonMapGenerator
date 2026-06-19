@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,10 @@ namespace ElectionTactics
         public TextMeshProUGUI EditionText;
         public TextMeshProUGUI MainArticleHeadline;
         public TextMeshProUGUI MainArticleText;
+
         public UI_HemicycleChart HemiCycleChart;
+        public TextMeshProUGUI ChartText;
+        public GameObject PartyListContainer;
 
         public GameObject MinorArticlesDividerLeft; // used if there's 3+ minor articles
         public GameObject MinorArticlesDividerCenter; // used only if there's 2 minor articles
@@ -29,6 +33,9 @@ namespace ElectionTactics
         public UI_NewspaperMinorArticle MinorArticle4;
         public UI_NewspaperMinorArticle MinorArticle5;
         public UI_NewspaperMinorArticle MinorArticle6;
+
+        [Header("Prefabs")]
+        public UI_NewspaperPartyRow PartyRowPrefab;
 
         private const float SHOW_ANIMATION_DURATION = 2f;
         private const float SHOW_ANIMATION_ROTATIONS = 2f; // full turns while spiraling in
@@ -54,10 +61,19 @@ namespace ElectionTactics
             EditionText.text = $"{newspaper.Year} Edition";
 
             // Main article
+            GeneralElectionResult electionResult = newspaper.ElectionResult;
             MainArticleHeadline.text = newspaper.MainArticle.Headline;
             MainArticleText.text = $"{newspaper.MainArticle.Chapter1}\n\n{newspaper.MainArticle.Chapter2}";
-            HemiCycleChart.ShowParliament(ElectionTacticsGame.Instance.GetLatestElectionResult());
+            HemiCycleChart.ShowParliament(electionResult);
 
+            ChartText.text = $"Parliament of {electionResult.Year + 1}";
+            HelperFunctions.DestroyAllChildredImmediately(PartyListContainer);
+            Dictionary<Party, int> partyList = electionResult.SeatsWon.Where(x => x.Value > 0).OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            foreach (var party in partyList)
+            {
+                UI_NewspaperPartyRow elem = GameObject.Instantiate(PartyRowPrefab, PartyListContainer.transform);
+                elem.Init(party.Key, party.Value);
+            }
 
             // Minor articles
             LayoutMinorArticles(newspaper.MinorArticles);
@@ -71,7 +87,7 @@ namespace ElectionTactics
             }
             else
             {
-                AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle1);
+                AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle1, volume: 0.6f);
                 newspaperRect.localScale = Vector3.one;
                 newspaperRect.localRotation = Quaternion.identity;
             }
@@ -85,7 +101,7 @@ namespace ElectionTactics
             rect.localScale = Vector3.zero;
             rect.localRotation = Quaternion.Euler(0, 0, totalAngle);
 
-            AudioManager.PlaySound(AudioManager.Instance.NewspaperSpin);
+            AudioManager.PlaySound(AudioManager.Instance.NewspaperSpin, volume: 0.7f);
 
             while (t < SHOW_ANIMATION_DURATION)
             {
@@ -101,7 +117,7 @@ namespace ElectionTactics
                 yield return null;
             }
 
-            AudioManager.PlaySound(AudioManager.Instance.NewspaperSpinEnd);
+            AudioManager.PlaySound(AudioManager.Instance.NewspaperSpinEnd, volume: 0.8f);
 
             // Snap to final state
             rect.localScale = Vector3.one;
@@ -200,7 +216,7 @@ namespace ElectionTactics
 
         private void ButtonHide()
         {
-            AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle2);
+            AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle2, volume: 0.6f);
             Hide();
         }
 
