@@ -20,7 +20,7 @@ namespace ElectionTactics
             Frame.color = Color.white;
             Text.color = darkMode ? Color.white : Color.black;
 
-            string tooltipDesc = "How many seats this district is worth.\n\n" + seatAllocationmethod.Description;
+            string tooltipDesc = $"This district is worth {seats} in the parliament.\n\n" + seatAllocationmethod.Description;
             TooltipTarget.Init("Seats", tooltipDesc);
         }
 

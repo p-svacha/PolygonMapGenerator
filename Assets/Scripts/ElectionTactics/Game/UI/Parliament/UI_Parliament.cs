@@ -29,8 +29,10 @@ namespace ElectionTactics
         public UI_ModifierSliderContainer ModifierSliderContainer;
         public GameObject CurrentElectionContainer;
         public Text CurrentElectionTitle;
-        public Text CurrentElectionMarginText;
-        public TooltipTarget CurrentElectionMarginText_Tooltip;
+        public TextMeshProUGUI PrevElectionShareText;
+        public TooltipTarget PrevElectionShareText_Tooltip;
+        public TextMeshProUGUI PrevElectionSeatsText;
+        public TooltipTarget PrevElectionSeatsText_Tooltip;
         public Image LastElectionWinnerKnob;
         public TooltipTarget LastElectionWinnerKnob_Tooltip;
         public UI_SeatNumber CurrentElectionSeatsInfo;

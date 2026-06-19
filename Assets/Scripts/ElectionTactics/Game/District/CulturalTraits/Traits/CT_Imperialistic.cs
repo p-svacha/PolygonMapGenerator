@@ -12,6 +12,11 @@ namespace ElectionTactics
             if (!District.HasReligion) PolicyType = PolicyType.Language;
         }
 
+        public override Policy GetOnClickPolicy()
+        {
+            return PolicyType == PolicyType.Religion ? Game.LocalPlayerParty.GetPolicy(District.Religion) : Game.LocalPlayerParty.GetPolicy(District.Language);
+        }
+
         public override string Label => (PolicyType == PolicyType.Religion ? "Religious" : "Linguistic") + " Imperialism";
         public override string Description => "Newly added districts adjacent to this will have guaranteed the same " + PolicyType.ToString() + ".";
     }

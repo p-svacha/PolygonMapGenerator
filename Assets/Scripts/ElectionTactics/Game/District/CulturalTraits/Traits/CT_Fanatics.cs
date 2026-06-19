@@ -16,6 +16,11 @@ namespace ElectionTactics
             }
         }
 
+        public override Policy GetOnClickPolicy()
+        {
+            return Game.LocalPlayerParty.GetPolicy(District.Religion);
+        }
+
         public override string Label => District.Religion.LabelCapWord + " Fanatics";
         public override string Description => $"{District.Religion.Label} policy impact is increased by {PositiveImpact}. All other religion policies reduce popularity by {NegativeImpact}.";
     }

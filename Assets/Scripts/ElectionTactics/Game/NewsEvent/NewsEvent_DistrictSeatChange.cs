@@ -17,7 +17,7 @@ namespace ElectionTactics
             SeatsAfter = seatsAfter;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Star";
         public override int GetArticlePriority() => 50 + SeatsAfter;
 
         public override string GetArticleHeadline()

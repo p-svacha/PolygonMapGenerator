@@ -68,7 +68,7 @@ namespace ElectionTactics
             AddPlayerPanel.SetActive(false);
             ActivePanel.SetActive(true);
             PartyNameInput.text = playerName;
-            PartyNameText.color = c;
+            PartyNameText.color = PartyNameGenerator.GetPartyTextColor(c);
 
             PlayerColor.color = c;
             bool canChangeColor = Slot.ClientId == NetworkPlayer.LocalClientId;
@@ -96,7 +96,7 @@ namespace ElectionTactics
 
         public void SetColor(Color c)
         {
-            PartyNameText.color = c;
+            PartyNameText.color = PartyNameGenerator.GetPartyTextColor(c);
             PlayerColor.color = c;
             Slot.SetColor(c);
         }

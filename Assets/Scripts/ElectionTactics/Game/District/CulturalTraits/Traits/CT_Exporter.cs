@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ElectionTactics
@@ -15,6 +16,11 @@ namespace ElectionTactics
         public override void ModifyNeighbourPolicyPointImpact(District targetDistrict, Policy policy, District neighbourWithTrait, ref int impact)
         {
             if (policy is EconomyPolicy econPolicy && econPolicy.Trait == neighbourWithTrait.Economy1) impact += NEIGHBOUR_IMPACT;
+        }
+
+        public override Policy GetOnClickPolicy()
+        {
+            return Game.LocalPlayerParty.GetPolicy(District.Economy1);
         }
 
         public override string Label => $"{District.Economy1.LabelCapWord} Exporter";

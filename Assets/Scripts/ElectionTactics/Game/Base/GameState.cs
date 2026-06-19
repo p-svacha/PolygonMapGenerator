@@ -9,6 +9,7 @@ namespace ElectionTactics
         Inactive,
         Loading,
         PreparationPhase,
-        Election
+        Election,
+        Done
     }
 }

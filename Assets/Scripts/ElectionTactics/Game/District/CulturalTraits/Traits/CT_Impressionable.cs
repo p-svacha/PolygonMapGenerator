@@ -6,7 +6,17 @@ namespace ElectionTactics
     {
         private const int BONUS_PER_DISTRICT = 10;
 
+        protected override void OnInit()
+        {
+            ApplyModifiersFromElection();
+        }
+
         public override void OnPostElection()
+        {
+            ApplyModifiersFromElection();
+        }
+
+        private void ApplyModifiersFromElection()
         {
             Dictionary<Party, int> bonuses = new Dictionary<Party, int>();
 

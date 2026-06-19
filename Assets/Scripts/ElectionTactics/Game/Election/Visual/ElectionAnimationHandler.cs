@@ -227,7 +227,7 @@ namespace ElectionTactics
             TempStandingsScore.Clear();
             foreach (Party p in Game.Parties) TempStandingsScore.Add(p, p.PreviousScore);
 
-            DistrictOrder = ElectionResult.DistrictResults.OrderBy(x => x.Population).Select(x => x.District).ToList();
+            DistrictOrder = ElectionResult.DistrictResults.OrderBy(r => r.Seats).ThenBy(r => r.Population).Select(x => x.District).ToList();
             CurElectionDistrictIndex = -1;
         }
 
@@ -256,19 +256,28 @@ namespace ElectionTactics
                 // Prepare graph for next district
                 if (CurrentDistrictResult.District.ElectionResults.Count > 1)
                 {
-                    // Margin
-                    Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(true);
-                    Game.UI.Parliament.CurrentElectionMarginText_Tooltip.Init("Margin", "The difference in vote share between you and the winning party in the last cycle's election.\n\nPositive means you won, negative means another party was ahead.");
-                    Game.UI.Parliament.CurrentElectionMarginText.text = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).GetMargin(Game.LocalPlayerParty);
+                    DistrictElectionResult previousResult = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1);
+
+                    // Previous vote share
+                    Game.UI.Parliament.PrevElectionShareText.gameObject.SetActive(true);
+                    Game.UI.Parliament.PrevElectionShareText.text = previousResult.VoteShare[Game.LocalPlayerParty].ToString("0.0") + "%";
+                    Game.UI.Parliament.PrevElectionShareText_Tooltip.Init("Previous Vote Share", $"You has a vote share of {previousResult.VoteShare[Game.LocalPlayerParty].ToString("0.0") + "%"} in the previous cycle.\n\nMargin: {previousResult.GetMargin(Game.LocalPlayerParty)}");
+
+                    // Previous seats
+                    Game.UI.Parliament.PrevElectionSeatsText.gameObject.SetActive(true);
+                    Game.UI.Parliament.PrevElectionSeatsText.text = $"({previousResult.SeatsWon[Game.LocalPlayerParty]})";
+                    Game.UI.Parliament.PrevElectionSeatsText_Tooltip.Init("Previous Seats Won", $"You won {previousResult.SeatsWon[Game.LocalPlayerParty]} out of {previousResult.Seats} seats in the previous cycle.");
 
                     // Leader Knob
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(true);
-                    Game.UI.Parliament.LastElectionWinnerKnob.color = CurrentDistrictResult.District.GetLatestElectionResult(offset: 1).WinnerParty.Color;
-                    Game.UI.Parliament.LastElectionWinnerKnob_Tooltip.Init("Previous Winner", "The winning party in the last election.");
+                    Party previousWinner = previousResult.WinnerParty;
+                    Game.UI.Parliament.LastElectionWinnerKnob.color = previousWinner.Color;
+                    Game.UI.Parliament.LastElectionWinnerKnob_Tooltip.Init("Previous Winner", $"{previousWinner.Name} has won the election in this district in the previous cycle..\n\nVote Share: {previousResult.VoteShare[previousWinner].ToString("0.0") + "%"}\nSeats Won: {previousResult.SeatsWon[previousWinner]}");
                 }
                 else
                 {
-                    Game.UI.Parliament.CurrentElectionMarginText.gameObject.SetActive(false);
+                    Game.UI.Parliament.PrevElectionShareText.gameObject.SetActive(false);
+                    Game.UI.Parliament.PrevElectionSeatsText.gameObject.SetActive(false);
                     Game.UI.Parliament.LastElectionWinnerKnob.gameObject.SetActive(false);
                 }
 
@@ -286,13 +295,13 @@ namespace ElectionTactics
 
                 List<GraphDataPoint> dataPoints = new List<GraphDataPoint>();
                 foreach (KeyValuePair<Party, float> kvp in CurrentDistrictResult.VoteShare)
-                    dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color));
+                    dataPoints.Add(new GraphDataPoint(kvp.Key.Acronym, kvp.Value, kvp.Key.Color, kvp.Key.TextColor));
                 int yMax = (((int)CurrentDistrictResult.VoteShare.Values.Max(x => x)) / 9 + 1) * 10;
 
                 // Update current election graph
                 Game.UI.Parliament.CurrentElectionContainer.SetActive(true);
                 Game.UI.Parliament.CurrentElectionTitle.text = CurrentDistrictResult.District.Name;
-                Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.District.GetSeats(), CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
+                Game.UI.Parliament.CurrentElectionSeatsInfo.InitDistrictSeats(CurrentDistrictResult.Seats, CurrentDistrictResult.District.GetSeatAllocationMethod(), darkMode: false);
 
                 // Init animation
                 float graphTime = GraphAnimationTime;

@@ -20,21 +20,20 @@ namespace ElectionTactics
                 PolicyType.Language,
                 PolicyType.Religion
             };
+
+            if (!District.HasReligion) candidates.Remove(PolicyType.Religion);
+
             PolicyType = candidates.RandomElement();
         }
 
-        public override Dictionary<string, int> GetPopularityChange(Party p)
+        public override List<(string Label, int Value)> GetPopularityChange(Party p)
         {
             if (p.Policies.Count == 0) return base.GetPopularityChange(p);
 
             Policy policy = GetRelevantPolicy(p);
             if (policy.Value >= THRESHOLD)
-            {
-                return new Dictionary<string, int>()
-                {
-                    { Label, POPULARITY_BONUS }
-                };
-            }
+                return new List<(string, int)>() { (Label, POPULARITY_BONUS) };
+
             return base.GetPopularityChange(p);
         }
 
@@ -50,6 +49,11 @@ namespace ElectionTactics
                 PolicyType.Religion => p.GetPolicy(District.Religion),
                 _ => throw new System.NotImplementedException(),
             };
+        }
+
+        public override Policy GetOnClickPolicy()
+        {
+            return GetRelevantPolicy(Game.LocalPlayerParty);
         }
 
         public override string Label => $"Focal Point: {PolicyType}";

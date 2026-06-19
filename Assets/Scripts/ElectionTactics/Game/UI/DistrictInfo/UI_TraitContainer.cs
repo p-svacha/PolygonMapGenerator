@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace ElectionTactics
@@ -52,6 +53,18 @@ namespace ElectionTactics
                 }
                 UI_Trait traitElem = Instantiate(TraitPrefab, currentRow.transform);
                 traitElem.InitCulturalTrait(traits[i]);
+
+                // Add short cut jump to policy
+                if (traits[i].GetOnClickPolicy() != null)
+                {
+                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.JumpToPolicy(traits[i].GetOnClickPolicy()));
+                }
+
+                // Add short cut jump to district
+                else if (traits[i].GetOnClickDistrict() != null)
+                {
+                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.SelectDistrict(traits[i].GetOnClickDistrict()));
+                }
             }
         }
     }

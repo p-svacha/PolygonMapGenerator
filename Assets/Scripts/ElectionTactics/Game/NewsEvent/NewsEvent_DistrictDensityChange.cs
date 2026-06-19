@@ -17,7 +17,7 @@ namespace ElectionTactics
             DensityAfter = densityAfter;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Density";
         public override int GetArticlePriority() => 40;
 
         public override string GetArticleHeadline()

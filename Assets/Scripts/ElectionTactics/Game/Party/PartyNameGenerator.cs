@@ -390,21 +390,37 @@ namespace ElectionTactics
             { "APfAU", 20 },
         };
 
+        public static Color PINK = new Color(0.95f, 0.35f, 0.60f);
+        public static Color GREEN = new Color(0.00f, 0.50f, 0.00f);
+        public static Color BLUE = new Color(0.10f, 0.40f, 0.90f);
+        public static Color RED = new Color(0.85f, 0.05f, 0.05f);
+        public static Color YELLOW = new Color(0.80f, 0.75f, 0.15f);
+        public static Color BLACK = new Color(0.10f, 0.10f, 0.10f);
+        public static Color ORANGE = new Color(0.90f, 0.55f, 0.15f);
+        public static Color PURPLE = new Color(0.80f, 0.00f, 0.80f);
+        public static Color BROWN = new Color(0.66f, 0.32f, 0.10f);
+        public static Color LIGHT_BLUE = new Color(0.00f, 0.80f, 0.90f);
+        public static Color LIGHT_GREEN = new Color(0.00f, 0.90f, 0.00f);
+        public static Color TEAL = new Color(0.00f, 0.65f, 0.60f);
+        public static Color CRIMSON = new Color(0.45f, 0.00f, 0.05f);
+        public static Color NAVY = new Color(0.10f, 0.10f, 0.60f);
+
         private static List<Color> Colors = new List<Color>()
         {
-            new Color(0.90f, 0.30f, 0.55f), // 0 - Pink
-            new Color(0.00f, 0.50f, 0.00f), // 1 - Green
-            new Color(0.10f, 0.40f, 0.90f), // 2 - Blue
-            new Color(0.85f, 0.05f, 0.05f), // 3 - Red
-            new Color(0.80f, 0.75f, 0.15f), // 4 - Yellow
-            new Color(0.10f, 0.10f, 0.10f), // 5 - Black
-            new Color(0.85f, 0.60f, 0.16f), // 6 - Orange
-            new Color(0.80f, 0.00f, 0.80f), // 7 - Purple
-            new Color(0.66f, 0.32f, 0.10f), // 8 - Brown
-            new Color(0.00f, 0.80f, 0.90f), // 9 - Light Blue
-            new Color(0.00f, 0.90f, 0.00f), // 10 - Light Green
-            new Color(0.00f, 0.65f, 0.60f), // 11 - Teal
-            new Color(0.45f, 0.00f, 0.05f), // 12 - Crimson
+            PINK,
+            GREEN,
+            BLUE,
+            RED,
+            YELLOW,
+            BLACK,
+            ORANGE,
+            PURPLE,
+            BROWN,
+            LIGHT_BLUE,
+            LIGHT_GREEN,
+            TEAL,
+            CRIMSON,
+            NAVY
         };
 
 
@@ -455,18 +471,31 @@ namespace ElectionTactics
 
         public static Color GetPartyColor(string partyName, List<Color> alreadyTaken)
         {
-            if (partyName.Contains("Pink") && !alreadyTaken.Contains(Colors[0])) return Colors[0];
-            if (partyName.Contains("Green") && !alreadyTaken.Contains(Colors[1])) return Colors[1];
-            if (partyName.Contains("Blue") && !alreadyTaken.Contains(Colors[2])) return Colors[2];
-            if (partyName.Contains("Red") && !alreadyTaken.Contains(Colors[3])) return Colors[3];
-            if (partyName.Contains("Yellow") && !alreadyTaken.Contains(Colors[4])) return Colors[4];
-            if (partyName.Contains("Black") && !alreadyTaken.Contains(Colors[5])) return Colors[5];
-            if (partyName.Contains("Orange") && !alreadyTaken.Contains(Colors[6])) return Colors[6];
-            if (partyName.Contains("Purple") && !alreadyTaken.Contains(Colors[7])) return Colors[7];
-            if (partyName.Contains("Brown") && !alreadyTaken.Contains(Colors[8])) return Colors[8];
-            if (partyName.Contains("Teal") && !alreadyTaken.Contains(Colors[8])) return Colors[11];
-            if (partyName.Contains("Crimson") && !alreadyTaken.Contains(Colors[8])) return Colors[12];
+            if (partyName.ToLower().Contains("pink") && !alreadyTaken.Contains(PINK)) return PINK;
+            if (partyName.Contains("green") && !alreadyTaken.Contains(GREEN)) return GREEN;
+            if (partyName.Contains("blue") && !alreadyTaken.Contains(BLUE)) return BLUE;
+            if (partyName.Contains("red") && !alreadyTaken.Contains(RED)) return RED;
+            if (partyName.Contains("yellow") && !alreadyTaken.Contains(YELLOW)) return YELLOW;
+            if (partyName.Contains("black") && !alreadyTaken.Contains(BLACK)) return BLACK;
+            if (partyName.Contains("orange") && !alreadyTaken.Contains(ORANGE)) return ORANGE;
+            if (partyName.Contains("purple") && !alreadyTaken.Contains(PURPLE)) return PURPLE;
+            if (partyName.Contains("brown") && !alreadyTaken.Contains(BROWN)) return BROWN;
+            if (partyName.Contains("teal") && !alreadyTaken.Contains(TEAL)) return TEAL;
+            if (partyName.Contains("crimson") && !alreadyTaken.Contains(CRIMSON)) return CRIMSON;
+            if (partyName.Contains("navy") && !alreadyTaken.Contains(NAVY)) return NAVY;
             else return GetRandomColor(alreadyTaken);
+        }
+
+        /// <summary>
+        /// Some darker party colors have a separate color for text so it's more readable.
+        /// </summary>
+        public static Color GetPartyTextColor(Color partyColor)
+        {
+            if (partyColor == PartyNameGenerator.CRIMSON) return new Color(0.68f, 0.0f, 0.07f);
+            if (partyColor == PartyNameGenerator.BLACK) return new Color(0.45f, 0.45f, 0.45f);
+            if (partyColor == PartyNameGenerator.NAVY) return new Color(0.28f, 0.28f, 0.1f);
+
+            return partyColor;
         }
 
         public static Color GetRandomColor(List<Color> forbiddenColors, Color? oldColor = null)

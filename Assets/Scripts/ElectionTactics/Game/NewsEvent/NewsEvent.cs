@@ -14,7 +14,7 @@ namespace ElectionTactics
             Cycle = Game.ElectionCycle;
         }
 
-        public abstract Sprite GetArticleIcon();
+        public abstract string GetArticleIconName();
         public abstract string GetArticleHeadline();
         public abstract string GetArticleBody();
         public abstract int GetArticlePriority();

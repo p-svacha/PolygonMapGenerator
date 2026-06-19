@@ -14,7 +14,7 @@ namespace ElectionTactics
             Party = party;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Smiley";
         public override int GetArticlePriority() => 50;
 
         public override string GetArticleHeadline()

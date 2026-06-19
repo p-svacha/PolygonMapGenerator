@@ -31,14 +31,16 @@ namespace ElectionTactics
             if (connectedTrait != null) Rival.RemoveCulturalTrait(connectedTrait);
         }
 
-        public override Dictionary<string, int> GetPopularityChangeFromOtherDistrictPopularities(Party p)
+        public override List<(string Label, int Value)> GetPopularityChangeFromOtherDistrictPopularities(Party p)
         {
             int popularity = Rival.GetPartyPopularity(p, includeOtherDistrictPopularityInfluence: false);
             int popularityPenalty = (int)(FACTOR * popularity);
-            return new Dictionary<string, int>()
-            {
-                { $"{Rival.Name} Rivalry", -popularityPenalty }
-            };
+            return new List<(string, int)>() { ($"{Rival.Name} Rivalry", -popularityPenalty) };
+        }
+
+        public override District GetOnClickDistrict()
+        {
+            return Rival;
         }
 
         public override string Label => $"Rivalry with {Rival.Name}";

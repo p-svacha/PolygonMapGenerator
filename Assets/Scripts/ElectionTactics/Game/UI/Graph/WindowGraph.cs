@@ -185,7 +185,7 @@ public class WindowGraph : MonoBehaviour
             float height = (dataPoints[i].Value / yMax) * (GraphHeight - YMarginTop);
             if (zeroed) height = 0;
             Bars.Add(CreateBar(xPos, BarWidth, height, dataPoints[i].Color)); // Bars
-            BarLabels.Add(DrawText(zeroed ? "" : FormatBarLabel(dataPoints[i].Value), new Vector2(xPos, height + BarFontSize), new Vector2(BarWidth, BarFontSize), dataPoints[i].Color, font, BarFontSize)); // Bar value labels
+            BarLabels.Add(DrawText(zeroed ? "" : FormatBarLabel(dataPoints[i].Value), new Vector2(xPos, height + BarFontSize), new Vector2(BarWidth, BarFontSize), dataPoints[i].TextColor, font, BarFontSize)); // Bar value labels
         }
     }
 
@@ -360,7 +360,7 @@ public class WindowGraph : MonoBehaviour
         for (int i = 0; i < DataPoints.Count; i++)
         {
             float xPos = (i + 1) * XStep + 1;
-            DrawText(DataPoints[i].Label, new Vector2(xPos, -BarFontSize), new Vector2(BarWidth, BarFontSize), DataPoints[i].Color, Font, BarFontSize); // X-axis labels
+            DrawText(DataPoints[i].Label, new Vector2(xPos, -BarFontSize), new Vector2(BarWidth, BarFontSize), DataPoints[i].TextColor, Font, BarFontSize); // X-axis labels
 
             for (int j = 0; j < DataPoints[i].Icons.Count; j++) // X-axis label icons
             {

@@ -82,31 +82,6 @@ General UX:
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 (/) - Redesign loading screen
 
-UX pass from testing:
-- Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color. maybe also adjust colors a little
-- Show amount of seats won  in previous election during election animation
-- During animation, also show vote share from prev election rather than margin
-  - like 16.5% (4)
-- add a new party name category "fixed names" that appears in like 5% of cases, and fill it with party names from big countries.
-- Make sure vote shares all have exactly one decimal (XX.X%)
-- Make sure vote shares add up to 100%.
-- Make sure vote shares give a single winner.
-(/) - Make so that influental / partner / rival traits also get reflected in the map policy impact overlay, might need some rework.
-- Impatient news event article
-- added district article: capital clause
-- added district article: minority language/religion clause
-- added district article: falvour for rapidly growing or falling population
-- added district article: falvour for cultural traits
-- graph in election animation already shows seats from next cycle
-- cultural traits should be able to support jumping to a policy if clicked
-- add support for strong economy / religious / linguistic / focal point / Patriotic
-- add handling when all parties have a popularity of 0 in a district
-- in loading screen, show current step of map generation
-- Impressionable trait should act immediately when district is actibvated
-- election animation ordering needs to order by seats FIRST (because of capital)
-- fix district policy names. they are not allowed to be the same as other policies, but also shouldn't have "district" in the name. because popularity breakdown duplicate keys
-- winning sound plays twice
-
 Election graph:
 (/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.
 (/) - show more info about the modifiers in tooltip of modifier icons
@@ -162,19 +137,54 @@ Add random districts events (that can happen randomly (rarely) after an election
 (/) - add framework for them to exist, appear, and have effects
 
 Random Events (both logic & newspaper article gen):
-- disaster
-- trait gain (can't affect traits with commonness 0)
-- trait loss (can't affect traits with commonness 0)
-- capital move
-- district removed
-- language change
-- religion change (cannot apply if fanatics trait is present)
-- age group change
+(/) - disaster
+(/) - trait gain (can't affect traits with commonness 0)
+(/) - trait loss (can't affect traits with commonness 0)
+(/) - capital move
+(/) - district removed
+(/) - language change
+(/) - religion change (cannot apply if fanatics trait is present)
+(/) - age group change
+
+
+Points from personal playtest:
+(T) - Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color. maybe also adjust colors a little
+(T) - general color improvements
+(T) - add navy color
+(T) - Show amount of seats won  in previous election during election animation
+(T) - During animation, also show vote share from prev election rather than margin
+  - like 16.5% (4)
+(T) - Make sure vote shares all have exactly one decimal (XX.X%)
+(T) - Make sure vote shares add up to 100%.
+(T) - Make sure vote shares give a single winner.
+(T) - Improve policy impact to show complete impact, including all effects from anywhere, by fully simulating the new popularity with changed policy
+(T) - Impatient should create news event article on an exclusion
+(T) - BUG: graph in election animation already shows seats from next cycle
+(T) - cultural traits should be able to support jumping to a policy if clicked
+(T) - add jumping to relevant policies from many cultural traits
+(T) - cultural traits should be able to support jumping to a district if clicked
+(T) - add jumping to relevant district from some cultural traits
+(T) - add handling when all parties have a popularity of 0 in a district
+(/) - in loading screen, show current step of map generation
+(T) - Impressionable trait should act immediately when district is actibvated
+(T) - election animation ordering needs to order by seats FIRST (because of capital)
+(T) - fix district policy names. they are not allowed to be the same as other policies, but also shouldn't have "district" in the name. because popularity breakdown duplicate keys
+(T) - BUG: winning sound plays twice
 
 Newspaper:
 (/) - Add newspaper framework
+- Give minor articles a little bit more space
+- Show text for minor articles even if 2 per column 
+- redesign header (smaller title, change logo)
+
 - implement graph type creator for parliament seat distribution iconography (base it on graph framework)
 - show parliament in main article
+
+- added district article: capital clause
+- added district article: minority language/religion clause
+- added district article: falvour for rapidly growing or falling population
+- added district article: falvour for cultural traits
+
 - move general election result tag identification to the result class
 - expand/properly implement main article generator
 - properly implement main chapter 2 generator
@@ -225,6 +235,7 @@ Tutorial
 
 Remove log spams
 
+quick-fire test. 10 games in a row without restarting with max district enabled from start.
 PERSONAL PLAYTESTS
 
 itch page changes:

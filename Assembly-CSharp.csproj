@@ -312,6 +312,7 @@
     <Compile Include="Assets\Scripts\MapGeneration\Noise\Noise.cs" />
     <Compile Include="Assets\Scripts\MapEditor\UI_MapEditor.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Noise\WindNoise.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\NewsEvent\NewsEvent_ImpatientExclusion.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameLengthDefs.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />

@@ -460,24 +460,26 @@ namespace ElectionTactics
             foreach (Modifier m in electionModifiers.Where(x => x.Type == ModifierType.Exclusion)) partyPopularities[m.Party] = 0;
 
             // Cast "calculation" votes
+            int totalPopularity = partyPopularities.Values.Sum();
             for (int i = 0; i < Voters; i++)
             {
-                Party votedParty = partyPopularities.GetWeightedRandomElement();
+                Party votedParty;
+                if (totalPopularity <= 0)
+                    votedParty = parties[Random.Range(0, parties.Count)]; // Fully random when no party has any popularity
+                else
+                    votedParty = partyPopularities.GetWeightedRandomElement(); // Usually weighted random according to party popularity
+
                 partyVotes[votedParty]++;
             }
-            foreach (Party p in parties)
-            {
-                //Debug.Log(p.Name + " got " + partyVotes[p] + " votes.");
-                voterShares.Add(p, 100f * partyVotes[p] / Voters);
-            }
 
-            // Guarantee that there is only one winner (by having winner have 0.1% more share than others)
-            List<Party> winnerParties = voterShares.Where(x => x.Value == voterShares.Values.Max(v => v)).Select(x => x.Key).ToList();
-            if (winnerParties.Count > 1)
-            {
-                Party singleWinnerParty = winnerParties[Random.Range(0, winnerParties.Count)];
-                voterShares[singleWinnerParty] += 0.1f;
-            }
+            // Calculate raw vote shares
+            Dictionary<Party, float> rawShares = new Dictionary<Party, float>();
+            foreach (Party p in parties) rawShares.Add(p, 100f * partyVotes[p] / Voters);
+
+            // Normalize vote shares: one decimal, unique, sums to 100.0
+            voterShares = NormalizeVoteShares(rawShares);
+
+            // Identify single winner
             Party winner = voterShares.OrderByDescending(x => x.Value).First().Key;
 
             // Calculate number of "game" votes based on voter turnout
@@ -511,6 +513,43 @@ namespace ElectionTactics
             );
 
             return result;
+        }
+
+        /// <summary>
+        /// Normalizes raw vote shares so that: every share has exactly one decimal,
+        /// no two parties share the exact same value, and the total is exactly 100.0.
+        /// </summary>
+        private Dictionary<Party, float> NormalizeVoteShares(Dictionary<Party, float> rawShares)
+        {
+            // 1. Round every share to one decimal
+            Dictionary<Party, float> shares = rawShares.ToDictionary(
+                x => x.Key,
+                x => Mathf.Round(x.Value * 10f) / 10f
+            );
+
+            // 2. Break exact ties: nudge duplicates up by 0.1 each.
+            //    Process in descending raw order so the originally-higher party keeps the higher value.
+            List<Party> ordered = shares.Keys.OrderByDescending(p => rawShares[p]).ToList();
+            HashSet<float> used = new HashSet<float>();
+            foreach (Party p in ordered)
+            {
+                float v = shares[p];
+                while (used.Contains(v)) v = Mathf.Round((v + 0.1f) * 10f) / 10f;
+                shares[p] = v;
+                used.Add(v);
+            }
+
+            // 3. Correct rounding/tie-break drift so the total is exactly 100.0.
+            //    Apply the correction to the largest party (least relative distortion).
+            float sum = shares.Values.Sum();
+            float diff = Mathf.Round((100f - sum) * 10f) / 10f;
+            if (diff != 0f)
+            {
+                Party largest = shares.OrderByDescending(x => x.Value).First().Key;
+                shares[largest] = Mathf.Round((shares[largest] + diff) * 10f) / 10f;
+            }
+
+            return shares;
         }
 
         public void OnElectionEnd()
@@ -554,56 +593,37 @@ namespace ElectionTactics
             return popularity;
         }
 
-        /// <summary>
-        /// Returns all factors that affect the party popularity in this district. The sum all factors equals the absolute popularity.
-        /// /// <br/>If includeOtherDistrictPopularityInfluence is false, all popularity impacts based on the popularity of other districts are excluded. Used to prevent circular/chained popularity impacts.
-        /// </summary>
-        public Dictionary<string, int> GetPartyPopularityBreakdown(Party party, bool includeOtherDistrictPopularityInfluence)
+        public List<(string Label, int Value)> GetPartyPopularityBreakdown(Party party, bool includeOtherDistrictPopularityInfluence)
         {
-            Dictionary<string, int> factors = new Dictionary<string, int>();
+            var factors = new List<(string Label, int Value)>();
 
             // Base popularity
-            int basePopularity = BasePopularity;
-            factors.Add("Base Popularity", basePopularity);
+            factors.Add(("Base Popularity", BasePopularity));
 
             // Policies
-            foreach (Policy policy in party.ActivePolicies) factors.Add($"{policy.Name} Policy ({policy.Value})", policy.GetCurrentImpactOn(this));
+            foreach (Policy policy in party.ActivePolicies)
+                factors.Add(($"{policy.Name} Policy ({policy.Value})", policy.GetCurrentImpactOn(this)));
 
             // Positive & Negative Modifiers
-            List<Modifier> relevantModifiers = Modifiers.Where(m => m.Party == party).ToList();
-
-            foreach (Modifier m in relevantModifiers)
+            foreach (Modifier m in Modifiers.Where(m => m.Party == party))
             {
-                if (m.Type == ModifierType.Positive) factors.Add(m.Description, m.Value);
-                else if (m.Type == ModifierType.Negative) factors.Add(m.Description, -m.Value);
+                if (m.Type == ModifierType.Positive) factors.Add((m.Description, m.Value));
+                else if (m.Type == ModifierType.Negative) factors.Add((m.Description, -m.Value));
             }
 
             // Modifiers from cultural traits
             foreach (CulturalTrait trait in ActiveCulturalTraits)
-            {
-                Dictionary<string, int> f = trait.GetPopularityChange(party);
-                foreach (var x in f) factors.Add(x.Key, x.Value);
-            }
+                factors.AddRange(trait.GetPopularityChange(party));
 
             // Modifiers from the popularity of other districts
             if (includeOtherDistrictPopularityInfluence)
             {
-                // Effects from own traits
                 foreach (CulturalTrait trait in ActiveCulturalTraits)
-                {
-                    Dictionary<string, int> f = trait.GetPopularityChangeFromOtherDistrictPopularities(party);
-                    foreach (var x in f) factors.Add(x.Key, x.Value);
-                }
+                    factors.AddRange(trait.GetPopularityChangeFromOtherDistrictPopularities(party));
 
-                // Effects from neighbouring traits
-                foreach(District neighbour in ActiveLandNeighbours)
-                {
-                    foreach(CulturalTrait trait in neighbour.ActiveCulturalTraits)
-                    {
-                        Dictionary<string, int> f = trait.GetPopularityChangeInNeighbours(party);
-                        foreach (var x in f) factors.Add(x.Key, x.Value);
-                    }
-                }
+                foreach (District neighbour in ActiveLandNeighbours)
+                    foreach (CulturalTrait trait in neighbour.ActiveCulturalTraits)
+                        factors.AddRange(trait.GetPopularityChangeInNeighbours(party));
             }
 
             return factors;

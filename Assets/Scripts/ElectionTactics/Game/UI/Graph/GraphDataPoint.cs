@@ -8,17 +8,19 @@ public class GraphDataPoint
     public string Label;
     public float Value;
     public Color Color;
+    public Color TextColor;
 
     // Icons that get displayed below the label
     public List<Sprite> Icons; 
     public List<string> IconTooltipTitles;
     public List<string> IconTooltipTexts;
 
-    public GraphDataPoint(string label, float value, Color color, List<Sprite> icons = null, List<string> iconTooltipTitles = null, List<string> iconTooltipTexts = null)
+    public GraphDataPoint(string label, float value, Color color, Color? textColor = null, List<Sprite> icons = null, List<string> iconTooltipTitles = null, List<string> iconTooltipTexts = null)
     {
         Label = label;
         Value = value;
         Color = color;
+        TextColor = textColor != null ? textColor.Value : color;
         Icons = icons == null ? new List<Sprite>() : icons;
         IconTooltipTitles = iconTooltipTitles == null ? new List<string>() : iconTooltipTitles;
         IconTooltipTexts = iconTooltipTexts == null ? new List<string>() : iconTooltipTexts;

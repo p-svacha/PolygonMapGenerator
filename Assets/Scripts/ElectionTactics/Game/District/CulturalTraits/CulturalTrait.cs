@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 namespace ElectionTactics
 {
@@ -19,8 +20,6 @@ namespace ElectionTactics
             District = district;
             if (!skipOnInit) OnInit();
         }
-
-        #region Mentality effect
 
         /// <summary>
         /// Called once when initializing the trait.
@@ -45,17 +44,17 @@ namespace ElectionTactics
         /// <summary>
         /// Returns all modifiers within the popularity calculation for the given party.
         /// </summary>
-        public virtual Dictionary<string, int> GetPopularityChange(Party p) => new Dictionary<string, int>();
+        public virtual List<(string Label, int Value)> GetPopularityChange(Party p) => new List<(string Label, int Value)>();
 
         /// <summary>
         /// Returns all modifiers within the popularity calculation, that change the popularity of a party in this district based on the popularity of the party in other districts. Defined this specific way to avoid chained/circular dependencies.
         /// </summary>
-        public virtual Dictionary<string, int> GetPopularityChangeFromOtherDistrictPopularities(Party p) => new Dictionary<string, int>();
+        public virtual List<(string Label, int Value)> GetPopularityChangeFromOtherDistrictPopularities(Party p) => new List<(string Label, int Value)>();
 
         /// <summary>
         /// Returns all modifiers within the popularity calculation, that are applied to neighbouring districts, that change the popularity of a party in the neighbour district based on the popularity of the party in other districts. Defined this specific way to avoid chained/circular dependencies.
         /// </summary>
-        public virtual Dictionary<string, int> GetPopularityChangeInNeighbours(Party p) => new Dictionary<string, int>();
+        public virtual List<(string Label, int Value)> GetPopularityChangeInNeighbours(Party p) => new List<(string Label, int Value)>();
 
         /// <summary>
         /// Gets called when calculating the impact of a single policy point of a policy on a district with this trait.
@@ -69,7 +68,15 @@ namespace ElectionTactics
         /// </summary>
         public virtual void ModifyNeighbourPolicyPointImpact(District targetDistrict, Policy policy, District neighbourWithTrait, ref int impact) { }
 
-        #endregion
+        /// <summary>
+        /// The policy jumped to when clicking on this cultural trait in the district info. Can return null for no shortcut.
+        /// </summary>
+        public virtual Policy GetOnClickPolicy() => null;
+
+        /// <summary>
+        /// The policy jumped to when clicking on this cultural trait in the district info. Can return null for no shortcut.
+        /// </summary>
+        public virtual District GetOnClickDistrict() => null;
 
         public virtual string Label => Def.Label;
         public string LabelCapWord => Label.CapitalizeEachWord();

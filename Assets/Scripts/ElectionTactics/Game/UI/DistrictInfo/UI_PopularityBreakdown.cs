@@ -15,11 +15,11 @@ namespace ElectionTactics
             // Clear list
             for (int i = 0; i < transform.childCount; i++) Destroy(transform.GetChild(i).gameObject);
 
-            Dictionary<string, int> popularityBreakdown = district.GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence: true);
-            foreach(KeyValuePair<string, int> factor in popularityBreakdown.Where(x => x.Value != 0))
+            List<(string Label, int Value)> popularityBreakdown = district.GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence: true);
+            foreach(var factor in popularityBreakdown.Where(x => x.Value != 0))
             {
                 UI_PopularityBreakdownEntry entry = Instantiate(Entry, transform);
-                entry.Init(factor.Key, factor.Value);
+                entry.Init(factor.Label, factor.Value);
             }
         }
     }

@@ -67,7 +67,7 @@ namespace ElectionTactics
 
                 string label = GlobalSettings.DebugMode ? kvp.Key.Acronym + "|" + result.PartyPopularities[kvp.Key] : kvp.Key.Acronym;
                 float value = showSeats ? result.SeatsWon[kvp.Key] : kvp.Value;
-                dataPoints.Add(new GraphDataPoint(label, value, kvp.Key.Color, modifierIcons, iconTooltipTitles, iconTooltipTexts));
+                dataPoints.Add(new GraphDataPoint(label, value, kvp.Key.Color, kvp.Key.TextColor, modifierIcons, iconTooltipTitles, iconTooltipTexts));
             }
 
             if (showSeats)

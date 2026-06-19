@@ -14,7 +14,7 @@ namespace ElectionTactics
         {
             District = GetCandidates().RandomElement();
             OldReligion = District.Religion;
-            NewReligion = DefDatabase<ReligionDef>.AllDefs.Where(def => def != OldReligion).ToList().RandomElement();
+            NewReligion = DefDatabase<ReligionDef>.AllDefs.Where(def => def != OldReligion && def != ReligionDefOf.None).ToList().RandomElement();
 
             District.Religion = NewReligion;
         }

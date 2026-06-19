@@ -298,7 +298,11 @@ namespace ElectionTactics
             foreach (LobbySlot slot in GameSettings.Slots)
             {
                 if (slot.SlotType == LobbySlotType.Free || slot.SlotType == LobbySlotType.Inactive) continue;
-                Party party = new Party(this, id++, slot.Name, slot.GetColor(), HelperFunctions.GetContrastTextColor(slot.GetColor()), isAi: slot.SlotType == LobbySlotType.Bot);
+
+                Color partyColor = slot.GetColor();
+                Color partyTextColor = PartyNameGenerator.GetPartyTextColor(slot.GetColor());
+
+                Party party = new Party(this, id++, slot.Name, partyColor, partyTextColor, isAi: slot.SlotType == LobbySlotType.Bot);
 
                 if (slot.SlotType == LobbySlotType.Human && (GameType == GameType.Singleplayer || slot.ClientId == NetworkPlayer.LocalClientId))
                 {
@@ -397,6 +401,15 @@ namespace ElectionTactics
 
             switch (State)
             {
+                case GameState.Loading:
+                    string loadingStepText = PMG.GetCurrentStateString() + "...";
+                    if (PMG.GenerationState == MapGenerationState.GenerationDone) loadingStepText = "Creating Districts...";
+                    if (UI_LoadingScreen.Instance.LoadingScreenStepText.text != loadingStepText)
+                    {
+                        UI_LoadingScreen.Instance.LoadingScreenStepText.text = loadingStepText;
+                    }
+                    break;
+
                 case GameState.PreparationPhase:
                     // Mouse click
                     if (Input.GetMouseButtonDown(0))
@@ -578,6 +591,7 @@ namespace ElectionTactics
 
         private void EndGame()
         {
+            State = GameState.Done;
             UI.PostGameScreen.Init(this);
         }
 

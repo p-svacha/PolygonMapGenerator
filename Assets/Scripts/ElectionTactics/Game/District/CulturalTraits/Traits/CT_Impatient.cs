@@ -29,10 +29,12 @@ namespace ElectionTactics
                 if (ExclusionCountdown[p] == THRESHOLD)
                 {
                     Game.AddModifier(District, new Modifier(ModifierType.Exclusion, 0, p, -1, "for repeatedly failing to win seats", "Impatient Cultural Trait"));
+
+                    Game.RegisterNewsEvent(new NewsEvent_ImpatientExclusion(District, p));
                 }
             }
         }
 
-        public override string Description => base.Description + $"\n\nCurrently at {ExclusionCountdown[Game.LocalPlayerParty]}/{THRESHOLD}";
+        public override string Description => base.Description + $"\n\nCurrently at {UnityEngine.Mathf.Min(ExclusionCountdown[Game.LocalPlayerParty], THRESHOLD)}/{THRESHOLD}";
     }
 }

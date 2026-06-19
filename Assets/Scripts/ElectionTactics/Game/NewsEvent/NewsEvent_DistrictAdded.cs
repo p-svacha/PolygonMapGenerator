@@ -17,7 +17,7 @@ namespace ElectionTactics
             Cycle--;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "District";
         public override int GetArticlePriority() => 30;
 
         public override string GetArticleHeadline()

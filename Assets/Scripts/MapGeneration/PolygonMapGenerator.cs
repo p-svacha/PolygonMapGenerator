@@ -1484,5 +1484,32 @@ public class PolygonMapGenerator : MonoBehaviour
     public GraphNode CornerNode_TopRight { get { return CornerNodes[2]; } }
     public GraphNode CornerNode_TopLeft { get { return CornerNodes[3]; } }
 
+    /// <summary>
+    /// Returns the current map generation state as a human readable string.
+    /// </summary>
+    public string GetCurrentStateString()
+    {
+        return GenerationState switch
+        {
+            MapGenerationState.Waiting => "Waiting",
+            MapGenerationState.CreateMapBounds => "Creating Map Bounds",
+            MapGenerationState.CreateInitialGraph => "Creating Initial Graph",
+            MapGenerationState.FindInitialPolygons => "Finding Initial Polygons",
+            MapGenerationState.RemoveInvalidNodes => "Removing Invalid Nodes",
+            MapGenerationState.SplitBigPolygons => "Splitting Large Polygons",
+            MapGenerationState.MergeSmallPolygons => "Merging Small Polygons",
+            MapGenerationState.CreateWaters => "Creating Waters",
+            MapGenerationState.CreateTopology => "Creating Topology",
+            MapGenerationState.CreateRivers => "Creating Rivers",
+            MapGenerationState.ApplyBiomes => "Applying Biomes",
+            MapGenerationState.FindWaterNeighbours => "Finding Water Neighbours",
+            MapGenerationState.CreateContinents => "Creating Continents",
+            MapGenerationState.DrawMap => "Drawing Map",
+            MapGenerationState.GenerationDone => "Done",
+            MapGenerationState.GenerationAborted => "Aborted",
+            _ => "Generating Map"
+        };
+    }
+
     #endregion
 }

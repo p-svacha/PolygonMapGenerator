@@ -16,13 +16,13 @@ public class UI_InfoTable : MonoBehaviour
         // Clear list
         for (int i = 0; i < transform.childCount; i++) Destroy(transform.GetChild(i).gameObject);
 
-        Dictionary<string, int> popularityBreakdown = district.GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence: true);
-        foreach (KeyValuePair<string, int> factor in popularityBreakdown.Where(x => x.Value != 0))
+        List<(string Label, int Value)> popularityBreakdown = district.GetPartyPopularityBreakdown(party, includeOtherDistrictPopularityInfluence: true);
+        foreach (var factor in popularityBreakdown.Where(x => x.Value != 0))
         {
             UI_InfoTableRow entry = Instantiate(RowPrefab, transform);
             int value = factor.Value;
             string valueText = value >= 0 ? "+" + value : value.ToString();
-            entry.Init(factor.Key, valueText);
+            entry.Init(factor.Label, valueText);
         }
     }
 }

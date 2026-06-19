@@ -121,17 +121,17 @@ namespace ElectionTactics
 
         private void RandomizePlayerPartyColor()
         {
-            Color newColor = PartyNameGenerator.GetRandomColor(new List<Color>(), PlayerNameText.color);
+            Color newColor = PartyNameGenerator.GetRandomColor(new List<Color>(), PlayerColorButton.GetComponent<Image>().color);
             SetPlayerColor(newColor);
         }
         private void SetPlayerColor(Color color)
         {
-            PlayerNameText.color = color;
+            PlayerNameText.color = PartyNameGenerator.GetPartyTextColor(color);
             PlayerColorButton.GetComponent<Image>().color = color;
         }
         private void CyclePlayerColorBackward()
         {
-            Color newColor = PartyNameGenerator.GetRandomColorBackward(new List<Color>(), PlayerNameText.color);
+            Color newColor = PartyNameGenerator.GetRandomColorBackward(new List<Color>(), PlayerColorButton.GetComponent<Image>().color);
             SetPlayerColor(newColor);
             AudioManager.PlayStandardClickSound();
         }
@@ -244,8 +244,8 @@ namespace ElectionTactics
             }
 
             // Add player
-            slots[0].SetActive(PlayerNameInput.text, PlayerNameText.color, LobbySlotType.Human, 0);
-            List<Color> usedColors = new List<Color>() { PlayerNameText.color };
+            slots[0].SetActive(PlayerNameInput.text, PlayerColorButton.GetComponent<Image>().color, LobbySlotType.Human, 0);
+            List<Color> usedColors = new List<Color>() { PlayerColorButton.GetComponent<Image>().color };
 
             // Add 3 bots
             for (int i = 1; i <= 3; i++)

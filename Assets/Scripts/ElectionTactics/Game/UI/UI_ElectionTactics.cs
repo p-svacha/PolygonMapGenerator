@@ -300,7 +300,14 @@ namespace ElectionTactics
         }
 
 
-        public void ShowAndHighlightPolicy(Policy policy)
+        public void JumpToPolicy(Policy policy)
+        {
+            if (policy == null || !policy.IsActive) return;
+            AudioManager.PlayStandardClickSound();
+            ShowAndHighlightPolicy(policy);
+        }
+
+        private void ShowAndHighlightPolicy(Policy policy)
         {
             // Switch to policy screen
             if (ActiveTab != Tab.Policies)

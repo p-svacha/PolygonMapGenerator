@@ -9,6 +9,11 @@ namespace ElectionTactics
             if (policy is ReligionPolicy rp) impact += policy.GetSinglePointBaseImpact(targetDistrict);
         }
 
+        public override Policy GetOnClickPolicy()
+        {
+            return Game.LocalPlayerParty.GetPolicy(District.Religion);
+        }
+
         public override string Description => $"Base religion policy impact in this district is doubled.";
     }
 }
