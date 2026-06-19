@@ -19,7 +19,7 @@ namespace ElectionTactics
             District.AgeGroup = NewAgeGroup;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Population";
         public override int GetArticlePriority() => 70;
 
         public override string GetArticleHeadline()

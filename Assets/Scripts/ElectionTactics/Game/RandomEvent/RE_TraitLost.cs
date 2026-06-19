@@ -27,7 +27,7 @@ namespace ElectionTactics
             return Game.ActiveDistricts.Where(d => d.ActiveCulturalTraits.Count > 0 && d.ActiveCulturalTraits.Any(t => t.Def.Commonness != 0)).ToList();
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Exclusion";
         public override int GetArticlePriority() => 70;
 
         public override string GetArticleHeadline()

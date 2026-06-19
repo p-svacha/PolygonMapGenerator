@@ -80,12 +80,12 @@ namespace ElectionTactics {
 
         public Policy GetPolicy(District district)
         {
-            return Policies.OfType<DistrictPolicy>().First(x => x.District == district);
+            return Policies.OfType<DistrictPolicy>().FirstOrDefault(x => x.District == district);
         }
 
         public Policy GetPolicy(GeographyTraitDef def)
         {
-            return Policies.OfType<GeographyPolicy>().First(x => x.TraitDef == def);
+            return Policies.OfType<GeographyPolicy>().FirstOrDefault(x => x.TraitDef == def);
         }
         public int GetPolicyValueFor(GeographyTraitDef def)
         {
@@ -94,7 +94,7 @@ namespace ElectionTactics {
 
         public Policy GetPolicy(EconomicSectorDef def)
         {
-            return Policies.OfType<EconomyPolicy>().First(x => x.Trait == def);
+            return Policies.OfType<EconomyPolicy>().FirstOrDefault(x => x.Trait == def);
         }
         public int GetPolicyValueFor(EconomicSectorDef def)
         {
@@ -103,7 +103,7 @@ namespace ElectionTactics {
 
         public Policy GetPolicy(DensityDef d)
         {
-            return Policies.OfType<DensityPolicy>().First(x => x.Density == d);
+            return Policies.OfType<DensityPolicy>().FirstOrDefault(x => x.Density == d);
         }
         public int GetPolicyValueFor(DensityDef d)
         {
@@ -112,7 +112,7 @@ namespace ElectionTactics {
 
         public Policy GetPolicy(AgeGroupDef a)
         {
-            return Policies.OfType<AgeGroupPolicy>().First(x => x.AgeGroup == a);
+            return Policies.OfType<AgeGroupPolicy>().FirstOrDefault(x => x.AgeGroup == a);
         }
         public int GetPolicyValueFor(AgeGroupDef a)
         {
@@ -121,7 +121,7 @@ namespace ElectionTactics {
 
         public Policy GetPolicy(LanguageDef l)
         {
-            return Policies.OfType<LanguagePolicy>().First(x => x.Language == l);
+            return Policies.OfType<LanguagePolicy>().FirstOrDefault(x => x.Language == l);
         }
         public int GetPolicyValueFor(LanguageDef l)
         {
@@ -130,7 +130,7 @@ namespace ElectionTactics {
         public Policy GetPolicy(ReligionDef r)
         {
             if (r == ReligionDefOf.None) return null;
-            return Policies.OfType<ReligionPolicy>().First(x => x.Religion == r);
+            return Policies.OfType<ReligionPolicy>().FirstOrDefault(x => x.Religion == r);
         }
         public int GetPolicyValueFor(ReligionDef r)
         {

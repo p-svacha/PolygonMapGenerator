@@ -28,7 +28,7 @@ namespace ElectionTactics
         }
 
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Fire";
         public override int GetArticlePriority() => 100;
 
         public override string GetArticleHeadline()

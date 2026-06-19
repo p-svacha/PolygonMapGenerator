@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 19390
+  controlID: 45119
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 19391
+  controlID: 45120
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 19421
+  controlID: 45121
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -203,8 +203,8 @@ MonoBehaviour:
     y: 0
     width: 411
     height: 556
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 226}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 6}
   m_Panes:
   - {fileID: 6}
@@ -253,24 +253,30 @@ MonoBehaviour:
     m_DynamicPanelBehaviorModified: 0
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: []
+      scrollPos: {x: 0, y: 196}
+      m_SelectedIDs:
+      - m_rawData: 568105589212435918
       m_LastClickedID:
-        m_rawData: 0
+        m_rawData: 568105589212435918
       m_ExpandedIDs:
-      - m_rawData: 568105589213753306
+      - m_rawData: 568105589213036278
       - m_rawData: 568105589213756066
       - m_rawData: 568105584918834074
+      - m_rawData: 568105584918834188
+      - m_rawData: 568105584918834220
       - m_rawData: 568105584918834548
       - m_rawData: 568105584918835182
       - m_rawData: 568105584918835212
+      - m_rawData: 568105584918835330
       - m_rawData: 568105584918835348
       - m_rawData: 568105584918835380
+      - m_rawData: 568105584918835540
       - m_rawData: 568105584918835634
+      - m_rawData: 568105584918835800
       - m_rawData: 568105584918835886
-      - m_rawData: 568105584918836172
       - m_rawData: 568105584918836216
       - m_rawData: 568105584918836374
+      - m_rawData: 568105584918836542
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -316,8 +322,8 @@ MonoBehaviour:
     y: 0
     width: 989
     height: 556
-  m_MinSize: {x: 202, y: 226}
-  m_MaxSize: {x: 4002, y: 4026}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 8}
   m_Panes:
   - {fileID: 8}
@@ -893,9 +899,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 441.05014, y: 94.79804, z: -0.112810284}
+    m_Target: {x: 374.20596, y: 150.26787, z: 1.2720197}
     speed: 2
-    m_Value: {x: 441.05014, y: 94.79804, z: -0.112810284}
+    m_Value: {x: 374.20596, y: 150.26787, z: 1.2720197}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -946,9 +952,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 115.62292
+    m_Target: 93.29425
     speed: 2
-    m_Value: 115.62292
+    m_Value: 93.29425
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1008,7 +1014,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 19392
+  controlID: 45045
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1089,7 +1095,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/ElectionTactics/Game/UI/LoadingScreen
+    - Assets/Resources/ElectionTactics/Icons
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1099,18 +1105,18 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/ElectionTactics/Game/UI/LoadingScreen
+  - Assets/Resources/ElectionTactics/Icons
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 725}
+    scrollPos: {x: 0, y: 120}
     m_SelectedIDs:
-    - m_rawData: 568105584918839888
+    - m_rawData: 568105584918839700
     m_LastClickedID:
-      m_rawData: 568105584918839888
+      m_rawData: 568105584918839700
     m_ExpandedIDs:
     - m_rawData: 568105589213750098
     - m_rawData: 0
@@ -1201,9 +1207,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
+    m_SelectedInstanceIDs:
+    - m_rawData: 568105589212435918
     m_LastClickedEntityId:
-      m_rawData: 0
+      m_rawData: 568105589212435918
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214
@@ -1235,7 +1242,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 120}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 324

@@ -257,6 +257,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Newspaper\NewspaperGenerator.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_Rebellious.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\PostGame\UI_PostGameScreen.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphBase.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\GraphAnimationType.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_TraitRow.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\WindowGraph.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Game\GameSettings\GameLengthDefs.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\GeometryFunctions.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Election\GeneralElectionResult.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Graph\UI_HemiCycleChart.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\EconomyPolicy.cs" />
     <Compile Include="Assets\Scripts\TheWorldSimulation\UI\UI_LandmassInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Tutorial\TutorialArrow.cs" />

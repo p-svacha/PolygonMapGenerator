@@ -20,9 +20,8 @@ namespace ElectionTactics
 
             // Show icon only when there's room: title-only short headline, or body present with a short headline
             bool headlineShort = article.Headline == null ? true : article.Headline.Length <= 24;
-            bool showIcon = article.IconSprite != null && headlineShort;
-            ArticleIcon.gameObject.SetActive(showIcon);
-            if (showIcon) ArticleIcon.sprite = article.IconSprite;
+            ArticleIcon.gameObject.SetActive(true);
+            ArticleIcon.sprite = article.IconSprite;
         }
     }
 }

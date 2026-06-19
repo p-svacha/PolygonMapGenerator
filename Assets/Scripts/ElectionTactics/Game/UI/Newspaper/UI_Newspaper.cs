@@ -17,18 +17,18 @@ namespace ElectionTactics
         public TextMeshProUGUI EditionText;
         public TextMeshProUGUI MainArticleHeadline;
         public TextMeshProUGUI MainArticleText;
-        public GameObject ParliamentPreview; // todo: replace with own component
+        public UI_HemicycleChart HemiCycleChart;
 
         public GameObject MinorArticlesDividerLeft; // used if there's 3+ minor articles
         public GameObject MinorArticlesDividerCenter; // used only if there's 2 minor articles
         public GameObject MinorArticlesDividerRight; // used if there's 3+ minor articles
 
-        public UI_NewspaperMinorArticle MinorArticle1; // if 1 article: x-anchors need to be 0-1. if 2 articles: x-anchors need to be 0-0.48. if 3+articles: x-anchors need to be 0-0.32 | if <6 articles: y-anchors need to be 0-0.33. Else 0.16-0.33
-        public UI_NewspaperMinorArticle MinorArticle2; // if 2 articles: x-anchors need to be 0.52-1. if 3+articles: x-anchors need to be 0.35-0.67 | if <5 articles: y-anchors need to be 0-0.33. Else 0.16-0.33
-        public UI_NewspaperMinorArticle MinorArticle3; // x anchors always same | if <4 articles: y-anchors need to be 0-0.33. Else 0.16-0.33
-        public UI_NewspaperMinorArticle MinorArticle4; // anchors always same
-        public UI_NewspaperMinorArticle MinorArticle5; // anchors always same
-        public UI_NewspaperMinorArticle MinorArticle6; // anchors always same
+        public UI_NewspaperMinorArticle MinorArticle1;
+        public UI_NewspaperMinorArticle MinorArticle2;
+        public UI_NewspaperMinorArticle MinorArticle3;
+        public UI_NewspaperMinorArticle MinorArticle4;
+        public UI_NewspaperMinorArticle MinorArticle5;
+        public UI_NewspaperMinorArticle MinorArticle6;
 
         private const float SHOW_ANIMATION_DURATION = 2f;
         private const float SHOW_ANIMATION_ROTATIONS = 2f; // full turns while spiraling in
@@ -50,10 +50,16 @@ namespace ElectionTactics
         {
             gameObject.SetActive(true);
 
+            // Header
             EditionText.text = $"{newspaper.Year} Edition";
+
+            // Main article
             MainArticleHeadline.text = newspaper.MainArticle.Headline;
             MainArticleText.text = $"{newspaper.MainArticle.Chapter1}\n\n{newspaper.MainArticle.Chapter2}";
+            HemiCycleChart.ShowParliament(ElectionTacticsGame.Instance.GetLatestElectionResult());
 
+
+            // Minor articles
             LayoutMinorArticles(newspaper.MinorArticles);
 
             RectTransform newspaperRect = Newspaper.GetComponent<RectTransform>();
@@ -139,50 +145,50 @@ namespace ElectionTactics
         private Placement[] GetPlacements(int n)
         {
             // Column x-ranges
-            float[] x1 = { 0f, 1f };                       // single column spans full width
-            float[][] x2 = { new[] { 0f, 0.48f }, new[] { 0.55f, 1f } };
-            float[][] x3 = { new[] { 0f, 0.32f }, new[] { 0.35f, 0.67f }, new[] { 0.70f, 1f } };
+            float[] x1 = { 0f, 1f };
+            float[][] x2 = { new[] { 0f, 0.48f }, new[] { 0.52f, 1f } };
+            float[][] x3 = { new[] { 0f, 0.32f }, new[] { 0.35f, 0.65f }, new[] { 0.68f, 1f } };
 
             // y-ranges: top row vs bottom row when a column holds two
-            float[] yFull = { 0f, 0.33f };       // alone in column (your comment caps minor section at ~0.33 height)
-            float[] yTop = { 0.16f, 0.33f };
-            float[] yBot = { 0f, 0.15f };
+            float[] yFull = { 0f, 1f };
+            float[] yTop = { 0.51f, 1f };
+            float[] yBot = { 0f, 0.49f };
 
             var p = new Placement[n];
 
             switch (n)
             {
                 case 1:
-                    p[0] = Make(x1[0], x1[1], yFull, true);
+                    p[0] = Make(x1[0], x1[1], yFull, showBody: true);
                     break;
                 case 2:
-                    p[0] = Make(x2[0][0], x2[0][1], yFull, true);
-                    p[1] = Make(x2[1][0], x2[1][1], yFull, true);
+                    p[0] = Make(x2[0][0], x2[0][1], yFull, showBody: true);
+                    p[1] = Make(x2[1][0], x2[1][1], yFull, showBody: true);
                     break;
                 case 3:
-                    for (int i = 0; i < 3; i++) p[i] = Make(x3[i][0], x3[i][1], yFull, true);
+                    for (int i = 0; i < 3; i++) p[i] = Make(x3[i][0], x3[i][1], yFull, showBody: true);
                     break;
                 case 4:
                     // [1][1][2]: col3 holds articles 3 & 4 (title-only)
-                    p[0] = Make(x3[0][0], x3[0][1], yFull, true);
-                    p[1] = Make(x3[1][0], x3[1][1], yFull, true);
-                    p[2] = Make(x3[2][0], x3[2][1], yTop, false);
-                    p[3] = Make(x3[2][0], x3[2][1], yBot, false);
+                    p[0] = Make(x3[0][0], x3[0][1], yFull, showBody: true);
+                    p[1] = Make(x3[1][0], x3[1][1], yFull, showBody: true);
+                    p[2] = Make(x3[2][0], x3[2][1], yTop, showBody: true);
+                    p[3] = Make(x3[2][0], x3[2][1], yBot, showBody: true);
                     break;
                 case 5:
                     // [1][2][2]: col2 holds 2&3, col3 holds 4&5
-                    p[0] = Make(x3[0][0], x3[0][1], yFull, true);
-                    p[1] = Make(x3[1][0], x3[1][1], yTop, false);
-                    p[2] = Make(x3[1][0], x3[1][1], yBot, false);
-                    p[3] = Make(x3[2][0], x3[2][1], yTop, false);
-                    p[4] = Make(x3[2][0], x3[2][1], yBot, false);
+                    p[0] = Make(x3[0][0], x3[0][1], yFull, showBody: true);
+                    p[1] = Make(x3[1][0], x3[1][1], yTop, showBody: true);
+                    p[2] = Make(x3[1][0], x3[1][1], yBot, showBody: true);
+                    p[3] = Make(x3[2][0], x3[2][1], yTop, showBody: true);
+                    p[4] = Make(x3[2][0], x3[2][1], yBot, showBody: true);
                     break;
                 case 6:
                     // [2][2][2]
                     for (int c = 0; c < 3; c++)
                     {
-                        p[c * 2] = Make(x3[c][0], x3[c][1], yTop, false);
-                        p[c * 2 + 1] = Make(x3[c][0], x3[c][1], yBot, false);
+                        p[c * 2] = Make(x3[c][0], x3[c][1], yTop, showBody: true);
+                        p[c * 2 + 1] = Make(x3[c][0], x3[c][1], yBot, showBody: true);
                     }
                     break;
             }

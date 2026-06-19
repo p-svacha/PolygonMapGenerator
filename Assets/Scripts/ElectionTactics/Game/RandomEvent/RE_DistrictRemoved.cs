@@ -24,7 +24,7 @@ namespace ElectionTactics
             return Game.ActiveDistricts.Where(d => d != Game.Capital).ToList();
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "Exclusion";
         public override int GetArticlePriority() => 120;
 
         public override string GetArticleHeadline()

@@ -6,17 +6,10 @@ using UnityEngine.UI;
 /// <summary>
 /// Care. The prefab with this script has to be placed in a container of the same size with anchors [0,1],[0,1].
 /// </summary>
-public class WindowGraph : MonoBehaviour
+public class WindowGraph : GraphBase
 {
-    public float GraphWidth;
-    public float GraphHeight;
-
-    public RectTransform GraphContainer;
-    public Sprite CircleSprite;
-
     // Current graph attributes
     private List<GraphDataPoint> DataPoints;
-    public Font Font;
     private float XStep;
     private float BarSpacing;
     private float BarWidth;
@@ -143,7 +136,8 @@ public class WindowGraph : MonoBehaviour
     /// </summary>
     public void ClearGraph(bool stopAnimation = true)
     {
-        foreach (Transform t in GraphContainer) Destroy(t.gameObject);
+        ClearContainer();
+
         Bars.Clear();
         BarLabels.Clear();
         if (stopAnimation) AnimationType = GraphAnimationType.None;
@@ -154,8 +148,7 @@ public class WindowGraph : MonoBehaviour
     /// </summary>
     public void ShowBarGraph(List<GraphDataPoint> dataPoints, float yMax, float yStep, float barSpacing, Color axisColor, Color axisStepColor, Font font, bool stopAnimation = true, bool zeroed = false)
     {
-        GraphWidth = GraphContainer.rect.width;
-        GraphHeight = GraphContainer.rect.height;
+        MeasureContainer();
 
         ClearGraph(stopAnimation);
         DataPoints = dataPoints;
@@ -277,72 +270,6 @@ public class WindowGraph : MonoBehaviour
 
     #region GraphElements
 
-    private void CreateCircle(Vector2 anchoredPos, float size)
-    {
-        GameObject circleObject = new GameObject("circle", typeof(Image));
-        circleObject.transform.SetParent(GraphContainer, false);
-        circleObject.GetComponent<Image>().sprite = CircleSprite;
-        RectTransform rect = circleObject.GetComponent<RectTransform>();
-        rect.anchoredPosition = anchoredPos;
-        rect.sizeDelta = new Vector2(size, size);
-        rect.anchorMin = new Vector2(0, 0);
-        rect.anchorMax = new Vector2(0, 0);
-    }
-
-    private GameObject DrawRectangle(Vector2 centerPos, Vector2 dimensions, Color color)
-    {
-        GameObject obj = new GameObject("rect", typeof(Image));
-        obj.transform.SetParent(GraphContainer, false);
-        obj.GetComponent<Image>().color = color;
-        RectTransform rect = obj.GetComponent<RectTransform>();
-        rect.anchoredPosition = centerPos;
-        rect.sizeDelta = dimensions;
-        rect.anchorMin = new Vector2(0, 0);
-        rect.anchorMax = new Vector2(0, 0);
-        return obj;
-    }
-
-    private Text DrawText(string text, Vector2 centerPos, Vector2 dimensions, Color c, Font font, int size)
-    {
-        GameObject obj = new GameObject(text, typeof(Text));
-        obj.transform.SetParent(GraphContainer, false);
-        Text textObj = obj.GetComponent<Text>();
-        textObj.text = text;
-        textObj.color = c;
-        textObj.font = font;
-        textObj.fontSize = size;
-        textObj.alignment = TextAnchor.MiddleCenter;
-        RectTransform rect = obj.GetComponent<RectTransform>();
-        rect.anchoredPosition = centerPos;
-        rect.sizeDelta = dimensions;
-        rect.anchorMin = new Vector2(0, 0);
-        rect.anchorMax = new Vector2(0, 0);
-        return textObj;
-    }
-
-    private Image DrawImage(Sprite sprite, Vector2 centerPos, Vector2 dimensions, string tooltipTitle = "", string tooltipText = "")
-    {
-        GameObject obj = new GameObject("ModifierIcon", typeof(Image));
-        obj.transform.SetParent(GraphContainer, false);
-        Image imgObj = obj.GetComponent<Image>();
-        imgObj.sprite = sprite;
-        RectTransform rect = obj.GetComponent<RectTransform>();
-        rect.anchoredPosition = centerPos;
-        rect.sizeDelta = dimensions;
-        rect.anchorMin = new Vector2(0, 0);
-        rect.anchorMax = new Vector2(0, 0);
-
-        // Tooltip
-        if (tooltipTitle != "")
-        {
-            TooltipTarget tooltipTarget = obj.AddComponent<TooltipTarget>();
-            tooltipTarget.Title = tooltipTitle;
-            tooltipTarget.Text = tooltipText;
-        }
-
-        return imgObj;
-    }
-
     private GameObject CreateBar(float x, float width, float height, Color c)
     {
         Vector2 position = new Vector2(x, height / 2);
@@ -397,7 +324,7 @@ public class WindowGraph : MonoBehaviour
             float xPos = (i + 1) * xStep + 1;
             float yPos = (valueList[i] / yMaximum) * GraphHeight;
             float circleSize = Mathf.Min(GraphWidth, GraphHeight) * 0.05f;
-            CreateCircle(new Vector2(xPos, yPos), circleSize);
+            CreateCircle(new Vector2(xPos, yPos), circleSize, Color.white);
         }
     }
 

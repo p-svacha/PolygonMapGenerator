@@ -29,7 +29,7 @@ namespace ElectionTactics
             return Game.ActiveDistricts.Where(d => d.HasReligion && !d.HasCulturalTrait(CulturalTraitDefOf.Fanatics)).ToList();
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "YingYang";
         public override int GetArticlePriority() => 70;
 
         public override string GetArticleHeadline()

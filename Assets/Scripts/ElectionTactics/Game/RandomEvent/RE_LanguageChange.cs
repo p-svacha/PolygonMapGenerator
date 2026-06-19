@@ -19,7 +19,7 @@ namespace ElectionTactics
             District.Language = NewLanguage;
         }
 
-        public override Sprite GetArticleIcon() => ResourceManager.LoadSprite("ElectionTactics/Newspaper/ArticleSymbol_Star");
+        public override string GetArticleIconName() => "SpeechBubble";
         public override int GetArticlePriority() => 70;
 
         public override string GetArticleHeadline()

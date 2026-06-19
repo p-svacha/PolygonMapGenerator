@@ -146,7 +146,7 @@ namespace ElectionTactics
         private static NewspaperMinorArticle GenerateRandomEventArticle(RandomEvent e)
         {
             var article = new NewspaperMinorArticle(Newspaper);
-            article.SetSprite(e.GetArticleIcon());
+            article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/{e.GetArticleIconName()}"));
             article.SetHeadline(e.GetArticleHeadline());
             article.SetBodyText(e.GetArticleBody());
             article.Priority = e.GetArticlePriority();
@@ -169,6 +169,7 @@ namespace ElectionTactics
         {
             NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper);
 
+            article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/Quote"));
             article.SetHeadline("Fun Article");
             article.SetBodyText("Just some text to test stuff");
             article.Priority = 1;

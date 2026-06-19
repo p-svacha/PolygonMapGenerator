@@ -173,12 +173,18 @@ Points from personal playtest:
 
 Newspaper:
 (/) - Add newspaper framework
-- Give minor articles a little bit more space
-- Show text for minor articles even if 2 per column 
-- redesign header (smaller title, change logo)
+(/) - Give minor articles a little bit more space
+(/) - Show text for minor articles even if 2 per column 
+(/) - redesign header (smaller title, change logo)
 
-- implement graph type creator for parliament seat distribution iconography (base it on graph framework)
-- show parliament in main article
+(/) - implement graph type creator for parliament seat distribution iconography (base it on graph framework)
+(/) - show parliament in main article
+- show text label below chart
+- show list with knobs and party names next to chart
+
+(/) - add many article icons for all current minor articles (incl. quote)
+
+- make icon and headline smaller in 2 articles per column. if still not enough space, add a "generateshortbodytext" to each one that cna be used for half-column.
 
 - added district article: capital clause
 - added district article: minority language/religion clause

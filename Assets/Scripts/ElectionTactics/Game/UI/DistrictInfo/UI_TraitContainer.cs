@@ -46,24 +46,26 @@ namespace ElectionTactics
             UI_TraitRow currentRow = null;
             for (int i = 0; i < traits.Count; i++)
             {
+                CulturalTrait trait = traits[i];
+
                 if (i % MaxTraitsPerRow == 0)
                 {
                     currentRow = Instantiate(TraitRowPrefab, RowContainer.transform);
                     HelperFunctions.DestroyAllChildredImmediately(currentRow.gameObject);
                 }
                 UI_Trait traitElem = Instantiate(TraitPrefab, currentRow.transform);
-                traitElem.InitCulturalTrait(traits[i]);
+                traitElem.InitCulturalTrait(trait);
 
                 // Add short cut jump to policy
-                if (traits[i].GetOnClickPolicy() != null)
+                if (trait.GetOnClickPolicy() != null)
                 {
-                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.JumpToPolicy(traits[i].GetOnClickPolicy()));
+                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.JumpToPolicy(trait.GetOnClickPolicy()));
                 }
 
                 // Add short cut jump to district
-                else if (traits[i].GetOnClickDistrict() != null)
+                else if (trait.GetOnClickDistrict() != null)
                 {
-                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.SelectDistrict(traits[i].GetOnClickDistrict()));
+                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.SelectDistrict(trait.GetOnClickDistrict()));
                 }
             }
         }
