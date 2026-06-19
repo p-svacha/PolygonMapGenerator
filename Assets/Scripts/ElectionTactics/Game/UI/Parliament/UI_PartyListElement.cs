@@ -90,7 +90,7 @@ namespace ElectionTactics
                 if (Party.IsEliminated) description += " Eliminated.";
             }
 
-            TooltipTarget.Init(title, description, Party.Color);
+            TooltipTarget.Init(title, description, Party.TextColor);
         }
 
         public Vector3 GetSeatInfoScreenPosition()

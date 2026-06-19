@@ -415,6 +415,7 @@ namespace ElectionTactics
         public void Activate()
         {
             IsActive = true;
+            foreach (CulturalTrait trait in CulturalTraits) trait.OnDistrictActivated();
         }
         public void Deactivate()
         {
@@ -521,35 +522,47 @@ namespace ElectionTactics
         /// </summary>
         private Dictionary<Party, float> NormalizeVoteShares(Dictionary<Party, float> rawShares)
         {
-            // 1. Round every share to one decimal
-            Dictionary<Party, float> shares = rawShares.ToDictionary(
-                x => x.Key,
-                x => Mathf.Round(x.Value * 10f) / 10f
-            );
+            // Parties with 0 raw votes are always exactly 0.0% — exempt from the uniqueness rule.
+            var zeroParties = rawShares.Where(x => x.Value <= 0f).Select(x => x.Key).ToList();
+            var nonZeroShares = rawShares.Where(x => x.Value > 0f).ToDictionary(x => x.Key, x => x.Value);
 
-            // 2. Break exact ties: nudge duplicates up by 0.1 each.
-            //    Process in descending raw order so the originally-higher party keeps the higher value.
-            List<Party> ordered = shares.Keys.OrderByDescending(p => rawShares[p]).ToList();
-            HashSet<float> used = new HashSet<float>();
-            foreach (Party p in ordered)
+            Dictionary<Party, float> result = new Dictionary<Party, float>();
+
+            if (nonZeroShares.Count > 0)
             {
-                float v = shares[p];
-                while (used.Contains(v)) v = Mathf.Round((v + 0.1f) * 10f) / 10f;
-                shares[p] = v;
-                used.Add(v);
+                // 1. Round every non-zero share to one decimal.
+                Dictionary<Party, float> shares = nonZeroShares.ToDictionary(
+                    x => x.Key,
+                    x => Mathf.Round(x.Value * 10f) / 10f
+                );
+
+                // 2. Break exact ties among non-zero shares only.
+                List<Party> ordered = shares.Keys.OrderByDescending(p => nonZeroShares[p]).ToList();
+                HashSet<float> used = new HashSet<float>();
+                foreach (Party p in ordered)
+                {
+                    float v = shares[p];
+                    while (used.Contains(v)) v = Mathf.Round((v + 0.1f) * 10f) / 10f;
+                    shares[p] = v;
+                    used.Add(v);
+                }
+
+                // 3. Correct rounding drift so non-zero shares sum to exactly 100.0.
+                float sum = shares.Values.Sum();
+                float diff = Mathf.Round((100f - sum) * 10f) / 10f;
+                if (diff != 0f)
+                {
+                    Party largest = shares.OrderByDescending(x => x.Value).First().Key;
+                    shares[largest] = Mathf.Round((shares[largest] + diff) * 10f) / 10f;
+                }
+
+                foreach (var kvp in shares) result[kvp.Key] = kvp.Value;
             }
 
-            // 3. Correct rounding/tie-break drift so the total is exactly 100.0.
-            //    Apply the correction to the largest party (least relative distortion).
-            float sum = shares.Values.Sum();
-            float diff = Mathf.Round((100f - sum) * 10f) / 10f;
-            if (diff != 0f)
-            {
-                Party largest = shares.OrderByDescending(x => x.Value).First().Key;
-                shares[largest] = Mathf.Round((shares[largest] + diff) * 10f) / 10f;
-            }
+            // Zero parties always get exactly 0.0, regardless of how many there are.
+            foreach (Party p in zeroParties) result[p] = 0f;
 
-            return shares;
+            return result;
         }
 
         public void OnElectionEnd()

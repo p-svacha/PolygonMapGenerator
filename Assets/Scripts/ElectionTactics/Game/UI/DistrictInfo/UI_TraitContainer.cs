@@ -65,7 +65,7 @@ namespace ElectionTactics
                 // Add short cut jump to district
                 else if (trait.GetOnClickDistrict() != null)
                 {
-                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.SelectDistrict(trait.GetOnClickDistrict()));
+                    traitElem.SetClickAction(() => UI_ElectionTactics.Instance.SelectDistrictDeferred(trait.GetOnClickDistrict()));
                 }
             }
         }

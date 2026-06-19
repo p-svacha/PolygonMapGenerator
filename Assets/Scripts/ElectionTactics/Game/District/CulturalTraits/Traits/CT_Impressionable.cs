@@ -6,7 +6,7 @@ namespace ElectionTactics
     {
         private const int BONUS_PER_DISTRICT = 10;
 
-        protected override void OnInit()
+        public override void OnDistrictActivated()
         {
             ApplyModifiersFromElection();
         }

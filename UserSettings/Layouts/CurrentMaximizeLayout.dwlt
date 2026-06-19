@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 45119
+  controlID: 46584
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -100,7 +100,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 45120
+  controlID: 46585
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 45121
+  controlID: 46534
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -253,30 +253,15 @@ MonoBehaviour:
     m_DynamicPanelBehaviorModified: 0
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 196}
+      scrollPos: {x: 0, y: 0}
       m_SelectedIDs:
-      - m_rawData: 568105589212435918
+      - m_rawData: 568105584919103962
       m_LastClickedID:
-        m_rawData: 568105589212435918
+        m_rawData: 568105584919103962
       m_ExpandedIDs:
-      - m_rawData: 568105589213036278
-      - m_rawData: 568105589213756066
-      - m_rawData: 568105584918834074
-      - m_rawData: 568105584918834188
-      - m_rawData: 568105584918834220
-      - m_rawData: 568105584918834548
-      - m_rawData: 568105584918835182
-      - m_rawData: 568105584918835212
-      - m_rawData: 568105584918835330
-      - m_rawData: 568105584918835348
-      - m_rawData: 568105584918835380
-      - m_rawData: 568105584918835540
-      - m_rawData: 568105584918835634
-      - m_rawData: 568105584918835800
-      - m_rawData: 568105584918835886
-      - m_rawData: 568105584918836216
-      - m_rawData: 568105584918836374
-      - m_rawData: 568105584918836542
+      - m_rawData: 568105589209916990
+      - m_rawData: 568105589209917004
+      - m_rawData: 568105584919103962
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -322,8 +307,8 @@ MonoBehaviour:
     y: 0
     width: 989
     height: 556
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 226}
+  m_MaxSize: {x: 4002, y: 4026}
   m_ActualView: {fileID: 8}
   m_Panes:
   - {fileID: 8}
@@ -890,8 +875,8 @@ MonoBehaviour:
     m_DynamicPanelBehaviorModified: 0
   m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
   m_Gizmos: 1
-  m_OverrideSceneCullingMask: 6917529027641081856
-  m_SceneIsLit: 1
+  m_OverrideSceneCullingMask: 0
+  m_SceneIsLit: 0
   m_SceneLighting: 1
   m_2DMode: 1
   m_isRotationLocked: 0
@@ -899,9 +884,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 374.20596, y: 150.26787, z: 1.2720197}
+    m_Target: {x: 16.199366, y: 6.7798276, z: -0.5795969}
     speed: 2
-    m_Value: {x: 374.20596, y: 150.26787, z: 1.2720197}
+    m_Value: {x: 370.91568, y: 146.8193, z: 1.3140019}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -952,9 +937,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 93.29425
+    m_Target: 63.344833
     speed: 2
-    m_Value: 93.29425
+    m_Value: 89.09601
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1014,7 +999,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 45045
+  controlID: 46586
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1095,7 +1080,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/ElectionTactics/Icons
+    - Assets/Scripts/ElectionTactics/Game/UI/DistrictInfo
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1105,18 +1090,18 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources/ElectionTactics/Icons
+  - Assets/Scripts/ElectionTactics/Game/UI/DistrictInfo
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 120}
+    scrollPos: {x: 0, y: 900}
     m_SelectedIDs:
-    - m_rawData: 568105584918839700
+    - m_rawData: 568105584918839878
     m_LastClickedID:
-      m_rawData: 568105584918839700
+      m_rawData: 568105584918839878
     m_ExpandedIDs:
     - m_rawData: 568105589213750098
     - m_rawData: 0
@@ -1208,10 +1193,10 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_rawData: 568105589212435918
+    - m_rawData: 568105584919103962
     m_LastClickedEntityId:
-      m_rawData: 568105589212435918
-    m_HadKeyboardFocusLastEvent: 0
+      m_rawData: 568105584919103962
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214
     - m_rawData: 568105584918843216
@@ -1242,7 +1227,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 120}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 324
@@ -1332,8 +1317,8 @@ MonoBehaviour:
     y: 0
     width: 520
     height: 933
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 76}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}

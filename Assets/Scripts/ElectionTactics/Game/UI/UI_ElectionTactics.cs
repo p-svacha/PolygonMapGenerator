@@ -251,6 +251,17 @@ namespace ElectionTactics
             */
         }
 
+        /// <summary>
+        /// Selects the district in the next frame. Used to handle button clicks before destryoing them when switch from district to district through a trait clicl.
+        /// </summary>
+        public void SelectDistrictDeferred(District d) => StartCoroutine(SelectDistrictNextFrame(d));
+
+        private System.Collections.IEnumerator SelectDistrictNextFrame(District d)
+        {
+            yield return null;
+            SelectDistrict(d);
+        }
+
         private void UnselectDistrict()
         {
             if(IsDistrictSelected)

@@ -32,6 +32,11 @@ namespace ElectionTactics
         public virtual void OnRemoved() { }
 
         /// <summary>
+        /// Gets called when the district this trait belongs to gets activated.
+        /// </summary>
+        public virtual void OnDistrictActivated() { }
+
+        /// <summary>
         /// Gets called right before the party popularities get calculated during the district election.
         /// </summary>
         public virtual void OnPreElection() { }

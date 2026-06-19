@@ -472,18 +472,19 @@ namespace ElectionTactics
         public static Color GetPartyColor(string partyName, List<Color> alreadyTaken)
         {
             if (partyName.ToLower().Contains("pink") && !alreadyTaken.Contains(PINK)) return PINK;
-            if (partyName.Contains("green") && !alreadyTaken.Contains(GREEN)) return GREEN;
-            if (partyName.Contains("blue") && !alreadyTaken.Contains(BLUE)) return BLUE;
-            if (partyName.Contains("red") && !alreadyTaken.Contains(RED)) return RED;
-            if (partyName.Contains("yellow") && !alreadyTaken.Contains(YELLOW)) return YELLOW;
-            if (partyName.Contains("black") && !alreadyTaken.Contains(BLACK)) return BLACK;
-            if (partyName.Contains("orange") && !alreadyTaken.Contains(ORANGE)) return ORANGE;
-            if (partyName.Contains("purple") && !alreadyTaken.Contains(PURPLE)) return PURPLE;
-            if (partyName.Contains("brown") && !alreadyTaken.Contains(BROWN)) return BROWN;
-            if (partyName.Contains("teal") && !alreadyTaken.Contains(TEAL)) return TEAL;
-            if (partyName.Contains("crimson") && !alreadyTaken.Contains(CRIMSON)) return CRIMSON;
-            if (partyName.Contains("navy") && !alreadyTaken.Contains(NAVY)) return NAVY;
-            else return GetRandomColor(alreadyTaken);
+            if (partyName.ToLower().Contains("green") && !alreadyTaken.Contains(GREEN)) return GREEN;
+            if (partyName.ToLower().Contains("blue") && !alreadyTaken.Contains(BLUE)) return BLUE;
+            if (partyName.ToLower().Contains("red") && !alreadyTaken.Contains(RED)) return RED;
+            if (partyName.ToLower().Contains("yellow") && !alreadyTaken.Contains(YELLOW)) return YELLOW;
+            if (partyName.ToLower().Contains("black") && !alreadyTaken.Contains(BLACK)) return BLACK;
+            if (partyName.ToLower().Contains("orange") && !alreadyTaken.Contains(ORANGE)) return ORANGE;
+            if (partyName.ToLower().Contains("purple") && !alreadyTaken.Contains(PURPLE)) return PURPLE;
+            if (partyName.ToLower().Contains("brown") && !alreadyTaken.Contains(BROWN)) return BROWN;
+            if (partyName.ToLower().Contains("teal") && !alreadyTaken.Contains(TEAL)) return TEAL;
+            if (partyName.ToLower().Contains("crimson") && !alreadyTaken.Contains(CRIMSON)) return CRIMSON;
+            if (partyName.ToLower().Contains("navy") && !alreadyTaken.Contains(NAVY)) return NAVY;
+
+            return GetRandomColor(alreadyTaken);
         }
 
         /// <summary>
@@ -493,7 +494,7 @@ namespace ElectionTactics
         {
             if (partyColor == PartyNameGenerator.CRIMSON) return new Color(0.68f, 0.0f, 0.07f);
             if (partyColor == PartyNameGenerator.BLACK) return new Color(0.45f, 0.45f, 0.45f);
-            if (partyColor == PartyNameGenerator.NAVY) return new Color(0.28f, 0.28f, 0.1f);
+            if (partyColor == PartyNameGenerator.NAVY) return new Color(0.28f, 0.28f, 0.84f);
 
             return partyColor;
         }
