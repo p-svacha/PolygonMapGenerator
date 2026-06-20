@@ -101,7 +101,7 @@ namespace ElectionTactics
             }
             else
             {
-                AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle1, volume: 0.6f);
+                AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle1, volume: 0.4f);
                 newspaperRect.localScale = Vector3.one;
                 newspaperRect.localRotation = Quaternion.identity;
                 RefreshCycleButtons();
@@ -233,7 +233,7 @@ namespace ElectionTactics
 
         private void ButtonHide()
         {
-            AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle2, volume: 0.6f);
+            AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle2, volume: 0.4f);
             Hide();
         }
 

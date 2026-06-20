@@ -153,6 +153,7 @@
     <Compile Include="Assets\Scripts\Helper\ConsoleToGUI.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\AgeGroup.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\BiomeCreator.cs" />
+    <Compile Include="Assets\Scripts\Helper\IntegerExtensions.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\Helper\PolygonMapFunctions.cs" />
     <Compile Include="Assets\Scripts\Parrisk\UI\UI_ParriskGame.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\GraphElements\GraphConnection.cs" />

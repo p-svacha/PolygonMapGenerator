@@ -768,6 +768,7 @@ namespace ElectionTactics
         public CulturalTrait GetSeatDistributionTrait() => CulturalTraits.FirstOrDefault(t => t.Def.IsSeatDistributionTrait);
 
         public bool HasCulturalTrait(CulturalTraitDef def) => CulturalTraits.Any(t => t.Def == def);
+        public bool IsCapital => HasCulturalTrait(CulturalTraitDefOf.Capital);
 
         public bool HasReligion => Religion != ReligionDefOf.None;
 
@@ -779,7 +780,7 @@ namespace ElectionTactics
         }
 
         public bool IsMinorityLanguage => !Game.IsMostCommonLanguage(Language);
-        public bool IsMinorityReligion => Religion != ReligionDefOf.None && !Game.IsMostCommonReligion(Religion);
+        public bool IsMinorityReligion => HasReligion && !Game.IsMostCommonReligion(Religion);
 
 
         /// <summary>
@@ -839,8 +840,8 @@ namespace ElectionTactics
                 else continue;
             }
 
-            bool showAdjective = Random.value < 0.8f;
-            bool showDescriber = Random.value < 0.8f;
+            bool showAdjective = Random.value < 0.85f;
+            bool showDescriber = Random.value < 0.65f;
 
             string adjective = showAdjective ? adjectiveCandidates.RandomElement() + " " : "";
             string describer = showDescriber ? " " + describerCandidates.RandomElement() : "";

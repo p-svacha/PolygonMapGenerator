@@ -1091,6 +1091,8 @@ namespace ElectionTactics
         public Dictionary<Region, District> InvisibleDistricts { get { return Districts.Where(x => !x.Value.IsVisible).ToDictionary(x => x.Key, x => x.Value); } }
         public GeneralElectionResult GetLatestElectionResult() { return ElectionResults.Last(); }
 
+        public List<GeneralElectionResult> GetAllElectionResults() => ElectionResults.ToList();
+
         public int GetNextElectionNumSeats() => ActiveDistricts.Sum(d => d.GetSeats());
 
         /// <summary>

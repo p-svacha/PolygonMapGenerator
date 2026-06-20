@@ -21,6 +21,8 @@ namespace ElectionTactics
             DistrictElectionResult result = District.GetLatestElectionResult();
             if (result == null) return;
 
+            List<Party> newlyExcluded = new List<Party>();
+
             foreach (Party p in result.Parties)
             {
                 if (result.SeatsWon[p] == 0) ExclusionCountdown[p]++;
@@ -29,10 +31,12 @@ namespace ElectionTactics
                 if (ExclusionCountdown[p] == THRESHOLD)
                 {
                     Game.AddModifier(District, new Modifier(ModifierType.Exclusion, 0, p, -1, "for repeatedly failing to win seats", "Impatient Cultural Trait"));
-
-                    Game.RegisterNewsEvent(new NewsEvent_ImpatientExclusion(District, p));
+                    newlyExcluded.Add(p);
                 }
             }
+
+            if (newlyExcluded.Count > 0)
+                Game.RegisterNewsEvent(new NewsEvent_ImpatientExclusion(District, newlyExcluded));
         }
 
         public override string Description => base.Description + $"\n\nCurrently at {UnityEngine.Mathf.Min(ExclusionCountdown[Game.LocalPlayerParty], THRESHOLD)}/{THRESHOLD}";

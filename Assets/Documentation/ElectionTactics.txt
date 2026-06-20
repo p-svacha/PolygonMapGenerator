@@ -196,46 +196,37 @@ Newspaper:
 (/) - these can then be easily used in all kinds of articles for flavourful sentences like "x gains a seat. The lakeside district continues..."
 (/) - add these adjectives to the attribute Defs (also cultural traits)
 
-- expand/properly implement main article generator
-- add tags regarding win condition (make general so it works for both classic and battle royale)
-- party takes lead
-- party equals lead
-- party increases lead
-- party catches up
+(/) - expand/properly implement main article generator
  
-- properly implement main chapter 1 generator
-  - take a tag
-  - make sentence out of tag
-  - keep it short
-- properly implement main chapter 2 generator
-  - make sure the second chapter gives a hint about another party
-  - either the currently most spent pp policy
-  - or one of the highest weighted active policy
-  - or one of the lowest weighted active policies
-  - or a common attribute in the next upcoming districts
+(/) -properly implement main chapter 1 generator
+  (/) - take a tag
+  (/) - make sentence out of tag
+  (/) - keep it short
+(/) -properly implement main chapter 2 generator
+  (/) - make sure the second chapter gives a hint about another party
+  (/) - either the currently most spent pp policy
+  (/) - or one of the highest weighted active policy
+  (/) - or one of the lowest weighted active policies
+  (/) - or a common attribute in the next upcoming districts
 
 
-- rework added district article:
-  - since it's the most seen minor one, also use a weighted tag system
-  - add tag for capital added (high weight)
-  - add tag for first time a language/religion/age group/density/economy/geography appears (high weight)
-  - add tag for partnership/rivalry activated (high weight)
-  - add tag for describing any cultural trait (medium weight)
-  - add tag for describing any attribute (low weight)
-  - make sure it uses the adjective system. maybe even multiple times.
+(/) - rework added district article:
+  (/) - since it's the most seen minor one, also use a weighted tag system
+  (/) - add tag for capital added (high weight)
+  (/) - add tag for first time a language/religion/age group/density/economy/geography appears (high weight)
 
-- religion change article: change religion to noun
+(/) - religion change article: change religion to noun
 
-- newsevent article for impatient: combine multiple parties into 1 article.
+(/) - newsevent article for impatient: combine multiple parties into 1 article.
 
-- expand/properly implement news event articles
+(/) - expand/properly implement news event articles
 
-- expand/properly implement random event articles
+(/) - expand/properly implement random event articles
 
 - implement fun article generator
   - see ideas further below in document
 
-- adjust newspaper SFX volume if needed
+(/) - adjust newspaper SFX volume if needed
 
 - review all news event classes
   - add adjective system where needed
@@ -243,19 +234,18 @@ Newspaper:
   - add adjective system where needed
 
 End Game Screen:
-- Add some basic stats (all should already be tracked)
-- 2 columns
-- left: map stats
-  - num districts
-  - num parties
-  - end year and cycle
-- right column: party stats
-  - total won elections
-  - total won seats
-  - total won votes
-  - total popularity
-  - max popularty in a district
-  - total PP spent
+(/) - Add some basic stats (all should already be tracked)
+(/) - 2 columns
+(/) - left: map stats
+  (/) - num districts
+  (/) - total seats distributed
+  (/) - num parties
+  (/) - end year and cycle
+(/) - right column: party stats
+  (/) - total won elections
+  (/) - total won seats
+  (/) - total popularity (with avg and max per district)
+  (/) - total PP spent
 
 General Gameplay:
 (/) - Ensure the same district name cannot appear twice.
@@ -281,11 +271,15 @@ Tutorial
 
 Remove log spams
 
+quickfire-test. all districts. always events. read every article in first 3 elections. 3 games.
 quick-fire test. 10 games in a row without restarting with max district enabled from start.
 Full game playtests:
   - quick play with tutorial
   - classic mode, custom settings
   - battle royale, custom settings
+
+test district removal event if never happened
+adjust nailbiter threshold if it never happens or it happens too often
 
 itch page changes:
 - update description

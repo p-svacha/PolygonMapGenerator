@@ -36,11 +36,14 @@ namespace ElectionTactics
         {
             List<string> templates = new List<string>()
             {
-                $"{District.Name} Embraces {NewReligion.Label}",
+                $"{District.Name} Embraces {NewReligion.Noun}",
                 $"A Spiritual Shift in {District.Name}",
                 $"{NewReligion.Label} Takes Hold in {District.Name}",
-                $"New Faith for {District.Name}",
-                $"{District.Name} Turns to {NewReligion.Label}",
+                $"New Faith for {District.Name}: {NewReligion.Noun}",
+                $"{District.Name} Turns to {NewReligion.Noun}",
+                $"Religion change in {District.Name}: {OldReligion.Noun} -> {NewReligion.Noun}",
+                $"{District.Name} Turns {NewReligion.Label}",
+                $"{District.Name} Turns Away From {OldReligion.Label}",
             };
             return templates.RandomElement();
         }
@@ -49,9 +52,9 @@ namespace ElectionTactics
         {
             List<string> facts = new List<string>()
             {
-                $"The dominant faith in {District.Name} has shifted from {OldReligion.Label} to {NewReligion.Label}.",
-                $"{NewReligion.Label} has become the prevailing religion in {District.Name}, displacing {OldReligion.Label}.",
-                $"Once a stronghold of {OldReligion.Label}, {District.Name} now leans toward {NewReligion.Label}.",
+                $"The dominant faith in {District.Name} has shifted from {OldReligion.Noun} to {NewReligion.Noun}.",
+                $"{NewReligion.Noun} has become the prevailing religion in {District.Name}, displacing {OldReligion.Noun}.",
+                $"Once a stronghold of {OldReligion.Noun}, {District.Name} now leans toward {NewReligion.Noun}.",
             };
 
             var pool = new List<string>
