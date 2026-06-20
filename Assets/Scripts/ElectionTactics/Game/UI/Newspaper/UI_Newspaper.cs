@@ -9,6 +9,9 @@ namespace ElectionTactics
 {
     public class UI_Newspaper : MonoBehaviour
     {
+        private Newspaper CurrentNewspaper;
+        private int CurrentNewspaperIndex;
+
         [Header("Elements")]
         public GameObject NewspaperContainer; // Containing everything including the background dimmer
         public GameObject Newspaper; // The newspaper including ALL its content
@@ -34,6 +37,9 @@ namespace ElectionTactics
         public UI_NewspaperMinorArticle MinorArticle5;
         public UI_NewspaperMinorArticle MinorArticle6;
 
+        public Button PrevNewspaperButton;
+        public Button NextNewspaperButton;
+
         [Header("Prefabs")]
         public UI_NewspaperPartyRow PartyRowPrefab;
 
@@ -48,6 +54,9 @@ namespace ElectionTactics
         {
             ConfirmButton.onClick.AddListener(ButtonHide);
             CloseButton.onClick.AddListener(ButtonHide);
+
+            PrevNewspaperButton.onClick.AddListener(GoToPrevNewspaper);
+            NextNewspaperButton.onClick.AddListener(GoToNextNewspaper);
         }
 
         private UI_NewspaperMinorArticle[] Slots => new[]
@@ -55,7 +64,12 @@ namespace ElectionTactics
 
         public void ShowNewspaper(Newspaper newspaper, bool withAnimation = false)
         {
+            CurrentNewspaper = newspaper;
+            CurrentNewspaperIndex = ElectionTacticsGame.Instance.Newspapers.IndexOf(CurrentNewspaper);
+
             gameObject.SetActive(true);
+            PrevNewspaperButton.gameObject.SetActive(false);
+            NextNewspaperButton.gameObject.SetActive(false);
 
             // Header
             EditionText.text = $"{newspaper.Year} Edition";
@@ -90,6 +104,7 @@ namespace ElectionTactics
                 AudioManager.PlaySound(AudioManager.Instance.NewspaperRustle1, volume: 0.6f);
                 newspaperRect.localScale = Vector3.one;
                 newspaperRect.localRotation = Quaternion.identity;
+                RefreshCycleButtons();
             }
         }
 
@@ -123,6 +138,8 @@ namespace ElectionTactics
             rect.localScale = Vector3.one;
             rect.localRotation = Quaternion.identity;
             showAnimationCoroutine = null;
+
+            RefreshCycleButtons();
         }
 
         private void LayoutMinorArticles(List<NewspaperMinorArticle> articles)
@@ -152,7 +169,7 @@ namespace ElectionTactics
                 rt.offsetMin = Vector2.zero;
                 rt.offsetMax = Vector2.zero;
 
-                slot.ShowArticle(articles[i], showBody: placements[i].showBody);
+                slot.ShowArticle(articles[i]);
             }
         }
 
@@ -175,44 +192,44 @@ namespace ElectionTactics
             switch (n)
             {
                 case 1:
-                    p[0] = Make(x1[0], x1[1], yFull, showBody: true);
+                    p[0] = Make(x1[0], x1[1], yFull, isSmallVersion: false);
                     break;
                 case 2:
-                    p[0] = Make(x2[0][0], x2[0][1], yFull, showBody: true);
-                    p[1] = Make(x2[1][0], x2[1][1], yFull, showBody: true);
+                    p[0] = Make(x2[0][0], x2[0][1], yFull, isSmallVersion: false);
+                    p[1] = Make(x2[1][0], x2[1][1], yFull, isSmallVersion: false);
                     break;
                 case 3:
-                    for (int i = 0; i < 3; i++) p[i] = Make(x3[i][0], x3[i][1], yFull, showBody: true);
+                    for (int i = 0; i < 3; i++) p[i] = Make(x3[i][0], x3[i][1], yFull, isSmallVersion: false);
                     break;
                 case 4:
                     // [1][1][2]: col3 holds articles 3 & 4 (title-only)
-                    p[0] = Make(x3[0][0], x3[0][1], yFull, showBody: true);
-                    p[1] = Make(x3[1][0], x3[1][1], yFull, showBody: true);
-                    p[2] = Make(x3[2][0], x3[2][1], yTop, showBody: true);
-                    p[3] = Make(x3[2][0], x3[2][1], yBot, showBody: true);
+                    p[0] = Make(x3[0][0], x3[0][1], yFull, isSmallVersion: false);
+                    p[1] = Make(x3[1][0], x3[1][1], yFull, isSmallVersion: false);
+                    p[2] = Make(x3[2][0], x3[2][1], yTop, isSmallVersion: true);
+                    p[3] = Make(x3[2][0], x3[2][1], yBot, isSmallVersion: true);
                     break;
                 case 5:
                     // [1][2][2]: col2 holds 2&3, col3 holds 4&5
-                    p[0] = Make(x3[0][0], x3[0][1], yFull, showBody: true);
-                    p[1] = Make(x3[1][0], x3[1][1], yTop, showBody: true);
-                    p[2] = Make(x3[1][0], x3[1][1], yBot, showBody: true);
-                    p[3] = Make(x3[2][0], x3[2][1], yTop, showBody: true);
-                    p[4] = Make(x3[2][0], x3[2][1], yBot, showBody: true);
+                    p[0] = Make(x3[0][0], x3[0][1], yFull, isSmallVersion: false);
+                    p[1] = Make(x3[1][0], x3[1][1], yTop, isSmallVersion: true);
+                    p[2] = Make(x3[1][0], x3[1][1], yBot, isSmallVersion: true);
+                    p[3] = Make(x3[2][0], x3[2][1], yTop, isSmallVersion: true);
+                    p[4] = Make(x3[2][0], x3[2][1], yBot, isSmallVersion: true);
                     break;
                 case 6:
                     // [2][2][2]
                     for (int c = 0; c < 3; c++)
                     {
-                        p[c * 2] = Make(x3[c][0], x3[c][1], yTop, showBody: true);
-                        p[c * 2 + 1] = Make(x3[c][0], x3[c][1], yBot, showBody: true);
+                        p[c * 2] = Make(x3[c][0], x3[c][1], yTop, isSmallVersion: true);
+                        p[c * 2 + 1] = Make(x3[c][0], x3[c][1], yBot, isSmallVersion: true);
                     }
                     break;
             }
             return p;
         }
 
-        private Placement Make(float xMin, float xMax, float[] y, bool showBody)
-            => new Placement { xMin = xMin, xMax = xMax, yMin = y[0], yMax = y[1], showBody = showBody };
+        private Placement Make(float xMin, float xMax, float[] y, bool isSmallVersion)
+            => new Placement { xMin = xMin, xMax = xMax, yMin = y[0], yMax = y[1], showBody = isSmallVersion };
 
         private void ButtonHide()
         {
@@ -225,5 +242,20 @@ namespace ElectionTactics
             gameObject.SetActive(false);
         }
 
+        private void GoToNextNewspaper()
+        {
+            ShowNewspaper(ElectionTacticsGame.Instance.Newspapers[CurrentNewspaperIndex + 1]);
+        }
+
+        private void GoToPrevNewspaper()
+        {
+            ShowNewspaper(ElectionTacticsGame.Instance.Newspapers[CurrentNewspaperIndex - 1]);
+        }
+
+        private void RefreshCycleButtons()
+        {
+            PrevNewspaperButton.gameObject.SetActive(CurrentNewspaperIndex > 0);
+            NextNewspaperButton.gameObject.SetActive(ElectionTacticsGame.Instance.Newspapers.Count > CurrentNewspaperIndex + 1);
+        }
     }
 }

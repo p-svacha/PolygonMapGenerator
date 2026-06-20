@@ -66,8 +66,8 @@
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\MainMenu\ScrollingBackground.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\District\CulturalTraits\Traits\CT_FocalPoint.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\Policy\Policy.cs" />
-    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\Newspaper\UI_NewspaperPartyRow.cs" />
+    <Compile Include="Assets\Scripts\ElectionTactics\Game\UI\DistrictInfo\UI_DistrictInfo.cs" />
     <Compile Include="Assets\Scripts\Parrisk\GameState.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Game\RandomEvent\RE_Disaster.cs" />
     <Compile Include="Assets\Scripts\ElectionTactics\Menu\Lobby\UI_Lobby.cs" />

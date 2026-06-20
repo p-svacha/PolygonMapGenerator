@@ -166,7 +166,7 @@ Points from personal playtest:
 (.T) - add jumping to relevant district from some cultural traits
 (/) - add handling when all parties have a popularity of 0 in a district
 (/) - in loading screen, show current step of map generation
-(.T) - Impressionable trait should act immediately when district is actibvated
+(/) - Impressionable trait should act immediately when district is actibvated
 (/) - election animation ordering needs to order by seats FIRST (because of capital)
 (/) - fix district policy names. they are not allowed to be the same as other policies, but also shouldn't have "district" in the name. because popularity breakdown duplicate keys
 (/) - BUG: winning sound plays twice
@@ -184,17 +184,20 @@ Newspaper:
 
 (/) - add many article icons for all current minor articles (incl. quote)
 
-(/) - Add a new tab "Newspaper" tab with a newspaper as an icon.
+(/) - Add a new tab "Newspaper Archive" tab with a newspaper as an icon.
 (/) - This tab show all previous yearly newspapers
 (/) - make newspapers selectable
 
-- make icon and headline smaller in 2 articles per column. if still not enough space, add a "generateshortbodytext" to each one that cna be used for half-column.
+(/) - cycle through newspaper years
+
+(/) - make icon and headline smaller in 2 articles per column. if still not enough space, add a "generateshortbodytext" to each one that cna be used for half-column.
+
+- add adjectives to geography trait defs, that can easily be used in articles
 
 - added district article: capital clause
-- added district article: minority language/religion clause
+- added district article: first district with a language/religion/age group/density/economy/geography trait!
 - added district article: falvour for rapidly growing or falling population
 - added district article: falvour for cultural traits
-
 - newsevent article for impatient: combine multiple parties into 1 article.
 
 - move general election result tag identification to the result class
@@ -234,6 +237,8 @@ Tutorial
 - Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
 - Remove step DURING election
 - make sure it works with the newspaper
+
+- third soundtrack?
 
 Remove log spams
 

@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 41019
+  controlID: 18173
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 41062
+  controlID: 18174
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 41039
+  controlID: 18175
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -254,13 +254,16 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: []
+      m_SelectedIDs:
+      - m_rawData: 568105589213315644
       m_LastClickedID:
-        m_rawData: 0
+        m_rawData: 568105589213315644
       m_ExpandedIDs:
-      - m_rawData: 568105589212851484
-      - m_rawData: 568105589212851498
-      - m_rawData: 568105584918979860
+      - m_rawData: 568105589213315644
+      - m_rawData: 568105589213315660
+      - m_rawData: 568105584918885158
+      - m_rawData: 568105584918885164
+      - m_rawData: 568105584918885166
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -883,9 +886,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -18.08431, y: 32.307594, z: -1.0558449}
+    m_Target: {x: 36.762695, y: 39.965317, z: -0.65434504}
     speed: 2
-    m_Value: {x: -18.08431, y: 32.307594, z: -1.0558449}
+    m_Value: {x: 36.762695, y: 39.965317, z: -0.65434504}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -936,9 +939,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 170.21544
+    m_Target: 161.86674
     speed: 2
-    m_Value: 170.21544
+    m_Value: 161.86674
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -998,7 +1001,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 41063
+  controlID: 18121
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1079,7 +1082,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/ElectionTactics/Game/Newspaper
+    - Assets/Scripts/ElectionTactics/Game/UI/Newspaper
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1089,34 +1092,34 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/ElectionTactics/Game/Newspaper
+  - Assets/Scripts/ElectionTactics/Game/UI/Newspaper
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 767}
+    scrollPos: {x: 0, y: 947}
     m_SelectedIDs:
-    - m_rawData: 568105584918864296
+    - m_rawData: 568105584918840374
     m_LastClickedID:
-      m_rawData: 568105584918864296
+      m_rawData: 568105584918840374
     m_ExpandedIDs:
-    - m_rawData: 568105589213743120
+    - m_rawData: 568105589213748998
     - m_rawData: 0
-    - m_rawData: 568105584918839784
-    - m_rawData: 568105584918839786
-    - m_rawData: 568105584918839788
-    - m_rawData: 568105584918839790
-    - m_rawData: 568105584918839792
-    - m_rawData: 568105584918839794
-    - m_rawData: 568105584918839796
-    - m_rawData: 568105584918839798
-    - m_rawData: 568105584918839800
-    - m_rawData: 568105584918839802
-    - m_rawData: 568105584918839804
-    - m_rawData: 568105584918839806
-    - m_rawData: 568105584918839808
+    - m_rawData: 568105584918840148
+    - m_rawData: 568105584918840150
+    - m_rawData: 568105584918840152
+    - m_rawData: 568105584918840154
+    - m_rawData: 568105584918840156
+    - m_rawData: 568105584918840158
+    - m_rawData: 568105584918840160
+    - m_rawData: 568105584918840162
+    - m_rawData: 568105584918840164
+    - m_rawData: 568105584918840166
+    - m_rawData: 568105584918840168
+    - m_rawData: 568105584918840170
+    - m_rawData: 568105584918840172
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1149,21 +1152,21 @@ MonoBehaviour:
     m_LastClickedID:
       m_rawData: 0
     m_ExpandedIDs:
-    - m_rawData: 568105589213743120
+    - m_rawData: 568105589213748998
     - m_rawData: 0
-    - m_rawData: 568105584918839784
-    - m_rawData: 568105584918839786
-    - m_rawData: 568105584918839788
-    - m_rawData: 568105584918839790
-    - m_rawData: 568105584918839792
-    - m_rawData: 568105584918839794
-    - m_rawData: 568105584918839796
-    - m_rawData: 568105584918839798
-    - m_rawData: 568105584918839800
-    - m_rawData: 568105584918839802
-    - m_rawData: 568105584918839804
-    - m_rawData: 568105584918839806
-    - m_rawData: 568105584918839808
+    - m_rawData: 568105584918840148
+    - m_rawData: 568105584918840150
+    - m_rawData: 568105584918840152
+    - m_rawData: 568105584918840154
+    - m_rawData: 568105584918840156
+    - m_rawData: 568105584918840158
+    - m_rawData: 568105584918840160
+    - m_rawData: 568105584918840162
+    - m_rawData: 568105584918840164
+    - m_rawData: 568105584918840166
+    - m_rawData: 568105584918840168
+    - m_rawData: 568105584918840170
+    - m_rawData: 568105584918840172
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1191,9 +1194,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
+    m_SelectedInstanceIDs:
+    - m_rawData: 568105584918885164
     m_LastClickedEntityId:
-      m_rawData: 0
+      m_rawData: 568105584918885164
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214
@@ -1315,8 +1319,8 @@ MonoBehaviour:
     y: 0
     width: 520
     height: 933
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}

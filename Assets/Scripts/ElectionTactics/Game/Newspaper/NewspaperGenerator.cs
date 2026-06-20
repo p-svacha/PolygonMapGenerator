@@ -120,32 +120,60 @@ namespace ElectionTactics
         {
             List<NewspaperMinorArticle> articles = new List<NewspaperMinorArticle>();
 
+            // Identify number of articles
+            List<RandomEvent> randomEvents = Game.RandomEvents.Where(e => e.Year == Game.Year - 1).ToList();
+            List<NewsEvent> newsEvents = Game.NewsEvents.Where(e => e.Year == Game.Year - 1).ToList();
+            bool hasFunArticle = Random.value < 0.3f;
+
+            int numArticles = randomEvents.Count + newsEvents.Count + (hasFunArticle ? 1 : 0);
+            int currentArticleIndex = 1;
+
             // Generate articles about random district events
-            foreach (RandomEvent randomEvent in Game.RandomEvents.Where(e => e.Year == Game.Year - 1))
+            foreach (RandomEvent randomEvent in randomEvents)
             {
-                articles.Add(GenerateRandomEventArticle(randomEvent));
+                articles.Add(GenerateRandomEventArticle(randomEvent, IsSmallArticle(currentArticleIndex, numArticles)));
+                currentArticleIndex++;
             }
 
             // Generate articles about news events
-            foreach (NewsEvent newsEvent in Game.NewsEvents.Where(e => e.Year == Game.Year - 1))
+            foreach (NewsEvent newsEvent in newsEvents)
             {
-                articles.Add(GenerateNewsEventArticle(newsEvent));
+                articles.Add(GenerateNewsEventArticle(newsEvent, IsSmallArticle(currentArticleIndex, numArticles)));
+                currentArticleIndex++;
             }
 
             // Generate fun article
-            if (Random.value < 0.3f)
+            if (hasFunArticle)
             {
-                articles.Add(GenerateFunArticle());
+                articles.Add(GenerateFunArticle(IsSmallArticle(currentArticleIndex, numArticles)));
+                currentArticleIndex++;
             }
 
             articles = articles.OrderByDescending(a => a.Priority).Take(6).ToList();
             return articles;
         }
 
-
-        private static NewspaperMinorArticle GenerateRandomEventArticle(RandomEvent e)
+        private static bool IsSmallArticle(int currentIndex, int numArticles)
         {
-            var article = new NewspaperMinorArticle(Newspaper);
+            if (currentIndex > numArticles) throw new System.Exception($"currentIndex is {currentIndex}, numArticles is {numArticles}.");
+
+            if (numArticles <= 3) return false;
+            if (numArticles == 4)
+            {
+                return (currentIndex >= 3);
+            }
+            if (numArticles == 5)
+            {
+                return (currentIndex >= 2);
+            }
+
+            // >= 6
+            return true;
+        }
+
+        private static NewspaperMinorArticle GenerateRandomEventArticle(RandomEvent e, bool isSmallArticle)
+        {
+            var article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/{e.GetArticleIconName()}"));
             article.SetHeadline(e.GetArticleHeadline());
             article.SetBodyText(e.GetArticleBody());
@@ -153,9 +181,9 @@ namespace ElectionTactics
             return article;
         }
 
-        private static NewspaperMinorArticle GenerateNewsEventArticle(NewsEvent e)
+        private static NewspaperMinorArticle GenerateNewsEventArticle(NewsEvent e, bool isSmallArticle)
         {
-            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper);
+            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
 
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/{e.GetArticleIconName()}"));
             article.SetHeadline(e.GetArticleHeadline());
@@ -165,13 +193,13 @@ namespace ElectionTactics
             return article;
         }
 
-        private static NewspaperMinorArticle GenerateFunArticle()
+        private static NewspaperMinorArticle GenerateFunArticle(bool isSmallArticle)
         {
-            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper);
+            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
 
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/Quote"));
             article.SetHeadline("Fun Article");
-            article.SetBodyText("Just some text to test stuff");
+            article.SetBodyText("Just some text to test stuff.");
             article.Priority = 1;
 
             return article;
