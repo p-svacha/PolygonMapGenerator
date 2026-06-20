@@ -10,6 +10,7 @@ namespace ElectionTactics
     public class TutorialManager : MonoBehaviour
     {
         private static float DEFAULT_UI_SLIDE_TIME = 0.3f;
+        private static string GREEN = "#0EE387";
 
         public enum TutorialStep
         {
@@ -19,6 +20,7 @@ namespace ElectionTactics
             Popularity,
             Election,
             DuringElection,
+            Newspaper,
             Parliament,
             NewDistrict,
             End
@@ -101,7 +103,11 @@ namespace ElectionTactics
             {
                 ShowDuringElectionStep();
             }
-            if (CurrentStep == TutorialStep.DuringElection && ElectionTacticsGame.Instance.State != GameState.Election)
+            if (CurrentStep == TutorialStep.DuringElection && ElectionTacticsGame.Instance.State != GameState.Election && UI_ElectionTactics.Instance.Newspaper.ShowAnimationCoroutine == null)
+            {
+                ShowNewspaperStep();
+            }
+            if (CurrentStep == TutorialStep.Newspaper && !UI_ElectionTactics.Instance.IsShowingNewspaper)
             {
                 ShowParliamentStep();
             }
@@ -112,7 +118,7 @@ namespace ElectionTactics
                 // We are in district info screen
                 if (ElectionTacticsGame.Instance.UI.ActiveTab == Tab.DistrictInfo)
                 {
-                    TutorialText.text = "Hover over the popularity value for a detailed breakdown.\n\nElection results are determined by RELATIVE popularity between each party. You can't see your opponents' popularity or policies, but you can infer their strength from election results.";
+                    TutorialText.text = $"Hover over the popularity value for a detailed breakdown.\n\nElection results are determined by <color={GREEN}>relative popularity</color> between each party.\n\nYou can't see your opponents' popularity or policies, but you can infer their strength from election results.";
                     ContinueText.text = "";
                     PopularityArrow.gameObject.SetActive(true);
                     ContinueButton.gameObject.SetActive(true);
@@ -151,7 +157,7 @@ namespace ElectionTactics
             CurrentStep = TutorialStep.Welcome;
 
             StepText.text = "1/9";
-            TutorialText.text = "Welcome to Levers of Democracy!\n\nYou lead a political party competing in elections across a fictional country. Win seats by being the most popular party in a district.";
+            TutorialText.text = $"Welcome to Levers of Democracy!\n\nYou lead a political party competing in elections across a fictional country consisting of different <color={GREEN}>districts</color>.";
             ContinueText.text = "Select any district to continue.";
             ContinueButton.gameObject.SetActive(false);
 
@@ -161,6 +167,8 @@ namespace ElectionTactics
             ElectionTacticsGame.Instance.UI.SlideOutStandings(slideTime: 0f);
             ElectionTacticsGame.Instance.UI.SlideOutHeader(slideTime: 0f);
             ElectionTacticsGame.Instance.UI.SlideOutFooter(slideTime: 0f);
+            ElectionTacticsGame.Instance.UI.HideTabButton(Tab.Parliament);
+            ElectionTacticsGame.Instance.UI.HideTabButton(Tab.Newspaper);
 
             // Arrows
             DistrictArrow_Map.gameObject.SetActive(true);
@@ -175,7 +183,7 @@ namespace ElectionTactics
             DistrictArrow_List.gameObject.SetActive(false);
 
             StepText.text = "2/9";
-            TutorialText.text = "On the right you see the district info screen. Each district has various TRAITS across different categories.\n\nFor each trait, there is a matching POLICY. Supporting a policy increases your party's POPULARITY in districts that have the matching trait.";
+            TutorialText.text = $"Each district has various attributes across different categories.\n\nFor each attributes, there is a matching <color={GREEN}>policy</color>. Support the the right policies to increase your party's <color={GREEN}>popularity</color> in districts.";
             ContinueText.text = "Switch to the policy screen to continue.";
 
             ElectionTacticsGame.Instance.UI.SlideInHeader(DEFAULT_UI_SLIDE_TIME);
@@ -190,7 +198,7 @@ namespace ElectionTactics
             PolicyTabArrow.gameObject.SetActive(false);
 
             StepText.text = "3/9";
-            TutorialText.text = $"Here you can set your POLICIES. Each election cycle you receive {ElectionTacticsGame.PP_PER_CYCLE} Policy Points (PP) to spend freely.\n\nHover over any policy to see its impact on the map.";
+            TutorialText.text = $"Each election cycle you receive {ElectionTacticsGame.PP_PER_CYCLE} Policy Points (PP) to spend freely.\n\nHover over any policy to see its <color={GREEN}>popularity</color> impact on the map.";
             ContinueText.text = "Spend all your PP to continue.";
 
             PolicyPointsArrow.gameObject.SetActive(true);
@@ -214,7 +222,7 @@ namespace ElectionTactics
             ContinueButton.gameObject.SetActive(false);
 
             StepText.text = "5/9";
-            TutorialText.text = "All policy points spent. Time to see how your party performs in the first general election!\n\nNote: This locks all policies. PP can cannot be redistributed.";
+            TutorialText.text = "All policy points spent. Time to see how your party performs in the first general election!\n\nNote: This locks all policies. Policy points can cannot be redistributed after elections.";
             ContinueText.text = "End your turn to continue.";
 
             ElectionTacticsGame.Instance.UI.ElectionControls.gameObject.SetActive(true);
@@ -225,27 +233,32 @@ namespace ElectionTactics
         private void ShowDuringElectionStep()
         {
             CurrentStep = TutorialStep.DuringElection;
+            HideTutorialBox();
+        }
 
-            EndTurnArrow.gameObject.SetActive(false);
+        private void ShowNewspaperStep()
+        {
+            ShowTutorialBox();
+            CurrentStep = TutorialStep.Newspaper;
 
             StepText.text = "6/9";
-            TutorialText.text = "All you can do during the election is watch the results come in. You can speed up the process if you want.";
-            ContinueText.text = "Wait for the election to finish.";
+            TutorialText.text = $"After each election, the yearly newspaper will tell you everything important happening in the country.\n\nMany articles provide important information to shape your policy strategy.";
+            ContinueText.text = "Close the newspaper to continue";
 
-            ElectionControlsArrow.gameObject.SetActive(true);
+            ParliamentArrow.gameObject.SetActive(true);
         }
 
         private void ShowParliamentStep()
         {
             CurrentStep = TutorialStep.Parliament;
 
-            ElectionControlsArrow.gameObject.SetActive(false);
-
             StepText.text = "7/9";
-            TutorialText.text = $"The first election is over.\n\nThe parliament view shows the seat distribution from the last election and the current overall standings.\n\nYou can also inspect individual district results by selecting them.\n\nBe the first party to win {ElectionTacticsGame.Instance.Constitution.WinCondition.ConditionValue} general elections to win the game.";
+            TutorialText.text = $"The parliament view shows the seat distribution from the last election and the current overall standings.\n\nYou can also inspect individual district results by selecting them.\n\nBe the first party to win {ElectionTacticsGame.Instance.Constitution.WinCondition.ConditionValue} general elections to win the game.";
             ContinueText.text = "";
 
             ElectionTacticsGame.Instance.UI.SlideInStandings(slideTime: 0.3f);
+            ElectionTacticsGame.Instance.UI.ShowTabButton(Tab.Parliament);
+            ElectionTacticsGame.Instance.UI.ShowTabButton(Tab.Newspaper);
             ParliamentArrow.gameObject.SetActive(true);
             ContinueButton.gameObject.SetActive(true);
         }
@@ -260,7 +273,6 @@ namespace ElectionTactics
             TutorialText.text = "A new district has been added to the map. After each election, the country grows by one district.\n\nTip: Use the map overlay to color districts by traits like religion, language, or your popularity.";
 
             ElectionTacticsGame.Instance.UI.SlideInMapControls(slideTime: 0.3f);
-
             LensArrow.gameObject.SetActive(true);
             NewDistrictArrow.gameObject.SetActive(true);
         }
@@ -286,9 +298,20 @@ namespace ElectionTactics
             ElectionTacticsGame.Instance.UI.SlideInFooter(0f);
             ElectionTacticsGame.Instance.UI.SlideInHeader(0f);
             ElectionTacticsGame.Instance.UI.SlideInMapControls(0f);
+            ElectionTacticsGame.Instance.UI.ShowTabButton(Tab.Parliament);
+            ElectionTacticsGame.Instance.UI.ShowTabButton(Tab.Newspaper);
 
             // End tutorial
             IsTutorialActive = false;
+            HideTutorialBox();
+        }
+
+        private void ShowTutorialBox()
+        {
+            gameObject.SetActive(true);
+        }
+        private void HideTutorialBox()
+        {
             gameObject.SetActive(false);
         }
     }

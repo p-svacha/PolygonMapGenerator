@@ -223,15 +223,15 @@ Newspaper:
 
 (/) - expand/properly implement random event articles
 
-- implement fun article generator
-  - see ideas further below in document
+(/) - implement fun article generator
+  (/) - see ideas further below in document
 
 (/) - adjust newspaper SFX volume if needed
 
-- review all news event classes
-  - add adjective system where needed
-- review all random event classes
-  - add adjective system where needed
+(/) - review all news event classes
+  (/) - add adjective system where needed
+(/) - review all random event classes
+  (/) - add adjective system where needed
 
 End Game Screen:
 (/) - Add some basic stats (all should already be tracked)
@@ -254,24 +254,27 @@ General Gameplay:
 (/) - Add rivers as a geographical trait
 (/) - Make sure district names don't start with '
 (/) - Clean up district names
+(/) - add 2 new ambient soundtracks
 
 Tutorial
-- Make tutorial box bigger with bigger text.
-- Make tutorial in a fixed seed.
-- Start with 2 districts only.
-- Split district info into 2 steps: attributes and cultural traits.
+(/) - Make tutorial box bigger with bigger text.
+(/) - Start with 2 districts only.
 - In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
 - Use fixed and SIMPLE cultural traits for starting districts
-- Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
-- Remove step DURING election
-- make sure it works with the newspaper
-- add step to show hints in newspaper (main article, chapter 2)
+(/) - Remove step DURING election
+(/) - don't show parliament tab button and newspaper archive from start
+(/) - make sure it works with the newspaper
+(/) - add step to show hints in newspaper (main article, chapter 2)
+- somewhere show that districts are worth different amount of seats
+- add hint for cultural traits for newly added district in start of 2nd cycle
 
-- third soundtrack?
+Personal Playtest 1 Feedback:
+- Add SFX when winning a general election
+- maybe add murmur (happy and sad) when increasing / decreasing a policy, with volume/intensity change based on total change
 
 Remove log spams
 
-quickfire-test. all districts. always events. read every article in first 3 elections. 3 games.
+quickfire-test. all districts. always events, fun article chance = 1. read every article in first 3 elections. 3 games.
 quick-fire test. 10 games in a row without restarting with max district enabled from start.
 Full game playtests:
   - quick play with tutorial
@@ -297,7 +300,7 @@ Publish!
 
 
 
-- add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'"). doesn't always appear. max 1
+- add a section with a procedurally generated article / fun fact ("The cows have eaten more this year than preschoolers did last year due to the waether", "Local monks outraged at growing hamster population", "The babies of all nations have geen gathering in larger groups than 2 years ago", "Interested in a new pet? Mortality in penguins has dropped below 0. You can find one on a website that matches you. www.freepenguins.com". "Tomato Overconsumption. A risk often underestimated.", "Dangerous health fad in dogs. Dogfluencers have told dogs to become anorexic. Dogschool teachers made aware. if your dog exhibits one of these symptons, reduce its screen time." "Return of the T-Rex. Experts claim they were never gone" "The nuclear buillon. A lesser known use of nuclear power plants." "national football team in shambles. the team has unanimously decided to play handmall instead. handball league not amused". "playgrounds will now be double-used as cemeteries due to space problem". "national investment banker association releases new guidlines on how to raise elephants." "Back to the roots. Crucifixion makes a comeback due to popular demand" "New beauty trend emerged. Skin peeling and using it as a face mask. Recommended for juvenile skin", "xy recommends recreational use of paracetamol", "new tennis trend: ducks!", "Technology: AI-powered pool noodle strangulates old woman." "Downhill skiers demand more potholes", "Quote of the Year: 'Green is the new Yellow'").
 
 
 --------------------

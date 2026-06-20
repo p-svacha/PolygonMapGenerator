@@ -33,12 +33,14 @@ namespace ElectionTactics
         {
             List<string> templates = new List<string>()
             {
-                $"{District.Name} Takes On New Character",
-                $"Something Shifts in {District.Name}",
-                $"{District.Name}: A District Transformed",
-                $"A New Trait Defines {District.Name}",
-                $"Change Comes to {District.Name}",
+                $"{District.Name} gains Cultural Trait {GainedTrait.Label}",
             };
+
+            if (!string.IsNullOrEmpty(GainedTrait.Adjective))
+            {
+                templates.Add($"{District.Name} turns {GainedTrait.Adjective}");
+            }
+
             return templates.RandomElement();
         }
 
@@ -46,9 +48,9 @@ namespace ElectionTactics
         {
             List<string> facts = new List<string>()
             {
-                $"{District.Name} has taken on a new defining trait: {GainedTrait.LabelCapWord}.",
-                $"Observers note a shift in {District.Name}, which now carries the hallmark of {GainedTrait.LabelCapWord}.",
-                $"The character of {District.Name} has changed — it is now marked by {GainedTrait.LabelCapWord}.",
+                $"{District.Name} has taken on a new defining cultural trait: {GainedTrait.LabelCapWord}.",
+                $"Observers note a shift in {District.Name}, which now carries the cultural trait {GainedTrait.LabelCapWord}.",
+                $"The character of {District.Name} has changed. It is now marked by the cultural trait {GainedTrait.LabelCapWord}.",
             };
 
             var pool = new List<string>

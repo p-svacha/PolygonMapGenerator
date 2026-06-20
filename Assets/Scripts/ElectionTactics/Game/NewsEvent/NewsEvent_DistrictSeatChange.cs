@@ -41,24 +41,24 @@ namespace ElectionTactics
 
         public override string GetArticleBody()
         {
-            // The fact — always present, varied phrasing
+            // The fact
             List<string> gainFacts = new List<string>()
             {
                 $"{District.Name} will send {SeatsAfter} representatives to parliament next cycle, one more than before.",
                 $"Population growth has earned {District.Name} a new seat, bringing its total to {SeatsAfter}.",
-                $"Come next election, {District.Name} will hold {SeatsAfter} seats — a gain of one.",
+                $"Come next election, {District.Name} will hold {SeatsAfter} seats.",
             };
 
             List<string> lossFacts = new List<string>()
             {
                 $"{District.Name} will send {SeatsAfter} representatives to parliament next cycle, one fewer than before.",
                 $"A shrinking population costs {District.Name} a seat, leaving it with {SeatsAfter}.",
-                $"Come next election, {District.Name} will hold just {SeatsAfter} seats — a loss of one.",
+                $"Come next election, {District.Name} will hold just {SeatsAfter} seats.",
             };
 
             List<string> facts = IsGain ? gainFacts : lossFacts;
 
-            // Colour fragments — each stands alone, shuffled and sampled
+            // Colour fragments: each stands alone, shuffled and sampled
             var pool = new List<string>();
             if (IsGain)
             {

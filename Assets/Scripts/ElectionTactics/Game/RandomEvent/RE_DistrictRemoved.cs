@@ -46,7 +46,7 @@ namespace ElectionTactics
             {
                 $"{District.Name} has left the nation and will no longer take part in elections.",
                 $"In a stunning turn, {District.Name} has broken away from the country for good.",
-                $"The district of {District.Name} is no more — it has formally departed the union.",
+                $"The district of {District.Name} is no more. It has formally departed the country.",
             };
 
             var pool = new List<string>

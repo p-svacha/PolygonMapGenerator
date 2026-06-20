@@ -52,7 +52,6 @@ namespace ElectionTactics
             RandomEventFrequency = randomEventFreq;
         }
 
-
         public override string ToString()
         {
             return $"Game mode: {GameMode.Label}, Turn length: {TurnLength.Label}, Bot difficuly: {BotDifficulty.Label}";

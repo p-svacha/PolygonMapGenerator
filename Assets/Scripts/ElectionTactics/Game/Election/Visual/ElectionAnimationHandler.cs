@@ -352,7 +352,7 @@ namespace ElectionTactics
             playerBarIndex = Game.UI.Parliament.CurrentElectionGraph.GetBarIndex(Game.LocalPlayerParty.Acronym);
             if (playerBarIndex >= 0)
             {
-                // Calculate max pitch based on vote share — higher share = higher final pitch
+                // Calculate max pitch based on vote share (higher share = higher final pitch)
                 float voteShare = CurrentDistrictResult.VoteShare[Game.LocalPlayerParty];
                 float basePitch = 0.7f; // Base pitch for 0% share
                 float maxMaxPitch = 5f;  // Pitch ceiling for 100% share

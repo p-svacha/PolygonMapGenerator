@@ -22,29 +22,29 @@ namespace ElectionTactics
             new RandomEventFrequencyDef()
             {
                 DefName = "Rare",
-                Label = "Rare (15%)",
-                RandomEventChance = 0.15f,
+                Label = "Rare (10%)",
+                RandomEventChance = 0.10f,
             },
 
             new RandomEventFrequencyDef()
             {
                 DefName = "Standard",
-                Label = "Standard (30%)",
-                RandomEventChance = 0.3f,
+                Label = "Standard (25%)",
+                RandomEventChance = 0.25f,
             },
 
             new RandomEventFrequencyDef()
             {
                 DefName = "Often",
-                Label = "Often (50%)",
-                RandomEventChance = 0.5f,
+                Label = "Often (40%)",
+                RandomEventChance = 0.40f,
             },
 
             new RandomEventFrequencyDef()
             {
                 DefName = "VeryOften",
-                Label = "Very Often (75%)",
-                RandomEventChance = 0.75f,
+                Label = "Very Often (70%)",
+                RandomEventChance = 0.70f,
             },
 
             new RandomEventFrequencyDef()

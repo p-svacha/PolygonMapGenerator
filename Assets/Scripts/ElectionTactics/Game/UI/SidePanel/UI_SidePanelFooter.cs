@@ -61,7 +61,7 @@ namespace ElectionTactics {
 
             if (hasRemainingPP && !awaitingConfirmation)
             {
-                // First click with remaining PP — show warning and wait for confirmation
+                // First click with remaining PP, show warning and wait for confirmation
                 awaitingConfirmation = true;
                 confirmationTimer = CONFIRMATION_DURATION;
                 AudioManager.PlaySound(AudioManager.Instance.AddBot);

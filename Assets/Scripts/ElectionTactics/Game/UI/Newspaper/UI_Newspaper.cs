@@ -45,7 +45,7 @@ namespace ElectionTactics
 
         private const float SHOW_ANIMATION_DURATION = 2f;
         private const float SHOW_ANIMATION_ROTATIONS = 3f; // full turns while spiraling in
-        private Coroutine showAnimationCoroutine;
+        public Coroutine ShowAnimationCoroutine { get; private set; }
 
         /// <summary>
         /// Called once
@@ -96,8 +96,8 @@ namespace ElectionTactics
 
             if (withAnimation)
             {
-                if (showAnimationCoroutine != null) StopCoroutine(showAnimationCoroutine);
-                showAnimationCoroutine = StartCoroutine(SpiralIn(newspaperRect));
+                if (ShowAnimationCoroutine != null) StopCoroutine(ShowAnimationCoroutine);
+                ShowAnimationCoroutine = StartCoroutine(SpiralIn(newspaperRect));
             }
             else
             {
@@ -123,7 +123,7 @@ namespace ElectionTactics
                 t += Time.deltaTime;
                 float r = Mathf.Clamp01(t / SHOW_ANIMATION_DURATION);
 
-                // Ease-out so it decelerates as it settles — feels like it "lands"
+                // Ease-out so it decelerates as it settles to feel like it "lands"
                 float eased = 1f - Mathf.Pow(1f - r, 3f);
 
                 rect.localScale = Vector3.one * eased;
@@ -137,7 +137,7 @@ namespace ElectionTactics
             // Snap to final state
             rect.localScale = Vector3.one;
             rect.localRotation = Quaternion.identity;
-            showAnimationCoroutine = null;
+            ShowAnimationCoroutine = null;
 
             RefreshCycleButtons();
         }

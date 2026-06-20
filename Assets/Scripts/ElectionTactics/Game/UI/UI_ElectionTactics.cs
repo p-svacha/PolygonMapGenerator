@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace ElectionTactics
@@ -280,6 +281,15 @@ namespace ElectionTactics
                 SelectedDistrict = null;
                 IsDistrictSelected = false;
             }
+        }
+
+        public void HideTabButton(Tab tab)
+        {
+            TabButtons[tab].gameObject.SetActive(false);
+        }
+        public void ShowTabButton(Tab tab)
+        {
+            TabButtons[tab].gameObject.SetActive(true);
         }
 
 

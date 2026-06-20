@@ -124,4 +124,20 @@ public static class StringExtensions
     {
         return System.Text.RegularExpressions.Regex.Replace(input, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
     }
+
+    /// <summary>
+    /// Prefixes the string with "a" or "an" based on its first letter.
+    /// </summary>
+    public static string WithArticle(this string str)
+    {
+        if (string.IsNullOrEmpty(str)) return str;
+        char c = char.ToLower(str[0]);
+        bool vowel = "aeiou".IndexOf(c) >= 0;
+        return (vowel ? "an " : "a ") + str;
+    }
+
+    /// <summary>
+    /// Capitalizes the first letter and returns; convenience for headline-casing a filled template.
+    /// </summary>
+    public static string AsHeadline(this string str) => str.CapitalizeFirst();
 }

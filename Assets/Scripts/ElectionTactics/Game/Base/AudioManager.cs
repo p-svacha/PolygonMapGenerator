@@ -9,7 +9,7 @@ namespace ElectionTactics
         public static AudioManager Instance { get; private set; }
 
         [Header("Settings")]
-        public int OneShotPoolSize = 8;
+        public int OneShotPoolSize = 12;
         [Range(0f, 1f)] public float MasterVolume = 1f;
         [Range(0f, 1f)] public float MusicVolume = 0.5f;
         [Range(0f, 1f)] public float SfxVolume = 1f;
@@ -159,7 +159,7 @@ namespace ElectionTactics
                 }
             }
 
-            // All busy — steal the next one in rotation
+            // All busy steal the next one in rotation
             AudioSource stolen = oneShotPool[nextOneShotIndex];
             stolen.Stop();
             nextOneShotIndex = (nextOneShotIndex + 1) % OneShotPoolSize;
@@ -239,7 +239,7 @@ namespace ElectionTactics
             }
             else
             {
-                // No previous ambient to resume — start fresh
+                // No previous ambient to resume: start fresh
                 if (Instance.AmbientTracks.Length == 0) return;
                 Instance.currentTrackIndex = (Instance.currentTrackIndex) % Instance.AmbientTracks.Length;
                 next.clip = Instance.AmbientTracks[Instance.currentTrackIndex];
@@ -271,7 +271,7 @@ namespace ElectionTactics
         }
 
         /// <summary>
-        /// Standard crossfade — stops the outgoing source when done.
+        /// Standard crossfade: stops the outgoing source when done.
         /// </summary>
         private IEnumerator Crossfade(AudioSource fadeOut, AudioSource fadeIn, float duration)
         {
@@ -323,7 +323,7 @@ namespace ElectionTactics
                 yield return null;
             }
 
-            fadeOut.Pause(); // Pause, not stop — preserves playback position
+            fadeOut.Pause(); // Pause, not stop: preserves playback position
             fadeOut.volume = 0f;
             fadeIn.volume = targetVolume;
             crossfadeCoroutine = null;

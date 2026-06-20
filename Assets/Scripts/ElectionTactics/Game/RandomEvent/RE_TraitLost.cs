@@ -34,12 +34,14 @@ namespace ElectionTactics
         {
             List<string> templates = new List<string>()
             {
-                $"{District.Name} Sheds an Old Trait",
-                $"An Era Ends in {District.Name}",
-                $"{District.Name} Moves On",
-                $"Change of Character in {District.Name}",
-                $"{District.Name} Turns a Page",
+                $"{District.Name} loses Cultural Trait {LostTrait.Label}",
             };
+
+            if (!string.IsNullOrEmpty(LostTrait.Adjective))
+            {
+                templates.Add($"{District.Name} no longer {LostTrait.Adjective}");
+            }
+
             return templates.RandomElement();
         }
 
@@ -47,9 +49,9 @@ namespace ElectionTactics
         {
             List<string> facts = new List<string>()
             {
-                $"{District.Name} has shed a defining trait: it is no longer known for {LostTrait.LabelCapWord}.",
-                $"The {LostTrait.LabelCapWord} character of {District.Name} has faded into history.",
-                $"What once made {District.Name} distinctive — its {LostTrait.LabelCapWord} — is no more.",
+                $"{District.Name} has shed a defining cultural trait: {LostTrait.LabelCapWord}.",
+                $"The {LostTrait.LabelCapWord} cultural trait of {District.Name} has faded into history.",
+                $"What once made {District.Name} distinctive, its {LostTrait.LabelCapWord} cultural trait, is no more.",
             };
 
             var pool = new List<string>

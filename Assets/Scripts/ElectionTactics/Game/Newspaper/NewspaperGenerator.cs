@@ -124,7 +124,7 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"In an extraordinary outcome, three parties — {topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} — have finished level on {topSeats} seats each. Commentators are at a loss for precedent.",
+                    $"In an extraordinary outcome, the three parties {topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} have finished level on {topSeats} seats each. Commentators are at a loss for precedent.",
                     $"{topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} each claimed {topSeats} seats, fracturing the parliament three ways and guaranteeing a turbulent cycle.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
@@ -143,7 +143,7 @@ namespace ElectionTactics
                 var chapters = new List<string>
                 {
                     $"It could hardly have been closer. {topParty.NameOrAcr} edged out {secondParty.NameOrAcr} by a single seat, {topSeats} to {secondSeats}. A handful of votes elsewhere could have flipped the result.",
-                    $"{topParty.NameOrAcr} clings to victory by one seat — {topSeats} against {secondParty.NameOrAcr}'s {secondSeats}. The thinnest of margins hands them the year.",
+                    $"{topParty.NameOrAcr} clings to victory by one seat: {topSeats} against {secondParty.NameOrAcr}'s {secondSeats}. The thinnest of margins hands them the year.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -177,7 +177,7 @@ namespace ElectionTactics
                 var chapters = new List<string>
                 {
                     $"{topParty.NameOrAcr} has won an outright majority, claiming {topSeats} of {totalSeats} seats. With more than half the parliament, they can govern without compromise.",
-                    $"More than half the seats now belong to {topParty.NameOrAcr} — {topSeats} of {totalSeats}. It is a mandate few parties ever achieve.",
+                    $"More than half the seats now belong to {topParty.NameOrAcr} ({topSeats} of {totalSeats}). It is a mandate few parties ever achieve.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 50);
             }
@@ -193,7 +193,7 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"This was no ordinary win. {topParty.NameOrAcr} took {topSeats} of {totalSeats} seats — more than three quarters of the parliament — leaving the opposition in disarray.",
+                    $"This was no ordinary win. {topParty.NameOrAcr} took {topSeats} of {totalSeats} seats, more than three quarters of the parliament, leaving the opposition in disarray.",
                     $"{topParty.NameOrAcr} has all but obliterated its rivals, securing {topSeats} of {totalSeats} seats. Such a margin reshapes the political landscape entirely.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 100);
@@ -211,7 +211,7 @@ namespace ElectionTactics
                 var chapters = new List<string>
                 {
                     $"Three parties finished within touching distance: {topParty.Acronym} on {topSeats}, {secondParty.Acronym} on {secondSeats}, and {party3.Acronym} on {seats3}. {topParty.NameOrAcr} comes out ahead, but only just.",
-                    $"The top three — {topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} — are separated by a mere handful of seats. {topParty.NameOrAcr} leads a crowded field.",
+                    $"The top three ({topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym}) are separated by a mere handful of seats. {topParty.NameOrAcr} leads a crowded field.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -364,7 +364,7 @@ namespace ElectionTactics
                     }
                     else
                     {
-                        candidates.Add($"Notably, none of the leading parties have invested in {probe.Name} policy — a gap that remains wide open.");
+                        candidates.Add($"Notably, none of the leading parties have invested in {probe.Name} policy, a gap that remains wide open.");
                     }
                 }
             }
@@ -523,16 +523,237 @@ namespace ElectionTactics
             return article;
         }
 
+
+        #region Fun Article
+
+        enum FunArticleType
+        {
+            TimeFrameComparison,
+            OutrageHeadline,
+            HealthFad,
+            NewTrend,
+            QuoteOfYear,
+            ExpertClaim,
+            PublicService,
+            DangerWarning,
+        }
+
+        // --- Word lists, typed by grammatical role ---
+
+        // Plural nouns (subjects that "do" things). Animals, people, oddities.
+        private static List<string> nounsPlural = new List<string>()
+        {
+            "cows", "children", "monks", "penguins", "hamsters", "babies", "dogs", "ducks",
+            "investment bankers", "downhill skiers", "preschoolers", "elephants", "tomatoes",
+            "pensioners", "lighthouse keepers", "competitive eaters", "synchronized swimmers",
+            "beekeepers", "mimes", "geese", "librarians", "lumberjacks", "astronauts",
+        };
+
+        // Singular nouns (for "a/an X" constructions).
+        private static List<string> nounsSingular = new List<string>()
+        {
+            "cow", "child", "monk", "penguin", "hamster", "baby", "dog", "duck",
+            "investment banker", "downhill skier", "elephant", "tomato", "pensioner",
+            "lighthouse keeper", "competitive eater", "mime", "goose", "librarian",
+            "lumberjack", "astronaut", "pool noodle", "garden gnome", "traffic cone",
+        };
+
+        // Past-tense verbs (intransitive-ish, for "the X have VERBED").
+        private static List<string> verbsPast = new List<string>()
+        {
+            "eaten", "consumed", "gathered", "multiplied", "vanished", "rebelled",
+            "assembled", "migrated", "protested", "celebrated", "unionized", "fled",
+        };
+
+        // Activity verbs (gerund, "growing", for trends).
+        private static List<string> activitiesGerund = new List<string>()
+        {
+            "knitting", "competitive napping", "extreme ironing", "interpretive dance",
+            "underwater chess", "speed-walking", "artisanal yodeling", "synchronized blinking",
+            "cheese rolling", "professional queuing", "aggressive gardening",
+        };
+
+        private static List<string> comparator = new List<string>()
+        {
+            "more", "less", "an equal amount of", "considerably more", "alarmingly less",
+        };
+
+        private static List<string> timeFrames = new List<string>()
+        {
+            "morning", "evening", "week", "month", "year", "decade", "afternoon", "fortnight",
+        };
+
+        private static List<string> reasonAdjectives = new List<string>()
+        {
+            "bad", "good", "unusually mild", "historically poor", "surprisingly favorable",
+            "downright suspicious", "frankly inexplicable",
+        };
+
+        private static List<string> reasonNouns = new List<string>()
+        {
+            "weather", "lighting", "scheduling", "leadership", "ventilation", "moonlight",
+            "tax policy", "background music", "regional pride",
+        };
+
+        // Adjectives describing groups/things.
+        private static List<string> adjectives = new List<string>()
+        {
+            "growing", "shrinking", "rebellious", "anxious", "overconfident", "underfunded",
+            "militant", "fashionable", "elusive", "well-organized", "disgruntled", "radiant",
+        };
+
+        // Professions/authorities for "X are outraged / X claim".
+        private static List<string> authorities = new List<string>()
+        {
+            "local monks", "leading scientists", "the national football team", "city planners",
+            "dogschool teachers", "the beekeepers' guild", "retired admirals", "tax inspectors",
+            "the association of lighthouse keepers", "concerned parents", "the cheese board",
+            "marine biologists", "the puppeteers' union",
+        };
+
+        // Abstract things/concepts/causes.
+        private static List<string> concepts = new List<string>()
+        {
+            "the growing hamster population", "recreational mathematics", "the return of the T-Rex",
+            "mandatory joy", "the nuclear bouillon", "competitive crucifixion", "the tomato shortage",
+            "double-use playgrounds", "the handball uprising", "artisanal silence",
+        };
+
+        // Symptoms (plural noun phrases) for the health-fad template.
+        private static List<string> symptoms = new List<string>()
+        {
+            "excessive blinking", "a refusal to fetch", "sudden interest in jazz",
+            "unexplained elegance", "a thousand-yard stare", "spontaneous tap dancing",
+            "an aversion to Mondays", "compulsive list-making",
+        };
+
+        // Remedies/recommendations.
+        private static List<string> remedies = new List<string>()
+        {
+            "reduce its screen time", "consult a licensed mime", "increase exposure to sunlight",
+            "limit its tax burden", "introduce more potholes to its routine",
+            "schedule fewer meetings", "provide additional snacks",
+        };
+
+        // Colors for the "X is the new Y" quote.
+        private static List<string> colors = new List<string>()
+        {
+            "green", "yellow", "beige", "ultraviolet", "navy", "puce", "crimson", "teal",
+        };
+
         private static NewspaperMinorArticle GenerateFunArticle(bool isSmallArticle)
         {
             NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
-
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/Quote"));
-            article.SetHeadline("Fun Article");
-            article.SetBodyText("Just some text to test stuff.");
             article.Priority = 1;
+
+            var values = System.Enum.GetValues(typeof(FunArticleType));
+            FunArticleType chosenType = (FunArticleType)values.GetValue(Random.Range(0, values.Length));
+
+            switch (chosenType)
+            {
+                case FunArticleType.TimeFrameComparison: GenerateTimeFrameComparison(article); break;
+                case FunArticleType.OutrageHeadline: GenerateOutrage(article); break;
+                case FunArticleType.HealthFad: GenerateHealthFad(article); break;
+                case FunArticleType.NewTrend: GenerateNewTrend(article); break;
+                case FunArticleType.QuoteOfYear: GenerateQuoteOfYear(article); break;
+                case FunArticleType.ExpertClaim: GenerateExpertClaim(article); break;
+                case FunArticleType.PublicService: GeneratePublicService(article); break;
+                case FunArticleType.DangerWarning: GenerateDangerWarning(article); break;
+                default:
+                    article.SetHeadline("ERROR");
+                    article.SetBodyText("error");
+                    break;
+            }
 
             return article;
         }
+
+        private static void GenerateTimeFrameComparison(NewspaperMinorArticle article)
+        {
+            string subjects = nounsPlural.RandomElement();
+            article.SetHeadline($"News About {subjects.CapitalizeEachWord()}");
+            article.SetBodyText(
+                $"The {subjects} have {verbsPast.RandomElement()} {comparator.RandomElement()} this " +
+                $"{timeFrames.RandomElement()} than {nounsPlural.RandomElement()} did last " +
+                $"{timeFrames.RandomElement()}, owing to {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}.");
+        }
+
+        private static void GenerateOutrage(NewspaperMinorArticle article)
+        {
+            string who = authorities.RandomElement();
+            string what = concepts.RandomElement();
+            article.SetHeadline($"{who.CapitalizeEachWord()} Outraged");
+            article.SetBodyText(
+                $"{who.CapitalizeFirst()} have expressed fury over {what}. " +
+                $"\"This cannot continue,\" one spokesperson said, citing {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
+                $"Authorities urge calm as the situation develops.");
+        }
+
+        private static void GenerateHealthFad(NewspaperMinorArticle article)
+        {
+            string animalsPlural = nounsPlural.RandomElement();
+            string animalSingular = nounsSingular.RandomElement();
+            article.SetHeadline($"Dangerous Health Fad Sweeps the {animalsPlural.CapitalizeEachWord()}");
+            article.SetBodyText(
+                $"A worrying trend has emerged among {animalsPlural}: influencers now encourage them toward " +
+                $"{activitiesGerund.RandomElement()}. Experts have been made aware. If your {animalSingular} exhibits " +
+                $"{symptoms.RandomElement()}, {remedies.RandomElement()} immediately.");
+        }
+
+        private static void GenerateNewTrend(NewspaperMinorArticle article)
+        {
+            string activity = activitiesGerund.RandomElement();
+            string group = nounsPlural.RandomElement();
+            article.SetHeadline($"New Trend: {activity.CapitalizeEachWord()}");
+            article.SetBodyText(
+                $"The nation's {group} have embraced {activity} as the season's must-have pastime. " +
+                $"Critics call it {reasonAdjectives.RandomElement()}; enthusiasts insist it is the future. " +
+                $"{authorities.RandomElement().CapitalizeFirst()} remain divided.");
+        }
+
+        private static void GenerateQuoteOfYear(NewspaperMinorArticle article)
+        {
+            string a = colors.RandomElement();
+            string b = colors.Where(c => c != a).ToList().RandomElement();
+            article.SetHeadline("Quote of the Year");
+            article.SetBodyText(
+                $"\"{a.CapitalizeFirst()} is the new {b},\" declared a leading figure this year, " +
+                $"to widespread {(Random.value < 0.5f ? "acclaim" : "confusion")}. The remark has since been printed on mugs.");
+        }
+
+        private static void GenerateExpertClaim(NewspaperMinorArticle article)
+        {
+            string claim = concepts.RandomElement();
+            string who = authorities.RandomElement();
+            article.SetHeadline($"Experts Weigh In on {claim.CapitalizeEachWord()}");
+            article.SetBodyText(
+                $"{who.CapitalizeFirst()} claim that {claim} was, in fact, never gone. " +
+                $"\"We saw it coming,\" they noted, pointing to {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
+                $"Skeptics remain unconvinced.");
+        }
+
+        private static void GeneratePublicService(NewspaperMinorArticle article)
+        {
+            string petSingular = nounsSingular.RandomElement();
+            string petPlural = nounsPlural.RandomElement();
+            article.SetHeadline($"Interested in {petSingular.WithArticle().CapitalizeEachWord()}?");
+            article.SetBodyText(
+                $"Good news for animal lovers: mortality among {petPlural} has dropped below zero. " +
+                $"You can now adopt one via a website that matches you by temperament. " +
+                $"Demand is {adjectives.RandomElement()}, so act fast.");
+        }
+
+        private static void GenerateDangerWarning(NewspaperMinorArticle article)
+        {
+            string thing = nounsSingular.RandomElement();
+            article.SetHeadline($"{thing.CapitalizeEachWord()} Overconsumption: A Hidden Risk");
+            article.SetBodyText(
+                $"Health officials warn that {thing.WithArticle()} a day may no longer keep the doctor away. " +
+                $"Overconsumption has been linked to {symptoms.RandomElement()} and {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
+                $"Moderation, they stress, is key.");
+        }
+
+        #endregion
     }
 }

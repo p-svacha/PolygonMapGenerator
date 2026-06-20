@@ -173,11 +173,11 @@ namespace ElectionTactics
             GameType = type;
             int mapSeed = GetRandomSeed();
             StartGameSeed = GetRandomSeed();
-            MapGenerationSettings settings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
+            MapGenerationSettings mapGenSettings = new MapGenerationSettings(mapSeed, 10, 10, 0.08f, 1.5f, 5, 30, MapType.Island);
             if (GameType == GameType.MultiplayerHost) NetworkPlayer.Server.GenerateMapServerRpc(mapSeed, StartGameSeed);
 
-            // settings.Seed = ####;
-            PMG.GenerateMap(settings, callback: OnMapGenerationDone);
+            // mapGenSettings.Seed = ####;
+            PMG.GenerateMap(mapGenSettings, callback: OnMapGenerationDone);
         }
 
         /// <summary>
@@ -1137,6 +1137,8 @@ namespace ElectionTactics
             return counts.Where(x => x.Value == maxCount).Select(x => x.Key).ToList();
         }
         public bool IsMostCommonReligion(ReligionDef religion) => GetMostCommonReligions().Contains(religion);
+
+        public bool IsTutorialActive => TutorialManager.Instance.IsTutorialActive;
 
         #endregion
     }

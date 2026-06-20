@@ -266,7 +266,9 @@ namespace ElectionTactics
             SeatDistributionGameSettingDef sam = SeatDistributionGameSettingDefOf.Mixed;
             RandomEventFrequencyDef eventFreq = RandomEventFrequencyDefOf.Standard;
 
-            return new GameSettings(slots, isTutorialEnabled, mode, turnLength, botDifficulty, gameLength, startingDistricts, sam, eventFreq);
+            GameSettings gameSettings = new GameSettings(slots, isTutorialEnabled, mode, turnLength, botDifficulty, gameLength, startingDistricts, sam, eventFreq);
+
+            return gameSettings;
         }
 
         #endregion

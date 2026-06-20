@@ -87,6 +87,8 @@ namespace ElectionTactics
 
             // Cultural Traits
             int numCulturalTraits = NumCulturalTraitWeights.GetWeightedRandomElement();
+            if (Game.IsTutorialActive && Index <= 1) numCulturalTraits = 0;
+            if (Game.IsTutorialActive && Index == 2) numCulturalTraits = 2;
             while (CulturalTraits.Count < numCulturalTraits)
             {
                 CulturalTraitDef def = Game.GetRandomAdoptableCulturalTraitDef(this);
@@ -522,7 +524,7 @@ namespace ElectionTactics
         /// </summary>
         private Dictionary<Party, float> NormalizeVoteShares(Dictionary<Party, float> rawShares)
         {
-            // Parties with 0 raw votes are always exactly 0.0% — exempt from the uniqueness rule.
+            // Parties with 0 raw votes are always exactly 0.0% ( exempt from the uniqueness rule)
             var zeroParties = rawShares.Where(x => x.Value <= 0f).Select(x => x.Key).ToList();
             var nonZeroShares = rawShares.Where(x => x.Value > 0f).ToDictionary(x => x.Key, x => x.Value);
 
