@@ -17,6 +17,7 @@ namespace ElectionTactics
             Headline.text = article.Headline;
 
             Body.gameObject.SetActive(true);
+            Body.text = article.BodyText;
 
             // Show icon only when there's room: title-only short headline, or body present with a short headline
             bool headlineShort = article.Headline == null ? true : article.Headline.Length <= 24;

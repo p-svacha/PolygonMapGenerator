@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public EconomicSectorDef Trait;
 
-        public EconomyPolicy(int id, Party p, EconomicSectorDef trait, int maxValue) : base(id, p, maxValue)
+        public EconomyPolicy(int id, int localId, Party p, EconomicSectorDef trait, int maxValue) : base(id, localId, p, maxValue)
         {
             Trait = trait;
             Name = trait.Label;

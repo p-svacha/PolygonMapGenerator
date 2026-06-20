@@ -87,6 +87,9 @@ namespace ElectionTactics
         public string LabelCapWord => Label.CapitalizeEachWord();
         public virtual string Description => Def.Description;
 
+        public virtual string Adjective => Def.Adjective;
+        public virtual string Describer => Def.Describer;
+
         /// <summary>
         /// Flag if this trait is currently active.
         /// </summary>

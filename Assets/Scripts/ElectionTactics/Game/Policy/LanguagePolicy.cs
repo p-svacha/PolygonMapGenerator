@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public LanguageDef Language;
 
-        public LanguagePolicy(int id, Party p, LanguageDef language, int maxValue) : base(id, p, maxValue)
+        public LanguagePolicy(int id, int localId, Party p, LanguageDef language, int maxValue) : base(id, localId, p, maxValue)
         {
             Language = language;
             Name = language.Label;

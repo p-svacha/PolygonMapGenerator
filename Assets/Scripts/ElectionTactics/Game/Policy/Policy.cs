@@ -7,7 +7,8 @@ namespace ElectionTactics
     public abstract class Policy
     {
         public Party Party { get; private set; }
-        public int Id { get; protected set; } // Id to identify a policy, unique per player
+        public int Id { get; protected set; } // Id to identify a policy, unique across all policies from all players
+        public int LocalId { get; protected set; } // Id that is the same for all players for the type of policy, but unique across policy types.
         public string Name { get; protected set; }
         public string Description { get; protected set; } // Shown in tooltip of the policy if not empty
         public Sprite Sprite { get; protected set; } // Shown in policy control if not null
@@ -18,6 +19,8 @@ namespace ElectionTactics
         public int SortingOrder; // how this policy should be ordered in the policy selection
         public PolicyType Type;
 
+        public bool IsMaxed => Value >= MaxValue;
+
         public PolicyControl UIControl;
 
 
@@ -26,9 +29,10 @@ namespace ElectionTactics
         public const int HIGH_POPULARITY_IMPACT = 7;
         public const int VERY_HIGH_POPULARITY_IMPACT = 10;
 
-        public Policy(int id, Party p, int maxValue)
+        public Policy(int id, int localId, Party p, int maxValue)
         {
             Id = id;
+            LocalId = localId;
             Party = p;
             IsActive = false;
             MaxValue = maxValue;

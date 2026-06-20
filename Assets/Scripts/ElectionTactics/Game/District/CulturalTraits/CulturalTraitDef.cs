@@ -55,6 +55,16 @@ namespace ElectionTactics
         /// </summary>
         public bool RequiresMultipleDistricts { get; init; } = false;
 
+        /// <summary>
+        /// Adjective that can appear in the newspaper to describe districts with this trait. Can be empty.
+        /// </summary>
+        public string Adjective { get; init; } = "";
+
+        /// <summary>
+        /// Describing string that can appear in the newspaper to describe districts with this trait. Should be used to show what comes after "the district ..." Can be empty.
+        /// </summary>
+        public string Describer { get; init; } = "";
+
 
         public override bool Validate()
         {

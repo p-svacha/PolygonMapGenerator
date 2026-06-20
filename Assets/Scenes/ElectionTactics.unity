@@ -19837,7 +19837,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Election Results Are In and you won't!
+  m_text: You won't believe what happens next!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c8e13ba954f6e5d4a84567c6b30e11ab, type: 2}
   m_sharedMaterial: {fileID: -3870415364390749267, guid: c8e13ba954f6e5d4a84567c6b30e11ab,
@@ -48937,7 +48937,7 @@ MonoBehaviour:
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 32
   m_fontStyle: 0
   m_HorizontalAlignment: 8
   m_VerticalAlignment: 256

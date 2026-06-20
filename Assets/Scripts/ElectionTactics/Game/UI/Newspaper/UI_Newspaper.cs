@@ -44,7 +44,7 @@ namespace ElectionTactics
         public UI_NewspaperPartyRow PartyRowPrefab;
 
         private const float SHOW_ANIMATION_DURATION = 2f;
-        private const float SHOW_ANIMATION_ROTATIONS = 2f; // full turns while spiraling in
+        private const float SHOW_ANIMATION_ROTATIONS = 3f; // full turns while spiraling in
         private Coroutine showAnimationCoroutine;
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace ElectionTactics
             MainArticleText.text = $"{newspaper.MainArticle.Chapter1}\n\n{newspaper.MainArticle.Chapter2}";
             HemiCycleChart.ShowParliament(electionResult);
 
-            ChartText.text = $"Parliament of {electionResult.Year + 1}";
+            ChartText.text = $"Parliament of {electionResult.Year + 1}\n{electionResult.GetTotalSeats()} Seats";
             HelperFunctions.DestroyAllChildredImmediately(PartyListContainer);
             Dictionary<Party, int> partyList = electionResult.SeatsWon.Where(x => x.Value > 0).OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             foreach (var party in partyList)

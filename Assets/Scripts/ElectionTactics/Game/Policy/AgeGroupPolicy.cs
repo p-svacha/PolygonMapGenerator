@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public AgeGroupDef AgeGroup;
 
-        public AgeGroupPolicy(int id, Party p, AgeGroupDef ageGroup, int maxValue) : base(id, p, maxValue)
+        public AgeGroupPolicy(int id, int localId, Party p, AgeGroupDef ageGroup, int maxValue) : base(id, localId, p, maxValue)
         {
             AgeGroup = ageGroup;
             Name = ageGroup.Label;

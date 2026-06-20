@@ -162,8 +162,8 @@ Points from personal playtest:
 (/) - BUG: graph in election animation already shows seats from next cycle
 (/) - cultural traits should be able to support jumping to a policy if clicked
 (/) - add jumping to relevant policies from many cultural traits
-(.T) - cultural traits should be able to support jumping to a district if clicked
-(.T) - add jumping to relevant district from some cultural traits
+(/) - cultural traits should be able to support jumping to a district if clicked
+(/) - add jumping to relevant district from some cultural traits
 (/) - add handling when all parties have a popularity of 0 in a district
 (/) - in loading screen, show current step of map generation
 (/) - Impressionable trait should act immediately when district is actibvated
@@ -188,36 +188,74 @@ Newspaper:
 (/) - This tab show all previous yearly newspapers
 (/) - make newspapers selectable
 
-(/) - cycle through newspaper years
+(/) - add feature to cycle through newspaper years
 
 (/) - make icon and headline smaller in 2 articles per column. if still not enough space, add a "generateshortbodytext" to each one that cna be used for half-column.
 
-- add adjectives to geography trait defs, that can easily be used in articles
+(/) - add a GetAdjective() to district that will provide a random attribute as an adjective (like "riverside", "large", "english speaking", etc.)
+(/) - these can then be easily used in all kinds of articles for flavourful sentences like "x gains a seat. The lakeside district continues..."
+(/) - add these adjectives to the attribute Defs (also cultural traits)
 
-- added district article: capital clause
-- added district article: first district with a language/religion/age group/density/economy/geography trait!
-- added district article: falvour for rapidly growing or falling population
-- added district article: falvour for cultural traits
+- expand/properly implement main article generator
+- add tags regarding win condition (make general so it works for both classic and battle royale)
+- party takes lead
+- party equals lead
+- party increases lead
+- party catches up
+ 
+- properly implement main chapter 1 generator
+  - take a tag
+  - make sentence out of tag
+  - keep it short
+- properly implement main chapter 2 generator
+  - make sure the second chapter gives a hint about another party
+  - either the currently most spent pp policy
+  - or one of the highest weighted active policy
+  - or one of the lowest weighted active policies
+  - or a common attribute in the next upcoming districts
+
+
+- rework added district article:
+  - since it's the most seen minor one, also use a weighted tag system
+  - add tag for capital added (high weight)
+  - add tag for first time a language/religion/age group/density/economy/geography appears (high weight)
+  - add tag for partnership/rivalry activated (high weight)
+  - add tag for describing any cultural trait (medium weight)
+  - add tag for describing any attribute (low weight)
+  - make sure it uses the adjective system. maybe even multiple times.
+
+- religion change article: change religion to noun
+
 - newsevent article for impatient: combine multiple parties into 1 article.
 
-- move general election result tag identification to the result class
-- expand/properly implement main article generator
-- properly implement main chapter 2 generator
+- expand/properly implement news event articles
+
 - expand/properly implement random event articles
+
 - implement fun article generator
-- while newspaper is open or OPENING with animation, disallow interacting with the map
-- maybe also add a newspaper at the very start of the game ("COUNTRY SWITCHES TO DEMOCRACY")
-- maybe also add a newspaper at the end of the game ("PARTY XY HAS PROVEN TO PROVIDE FOR THE PEOPLE. THEY WILL BE HEREBY GRANTED AUTOCRATIC RULE")
-- adjust SFX
-- more intro animations (maybe 3, 1 chosen at random)
-- option to disable animations in settings (might get annoying with time)
-- increase swirl speed
+  - see ideas further below in document
+
+- adjust newspaper SFX volume if needed
+
 - review all news event classes
-- add an icon to all news event classes
+  - add adjective system where needed
 - review all random event classes
-- add an icon to all random event classes
-- add slight paper texture to background
-- add some text fx for more newspaper effect
+  - add adjective system where needed
+
+End Game Screen:
+- Add some basic stats (all should already be tracked)
+- 2 columns
+- left: map stats
+  - num districts
+  - num parties
+  - end year and cycle
+- right column: party stats
+  - total won elections
+  - total won seats
+  - total won votes
+  - total popularity
+  - max popularty in a district
+  - total PP spent
 
 General Gameplay:
 (/) - Ensure the same district name cannot appear twice.
@@ -237,13 +275,17 @@ Tutorial
 - Expand to start of 3rd cycle, but also allow it to disappear completely in-between (so it only shows up if something new and relevant happens)
 - Remove step DURING election
 - make sure it works with the newspaper
+- add step to show hints in newspaper (main article, chapter 2)
 
 - third soundtrack?
 
 Remove log spams
 
 quick-fire test. 10 games in a row without restarting with max district enabled from start.
-PERSONAL PLAYTESTS
+Full game playtests:
+  - quick play with tutorial
+  - classic mode, custom settings
+  - battle royale, custom settings
 
 itch page changes:
 - update description

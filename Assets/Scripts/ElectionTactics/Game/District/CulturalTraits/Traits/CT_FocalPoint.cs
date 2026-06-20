@@ -56,7 +56,9 @@ namespace ElectionTactics
             return GetRelevantPolicy(Game.LocalPlayerParty);
         }
 
-        public override string Label => $"Focal Point: {PolicyType}";
+        public override string Label => $"Focal Point: {PolicyType.ToString().SplitCamelCase()}";
         public override string Description => $"Parties that have invested at least {THRESHOLD} policy points into the {GetRelevantPolicy(Game.LocalPlayerParty).Name} policy, gain a +{POPULARITY_BONUS} popularity bonus.";
+
+        public override string Describer => $"with a focal point on {PolicyType.ToString().SplitCamelCase()}";
     }
 }

@@ -26,7 +26,7 @@ namespace ElectionTactics
 
             Party = p;
             NameText.text = useAcronym ? p.Acronym : p.Name;
-            NameText.color = p.Color;
+            NameText.color = useAcronym ? p.Color : p.TextColor;
 
             // Value
             if (useSeatIcons)

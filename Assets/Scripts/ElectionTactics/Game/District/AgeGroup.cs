@@ -11,6 +11,7 @@ namespace ElectionTactics
         public int SortingOrder { get; init; } // Used in policy list, highest on top
         public float PopulationGrowthRateModifier { get; init; } // Additive modifier, in %
         public int Commonness { get; init; } // Commonness weight, how often this age group is dominant in a distrcit
+        public string Adjective { get; init; }
     }
 
     public static class AgeGroupDefs
@@ -21,6 +22,7 @@ namespace ElectionTactics
             {
                 DefName = "Boomers",
                 Label = "Baby Boomers",
+                Adjective = "very old",
                 Description = "The population skews older. Slightly reduces the district's natural population growth rate.",
                 SortingOrder = 3,
                 Color = new Color(0.30f, 0.80f, 0.75f),
@@ -32,6 +34,7 @@ namespace ElectionTactics
             {
                 DefName = "GenerationX",
                 Label = "Generation X",
+                Adjective = "old",
                 Description = "The population is middle-aged. Has a small negative effect on population growth rate.",
                 SortingOrder = 2,
                 Color = new Color(0.55f, 0.70f, 0.30f),
@@ -43,6 +46,7 @@ namespace ElectionTactics
             {
                 DefName = "Millenials",
                 Label = "Millenials",
+                Adjective = "young",
                 Description = "The population skews younger. Has a small positive effect on population growth rate.",
                 SortingOrder = 1,
                 Color = new Color(0.80f, 0.55f, 0.25f),
@@ -54,6 +58,7 @@ namespace ElectionTactics
             {
                 DefName = "GenerationZ",
                 Label = "Gen Z",
+                Adjective = "very young",
                 Description = "The population is predominantly young. Slightly increases the district's natural population growth rate.",
                 SortingOrder = 0,
                 Color = new Color(0.65f, 0.40f, 0.45f),

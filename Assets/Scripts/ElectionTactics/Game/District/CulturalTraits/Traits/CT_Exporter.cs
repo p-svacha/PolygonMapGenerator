@@ -25,5 +25,8 @@ namespace ElectionTactics
 
         public override string Label => $"{District.Economy1.LabelCapWord} Exporter";
         public override string Description => $"{District.Economy1} Policy impact is increased by {INCREASE} and also increases popularity in neighbouring districts by {NEIGHBOUR_IMPACT}.";
+
+        public override string Adjective => $"{District.Economy1.Label.ToLower()}-exporting";
+        public override string Describer => $"that is known for its {District.Economy1.Label.ToLower()} export";
     }
 }

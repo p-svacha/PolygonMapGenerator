@@ -9,7 +9,7 @@ namespace ElectionTactics
     {
         public GeographyTraitDef TraitDef;
 
-        public GeographyPolicy(int id, Party p, GeographyTraitDef trait, int maxValue) : base(id, p, maxValue)
+        public GeographyPolicy(int id, int localId, Party p, GeographyTraitDef trait, int maxValue) : base(id, localId, p, maxValue)
         {
             TraitDef = trait;
             Name = trait.Label;

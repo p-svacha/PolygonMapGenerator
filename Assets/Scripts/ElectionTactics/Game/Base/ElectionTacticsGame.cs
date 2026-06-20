@@ -323,40 +323,48 @@ namespace ElectionTactics
         private void InitPolicies()
         {
             int policyId = 0;
+            int localId = 0;
 
             foreach (District district in Districts.Values)
             {
-                foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, p, district, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new DistrictPolicy(policyId++, localId, p, district, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (GeographyTraitDef def in DefDatabase<GeographyTraitDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new GeographyPolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (EconomicSectorDef def in DefDatabase<EconomicSectorDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new EconomyPolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (DensityDef def in DefDatabase<DensityDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new DensityPolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (AgeGroupDef def in DefDatabase<AgeGroupDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new AgeGroupPolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (LanguageDef def in DefDatabase<LanguageDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new LanguagePolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             foreach (ReligionDef def in DefDatabase<ReligionDef>.AllDefs)
             {
-                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, p, def, MAX_POLICY_VALUE));
+                foreach (Party p in Parties) p.AddPolicy(new ReligionPolicy(policyId++, localId, p, def, MAX_POLICY_VALUE));
+                localId++;
             }
 
             // Init bot policy weights

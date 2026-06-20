@@ -23,5 +23,7 @@ namespace ElectionTactics
 
         public override string Label => District.Religion.LabelCapWord + " Fanatics";
         public override string Description => $"{District.Religion.Label} policy impact is increased by {PositiveImpact}. All other religion policies reduce popularity by {NegativeImpact}.";
+
+        public override string Describer => $"with a fanatic {District.Religion.Label.ToLower()} community";
     }
 }

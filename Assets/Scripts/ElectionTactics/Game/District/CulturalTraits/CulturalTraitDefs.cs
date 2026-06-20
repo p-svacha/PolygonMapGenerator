@@ -47,6 +47,8 @@ namespace ElectionTactics
             {
                 DefName = RELIGIOUS,
                 Label = "Religious",
+                Adjective = "religious",
+                Describer = "with a focus on religion",
                 Description = "Base religion policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Religious),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -63,6 +65,7 @@ namespace ElectionTactics
             {
                 DefName = SECULAR,
                 Label = "Secular",
+                Adjective = "secular",
                 Description = "Base religion policy impact in this district is halved.",
                 TraitClass = typeof(CT_Secular),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -79,6 +82,8 @@ namespace ElectionTactics
             {
                 DefName = FANATIC,
                 Label = "Religion Fanatics",
+                Adjective = "fanatically religious",
+                Describer = "with a fanatic religious community",
                 Description = "+10 impact of religion policy of the districts religion. All other religion policies give -3.",
                 TraitClass = typeof(CT_Fanatics),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -96,6 +101,8 @@ namespace ElectionTactics
             {
                 DefName = LINGUISTIC,
                 Label = "Linguistic",
+                Adjective = "linguistic",
+                Describer = "with a focus on language",
                 Description = "Base language policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Linguistic),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -110,6 +117,7 @@ namespace ElectionTactics
             {
                 DefName = NON_LINGUISTIC,
                 Label = "Non-Linguistic",
+                Adjective = "non-linguistic",
                 Description = "Base language policy impact in this district is halved.",
                 TraitClass = typeof(CT_NonLinguistic),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -125,6 +133,8 @@ namespace ElectionTactics
             {
                 DefName = GEOCENTRIC,
                 Label = "Geocentric",
+                Adjective = "geocentric",
+                Describer = "that highly values its geography",
                 Description = "Base geography policy impact in this district is doubled.",
                 TraitClass = typeof(CT_Geocentric),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -136,6 +146,7 @@ namespace ElectionTactics
             {
                 DefName = STRONG_ECONOMY,
                 Label = "Strong Economy",
+                Adjective = "economy-focussed",
                 Description = "Base economy policy impact in this district is doubled.",
                 TraitClass = typeof(CT_StrongEconomy),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -149,6 +160,7 @@ namespace ElectionTactics
             {
                 DefName = WEAK_ECONOMY,
                 Label = "Weak Economy",
+                Describer = "with a weak economy",
                 Description = "Base economy policy impact in this district is halved.",
                 TraitClass = typeof(CT_WeakEconomy),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -178,6 +190,7 @@ namespace ElectionTactics
             {
                 DefName = PATRIOTIC,
                 Label = "Patriotic",
+                Adjective = "patriotic",
                 Description = "Base district policy impact of this district is doubled.",
                 TraitClass = typeof(CT_Patriotic),
                 Category = CulturalTraitCategoryDefOf.PolicyImpact,
@@ -193,6 +206,8 @@ namespace ElectionTactics
             {
                 DefName = GROWING_POPULATION,
                 Label = "Growing Population",
+                Adjective = "rapidly growing",
+                Describer = "with a rapidly growing population",
                 Description = "The population of this district grows quickly, leading to it being worth more seats over time.",
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 90,
@@ -207,6 +222,8 @@ namespace ElectionTactics
             {
                 DefName = DECLINING_POPULATION,
                 Label = "Declining Population",
+                Adjective = "rapidly declining",
+                Describer = "with a rapidly declining population",
                 Description = "The population of this district is in quick decline, leading to it being fewer more seats over time.",
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 50,
@@ -221,6 +238,7 @@ namespace ElectionTactics
             {
                 DefName = IMMIGRATION_HUB,
                 Label = "Immigration Hub",
+                Describer = "acting as an immigration hub",
                 Description = "+5% to population growth in this district, but -2% population growth every adjacent district.",
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
                 Commonness = 80,
@@ -232,6 +250,7 @@ namespace ElectionTactics
             {
                 DefName = IMPERIALISTIC,
                 Label = "Imperialistic",
+                Adjective = "imperialistic",
                 Description = "Newly added districts adjacent to this will have guaranteed the same language/religion.",
                 TraitClass = typeof(CT_Imperialistic),
                 Category = CulturalTraitCategoryDefOf.PopulationDevelopment,
@@ -246,6 +265,8 @@ namespace ElectionTactics
             {
                 DefName = IMPRESSIONABLE,
                 Label = "Impressionable",
+                Adjective = "impressionable",
+                Describer = "that is easily influenced by its neighbours",
                 Description = "Each party gains a +10 popularity bonus for each adjacent district where they won the last election.",
                 TraitClass = typeof(CT_Impressionable),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -267,6 +288,7 @@ namespace ElectionTactics
             {
                 DefName = STABLE,
                 Label = "Stable",
+                Adjective = "stable",
                 Description = "The party that won the last election will get a +30 popularity bonus for the next one.",
                 TraitClass = typeof(CT_Stable),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -281,6 +303,7 @@ namespace ElectionTactics
             {
                 DefName = REBELLIOUS,
                 Label = "Rebellious",
+                Adjective = "rebellious",
                 Description = "The party that won the last election will get a -30 popularity penalty for the next one.",
                 TraitClass = typeof(CT_Rebellious),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -295,6 +318,7 @@ namespace ElectionTactics
             {
                 DefName = REVOLUTIONARY,
                 Label = "Revolutionary",
+                Adjective = "revolutionary",
                 Description = "The party that won the last election will be excluded for the next one.",
                 TraitClass = typeof(CT_Revolutionary),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -310,6 +334,7 @@ namespace ElectionTactics
             {
                 DefName = IMPATIENT,
                 Label = "Impatient",
+                Adjective = "impatient",
                 Description = $"Parties that don't win any seat in {CT_Impatient.THRESHOLD} consecutive cycles get permanently excluded from competing in elections.",
                 TraitClass = typeof(CT_Impatient),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -320,6 +345,7 @@ namespace ElectionTactics
             {
                 DefName = HISTORICAL_LEGACY,
                 Label = "Historical Legacy",
+                Describer = "with a strong historical legacy",
                 Description = "The most popular party gets a permanent popularity bonus.",
                 TraitClass = typeof(CT_HistoricalLegacy),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -332,6 +358,8 @@ namespace ElectionTactics
             {
                 DefName = SWING_DISTRICT,
                 Label = "Swing District",
+                Adjective = "swing",
+                Describer = "known for its politically undecided population",
                 Description = "Election outcomes in this district are less predictable. Results may not fully accurately represent party popularities.",
                 TraitClass = typeof(CT_SwingDistrict),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -365,6 +393,8 @@ namespace ElectionTactics
             {
                 DefName = INFLUENTAL,
                 Label = "Influental",
+                Adjective = "influental",
+                Describer = "known to have an impact on its neighbours",
                 Description = "10% of your popularity in this district is applied as a popularity bonus in all adjacent districts.",
                 TraitClass = typeof(CT_Influental),
                 Category = CulturalTraitCategoryDefOf.Popularity,
@@ -379,6 +409,7 @@ namespace ElectionTactics
             {
                 DefName = PROPORTIONAL_REPRESENTATION,
                 Label = "Proportional Representation",
+                Describer = "that distributes its seats with proportional representation,",
                 Description = "Seats in this district are divided as closely as possible to each party’s vote share.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 Category = CulturalTraitCategoryDefOf.Seats,
                 Commonness = 0, // applied separately through seat distribution method choice
@@ -389,6 +420,7 @@ namespace ElectionTactics
             {
                 DefName = MAJORITY_BONUS,
                 Label = "Majority Representation",
+                Describer = "that distributes its seat with a majority representation,",
                 Description = "Seats in this district are distributed proportionally, but larger parties gain a slight advantage.\n\nReplaces the Winner-Takes-All seat distribution system.",
                 Category = CulturalTraitCategoryDefOf.Seats,
                 Commonness = 0, // applied separately through seat distribution method choice
@@ -400,6 +432,8 @@ namespace ElectionTactics
             {
                 DefName = CAPITAL,
                 Label = "Capital",
+                Adjective = "capital",
+                Describer = "that acts the country's capital,",
                 Description = "This district is the nation's capital and holds 3 additional seats in parliament.",
                 Category = CulturalTraitCategoryDefOf.Seats,
                 Commonness = 0, // applied separately

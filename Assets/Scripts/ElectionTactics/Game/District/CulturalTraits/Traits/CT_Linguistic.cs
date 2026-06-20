@@ -15,5 +15,6 @@ namespace ElectionTactics
         }
 
         public override string Description => $"Base language policy impact in this district is doubled.";
+        public override string Describer => $"with a high focus on their {District.Language.Label.ToLower()} language";
     }
 }

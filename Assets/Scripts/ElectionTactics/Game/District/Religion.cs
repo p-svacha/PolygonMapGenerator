@@ -10,6 +10,7 @@ namespace ElectionTactics
 
         public Color Color { get; init; }
         public int SortingOrder { get; init; } // Used in policy list and map control legend, highest on top
+        public string Noun { get; init; }
     }
 
     public static class ReligionDefs
@@ -28,6 +29,7 @@ namespace ElectionTactics
             {
                 DefName = "Christian",
                 Label = "Christian",
+                Noun = "Christianity",
                 Color = new Color(0.45f, 0.50f, 0.80f),
             },
 
@@ -35,6 +37,7 @@ namespace ElectionTactics
             {
                 DefName = "Muslim",
                 Label = "Muslim",
+                Noun = "Islam",
                 Color = new Color(0.35f, 0.70f, 0.55f),
             },
 
@@ -42,6 +45,7 @@ namespace ElectionTactics
             {
                 DefName = "Hindu",
                 Label = "Hindu",
+                Noun = "Hinduism",
                 Color = new Color(0.85f, 0.55f, 0.20f),
             },
 
@@ -49,6 +53,7 @@ namespace ElectionTactics
             {
                 DefName = "Buddhist",
                 Label = "Buddhist",
+                Noun = "Buddhism",
                 Color = new Color(0.80f, 0.70f, 0.25f),
             },
 
@@ -56,6 +61,7 @@ namespace ElectionTactics
             {
                 DefName = "Jewish",
                 Label = "Jewish",
+                Noun = "Hinduism",
                 Color = new Color(0.60f, 0.45f, 0.70f),
             },
         };

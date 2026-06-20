@@ -4,7 +4,18 @@ using UnityEngine;
 
 namespace ElectionTactics
 {
-    public class GeographyTraitDef : Def { }
+    public class GeographyTraitDef : Def
+    {
+        /// <summary>
+        /// Adjective that can appear in the newspaper to describe districts with this trait. Can be empty.
+        /// </summary>
+        public string Adjective { get; init; } = "";
+
+        /// <summary>
+        /// Describing string that can appear in the newspaper to describe districts with this trait. Should be used to show what comes after "the district ..." Can be empty.
+        /// </summary>
+        public string Describer { get; init; } = "";
+    }
 
     public class GeographyTraitDefs
     {
@@ -14,6 +25,8 @@ namespace ElectionTactics
             {
                 DefName = "Coastal",
                 Label = "Coastal",
+                Adjective = "coastal",
+                Describer = "with long coastlines",
                 Description = "Situated along the ocean coast."
             },
 
@@ -21,6 +34,8 @@ namespace ElectionTactics
             {
                 DefName = "Landlocked",
                 Label = "Landlocked",
+                Adjective = "landlocked",
+                Describer = "enclosed by land",
                 Description = "Surrounded entirely by land with no ocean access."
             },
 
@@ -28,6 +43,8 @@ namespace ElectionTactics
             {
                 DefName = "Island",
                 Label = "Island",
+                Adjective = "insular",
+                Describer = "located on an island",
                 Description = "Located on a small island landmass."
             },
 
@@ -35,6 +52,8 @@ namespace ElectionTactics
             {
                 DefName = "Tiny",
                 Label = "Tiny",
+                Adjective = "tiny",
+                Describer = "with a tiny area",
                 Description = "Very small district by area."
             },
 
@@ -42,6 +61,8 @@ namespace ElectionTactics
             {
                 DefName = "Large",
                 Label = "Large",
+                Adjective = "large",
+                Describer = "with a large area",
                 Description = "Very large district by area."
             },
 
@@ -49,6 +70,8 @@ namespace ElectionTactics
             {
                 DefName = "East",
                 Label = "East",
+                Adjective = "eastern",
+                Describer = "located in the far east",
                 Description = "Located in the eastern part of the country."
             },
 
@@ -56,6 +79,8 @@ namespace ElectionTactics
             {
                 DefName = "West",
                 Label = "West",
+                Adjective = "western",
+                Describer = "located in the far west",
                 Description = "Located in the western part of the country."
             },
 
@@ -63,6 +88,8 @@ namespace ElectionTactics
             {
                 DefName = "North",
                 Label = "North",
+                Adjective = "northern",
+                Describer = "located in the far north",
                 Description = "Located in the northern part of the country."
             },
 
@@ -70,6 +97,8 @@ namespace ElectionTactics
             {
                 DefName = "South",
                 Label = "South",
+                Adjective = "southern",
+                Describer = "located in the far south",
                 Description = "Located in the southern part of the country."
             },
 
@@ -77,6 +106,8 @@ namespace ElectionTactics
             {
                 DefName = "Lake",
                 Label = "Lake",
+                Adjective = "lakeside",
+                Describer = "located next to a lake",
                 Description = "Borders an inland lake."
             },
 
@@ -84,6 +115,8 @@ namespace ElectionTactics
             {
                 DefName = "Core",
                 Label = "Core",
+                Adjective = "core",
+                Describer = "that has been around forever",
                 Description = "One of the very first districts of the country."
             },
 
@@ -91,6 +124,8 @@ namespace ElectionTactics
             {
                 DefName = "New",
                 Label = "New",
+                Adjective = "new",
+                Describer = "that has joined the country just recently",
                 Description = "Recently joined the country. This trait loses significance and fades over time."
             },
 
@@ -98,6 +133,8 @@ namespace ElectionTactics
             {
                 DefName = "River",
                 Label = "River",
+                Adjective = "riverside",
+                Describer = "located along a river",
                 Description = "Situated along a river."
             },
         };

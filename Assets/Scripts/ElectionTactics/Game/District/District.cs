@@ -195,11 +195,11 @@ namespace ElectionTactics
         private void SetGeographyTraits()
         {
             // Coastal
-            if (Region.OceanCoastRatio > 0.6f)
+            if (Region.OceanCoastRatio > 0.65f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 3));
-            else if (Region.OceanCoastRatio > 0.3f)
+            else if (Region.OceanCoastRatio > 0.35f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 2));
-            else if (Region.OceanCoastRatio > 0.01f)
+            else if (Region.OceanCoastRatio > 0.1f)
                 Geography.Add(Game.GetGeographyTrait(GeographyTraitDefOf.Coastal, 1));
 
             // Landlocked
@@ -780,6 +780,73 @@ namespace ElectionTactics
 
         public bool IsMinorityLanguage => !Game.IsMostCommonLanguage(Language);
         public bool IsMinorityReligion => Religion != ReligionDefOf.None && !Game.IsMostCommonReligion(Religion);
+
+
+        /// <summary>
+        /// Returns a descriptive label based on the attributes and traits of this district.
+        /// </summary>
+        public string GetDescripiveLabel()
+        {
+            List<string> adjectiveCandidates = new List<string>();
+            List<string> describerCandidates = new List<string>();
+
+            foreach (GeographyTrait trait in Geography)
+            {
+                if (trait.Category > 1)
+                {
+                    if (Random.value < 0.5f) adjectiveCandidates.Add($"{trait.Def.Adjective}");
+                    else describerCandidates.Add($"{trait.Def.Describer}");
+                }
+            }
+
+            if (Random.value < 0.5f) adjectiveCandidates.Add($"{Language.Label.ToLower()}-speaking");
+            else describerCandidates.Add($"with a {Language.Label.ToLower()}-speaking community");
+
+            if (HasReligion)
+            {
+                if (Random.value < 0.5f) adjectiveCandidates.Add($"{Religion.Label.ToLower()}");
+                else describerCandidates.Add($"following {Religion.Noun}");
+            }
+            else
+            {
+                if (Random.value < 0.5f) adjectiveCandidates.Add($"atheistic");
+                else describerCandidates.Add($"following no religion");
+            }
+
+            if (Random.value < 0.5f) adjectiveCandidates.Add($"{Density.Label.ToLower()}-density");
+            else describerCandidates.Add($"with a {Density.Label.ToLower()} density");
+
+            if (Random.value < 0.5f) adjectiveCandidates.Add($"{AgeGroup.Label} dominated");
+            else describerCandidates.Add($"with a {AgeGroup.Adjective} population");
+
+            if (Random.value < 0.5f) adjectiveCandidates.Add($"{Economy1.Label}-focussed");
+            else describerCandidates.Add($"with a big {Economy1.Label} industry");
+
+            foreach (CulturalTrait trait in ActiveCulturalTraits)
+            {
+                bool hasAdjective = !string.IsNullOrEmpty(trait.Adjective);
+                bool hasDescriber = !string.IsNullOrEmpty(trait.Describer);
+
+                if (hasAdjective && hasDescriber)
+                {
+                    if (Random.value < 0.5f) adjectiveCandidates.Add($"{trait.Def.Adjective}");
+                    else describerCandidates.Add($"{trait.Def.Describer}");
+                }
+
+                else if (hasAdjective) adjectiveCandidates.Add($"{trait.Def.Adjective}");
+                else if (hasDescriber) describerCandidates.Add($"{trait.Def.Describer}");
+
+                else continue;
+            }
+
+            bool showAdjective = Random.value < 0.8f;
+            bool showDescriber = Random.value < 0.8f;
+
+            string adjective = showAdjective ? adjectiveCandidates.RandomElement() + " " : "";
+            string describer = showDescriber ? " " + describerCandidates.RandomElement() : "";
+
+            return $"{adjective}district{describer}";
+        }
 
         #endregion
 

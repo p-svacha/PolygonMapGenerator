@@ -46,5 +46,7 @@ namespace ElectionTactics
         public override string Label => $"Rivalry with {Rival.Name}";
         public override string Description => $"This district has a rivalry with {Rival.Name}.\n\n20% of your popularity in {Rival.Name} is applied as a popularity penalty here, and vice versa.";
         public override bool IsActive => District.IsActive && Rival.IsActive;
+
+        public override string Describer => $"that has a strong rivalry with {Rival.Name},";
     }
 }

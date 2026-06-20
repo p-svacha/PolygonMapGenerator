@@ -53,5 +53,6 @@ namespace ElectionTactics
         }
 
         public DistrictElectionResult GetDistrictResult(District d) => DistrictResults.FirstOrDefault(r => r.District == d);
+        public int GetTotalSeats() => DistrictResults.Sum(r => r.Seats);
     }
 }

@@ -15,5 +15,7 @@ namespace ElectionTactics
         }
 
         public override string Description => $"Base religion policy impact in this district is doubled.";
+
+        public override string Describer => $"with a high focus on their {District.Religion.Label.ToLower()} religion";
     }
 }

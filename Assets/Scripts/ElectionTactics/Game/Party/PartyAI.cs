@@ -44,5 +44,10 @@ namespace ElectionTactics
                 Party.Game.DoIncreasePolicy(Party.Id, chosenPolicy.Id);
             }
         }
+
+        public float GetPolicyWeight(Policy p)
+        {
+            return PolicyWeights[p];
+        }
     }
 }

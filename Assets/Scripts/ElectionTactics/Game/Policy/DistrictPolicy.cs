@@ -6,7 +6,7 @@ namespace ElectionTactics
     {
         public District District { get; private set; } // District that this policy will increase popularity in
 
-        public DistrictPolicy(int id, Party p, District district, int maxValue) : base(id, p, maxValue)
+        public DistrictPolicy(int id, int localId, Party p, District district, int maxValue) : base(id, localId, p, maxValue)
         {
             District = district;
             Name = district.Name;

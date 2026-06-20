@@ -21,7 +21,7 @@ namespace ElectionTactics
             else throw new System.Exception("Modifier Image not found for type " + m.Type.ToString());
 
             PartyText.text = m.Party.Acronym;
-            PartyText.color = m.Party.Color;
+            PartyText.color = m.Party.TextColor;
 
             if (m.Type == ModifierType.Exclusion) DescriptionText.text = $"<b>EXCLUDED</b> {m.Description}";
             if (m.Type == ModifierType.Positive) DescriptionText.text = "<b>+" + m.Value + "</b> " + m.Description;

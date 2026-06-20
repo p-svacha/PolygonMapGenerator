@@ -19,5 +19,7 @@ namespace ElectionTactics
 
         public override string Label => (PolicyType == PolicyType.Religion ? "Religious" : "Linguistic") + " Imperialism";
         public override string Description => "Newly added districts adjacent to this will have guaranteed the same " + PolicyType.ToString() + ".";
+
+        public override string Adjective => (PolicyType == PolicyType.Religion ? "religiously" : "linguisticly") + " imperialistic";
     }
 }

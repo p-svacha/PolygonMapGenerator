@@ -8,7 +8,7 @@ namespace ElectionTactics
     {
         public ReligionDef Religion;
 
-        public ReligionPolicy(int id, Party p, ReligionDef religion, int maxValue) : base(id, p, maxValue)
+        public ReligionPolicy(int id, int localId, Party p, ReligionDef religion, int maxValue) : base(id, localId, p, maxValue)
         {
             Religion = religion;
             Name = religion.Label;

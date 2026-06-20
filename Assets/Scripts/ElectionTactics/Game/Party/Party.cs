@@ -13,6 +13,7 @@ namespace ElectionTactics {
         public int Id;
         public string Name;
         public string Acronym;
+        public string NameOrAcr => UnityEngine.Random.value < 0.5f ? Name : Acronym;
         public Color Color;
         public Color TextColor;
         public bool IsHuman;
@@ -76,6 +77,11 @@ namespace ElectionTactics {
         public Policy GetPolicy(int id)
         {
             return Policies.First(x => x.Id == id);
+        }
+
+        public Policy GetPolicyByLocalId(int localid)
+        {
+            return Policies.First(x => x.LocalId == localid);
         }
 
         public Policy GetPolicy(District district)
