@@ -424,7 +424,7 @@ namespace ElectionTactics
         };
 
 
-        public static string GetRandomPartyName(int maxLength = 32, bool log = true)
+        public static string GetRandomPartyName(int maxLength = 32, bool log = false)
         {
             string name = "";
 

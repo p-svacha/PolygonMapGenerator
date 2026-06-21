@@ -26,9 +26,9 @@ namespace ElectionTactics
         private static List<string> nounsPlural = new List<string>()
         {
             "cows", "children", "monks", "penguins", "hamsters", "babies", "dogs", "ducks",
-            "investment bankers", "downhill skiers", "preschoolers", "elephants", "tomatoes",
+            "investment bankers", "downhill skiers", "preschoolers", "elephants", "artists",
             "pensioners", "lighthouse keepers", "competitive eaters", "synchronized swimmers",
-            "beekeepers", "mimes", "geese", "librarians", "lumberjacks", "astronauts",
+            "beekeepers", "mimes", "geese", "librarians", "lumberjacks", "astronauts", "small business owners"
         };
 
         private static List<string> animals = new List<string>()
@@ -37,12 +37,12 @@ namespace ElectionTactics
             "elephant", "cat", "parrot", "rabbit", "ferret",
             "iguana", "capybara", "hedgehog", "flamingo", "alpaca",
             "sloth", "otter", "meerkat", "lemur", "pelican",
-            "walrus", "narwhal", "platypus", "axolotl", "pangolin",
+            "narwhal", "platypus", "axolotl", "pangolin",
             "wombat", "manatee", "tapir", "monkey", "worm",
             "goat", "llama", "porcupine", "armadillo", "bison",
             "cassowary", "quokka", "echidna", "okapi", "aardvark",
             "mantis shrimp", "komodo dragon", "tardigrade", "wolverine", "binturong",
-            "fossa", "numbat", "kinkajou", "babirusa", "saiga",
+            "fossa", "numbat", "kinkajou", "babirusa", "saiga", "seal", "crab"
         };
 
         private static List<string> matchingAttribute = new List<string>()
@@ -104,7 +104,7 @@ namespace ElectionTactics
             "the institute of competitive eating", "the royal society of mimes",
             "professional whistlers", "the association of amateur geologists",
             "the synchronized swimming committee", "the national lumberjack council",
-            "enthusiastic amateurs",
+            "leading politicians",
         };
 
         private static List<string> reactions = new List<string>()

@@ -518,7 +518,7 @@ namespace ElectionTactics
             seatsWon = allocationMethod.AllocateSeats(numTotalSeats, voterShares);
 
             // Create result
-            Debug.Log($"Saving district election result for {Name} for cycle {Game.ElectionCycle} with {numTotalSeats} seats.");
+            // Debug.Log($"Saving district election result for {Name} for cycle {Game.ElectionCycle} with {numTotalSeats} seats.");
             DistrictElectionResult result = new DistrictElectionResult
             (
                 Game.ElectionCycle,

@@ -144,7 +144,7 @@ namespace ElectionTactics
             var shares = VoteShare.OrderByDescending(x => x.Value).ToList();
             if (shares.Count < 2) return false;
 
-            float threshold = 1f - (0.1f * Parties.Count);
+            float threshold = 1.1f - (0.1f * Parties.Count);
             float topShare = shares[0].Value;
             float playerShare = shares.First(s => s.Key == Game.LocalPlayerParty).Value;
 

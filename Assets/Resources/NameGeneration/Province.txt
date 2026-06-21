@@ -1497,13 +1497,13 @@ Stykkisholmsbaer
 Sudhavikurhreppur
 Svalbardhshreppur
 Svalbardhsstrandarhreppur
-Sveitarfelagidh Arborg
-Sveitarfelagidh Gardhur
-Sveitarfelagidh Hornafjordhur
-Sveitarfelagidh Olfus
-Sveitarfelagidh Skagafjordhur
-Sveitarfelagidh Skagastrond
-Sveitarfelagidh Vogar
+Arborg
+Gardhur
+Hornafjordhur
+Olfus
+Skagafjordhur
+Skagastrond
+Vogar
 Talknafjardharhreppur
 Thingeyjarsveit
 Tjorneshreppur
@@ -1707,6 +1707,7 @@ Lombardia
 Marche
 Molise
 Piemonte
+Magyar
 Piedmont
 Puglia
 Apulia
@@ -1715,13 +1716,19 @@ Tuscany
 Umbria
 Veneto
 Friuli Venezia Giulia
+Friuli
+Venezia
+Giulia
 Sardegna
 Sardinia
 Sicilia
 Sicily
-Trentino Alto Adige
-Trentino South Tyrol
-Trentino Suedtirol
+Trentino
+Alto Adige
+Alto
+Adige
+South Tyrol
+Suedtirol
 German
 Valle dAosta
 Aosta Valley

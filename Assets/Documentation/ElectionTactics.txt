@@ -275,22 +275,8 @@ Tutorial
 
 Personal Playtest 2 Feedback:
 (/) - Add SFX when winning a general election
+rest in notepad
 
-
-REMEMBER DURING PLAYTESTS
-- take screenshots
-- when done, check if there were any log spams
-
-quickfire-test. all districts. always events, fun article chance = 1. read every article in first 3 elections. repeat 3 times.
-quick-fire test. 10 games in a row without restarting with max district enabled from start.
-Full game playtests:
-  - quick play with tutorial
-  - classic mode, custom settings
-  - battle royale, custom settings
-
-test district removal event if never happened
-adjust nailbiter threshold if it never happens or it happens too often
-revert fun article chance
 
 itch page changes:
 - update description
@@ -316,6 +302,8 @@ Publish!
 
 
 [v0.3?]
+- somehow make use of continent system
+
 Introduce new "Ideology" mechanic:
 - Every 3 cycles (first time at the start of cycle 3, so it fits nicely into the tutorial), each party has gets 3 semi-random "Ideologies" to choose from. Ideologies are a set of passive bonuses and penalties that define the general direction of the party, and also give a bit of flavour. The player can see the ideologies of the other parties. The offered ideologies are somewhat random but also weighted based on the policies the party has been using up to this point.
 - Ideas for first set of ideologies:

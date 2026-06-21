@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 63919
+  controlID: 66336
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 63924
+  controlID: 66337
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 63925
+  controlID: 66414
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -253,10 +253,11 @@ MonoBehaviour:
     m_DynamicPanelBehaviorModified: 0
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 1442}
-      m_SelectedIDs: []
+      scrollPos: {x: 0, y: 48}
+      m_SelectedIDs:
+      - m_rawData: 568105584918835796
       m_LastClickedID:
-        m_rawData: 0
+        m_rawData: 568105584918835796
       m_ExpandedIDs:
       - m_rawData: 568105589213751982
       - m_rawData: 568105589213752414
@@ -272,7 +273,6 @@ MonoBehaviour:
       - m_rawData: 568105584918834428
       - m_rawData: 568105584918834636
       - m_rawData: 568105584918834644
-      - m_rawData: 568105584918834888
       - m_rawData: 568105584918834984
       - m_rawData: 568105584918835068
       - m_rawData: 568105584918835118
@@ -290,6 +290,7 @@ MonoBehaviour:
       - m_rawData: 568105584918836178
       - m_rawData: 568105584918836214
       - m_rawData: 568105584918836218
+      - m_rawData: 568105584918836226
       - m_rawData: 568105584918836522
       - m_rawData: 568105584918836574
       - m_rawData: 568105584918836750
@@ -1030,7 +1031,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 63977
+  controlID: 66338
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1111,7 +1112,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/ElectionTactics/Game/RandomEvent
+    - Assets/Resources/ElectionTactics/Icons/ArticleIcons
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1121,18 +1122,18 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/ElectionTactics/Game/RandomEvent
+  - Assets/Resources/ElectionTactics/Icons/ArticleIcons
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 575}
+    scrollPos: {x: 0, y: 0}
     m_SelectedIDs:
-    - m_rawData: 568105584918847030
+    - m_rawData: 568105584918846968
     m_LastClickedID:
-      m_rawData: 568105584918847030
+      m_rawData: 568105584918846968
     m_ExpandedIDs:
     - m_rawData: 568105589213742804
     - m_rawData: 0
@@ -1223,11 +1224,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs:
-    - m_rawData: 568105584919164122
+    m_SelectedInstanceIDs: []
     m_LastClickedEntityId:
-      m_rawData: 568105584919164122
-    m_HadKeyboardFocusLastEvent: 1
+      m_rawData: 0
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214
     - m_rawData: 568105584918843216

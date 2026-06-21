@@ -623,6 +623,11 @@ namespace ElectionTactics
             ActiveLanguageTraits.Clear();
             ActiveDensityTraits.Clear();
 
+            RandomEvents.Clear();
+            NewsEvents.Clear();
+            Newspapers.Clear();
+            CurrentNewspaper = null;
+
             ElectionResults.Clear();
             GeographyTraits.Clear();
             ElectionResults.Clear();

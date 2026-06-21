@@ -10,7 +10,7 @@ namespace ElectionTactics
         private static GeneralElectionResult ElectionResult;
         private static Newspaper Newspaper;
 
-        private static float FUN_ARTICLE_CHANCE = 1f; //0.1f;
+        private static float FUN_ARTICLE_CHANCE = 0.1f;
 
         public static Newspaper GenerateYearNewspaper()
         {
@@ -113,8 +113,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"The nation wakes to a split decision: {winnerParty.NameOrAcr} and {secondParty.NameOrAcr} have tied on {topSeats} seats apiece. With no single victor, uneasy negotiations lie ahead.",
-                    $"It ends level. {winnerParty.NameOrAcr} and {secondParty.NameOrAcr} each took {topSeats} seats, leaving the parliament evenly split and the path forward unclear.",
+                    $"The nation wakes to a split decision: {winnerParty.Name} and {secondParty.Name} have tied on {topSeats} seats apiece. With no single victor, uneasy negotiations lie ahead.",
+                    $"It ends level. {winnerParty.Name} and {secondParty.Name} each took {topSeats} seats, leaving the parliament evenly split and the path forward unclear.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
