@@ -466,7 +466,10 @@ namespace ElectionTactics
             {
                 if (standings.Count == 0) return null;
                 var weights = new Dictionary<Party, int>();
-                for (int i = 0; i < standings.Count; i++) weights[standings[i]] = standings.Count - i; // top of standings = highest weight
+                foreach(Party party in ElectionResult.SeatsWon.Keys)
+                {
+                    weights[party] = ElectionResult.SeatsWon[party] + 2;
+                }
                 return weights.GetWeightedRandomElement();
             }
 
@@ -491,11 +494,12 @@ namespace ElectionTactics
             // Option: an opponent's highest-weighted policies + current points spent.
             {
                 Party opp = PickWeightedOpponent();
+                int amount = Random.Range(2, 3 + 1);
                 if (opp != null && opp.AI != null)
                 {
                     var favoured = opp.ActivePolicies
-                        .OrderByDescending(p => opp.AI.GetPolicyWeight(p))
-                        .Take(2).ToList();
+                        .OrderByDescending(p => opp.AI.GetPolicyWeight(p) + (Random.value * 0.1f))
+                        .Take(amount).ToList();
                     if (favoured.Count > 0)
                     {
                         string list = JoinPolicies(favoured.Select(p => $"{p.Name}"));
@@ -507,11 +511,12 @@ namespace ElectionTactics
             // Option: an opponent's lowest-weighted policies (areas they neglect).
             {
                 Party opp = PickWeightedOpponent();
+                int amount = Random.Range(2, 3 + 1);
                 if (opp != null && opp.AI != null)
                 {
                     var neglected = opp.ActivePolicies
-                        .OrderBy(p => opp.AI.GetPolicyWeight(p))
-                        .Take(2).ToList();
+                        .OrderBy(p => opp.AI.GetPolicyWeight(p) + (Random.value * 0.1f))
+                        .Take(amount).ToList();
                     if (neglected.Count > 0)
                     {
                         string list = JoinPolicies(neglected.Select(p => p.Name));

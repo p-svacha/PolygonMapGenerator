@@ -6,9 +6,9 @@ namespace ElectionTactics
 {
     public class RE_Disaster : RandomEvent
     {
-        private const float MIN_POPULATION = 100000;
-        private const float MIN_CASUALTIES = 0.20f; // in % of district population
-        private const float MAX_CASUALTIES = 0.50f; // in % of district population
+        private const float MIN_POPULATION = 300000;
+        private const float MIN_CASUALTIES = 0.40f; // in % of district population
+        private const float MAX_CASUALTIES = 0.65f; // in % of district population
 
         public District District { get; private set; }
         public int Casualties { get; private set; }
@@ -19,7 +19,7 @@ namespace ElectionTactics
             District = game.ActiveDistricts.Where(d => d.Population > MIN_POPULATION).ToList().RandomElement();
             int casualties = (int)(District.Population * Random.Range(MIN_CASUALTIES, MAX_CASUALTIES));
             Casualties = (casualties / 1000) * 1000; // round to 1000s
-            District.Population = Mathf.Max(1000, District.Population - casualties);
+            District.ModifyPopulation(-casualties);
         }
 
         public override bool CanExecute()
@@ -50,7 +50,7 @@ namespace ElectionTactics
             {
                 $"A natural disaster has struck {District.Name} in the wake of the election, with early reports citing around {Casualties:N0} fatalities.",
                 $"Calamity has befallen {District.Name}: officials estimate roughly {Casualties:N0} lives lost.",
-                $"In the aftermath of the vote, {District.Name} was hit by catastrophe, leaving an estimated {Casualties:N0} dead.",
+                $"In the aftermath of the vote, {District.Name} was hit by catastrophe, leaving an estimated {Casualties:N0} casualties.",
             };
 
             var pool = new List<string>

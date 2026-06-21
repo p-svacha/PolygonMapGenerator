@@ -272,7 +272,6 @@ namespace ElectionTactics
             string what = concepts.RandomElement();
             article.SetHeadline($"Outrage Over {what.CapitalizeEachWord()}");
             article.SetBodyText(
-                $"{GetAuthorityReaction()} " +
                 $"The controversy stems from {what}, which has divided opinion across the country. " +
                 $"{GetAuthorityReaction()}");
         }
@@ -282,7 +281,7 @@ namespace ElectionTactics
             string animal = animals.RandomElement();
             article.SetHeadline($"Dangerous Health Fad Sweeps {(animal + "s").CapitalizeFirst()}");
             article.SetBodyText(
-                $"A worrying trend has emerged among {animal}s: influencers now encourage them toward " +
+                $"A worrying trend has emerged among {animal}s. Influencers now encourage them toward " +
                 $"{activitiesGerund.RandomElement()}. Experts have been made aware. If your {animal} exhibits " +
                 $"{symptoms.RandomElement()}, {remedies.RandomElement()} immediately.");
         }

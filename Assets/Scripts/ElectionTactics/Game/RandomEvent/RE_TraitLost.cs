@@ -27,19 +27,19 @@ namespace ElectionTactics
             return Game.ActiveDistricts.Where(d => d.ActiveCulturalTraits.Count > 0 && d.ActiveCulturalTraits.Any(t => t.Def.Commonness != 0)).ToList();
         }
 
-        public override string GetArticleIconName() => "Exclusion";
+        public override string GetArticleIconName() => "Minus";
         public override int GetArticlePriority() => 70;
 
         public override string GetArticleHeadline()
         {
             List<string> templates = new List<string>()
             {
-                $"{District.Name} loses Cultural Trait {LostTrait.Label}",
+                $"{District.Name} loses Cultural Trait: {LostTrait.Label}",
             };
 
             if (!string.IsNullOrEmpty(LostTrait.Adjective))
             {
-                templates.Add($"{District.Name} no longer {LostTrait.Adjective}");
+                templates.Add($"{District.Name} no longer {LostTrait.Adjective.CapitalizeEachWord()}");
             }
 
             return templates.RandomElement();

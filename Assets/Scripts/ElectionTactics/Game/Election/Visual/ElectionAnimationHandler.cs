@@ -588,7 +588,7 @@ namespace ElectionTactics
             Game.UI.Parliament.CurrentElectionContainer.SetActive(false);
 
             // Show new districts
-            Game.SetAllActiveDistrictsVisible();
+            Game.RefreshDistrictVisibility();
 
             // Change UI controls
             Game.UI.SlideInHeader(UiControlsSlideTime);

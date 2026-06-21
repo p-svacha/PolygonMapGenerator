@@ -25,7 +25,7 @@ namespace ElectionTactics
             return Game.ActiveDistricts.Count > 1 && Game.Capital.IsActive;
         }
 
-        public override string GetArticleIconName() => "Star";
+        public override string GetArticleIconName() => "Capital";
         public override int GetArticlePriority() => 100;
 
         public override string GetArticleHeadline()

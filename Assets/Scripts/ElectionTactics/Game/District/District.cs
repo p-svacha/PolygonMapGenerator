@@ -44,10 +44,11 @@ namespace ElectionTactics
         public float CurrentWinnerShare;
 
         public const int MIN_SEATS = 1;
+        public const int MIN_POPULATION = 1000;
         public const int RequiredPopulationPerSeat = 40000;
         public const int RequirementIncreasePerSeat = 20000; // After each seat, the district needs this amount more population for the next seat
 
-        public int Population;     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
+        public int Population { get; private set; }     // How many inhabitants the district has - It can vary from 32'000 to 2'400'000
         private float BasePopulationGrowthRate; // Randomized base growth rate of the district. Between -1% and 2%.
         private int SeatsFromPopulation { get; set; }          // Base amount of seats this district is worth
         public int Voters { get; set; } // How many people cast a vote (used just for calculation behind the scenes, actual voter count is based on population and voter turnout).
@@ -130,8 +131,8 @@ namespace ElectionTactics
             BasePopulationGrowthRate = Random.Range(ElectionTacticsGame.MIN_BASE_GROWTH_RATE, ElectionTacticsGame.MAX_BASE_GROWTH_RATE);
 
             // Calculations based on previous values
-            RecalculateSeatsFromPopulation();
-            RecalculateDensity();
+            RecalculateSeatsFromPopulation(createNewsEventOnChange: false);
+            RecalculateDensity(createNewsEventOnChange: false);
 
             // Economy (requires all previous attributes)
             AssignEconomicSectors();
@@ -164,7 +165,16 @@ namespace ElectionTactics
             trait.OnRemoved();
         }
 
-        private void RecalculateSeatsFromPopulation()
+        public void ModifyPopulation(int amount)
+        {
+            Population += amount;
+            if (Population < MIN_POPULATION) Population = MIN_POPULATION;
+
+            RecalculateSeatsFromPopulation(createNewsEventOnChange: false);
+            RecalculateDensity(createNewsEventOnChange: false);
+        }
+
+        private void RecalculateSeatsFromPopulation(bool createNewsEventOnChange)
         {
             int totalSeatsBefore = GetSeats();
 
@@ -181,10 +191,13 @@ namespace ElectionTactics
 
             int seatsAfter = GetSeats();
 
-            if (totalSeatsBefore != seatsAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictSeatChange(this, totalSeatsBefore, seatsAfter));
+            if (createNewsEventOnChange && totalSeatsBefore != seatsAfter)
+            {
+                Game.RegisterNewsEvent(new NewsEvent_DistrictSeatChange(this, totalSeatsBefore, seatsAfter));
+            }
         }
 
-        private void RecalculateDensity()
+        private void RecalculateDensity(bool createNewsEventOnChange)
         {
             DensityDef densityBefore = Density;
 
@@ -196,7 +209,10 @@ namespace ElectionTactics
 
             DensityDef densityAfter = Density;
 
-            if (densityBefore != densityAfter) Game.RegisterNewsEvent(new NewsEvent_DistrictDensityChange(this, densityBefore, densityAfter));
+            if (createNewsEventOnChange && densityBefore != densityAfter)
+            {
+                Game.RegisterNewsEvent(new NewsEvent_DistrictDensityChange(this, densityBefore, densityAfter));
+            }
         }
 
         private void SetGeographyTraits()
@@ -585,8 +601,8 @@ namespace ElectionTactics
             foreach (CulturalTrait trait in ActiveCulturalTraits) trait.OnPostElection();
 
             // Recalculate
-            RecalculateSeatsFromPopulation();
-            RecalculateDensity();
+            RecalculateSeatsFromPopulation(createNewsEventOnChange: true);
+            RecalculateDensity(createNewsEventOnChange: true);
         }
 
         /// <summary>
@@ -748,6 +764,8 @@ namespace ElectionTactics
 
         public void SetVisible(bool v)
         {
+            if (IsVisible == v) return;
+
             IsVisible = v;
             MapLabel.gameObject.SetActive(v);
         }
@@ -864,8 +882,8 @@ namespace ElectionTactics
                 else continue;
             }
 
-            bool showAdjective = Random.value < 0.85f;
-            bool showDescriber = Random.value < 0.65f;
+            bool showAdjective = adjectiveCandidates.Count > 0 && Random.value < 0.85f;
+            bool showDescriber = describerCandidates.Count > 0 && Random.value < 0.65f;
 
             string adjective = showAdjective ? adjectiveCandidates.RandomElement() + " " : "";
             string describer = showDescriber ? " " + describerCandidates.RandomElement() : "";

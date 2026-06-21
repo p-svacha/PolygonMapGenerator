@@ -260,7 +260,7 @@ namespace ElectionTactics
             Constitution = new Constitution(this);
             UI.Constitution.Init(Constitution);
             StartNextElectionCycle(); // Start first cycle
-            SetAllActiveDistrictsVisible();
+            RefreshDistrictVisibility();
             CameraHandler.FocusDistricts(VisibleDistricts.Values.ToList());
             State = GameState.PreparationPhase;
 
@@ -665,9 +665,12 @@ namespace ElectionTactics
             return newDistrict;
         }
 
-        public void SetAllActiveDistrictsVisible()
+        /// <summary>
+        /// Sets all active districts visible, and all inactive ones invisible.
+        /// </summary>
+        public void RefreshDistrictVisibility()
         {
-            foreach (District d in ActiveDistricts) d.SetVisible(true);
+            foreach (District d in AllDistricts) d.SetVisible(d.IsActive);
             UI.MapControls.RefreshMapDisplay();
         }
 

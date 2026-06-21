@@ -29,7 +29,6 @@ namespace ElectionTactics
                 $"{District.Name} Sees a Generational Shift",
                 $"The Faces of {District.Name} Change",
                 $"A New Generation in {District.Name}",
-                $"{District.Name} Ages... or Doesn't",
                 $"Demographic Turn in {District.Name}",
             };
             return templates.RandomElement();
@@ -39,9 +38,9 @@ namespace ElectionTactics
         {
             List<string> facts = new List<string>()
             {
-                $"The dominant generation in {District.Name} has shifted from {OldAgeGroup.Label.ToLower()} to {NewAgeGroup.Label.ToLower()}.",
-                $"Census figures show {District.Name} is now characterised by a {NewAgeGroup.Label.ToLower()} population, where {OldAgeGroup.Label.ToLower()} once prevailed.",
-                $"{District.Name} has changed face: its {OldAgeGroup.Label.ToLower()} majority has given way to a {NewAgeGroup.Label.ToLower()} one.",
+                $"The dominant generation in {District.Name} has shifted from {OldAgeGroup.Label} to {NewAgeGroup.Label}.",
+                $"Census figures show {District.Name} is now characterised by a {NewAgeGroup.Label} population, where {OldAgeGroup.Label} once prevailed.",
+                $"{District.Name} has changed face: its {OldAgeGroup.Label} majority has given way to a {NewAgeGroup.Label} one.",
             };
 
             var pool = new List<string>

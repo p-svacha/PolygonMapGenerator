@@ -33,12 +33,12 @@ namespace ElectionTactics
         {
             List<string> templates = new List<string>()
             {
-                $"{District.Name} gains Cultural Trait {GainedTrait.Label}",
+                $"{District.Name} gains Cultural Trait: {GainedTrait.Label}",
             };
 
             if (!string.IsNullOrEmpty(GainedTrait.Adjective))
             {
-                templates.Add($"{District.Name} turns {GainedTrait.Adjective}");
+                templates.Add($"{District.Name} turns {GainedTrait.Adjective.CapitalizeEachWord()}");
             }
 
             return templates.RandomElement();
