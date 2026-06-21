@@ -14,6 +14,8 @@ namespace ElectionTactics
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (ElectionTacticsGame.Instance.State != GameState.PreparationPhase) return;
+
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 district.Game.UI.SelectDistrict(district);

@@ -251,6 +251,7 @@ namespace ElectionTactics
 
             // Assign a random capital district
             Capital = Districts.Values.Take(10).ToList().RandomElement();
+            if (IsTutorialEnabled) Capital = Districts.Values.ToArray()[7]; // To make sure the earliest districts are not capital
             Capital.AddCulturalTrait(CulturalTraitDefOf.Capital);
 
             // Battle royale
@@ -1138,7 +1139,7 @@ namespace ElectionTactics
         }
         public bool IsMostCommonReligion(ReligionDef religion) => GetMostCommonReligions().Contains(religion);
 
-        public bool IsTutorialActive => TutorialManager.Instance.IsTutorialActive;
+        public bool IsTutorialEnabled => GameSettings.IsTutorialEnabled;
 
         #endregion
     }

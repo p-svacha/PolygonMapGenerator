@@ -37,6 +37,7 @@ namespace ElectionTactics
         public AudioClip Lever;
         public AudioClip Heartbeat;
         public AudioClip HeartbeatEnd;
+        public AudioClip SmallApplause;
 
         public AudioClip NewspaperSpin;
         public AudioClip NewspaperSpinEnd;

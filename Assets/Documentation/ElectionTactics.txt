@@ -147,7 +147,7 @@ Random Events (both logic & newspaper article gen):
 (/) - age group change
 
 
-Points from personal playtest:
+Points from personal playtest 1:
 (/) - Add seperate text color for parties. use for black and crimson. if that works nicely, also add navy/dark blue as new color. maybe also adjust colors a little
 (/) - general color improvements
 (/) - add navy color
@@ -170,6 +170,7 @@ Points from personal playtest:
 (/) - election animation ordering needs to order by seats FIRST (because of capital)
 (/) - fix district policy names. they are not allowed to be the same as other policies, but also shouldn't have "district" in the name. because popularity breakdown duplicate keys
 (/) - BUG: winning sound plays twice
+(/) - BUG: Can select districts by clicking on label during election animation
 
 Newspaper:
 (/) - Add newspaper framework
@@ -259,22 +260,26 @@ General Gameplay:
 Tutorial
 (/) - Make tutorial box bigger with bigger text.
 (/) - Start with 2 districts only.
-- In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
-- Use fixed and SIMPLE cultural traits for starting districts
+(/) - Used fixed rules for cultural traits and voting system for first 3 districts
+(/) - In popularity change step, add note to amount of SEATS (with star symbol in tutorial!)
+(/) - Use fixed and SIMPLE cultural traits for starting districts
 (/) - Remove step DURING election
 (/) - don't show parliament tab button and newspaper archive from start
 (/) - make sure it works with the newspaper
 (/) - add step to show hints in newspaper (main article, chapter 2)
-- somewhere show that districts are worth different amount of seats
-- add hint for cultural traits for newly added district in start of 2nd cycle
+(/) - somewhere show that districts are worth different amount of seats
+(/) - add hint for cultural traits for newly added district in start of 2nd cycle
+(/) - add highlighted text
 
-Personal Playtest 1 Feedback:
-- Add SFX when winning a general election
-- maybe add murmur (happy and sad) when increasing / decreasing a policy, with volume/intensity change based on total change
+Personal Playtest 2 Feedback:
+(/) - Add SFX when winning a general election
 
-Remove log spams
 
-quickfire-test. all districts. always events, fun article chance = 1. read every article in first 3 elections. 3 games.
+REMEMBER DURING PLAYTESTS
+- take screenshots
+- when done, check if there were any log spams
+
+quickfire-test. all districts. always events, fun article chance = 1. read every article in first 3 elections. repeat 3 times.
 quick-fire test. 10 games in a row without restarting with max district enabled from start.
 Full game playtests:
   - quick play with tutorial
@@ -283,6 +288,7 @@ Full game playtests:
 
 test district removal event if never happened
 adjust nailbiter threshold if it never happens or it happens too often
+revert fun article chance
 
 itch page changes:
 - update description

@@ -43,7 +43,7 @@ namespace ElectionTactics
                 $"{District.Name} Turns to {NewReligion.Noun}",
                 $"Religion change in {District.Name}: {OldReligion.Noun} -> {NewReligion.Noun}",
                 $"{District.Name} Turns {NewReligion.Label}",
-                $"{District.Name} Turns Away From {OldReligion.Label}",
+                $"{District.Name} Turns Away From {OldReligion.Noun}",
             };
             return templates.RandomElement();
         }

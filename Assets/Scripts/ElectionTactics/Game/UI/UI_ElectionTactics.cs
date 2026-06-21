@@ -314,11 +314,11 @@ namespace ElectionTactics
         // Only move button, not legend
         public void SlideOutMapControls(float slideTime)
         {
-            MapControls.OverlayDropdown.GetComponent<UIElement>().Slide(new Vector2(-70, 0), slideTime);
+            MapControls.GetComponent<UIElement>().Slide(new Vector2(-200, 0), slideTime);
         }   
         public void SlideInMapControls(float slideTime)
         {
-            MapControls.OverlayDropdown.GetComponent<UIElement>().Slide(new Vector2(0, 0), slideTime);
+            MapControls.GetComponent<UIElement>().Slide(new Vector2(0, 0), slideTime);
         }
 
         public void SlideOutStandings(float slideTime)

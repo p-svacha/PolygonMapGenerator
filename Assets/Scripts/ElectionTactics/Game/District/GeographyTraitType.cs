@@ -117,7 +117,7 @@ namespace ElectionTactics
                 Label = "Core",
                 Adjective = "core",
                 Describer = "that has been around forever",
-                Description = "One of the very first districts of the country."
+                Description = "Joined the country at the very beginning."
             },
 
             new GeographyTraitDef()

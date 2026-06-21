@@ -66,7 +66,7 @@ public static class DefDatabaseRegistry
             resolveMethod?.Invoke(null, null);
         }
 
-        DefDumpUtility.DumpAllDefs();
+        // DefDumpUtility.DumpAllDefs();
     }
 
     /// <summary>

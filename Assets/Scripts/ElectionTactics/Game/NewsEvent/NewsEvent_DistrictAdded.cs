@@ -62,17 +62,10 @@ namespace ElectionTactics
             // Sentence 2: a characterful description built from the district's most distinctive trait
             string flavour = GetFlavourSentence();
 
-            // Sentence 3: the economy hook (varied phrasing)
-            List<string> economy = new List<string>()
-            {
-                $"Locally, the {District.Economy1.Label.ToLower()} sector dominates the economy.",
-                $"Its economy leans heavily on {District.Economy1.Label.ToLower()}.",
-                $"{District.Economy1.Label} is the lifeblood of the regional economy.",
-                $"Most here make their living in {District.Economy1.Label.ToLower()}.",
-            };
-            string econ = economy.RandomElement();
+            // Sentence 3: seats
+            string seatSentence = GetSeatSentence();
 
-            return $"{opener} {flavour} {econ}";
+            return $"{opener} {flavour} {seatSentence}";
         }
 
         /// <summary>
@@ -129,6 +122,46 @@ namespace ElectionTactics
             candidates.Add($"The political leanings of the the {District.GetDescripiveLabel()} remain, for now, an open question.");
 
             return candidates.RandomElement();
+        }
+
+        private string GetSeatSentence()
+        {
+            int seats = District.GetSeats();
+
+            List<string> sentences;
+
+            if (seats <= 4) // small / low-impact
+            {
+                sentences = new List<string>()
+                {
+                    $"With {seats} {"seat".Pluralize(seats)} in parliament, it will be a modest presence on the national stage.",
+                    $"It brings just {seats} {"seat".Pluralize(seats)} to parliament, a small but welcome addition.",
+                    $"Holding {seats} {"seat".Pluralize(seats)}, the district will have a limited say in national affairs.",
+                    $"Its {seats} {"seat".Pluralize(seats)} make it one of the smaller voices in parliament.",
+                };
+            }
+            else if (seats <= 7) // medium
+            {
+                sentences = new List<string>()
+                {
+                    $"With {seats} {"seat".Pluralize(seats)} in parliament, it carries a respectable amount of influence.",
+                    $"Its {seats} {"seat".Pluralize(seats)} give it a solid voice in national politics.",
+                    $"Worth {seats} {"seat".Pluralize(seats)}, the district is a meaningful prize for any party.",
+                    $"Holding {seats} {"seat".Pluralize(seats)}, it sits comfortably among the mid-sized districts.",
+                };
+            }
+            else // 8+ high-impact
+            {
+                sentences = new List<string>()
+                {
+                    $"With a commanding {seats} {"seat".Pluralize(seats)} in parliament, it is a major political prize.",
+                    $"Its {seats} {"seat".Pluralize(seats)} make it one of the most coveted districts in the nation.",
+                    $"Worth a hefty {seats} {"seat".Pluralize(seats)}, it could swing the balance of any election.",
+                    $"Holding {seats} {"seat".Pluralize(seats)}, the district commands serious weight in parliament.",
+                };
+            }
+
+            return sentences.RandomElement();
         }
 
         private bool HasGeo(GeographyTraitDef def) => District.Geography.Any(g => g.Def == def);

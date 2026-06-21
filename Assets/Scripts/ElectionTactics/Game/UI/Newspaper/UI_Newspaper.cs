@@ -139,6 +139,13 @@ namespace ElectionTactics
             rect.localRotation = Quaternion.identity;
             ShowAnimationCoroutine = null;
 
+            // Play cheer sound if won
+            if (CurrentNewspaper.ElectionResult.WinnerParties.Contains(ElectionTacticsGame.Instance.LocalPlayerParty))
+            {
+                AudioManager.PlaySound(AudioManager.Instance.SmallApplause, volume: 0.5f);
+            }
+
+            // Newspaper cycle buttons
             RefreshCycleButtons();
         }
 
@@ -184,8 +191,8 @@ namespace ElectionTactics
 
             // y-ranges: top row vs bottom row when a column holds two
             float[] yFull = { 0f, 1f };
-            float[] yTop = { 0.51f, 1f };
-            float[] yBot = { 0f, 0.49f };
+            float[] yTop = { 0.52f, 1f };
+            float[] yBot = { 0f, 0.48f };
 
             var p = new Placement[n];
 

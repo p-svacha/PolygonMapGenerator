@@ -87,8 +87,8 @@ namespace ElectionTactics
 
             // Cultural Traits
             int numCulturalTraits = NumCulturalTraitWeights.GetWeightedRandomElement();
-            if (Game.IsTutorialActive && Index <= 1) numCulturalTraits = 0;
-            if (Game.IsTutorialActive && Index == 2) numCulturalTraits = 2;
+            if (Game.IsTutorialEnabled && Index <= 1) numCulturalTraits = 0; // Tutorial override
+            if (Game.IsTutorialEnabled && Index == 2) numCulturalTraits = 1; // Tutorial override
             while (CulturalTraits.Count < numCulturalTraits)
             {
                 CulturalTraitDef def = Game.GetRandomAdoptableCulturalTraitDef(this);
@@ -102,11 +102,16 @@ namespace ElectionTactics
                 samCandidates.Add(def, def.Commonness);
             }
             SeatAllocationMethodDef chosenMethod = samCandidates.GetWeightedRandomElement();
+            
 
             // Check overrides through game settings
             if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.WTA) chosenMethod = SeatAllocationMethodDefOf.WinnerTakesAll;
             if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.Hamilton) chosenMethod = SeatAllocationMethodDefOf.HamiltonPR;
             if (Game.GameSettings.SeatDistribution == SeatDistributionGameSettingDefOf.DHondt) chosenMethod = SeatAllocationMethodDefOf.DHondtPR;
+
+            // Tutorial overrides
+            if (Game.IsTutorialEnabled && Index <= 1) chosenMethod = SeatAllocationMethodDefOf.WinnerTakesAll;
+            if (Game.IsTutorialEnabled && Index == 2) chosenMethod = SeatAllocationMethodDefOf.HamiltonPR;
 
             // Apply fitting cultural traits
             if (chosenMethod == SeatAllocationMethodDefOf.HamiltonPR) AddCulturalTrait(CulturalTraitDefOf.ProportionalRepresentation);

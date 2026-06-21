@@ -183,7 +183,6 @@ namespace ElectionTactics
 
                 case AnimationState.InitApplyElectionResult:
                     InitElectionResultApplication();
-                    State = AnimationState.ApplyElectionResult;
                     break;
 
                 case AnimationState.ApplyElectionResult:
@@ -529,6 +528,15 @@ namespace ElectionTactics
         {
             // Disable graph
             Game.UI.Parliament.CurrentElectionContainer.SetActive(false);
+
+            // Skip if first cycle in the tutorial
+            if (Game.IsTutorialEnabled && ElectionResult.ElectionCycle == 1)
+            {
+                InitWaitTime(PostPartyListAnimationPauseTime, AnimationState.InitEndAnimation);
+                return;
+            }
+
+            State = AnimationState.ApplyElectionResult;
 
             // Apply election score points as flying tokens
             if (Game.IsClassicMode)
