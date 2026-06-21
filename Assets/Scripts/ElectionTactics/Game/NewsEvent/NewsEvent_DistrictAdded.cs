@@ -84,35 +84,36 @@ namespace ElectionTactics
             bool firstAny = firstLanguage || firstReligion || firstAgeGroup || firstDensity;
             if (firstAny)
             {
-                if (firstLanguage) candidates.Add($"The {District.GetDescripiveLabel()} is the first to speak {District.Language.Label}.");
-                if (firstReligion) candidates.Add($"The {District.GetDescripiveLabel()} is the first with a {District.Religion.Label} faith.");
-                if (firstAgeGroup) candidates.Add($"The {District.GetDescripiveLabel()} is the first with the primary age group {District.AgeGroup.Label}.");
-                if (firstAgeGroup) candidates.Add($"The {District.GetDescripiveLabel()} is the first with a {District.Density.Label} density.");
+                if (firstLanguage) candidates.Add($"The {District.GetDescripiveLabel(excludeLanguage: true)} is the first to speak {District.Language.Label}.");
+                if (firstReligion) candidates.Add($"The {District.GetDescripiveLabel(excludeReligion: true)} is the first with a {District.Religion.Label} faith.");
+                if (firstAgeGroup) candidates.Add($"The {District.GetDescripiveLabel(excludeAgeGroup: true)} is the first with the primary age group {District.AgeGroup.Label}.");
+                if (firstDensity) candidates.Add($"The {District.GetDescripiveLabel(excludeDensity: true)} is the first with a {District.Density.Label} density.");
 
                 return candidates.RandomElement();
             }
 
             // Geography-driven flavour (only if the district actually has a notable trait)
+
             if (HasGeo(GeographyTraitDefOf.Island))
-                candidates.Add($"Cut off by the sea, the {District.GetDescripiveLabel()} brings an island perspective to the table.");
+                candidates.Add($"Cut off by the sea, the {District.GetDescripiveLabel(excludeGeography: true)} brings an island perspective to the table.");
             if (HasGeo(GeographyTraitDefOf.Tiny))
-                candidates.Add($"What it lacks in size, the {District.GetDescripiveLabel()} makes up for in local pride.");
+                candidates.Add($"What it lacks in size, the {District.GetDescripiveLabel(excludeGeography: true)} makes up for in local pride.");
             if (HasGeo(GeographyTraitDefOf.Large))
-                candidates.Add($"Sprawling across a vast area, the {District.GetDescripiveLabel()} is one of the country's larger districts.");
+                candidates.Add($"Sprawling across a vast area, the {District.GetDescripiveLabel(excludeGeography: true)} is one of the country's larger districts.");
             if (HasGeo(GeographyTraitDefOf.Coastal))
-                candidates.Add($"The long coastline of the {District.GetDescripiveLabel()} has long shaped the character of the region.");
+                candidates.Add($"The long coastline of the {District.GetDescripiveLabel(excludeGeography: true)} has long shaped the character of the region.");
             if (HasGeo(GeographyTraitDefOf.Landlocked))
-                candidates.Add($"Far from any shore, the {District.GetDescripiveLabel()} is a thoroughly inland community.");
+                candidates.Add($"Far from any shore, the {District.GetDescripiveLabel(excludeGeography: true)} is a thoroughly inland community.");
             if (HasGeo(GeographyTraitDefOf.River))
-                candidates.Add($"Life in the {District.GetDescripiveLabel()} has always followed the rhythm of the river.");
+                candidates.Add($"Life in the {District.GetDescripiveLabel(excludeGeography: true)} has always followed the rhythm of the river.");
             if (HasGeo(GeographyTraitDefOf.Lake))
-                candidates.Add($"The lakeside setting of the {District.GetDescripiveLabel()} draws visitors and locals alike.");
+                candidates.Add($"The lakeside setting of the {District.GetDescripiveLabel(excludeGeography: true)} draws visitors and locals alike.");
 
             // Demographic flavour
             if (District.IsMinorityLanguage)
-                candidates.Add($"Notably, {District.Language.Label} is the dominant tongue in the {District.GetDescripiveLabel()}, setting it apart from many other districts.");
+                candidates.Add($"Notably, {District.Language.Label} is the dominant tongue in the {District.GetDescripiveLabel(excludeLanguage: true)}, setting it apart from many other districts.");
             if (District.IsMinorityReligion)
-                candidates.Add($"The {District.GetDescripiveLabel()} stands out for its {District.Religion.Label} faith, which is uncommon.");
+                candidates.Add($"The {District.GetDescripiveLabel(excludeReligion: true)} stands out for its {District.Religion.Label} faith, which is uncommon.");
 
             candidates.Add($"Home to a largely {District.AgeGroup.Label.ToLower()} population, it has a distinct character.");
             candidates.Add($"With a {District.Density.Label.ToLower()}-density population, daily life moves at its own pace.");

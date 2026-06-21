@@ -81,6 +81,8 @@ General UX:
 (/) - district list needs tooltips on margin and last election winner
 (/) - Expand sound setting to have 4 different volume settings instead of just sound/mute. clicking cycles through it (starts at 3, then mute, then 1, then 2, then back to 3)
 (/) - Redesign loading screen
+(/) - In map overlay, show currently selected overlay
+(/) - Add new map overlay/lens option: "Seats won", that shows % of seats won in each district
 
 Election graph:
 (/) - Make bar label and bar value text size slightly dynamic based on number/width of bars. For 8 bars it's perfect like this. But the font size can be a little bigger for values below that.

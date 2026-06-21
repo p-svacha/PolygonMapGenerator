@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,13 +13,13 @@ namespace ElectionTactics
         public Image BackgroundTop;
         public Image BackgroundBot;
         public UI_SeatNumber Seats;
-        public Text NameText;
+        public TextMeshProUGUI NameText;
         public Image ReligionIcon;
         public Image LanguageIcon;
         public Image DensityIcon;
-        public Text PopularityText;
+        public TextMeshProUGUI PopularityText;
         public GameObject MarginContainer;
-        public Text MarginText;
+        public TextMeshProUGUI MarginText;
 
         // State
         public DistrictLabelMode Mode { get; private set; }

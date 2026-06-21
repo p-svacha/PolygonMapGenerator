@@ -391,7 +391,7 @@ namespace ElectionTactics
                     // Start heartbeat once when we enter the window
                     if (!isPlayingHeartbeat)
                     {
-                        AudioManager.StartChargingSound("heartbeat", AudioManager.Instance.Heartbeat, basePitch: 1f, maxPitch: 1f, volume: 0.7f);
+                        AudioManager.StartChargingSound("heartbeat", AudioManager.Instance.Heartbeat, basePitch: 1f, maxPitch: 1f, volume: 0.85f);
                         isPlayingHeartbeat = true;
                     }
                 }

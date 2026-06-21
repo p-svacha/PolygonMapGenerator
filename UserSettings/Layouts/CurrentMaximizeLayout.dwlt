@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 29835
+  controlID: 50724
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 29836
+  controlID: 50725
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 29866
+  controlID: 50663
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -253,34 +253,43 @@ MonoBehaviour:
     m_DynamicPanelBehaviorModified: 0
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 28}
-      m_SelectedIDs: []
+      scrollPos: {x: 0, y: 1442}
+      m_SelectedIDs:
+      - m_rawData: 568105589213751978
       m_LastClickedID:
-        m_rawData: 0
+        m_rawData: 568105589213751978
       m_ExpandedIDs:
+      - m_rawData: 568105589213751982
+      - m_rawData: 568105589213752414
+      - m_rawData: 568105589213755806
       - m_rawData: 568105589213756052
       - m_rawData: 568105584918833968
       - m_rawData: 568105584918834130
       - m_rawData: 568105584918834196
       - m_rawData: 568105584918834286
+      - m_rawData: 568105584918834322
+      - m_rawData: 568105584918834350
+      - m_rawData: 568105584918834354
       - m_rawData: 568105584918834428
       - m_rawData: 568105584918834636
+      - m_rawData: 568105584918834644
       - m_rawData: 568105584918834888
       - m_rawData: 568105584918834984
       - m_rawData: 568105584918835068
-      - m_rawData: 568105584918835072
       - m_rawData: 568105584918835118
       - m_rawData: 568105584918835320
-      - m_rawData: 568105584918835350
       - m_rawData: 568105584918835468
       - m_rawData: 568105584918835486
       - m_rawData: 568105584918835626
       - m_rawData: 568105584918835696
+      - m_rawData: 568105584918835736
+      - m_rawData: 568105584918835760
       - m_rawData: 568105584918835796
       - m_rawData: 568105584918835818
       - m_rawData: 568105584918836066
       - m_rawData: 568105584918836172
       - m_rawData: 568105584918836178
+      - m_rawData: 568105584918836214
       - m_rawData: 568105584918836218
       - m_rawData: 568105584918836522
       - m_rawData: 568105584918836574
@@ -907,9 +916,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 447.06006, y: 278.69568, z: -0.3847966}
+    m_Target: {x: 155.58049, y: 114.72353, z: -0.90870005}
     speed: 2
-    m_Value: {x: 447.06006, y: 278.69568, z: -0.3847966}
+    m_Value: {x: 155.58049, y: 114.72353, z: -0.90870005}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -960,9 +969,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 57.66721
+    m_Target: 110.057335
     speed: 2
-    m_Value: 57.66721
+    m_Value: 110.057335
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1022,7 +1031,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 29837
+  controlID: 50726
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -1043,8 +1052,8 @@ MonoBehaviour:
     y: 0
     width: 877
     height: 376
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 101, y: 126}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 11}
@@ -1103,7 +1112,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/ElectionTactics/Game/Newspaper
+    - Assets/Scripts/ElectionTactics/Game/UI/Newspaper
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1113,18 +1122,18 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/ElectionTactics/Game/Newspaper
+  - Assets/Scripts/ElectionTactics/Game/UI/Newspaper
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Workspace\Unity\PolygonMapGenerator
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 486}
+    scrollPos: {x: 0, y: 883}
     m_SelectedIDs:
-    - m_rawData: 568105584918847024
+    - m_rawData: 568105584918847062
     m_LastClickedID:
-      m_rawData: 568105584918847024
+      m_rawData: 568105584918847062
     m_ExpandedIDs:
     - m_rawData: 568105589213742804
     - m_rawData: 0
@@ -1216,9 +1225,9 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_rawData: 568105584918834428
+    - m_rawData: 568105589213751978
     m_LastClickedEntityId:
-      m_rawData: 568105584918834428
+      m_rawData: 568105589213751978
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_rawData: 568105584918836214

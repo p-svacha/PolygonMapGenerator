@@ -8976,7 +8976,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 715.26, y: -460.95}
+  m_AnchoredPosition: {x: 707.32, y: -478.5}
   m_SizeDelta: {x: 210.448, y: 71.497}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &311277809
@@ -29096,7 +29096,7 @@ PrefabInstance:
     - target: {fileID: 6540426163209799584, guid: 2347b9e9dc839c94bb0de7279ae6ee7d,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6804430379150079108, guid: 2347b9e9dc839c94bb0de7279ae6ee7d,
         type: 3}
@@ -33272,9 +33272,11 @@ MonoBehaviour:
   LegendEntryPrefab: {fileID: 7544485908387937463, guid: acadb34b1554a1c4e87fc9c3f56e29a7,
     type: 3}
   OverlayDropdown: {fileID: 431260710}
+  TitleLabel: {fileID: 1143503027}
   LegendContainer: {fileID: 323681681}
   LegendTitleText: {fileID: 1253630605}
-  PopularityLegend: {fileID: 322222629}
+  LinearScaleLegend: {fileID: 322222629}
+  LinearScaleLegendImage: {fileID: 1029846130}
   PopularityLegendTopLimitText: {fileID: 440761407}
   PopularityLegendBotLimitText: {fileID: 2000899377}
 --- !u!114 &1392872643

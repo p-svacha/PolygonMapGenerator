@@ -10,7 +10,7 @@ namespace ElectionTactics
         private static GeneralElectionResult ElectionResult;
         private static Newspaper Newspaper;
 
-        private static float FUN_ARTICLE_CHANCE = 1f; //0.125f;
+        private static float FUN_ARTICLE_CHANCE = 1f; //0.1f;
 
         public static Newspaper GenerateYearNewspaper()
         {
@@ -46,8 +46,8 @@ namespace ElectionTactics
         {
             var seats = ElectionResult.SeatsWon;
             int totalSeats = seats.Values.Sum();
-            Party topParty = seats.OrderByDescending(x => x.Value).First().Key;
-            int topSeats = seats[topParty];
+            Party winnerParty = seats.OrderByDescending(x => x.Value).First().Key;
+            int topSeats = seats[winnerParty];
             Party secondParty = seats.OrderByDescending(x => x.Value).Skip(1).First().Key;
             int secondSeats = seats[secondParty];
             Party party3 = seats.Count() > 2 ? seats.OrderByDescending(x => x.Value).Skip(2).First().Key : null;
@@ -66,19 +66,19 @@ namespace ElectionTactics
                 var headlines = new List<string>
                 {
                     "Election Results Are In!",
-                    $"{topParty.Acronym} Wins!",
+                    $"{winnerParty.Acronym} Wins!",
                     "The People Have Spoken",
-                    $"A Year for {topParty.Acronym}",
-                    $"{topParty.Acronym} Wins its {topParty.TotalElectionsWon.ToOrdinal()} Election",
-                    $"Win number {topParty.TotalElectionsWon} for {topParty.Acronym}",
-                    $"{ElectionResult.Year}: The Year of {topParty.Acronym}",
-                    $"{topParty.Acronym} Wins Cycle {ElectionResult.ElectionCycle}",
+                    $"A Year for {winnerParty.Acronym}",
+                    $"{winnerParty.Acronym} Wins its {winnerParty.TotalElectionsWon.ToOrdinal()} Election",
+                    $"Win Number {winnerParty.TotalElectionsWon} for {winnerParty.Acronym}",
+                    $"{ElectionResult.Year}: The Year of {winnerParty.Acronym}",
+                    $"{winnerParty.Acronym} Wins Cycle {ElectionResult.ElectionCycle}",
                 };
                 var chapters = new List<string>
                 {
-                    $"{topParty.NameOrAcr} has secured victory with {topSeats} of {totalSeats} seats. {secondParty.NameOrAcr} followed with {secondSeats}. It is the {topParty.TotalElectionsWon.ToOrdinal()} general election {topParty.Acronym} has won.",
-                    $"With {topSeats} of {totalSeats} seats, {topParty.NameOrAcr} comes out on top this year, ahead of {secondParty.NameOrAcr} on {secondSeats}. Attention now turns to the cycle ahead.",
-                    $"The votes are counted: {topParty.NameOrAcr} takes {topSeats} seats to {secondParty.NameOrAcr}'s {secondSeats}, claiming the year's election. It is the pary's {topParty.TotalElectionsWon.ToOrdinal()} win.",
+                    $"{winnerParty.NameOrAcr} has secured victory with {topSeats} of {totalSeats} seats. {secondParty.NameOrAcr} followed with {secondSeats}. It is the {winnerParty.TotalElectionsWon.ToOrdinal()} general election {winnerParty.Acronym} has won.",
+                    $"With {topSeats} of {totalSeats} seats, {winnerParty.NameOrAcr} comes out on top this year, ahead of {secondParty.NameOrAcr} on {secondSeats}. Attention now turns to the cycle ahead.",
+                    $"The votes are counted: {winnerParty.NameOrAcr} takes {topSeats} seats to {secondParty.NameOrAcr}'s {secondSeats}, claiming the year's election. It is the pary's {winnerParty.TotalElectionsWon.ToOrdinal()} win.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 15);
             }
@@ -89,14 +89,14 @@ namespace ElectionTactics
                 var headlines = new List<string>
                 {
                     "A Clean Sweep!",
-                    $"{topParty.Acronym} Takes Everything",
+                    $"{winnerParty.Acronym} Takes Everything",
                     "Total Domination",
                     "Not a Seat to Spare",
                 };
                 var chapters = new List<string>
                 {
-                    $"In a staggering result, {topParty.NameOrAcr} has claimed every single one of the {totalSeats} seats on offer. No rival managed to win even one. Such complete dominance is rarely seen.",
-                    $"{topParty.NameOrAcr} has swept the board, winning all {totalSeats} seats. The opposition is left with nothing to show for the cycle.",
+                    $"In a staggering result, {winnerParty.NameOrAcr} has claimed every single one of the {totalSeats} seats on offer. No rival managed to win even one. Such complete dominance is rarely seen.",
+                    $"{winnerParty.NameOrAcr} has swept the board, winning all {totalSeats} seats. The opposition is left with nothing to show for the cycle.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -113,8 +113,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"The nation wakes to a split decision: {topParty.NameOrAcr} and {secondParty.NameOrAcr} have tied on {topSeats} seats apiece. With no single victor, uneasy negotiations lie ahead.",
-                    $"It ends level. {topParty.NameOrAcr} and {secondParty.NameOrAcr} each took {topSeats} seats, leaving the parliament evenly split and the path forward unclear.",
+                    $"The nation wakes to a split decision: {winnerParty.NameOrAcr} and {secondParty.NameOrAcr} have tied on {topSeats} seats apiece. With no single victor, uneasy negotiations lie ahead.",
+                    $"It ends level. {winnerParty.NameOrAcr} and {secondParty.NameOrAcr} each took {topSeats} seats, leaving the parliament evenly split and the path forward unclear.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -130,8 +130,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"In an extraordinary outcome, the three parties {topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} have finished level on {topSeats} seats each. Commentators are at a loss for precedent.",
-                    $"{topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} each claimed {topSeats} seats, fracturing the parliament three ways and guaranteeing a turbulent cycle.",
+                    $"In an extraordinary outcome, the three parties {winnerParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} have finished level on {topSeats} seats each. Commentators are at a loss for precedent.",
+                    $"{winnerParty.Acronym}, {secondParty.Acronym} and {party3.Acronym} each claimed {topSeats} seats, fracturing the parliament three ways and guaranteeing a turbulent cycle.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -148,8 +148,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"It could hardly have been closer. {topParty.NameOrAcr} edged out {secondParty.NameOrAcr} by a single seat, {topSeats} to {secondSeats}. A handful of votes elsewhere could have flipped the result.",
-                    $"{topParty.NameOrAcr} clings to victory by one seat: {topSeats} against {secondParty.NameOrAcr}'s {secondSeats}. The thinnest of margins hands them the year.",
+                    $"It could hardly have been closer. {winnerParty.NameOrAcr} edged out {secondParty.NameOrAcr} by a single seat, {topSeats} to {secondSeats}. A handful of votes elsewhere could have flipped the result.",
+                    $"{winnerParty.NameOrAcr} clings to victory by one seat: {topSeats} against {secondParty.NameOrAcr}'s {secondSeats}. The thinnest of margins hands them the year.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 250);
             }
@@ -165,8 +165,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"{topParty.NameOrAcr} held on through a tense count, finishing {winnerMargin} seats clear of {secondParty.NameOrAcr}, {topSeats} to {secondSeats}. The result was in doubt until the final districts reported.",
-                    $"A narrow win for {topParty.NameOrAcr}, just {winnerMargin} seats ahead of {secondParty.NameOrAcr}. Few would have called it with confidence beforehand.",
+                    $"{winnerParty.NameOrAcr} held on through a tense count, finishing {winnerMargin} seats clear of {secondParty.NameOrAcr}, {topSeats} to {secondSeats}. The result was in doubt until the final districts reported.",
+                    $"A narrow win for {winnerParty.NameOrAcr}, just {winnerMargin} seats ahead of {secondParty.NameOrAcr}. Few would have called it with confidence beforehand.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 50);
             }
@@ -177,13 +177,13 @@ namespace ElectionTactics
                 var headlines = new List<string>
                 {
                     "A Commanding Majority",
-                    $"{topParty.Acronym} Takes Control",
+                    $"{winnerParty.Acronym} Takes Control",
                     "An Absolute Majority",
                 };
                 var chapters = new List<string>
                 {
-                    $"{topParty.NameOrAcr} has won an outright majority, claiming {topSeats} of {totalSeats} seats. With more than half the parliament, they can govern without compromise.",
-                    $"More than half the seats now belong to {topParty.NameOrAcr} ({topSeats} of {totalSeats}). It is a mandate few parties ever achieve.",
+                    $"{winnerParty.NameOrAcr} has won an outright majority, claiming {topSeats} of {totalSeats} seats. With more than half the parliament, they can govern without compromise.",
+                    $"More than half the seats now belong to {winnerParty.NameOrAcr} ({topSeats} of {totalSeats}). It is a mandate few parties ever achieve.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 50);
             }
@@ -195,12 +195,12 @@ namespace ElectionTactics
                 {
                     "A Crushing Mandate",
                     "An Overwhelming Victory",
-                    $"{topParty.Acronym} Sweeps the Nation",
+                    $"{winnerParty.Acronym} Sweeps the Nation",
                 };
                 var chapters = new List<string>
                 {
-                    $"This was no ordinary win. {topParty.NameOrAcr} took {topSeats} of {totalSeats} seats, more than three quarters of the parliament, leaving the opposition in disarray.",
-                    $"{topParty.NameOrAcr} has all but obliterated its rivals, securing {topSeats} of {totalSeats} seats. Such a margin reshapes the political landscape entirely.",
+                    $"This was no ordinary win. {winnerParty.NameOrAcr} took {topSeats} of {totalSeats} seats, more than three quarters of the parliament, leaving the opposition in disarray.",
+                    $"{winnerParty.NameOrAcr} has all but obliterated its rivals, securing {topSeats} of {totalSeats} seats. Such a margin reshapes the political landscape entirely.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 100);
             }
@@ -216,8 +216,8 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"Three parties finished within touching distance: {topParty.Acronym} on {topSeats}, {secondParty.Acronym} on {secondSeats}, and {party3.Acronym} on {seats3}. {topParty.NameOrAcr} comes out ahead, but only just.",
-                    $"The top three ({topParty.Acronym}, {secondParty.Acronym} and {party3.Acronym}) are separated by a mere handful of seats. {topParty.NameOrAcr} leads a crowded field.",
+                    $"Three parties finished within touching distance: {winnerParty.Acronym} on {topSeats}, {secondParty.Acronym} on {secondSeats}, and {party3.Acronym} on {seats3}. {winnerParty.NameOrAcr} comes out ahead, but only just.",
+                    $"The top three ({winnerParty.Acronym}, {secondParty.Acronym} and {party3.Acronym}) are separated by a mere handful of seats. {winnerParty.NameOrAcr} leads a crowded field.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 100);
             }
@@ -233,26 +233,26 @@ namespace ElectionTactics
                 };
                 var chapters = new List<string>
                 {
-                    $"Four parties remain firmly in the hunt this cycle. {topParty.NameOrAcr} edges ahead on {topSeats}, but {secondParty.Acronym}, {party3.Acronym} and {party4.Acronym} are all within striking distance.",
-                    $"Rarely has the top of the table been so congested: {topParty.Acronym}, {secondParty.Acronym}, {party3.Acronym} and {party4.Acronym} are all within {topSeats - seats4} seats of one another.",
+                    $"Four parties remain firmly in the hunt this cycle. {winnerParty.NameOrAcr} edges ahead on {topSeats}, but {secondParty.Acronym}, {party3.Acronym} and {party4.Acronym} are all within striking distance.",
+                    $"Rarely has the top of the table been so congested: {winnerParty.Acronym}, {secondParty.Acronym}, {party3.Acronym} and {party4.Acronym} are all within {topSeats - seats4} seats of one another.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 100);
             }
 
             // Case: party wins its FIRST general election (cycle 5+ only)
-            if (winners.Count == 1 && topParty.TotalElectionsWon == 1 && ElectionResult.ElectionCycle >= 5)
+            if (winners.Count == 1 && winnerParty.TotalElectionsWon == 1 && ElectionResult.ElectionCycle >= 5)
             {
                 var headlines = new List<string>
                 {
-                    $"{topParty.Acronym} Wins its First Election!",
-                    $"A First for {topParty.Acronym}",
-                    $"{topParty.Acronym} Tastes Victory at Last",
-                    $"A Maiden Win: {topParty.NameOrAcr}",
+                    $"{winnerParty.Acronym} Wins its First Election!",
+                    $"A First for {winnerParty.Acronym}",
+                    $"{winnerParty.Acronym} Tastes Victory at Last",
+                    $"A Maiden Win: {winnerParty.NameOrAcr}",
                 };
                 var chapters = new List<string>
                 {
-                    $"After cycles of trying, {topParty.NameOrAcr} has finally won its first general election, taking {topSeats} of {totalSeats} seats. Supporters who waited years celebrated long into the night.",
-                    $"It has been a long road, but {topParty.NameOrAcr} claims its maiden general election victory with {topSeats} seats. {secondParty.NameOrAcr} will rue letting it slip.",
+                    $"After cycles of trying, {winnerParty.NameOrAcr} has finally won its first general election, taking {topSeats} of {totalSeats} seats. Supporters who waited years celebrated long into the night.",
+                    $"It has been a long road, but {winnerParty.NameOrAcr} claims its maiden general election victory with {topSeats} seats. {secondParty.NameOrAcr} will rue letting it slip.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 100);
             }
@@ -261,20 +261,20 @@ namespace ElectionTactics
             if (Game.IsClassicMode && winners.Count == 1)
             {
                 int target = Game.Constitution.WinCondition.ConditionValue;
-                if (topParty.TotalElectionsWon == target - 1)
+                if (winnerParty.TotalElectionsWon == target - 1)
                 {
                     var headlines = new List<string>
                     {
-                        $"{topParty.Acronym} almost there!",
-                        $"{topParty.Acronym} One Election from Glory",
-                        $"{topParty.Acronym} Closes In",
-                        $"The Finish Line Beckons for {topParty.Acronym}",
-                        $"The End is Nigh for {topParty.Acronym}",
+                        $"{winnerParty.Acronym} almost there!",
+                        $"{winnerParty.Acronym} One Election from Glory",
+                        $"{winnerParty.Acronym} Closes In",
+                        $"The Finish Line Beckons for {winnerParty.Acronym}",
+                        $"The End is Nigh for {winnerParty.Acronym}",
                     };
                     var chapters = new List<string>
                     {
-                        $"{topParty.NameOrAcr} stands a single election away from winning it all. With {topParty.TotalElectionsWon} of the required {target} general elections now secured, the nation watches nervously to see if anyone can stop them.",
-                        $"One more win. That is all {topParty.NameOrAcr} now needs, having reached {topParty.TotalElectionsWon} general elections. Rivals must find an answer immediately or concede the game.",
+                        $"{winnerParty.NameOrAcr} stands a single election away from winning it all. With {winnerParty.TotalElectionsWon} of the required {target} general elections now secured, the nation watches nervously to see if anyone can stop them.",
+                        $"One more win. That is all {winnerParty.NameOrAcr} now needs, having reached {winnerParty.TotalElectionsWon} general elections. Rivals must find an answer immediately or concede the game.",
                     };
                     candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 200);
                 }
@@ -283,8 +283,8 @@ namespace ElectionTactics
             // Case: party TAKES the lead in total general elections won (cycle 5+, sole lead)
             if (winners.Count == 1 && ElectionResult.ElectionCycle >= 5)
             {
-                int topWins = topParty.TotalElectionsWon;
-                var others = Game.Parties.Where(p => p != topParty).ToList();
+                int topWins = winnerParty.TotalElectionsWon;
+                var others = Game.Parties.Where(p => p != winnerParty).ToList();
                 int prevTopWins = topWins - 1; // before this election's win was counted
                 bool nowSoleLeader = others.All(p => p.TotalElectionsWon < topWins);
                 bool wasNotSoleLeaderBefore = others.Any(p => p.TotalElectionsWon >= prevTopWins);
@@ -292,15 +292,15 @@ namespace ElectionTactics
                 {
                     var headlines = new List<string>
                     {
-                        $"{topParty.Acronym} Seizes the Lead!",
-                        $"{topParty.Acronym} Moves Ahead",
+                        $"{winnerParty.Acronym} Seizes the Lead!",
+                        $"{winnerParty.Acronym} Moves Ahead",
                         $"A New Frontrunner",
-                        $"{topParty.Acronym} Pulls Clear",
+                        $"{winnerParty.Acronym} Pulls Clear",
                     };
                     var chapters = new List<string>
                     {
-                        $"With this victory, {topParty.NameOrAcr} moves into the outright lead in general elections won, now standing alone at {topWins}. The race for the game has a new frontrunner.",
-                        $"{topParty.NameOrAcr} has wrested top spot from its rivals, reaching {topWins} general elections won, more than any other party. Momentum is firmly with them.",
+                        $"With this victory, {winnerParty.NameOrAcr} moves into the outright lead in general elections won, now standing alone at {topWins}. The race for the game has a new frontrunner.",
+                        $"{winnerParty.NameOrAcr} has wrested top spot from its rivals, reaching {topWins} general elections won, more than any other party. Momentum is firmly with them.",
                     };
                     candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 80);
                 }
@@ -309,24 +309,23 @@ namespace ElectionTactics
             // Case: party EQUALS the leader in total general elections won (cycle 5+, now tied at the top)
             if (winners.Count == 1 && ElectionResult.ElectionCycle >= 5)
             {
-                int topWins = topParty.TotalElectionsWon;
-                var others = Game.Parties.Where(p => p != topParty).ToList();
+                int topWins = Game.Parties.Max(p => p.TotalElectionsWon);
+                var others = Game.Parties.Where(p => p != winnerParty).ToList();
                 int leadersTied = others.Count(p => p.TotalElectionsWon == topWins);
-                bool ledOutrightBefore = others.All(p => p.TotalElectionsWon < topWins); // if true, they didn't just equal anyone
-                if (leadersTied >= 1 && !ledOutrightBefore)
+                if (winnerParty.TotalElectionsWon == topWins && leadersTied >= 1)
                 {
                     Party rival = others.First(p => p.TotalElectionsWon == topWins);
                     var headlines = new List<string>
                     {
-                        $"{topParty.Acronym} Equals the top with {topParty.TotalElectionsWon} wins",
-                        $"{topParty.Acronym} Catches Up in Election Wins",
+                        $"{winnerParty.Acronym} Equals the top with {winnerParty.TotalElectionsWon} wins",
+                        $"{winnerParty.Acronym} Catches Up in Election Wins",
                         "A New Tie for the Overall Lead",
-                        $"A tie at the top after {topParty.Acronym} wins"
+                        $"A tie at the top after {winnerParty.Acronym} wins"
                     };
                     var chapters = new List<string>
                     {
-                        $"{topParty.NameOrAcr} has pulled level at the summit, matching {rival.NameOrAcr} on {topWins} general elections won. The contest for overall victory could hardly be tighter.",
-                        $"By winning this year, {topParty.NameOrAcr} draws equal with the frontrunners on {topWins} general elections. The lead is now shared, and the pressure mounts.",
+                        $"{winnerParty.NameOrAcr} has pulled level at the summit, matching {rival.NameOrAcr} on {topWins} general elections won. The contest for overall victory could hardly be tighter.",
+                        $"By winning this year, {winnerParty.NameOrAcr} draws equal with the frontrunners on {topWins} general elections. The lead is now shared, and the pressure mounts.",
                     };
                     candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 70);
                 }
@@ -336,39 +335,39 @@ namespace ElectionTactics
             if (winners.Count == 1 && ElectionResult.ElectionCycle >= 2)
             {
                 Party previousWinner = GetPreviousElectionSoleWinner();
-                if (previousWinner != null && previousWinner != topParty)
+                if (previousWinner != null && previousWinner != winnerParty)
                 {
                     var headlines = new List<string>
                     {
                         "Power Changes Hands",
-                        $"{topParty.Acronym} Unseats {previousWinner.Acronym}",
-                        $"{topParty.Acronym} emerges as new most popular Party",
+                        $"{winnerParty.Acronym} Unseats {previousWinner.Acronym}",
+                        $"{winnerParty.Acronym} emerges as new most popular Party",
                         $"{previousWinner.Acronym} loses power",
                     };
                     var chapters = new List<string>
                     {
-                        $"The wheel turns: {topParty.NameOrAcr} has won this year's election with {topSeats} seats, ending {previousWinner.NameOrAcr}'s reign from the previous cycle. Fortunes can shift quickly in politics.",
-                        $"Last cycle belonged to {previousWinner.NameOrAcr}; this one is {topParty.NameOrAcr}'s. The new victors took {topSeats} of {totalSeats} seats to claim the crown.",
+                        $"The wheel turns: {winnerParty.NameOrAcr} has won this year's election with {topSeats} seats, ending {previousWinner.NameOrAcr}'s reign from the previous cycle. Fortunes can shift quickly in politics.",
+                        $"Last cycle belonged to {previousWinner.NameOrAcr}; this one is {winnerParty.NameOrAcr}'s. The new victors took {topSeats} of {totalSeats} seats to claim the crown.",
                     };
                     candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 50);
                 }
             }
 
             // Case: SAME party won 3+ general elections in a row
-            if (winners.Count == 1 && GetConsecutiveWinStreak(topParty) >= 3)
+            if (winners.Count == 1 && GetConsecutiveWinStreak(winnerParty) >= 3)
             {
-                int streak = GetConsecutiveWinStreak(topParty);
+                int streak = GetConsecutiveWinStreak(winnerParty);
                 var headlines = new List<string>
                 {
-                    $"{topParty.Acronym} Reigns On",
-                    $"{streak} in a Row for {topParty.Acronym}",
+                    $"{winnerParty.Acronym} Reigns On",
+                    $"{streak} in a Row for {winnerParty.Acronym}",
                     "A Dynasty in the Making",
-                    $"{topParty.Acronym} Won't Let Go",
+                    $"{winnerParty.Acronym} Won't Let Go",
                 };
                 var chapters = new List<string>
                 {
-                    $"Make it {streak} straight. {topParty.NameOrAcr} has won its {streak.ToOrdinal()} consecutive general election, taking {topSeats} of {totalSeats} seats. Rivals are running out of ideas.",
-                    $"{topParty.NameOrAcr}'s grip on power shows no sign of loosening, with a {streak.ToOrdinal()} successive victory this year. Talk of a dynasty grows louder.",
+                    $"Make it {streak} straight. {winnerParty.NameOrAcr} has won its {streak.ToOrdinal()} consecutive general election, taking {topSeats} of {totalSeats} seats. Rivals are running out of ideas.",
+                    $"{winnerParty.NameOrAcr}'s grip on power shows no sign of loosening, with a {streak.ToOrdinal()} successive victory this year. Talk of a dynasty grows louder.",
                 };
                 candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 50);
             }
@@ -415,6 +414,35 @@ namespace ElectionTactics
                 }
             }
 
+            // Case: multi-way tie at the top of the standings (3+ parties sharing the leading score)
+            {
+                var standings = Game.GetCurrentStandings();
+                int topScore = standings.Values.Max();
+                List<Party> tiedLeaders = standings.Where(x => x.Value == topScore).Select(x => x.Key).ToList();
+
+                if (tiedLeaders.Count >= 3)
+                {
+                    string scoreLabel = Game.IsClassicMode ? "election win" : "legitimacy";
+                    string tiedNames = JoinPartyNames(tiedLeaders);
+
+                    var headlines = new List<string>
+                    {
+                        "No One Pulls Ahead",
+                        "A Deadlocked Race",
+                        "All Tied at the Top",
+                        $"{tiedLeaders.Count}-Way Tie in the Standings",
+                        "The Race Could Not Be Tighter",
+                    };
+                    var chapters = new List<string>
+                    {
+                        $"After the dust settles, {tiedNames} all share the lead with {topScore} {scoreLabel.Pluralize(topScore)}. With {tiedLeaders.Count} parties level at the top, the race for victory remains entirely open.",
+                        $"The standings offer no clarity: {tiedNames} are all locked on {topScore} {scoreLabel.Pluralize(topScore)}. Any one of them could pull ahead next cycle.",
+                        $"A {tiedLeaders.Count}-way tie at the summit. {tiedNames} each sit on {topScore} {scoreLabel.Pluralize(topScore)}, and no party can claim the initiative heading into the next cycle.",
+                    };
+                    candidates.Add((headlines.RandomElement(), chapters.RandomElement()), 140);
+                }
+            }
+
             var chosen = candidates.GetWeightedRandomElement();
             mainArticle.SetHeadline(chosen.Headline);
             mainArticle.SetChapter1(chosen.Chapter1);
@@ -442,7 +470,7 @@ namespace ElectionTactics
                 return weights.GetWeightedRandomElement();
             }
 
-            // Option 1: an opponent's most-invested policies + whether they'll keep investing.
+            // Option: an opponent's most-invested policies + whether they'll keep investing.
             {
                 Party opp = PickWeightedOpponent();
                 if (opp != null)
@@ -460,7 +488,7 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 2: an opponent's highest-weighted policies + current points spent.
+            // Option: an opponent's highest-weighted policies + current points spent.
             {
                 Party opp = PickWeightedOpponent();
                 if (opp != null && opp.AI != null)
@@ -476,7 +504,7 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 3: an opponent's lowest-weighted policies (areas they neglect).
+            // Option: an opponent's lowest-weighted policies (areas they neglect).
             {
                 Party opp = PickWeightedOpponent();
                 if (opp != null && opp.AI != null)
@@ -492,7 +520,7 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 4: a single attribute the very next district will have (and how many of the next few share it).
+            // Option: a single attribute the very next district will have (and how many of the next few share it).
             {
                 var upcoming = GetUpcomingDistricts(3);
                 if (upcoming.Count > 0)
@@ -508,7 +536,7 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 5: an attribute shared by all of the next few districts.
+            // Option: an attribute shared by all of the next few districts.
             {
                 var upcoming = GetUpcomingDistricts(3);
                 if (upcoming.Count >= 2)
@@ -519,7 +547,7 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 6: a random policy and how much the top opponents have invested in it.
+            // Option: a random policy and how much the top opponents have invested in it.
             {
                 var allActive = Game.LocalPlayerParty.ActivePolicies;
                 if (allActive.Count > 0 && standings.Count > 0)
@@ -542,7 +570,33 @@ namespace ElectionTactics
                 }
             }
 
-            // Option 7: pure flavour, no hint. Always available as a floor.
+            // Option: spotlight the next upcoming district, its seats and a descriptive label.
+            {
+                var upcoming = GetUpcomingDistricts(1);
+                if (upcoming.Count > 0)
+                {
+                    District next = upcoming[0];
+                    int seats = next.GetSeats();
+                    string label = next.GetDescripiveLabel();
+
+                    string seatClause = seats <= 4
+                        ? $"a modest {seats} {"seat".Pluralize(seats)}"
+                        : seats <= 7
+                            ? $"{seats} {"seat".Pluralize(seats)}"
+                            : $"a substantial {seats} {"seat".Pluralize(seats)}";
+
+                    var options = new List<string>
+                    {
+                        $"Sources reveal information about a district that will join the nation soon. The {label} will be worth {seatClause} in parliament. Parties would do well to prepare.",
+                        $"Information was leaked regarding {next.Name}, a district said to join the nation soon. The {label} will be worth {seatClause} in parliament. Parties would do well to prepare.",
+                        $"All eyes are on {next.Name}, an upcoming district. The {label} is expected to bring {seatClause} to the parliament. Those who plan ahead will have an edge.",
+                        $"There have been reports about a district, that will join the nation in {ElectionResult.Year + 2}. With {seatClause} on offer, the {label} will be worth watching closely.",
+                    };
+                    candidates.Add(options.RandomElement());
+                }
+            }
+
+            // Option: pure flavour, no hint. Always available as a floor.
             {
                 var flavour = new List<string>
                 {
@@ -673,30 +727,34 @@ namespace ElectionTactics
             bool hasFunArticle = Random.value < FUN_ARTICLE_CHANCE;
 
             int numArticles = randomEvents.Count + newsEvents.Count + (hasFunArticle ? 1 : 0);
-            int currentArticleIndex = 1;
 
             // Generate articles about random district events
             foreach (RandomEvent randomEvent in randomEvents)
             {
-                articles.Add(GenerateRandomEventArticle(randomEvent, IsSmallArticle(currentArticleIndex, numArticles)));
-                currentArticleIndex++;
+                articles.Add(GenerateRandomEventArticle(randomEvent));
             }
 
             // Generate articles about news events
             foreach (NewsEvent newsEvent in newsEvents)
             {
-                articles.Add(GenerateNewsEventArticle(newsEvent, IsSmallArticle(currentArticleIndex, numArticles)));
-                currentArticleIndex++;
+                articles.Add(GenerateNewsEventArticle(newsEvent));
             }
 
             // Generate fun article
             if (hasFunArticle)
             {
-                articles.Add(GenerateFunArticle(IsSmallArticle(currentArticleIndex, numArticles)));
-                currentArticleIndex++;
+                articles.Add(FunArticleGenerator.GenerateFunArticle(Newspaper));
             }
 
             articles = articles.OrderByDescending(a => a.Priority).Take(6).ToList();
+
+            int currentArticleIndex = 1;
+            foreach (NewspaperMinorArticle article in articles)
+            {
+                article.SetIsSmallVersion(IsSmallArticle(currentArticleIndex, Mathf.Min(numArticles, 6)));
+                currentArticleIndex++;
+            }
+
             return articles;
         }
 
@@ -718,9 +776,9 @@ namespace ElectionTactics
             return true;
         }
 
-        private static NewspaperMinorArticle GenerateRandomEventArticle(RandomEvent e, bool isSmallArticle)
+        private static NewspaperMinorArticle GenerateRandomEventArticle(RandomEvent e)
         {
-            var article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
+            var article = new NewspaperMinorArticle(Newspaper);
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/{e.GetArticleIconName()}"));
             article.SetHeadline(e.GetArticleHeadline());
             article.SetBodyText(e.GetArticleBody());
@@ -728,9 +786,9 @@ namespace ElectionTactics
             return article;
         }
 
-        private static NewspaperMinorArticle GenerateNewsEventArticle(NewsEvent e, bool isSmallArticle)
+        private static NewspaperMinorArticle GenerateNewsEventArticle(NewsEvent e)
         {
-            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
+            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper);
 
             article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/{e.GetArticleIconName()}"));
             article.SetHeadline(e.GetArticleHeadline());
@@ -738,239 +796,6 @@ namespace ElectionTactics
             article.Priority = e.GetArticlePriority();
 
             return article;
-        }
-
-        #endregion
-
-
-        #region Fun Article
-
-        enum FunArticleType
-        {
-            TimeFrameComparison,
-            OutrageHeadline,
-            HealthFad,
-            NewTrend,
-            QuoteOfYear,
-            ExpertClaim,
-            PublicService,
-            DangerWarning,
-        }
-
-        // --- Word lists, typed by grammatical role ---
-
-        // Plural nouns (subjects that "do" things). Animals, people, oddities.
-        private static List<string> nounsPlural = new List<string>()
-        {
-            "cows", "children", "monks", "penguins", "hamsters", "babies", "dogs", "ducks",
-            "investment bankers", "downhill skiers", "preschoolers", "elephants", "tomatoes",
-            "pensioners", "lighthouse keepers", "competitive eaters", "synchronized swimmers",
-            "beekeepers", "mimes", "geese", "librarians", "lumberjacks", "astronauts",
-        };
-
-        // Singular nouns (for "a/an X" constructions).
-        private static List<string> nounsSingular = new List<string>()
-        {
-            "cow", "child", "monk", "penguin", "hamster", "baby", "dog", "duck",
-            "investment banker", "downhill skier", "elephant", "tomato", "pensioner",
-            "lighthouse keeper", "competitive eater", "mime", "goose", "librarian",
-            "lumberjack", "astronaut", "pool noodle", "garden gnome", "traffic cone",
-        };
-
-        // Past-tense verbs (intransitive-ish, for "the X have VERBED").
-        private static List<string> verbsPast = new List<string>()
-        {
-            "eaten", "consumed", "gathered", "multiplied", "vanished", "rebelled",
-            "assembled", "migrated", "protested", "celebrated", "unionized", "fled",
-        };
-
-        // Activity verbs (gerund, "growing", for trends).
-        private static List<string> activitiesGerund = new List<string>()
-        {
-            "knitting", "competitive napping", "extreme ironing", "interpretive dance",
-            "underwater chess", "speed-walking", "artisanal yodeling", "synchronized blinking",
-            "cheese rolling", "professional queuing", "aggressive gardening",
-        };
-
-        private static List<string> comparator = new List<string>()
-        {
-            "more", "less", "an equal amount of", "considerably more", "alarmingly less",
-        };
-
-        private static List<string> timeFrames = new List<string>()
-        {
-            "morning", "evening", "week", "month", "year", "decade", "afternoon", "fortnight",
-        };
-
-        private static List<string> reasonAdjectives = new List<string>()
-        {
-            "bad", "good", "unusually mild", "historically poor", "surprisingly favorable",
-            "downright suspicious", "frankly inexplicable",
-        };
-
-        private static List<string> reasonNouns = new List<string>()
-        {
-            "weather", "lighting", "scheduling", "leadership", "ventilation", "moonlight",
-            "tax policy", "background music", "regional pride",
-        };
-
-        // Adjectives describing groups/things.
-        private static List<string> adjectives = new List<string>()
-        {
-            "growing", "shrinking", "rebellious", "anxious", "overconfident", "underfunded",
-            "militant", "fashionable", "elusive", "well-organized", "disgruntled", "radiant",
-        };
-
-        // Professions/authorities for "X are outraged / X claim".
-        private static List<string> authorities = new List<string>()
-        {
-            "local monks", "leading scientists", "the national football team", "city planners",
-            "dogschool teachers", "the beekeepers' guild", "retired admirals", "tax inspectors",
-            "the association of lighthouse keepers", "concerned parents", "the cheese board",
-            "marine biologists", "the puppeteers' union",
-        };
-
-        // Abstract things/concepts/causes.
-        private static List<string> concepts = new List<string>()
-        {
-            "the growing hamster population", "recreational mathematics", "the return of the T-Rex",
-            "mandatory joy", "the nuclear bouillon", "competitive crucifixion", "the tomato shortage",
-            "double-use playgrounds", "the handball uprising", "artisanal silence",
-        };
-
-        // Symptoms (plural noun phrases) for the health-fad template.
-        private static List<string> symptoms = new List<string>()
-        {
-            "excessive blinking", "a refusal to fetch", "sudden interest in jazz",
-            "unexplained elegance", "a thousand-yard stare", "spontaneous tap dancing",
-            "an aversion to Mondays", "compulsive list-making",
-        };
-
-        // Remedies/recommendations.
-        private static List<string> remedies = new List<string>()
-        {
-            "reduce its screen time", "consult a licensed mime", "increase exposure to sunlight",
-            "limit its tax burden", "introduce more potholes to its routine",
-            "schedule fewer meetings", "provide additional snacks",
-        };
-
-        // Colors for the "X is the new Y" quote.
-        private static List<string> colors = new List<string>()
-        {
-            "green", "yellow", "beige", "ultraviolet", "navy", "puce", "crimson", "teal",
-        };
-
-        private static NewspaperMinorArticle GenerateFunArticle(bool isSmallArticle)
-        {
-            NewspaperMinorArticle article = new NewspaperMinorArticle(Newspaper, isSmallArticle);
-            article.SetSprite(ResourceManager.LoadSprite($"ElectionTactics/Icons/ArticleIcons/Quote"));
-            article.Priority = 1;
-
-            var values = System.Enum.GetValues(typeof(FunArticleType));
-            FunArticleType chosenType = (FunArticleType)values.GetValue(Random.Range(0, values.Length));
-
-            switch (chosenType)
-            {
-                case FunArticleType.TimeFrameComparison: GenerateTimeFrameComparison(article); break;
-                case FunArticleType.OutrageHeadline: GenerateOutrage(article); break;
-                case FunArticleType.HealthFad: GenerateHealthFad(article); break;
-                case FunArticleType.NewTrend: GenerateNewTrend(article); break;
-                case FunArticleType.QuoteOfYear: GenerateQuoteOfYear(article); break;
-                case FunArticleType.ExpertClaim: GenerateExpertClaim(article); break;
-                case FunArticleType.PublicService: GeneratePublicService(article); break;
-                case FunArticleType.DangerWarning: GenerateDangerWarning(article); break;
-                default:
-                    article.SetHeadline("ERROR");
-                    article.SetBodyText("error");
-                    break;
-            }
-
-            return article;
-        }
-
-        private static void GenerateTimeFrameComparison(NewspaperMinorArticle article)
-        {
-            string subjects = nounsPlural.RandomElement();
-            article.SetHeadline($"News About {subjects.CapitalizeEachWord()}");
-            article.SetBodyText(
-                $"The {subjects} have {verbsPast.RandomElement()} {comparator.RandomElement()} this " +
-                $"{timeFrames.RandomElement()} than {nounsPlural.RandomElement()} did last " +
-                $"{timeFrames.RandomElement()}, owing to {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}.");
-        }
-
-        private static void GenerateOutrage(NewspaperMinorArticle article)
-        {
-            string who = authorities.RandomElement();
-            string what = concepts.RandomElement();
-            article.SetHeadline($"{who.CapitalizeEachWord()} Outraged");
-            article.SetBodyText(
-                $"{who.CapitalizeFirst()} have expressed fury over {what}. " +
-                $"\"This cannot continue,\" one spokesperson said, citing {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
-                $"Authorities urge calm as the situation develops.");
-        }
-
-        private static void GenerateHealthFad(NewspaperMinorArticle article)
-        {
-            string animalsPlural = nounsPlural.RandomElement();
-            string animalSingular = nounsSingular.RandomElement();
-            article.SetHeadline($"Dangerous Health Fad Sweeps the {animalsPlural.CapitalizeEachWord()}");
-            article.SetBodyText(
-                $"A worrying trend has emerged among {animalsPlural}: influencers now encourage them toward " +
-                $"{activitiesGerund.RandomElement()}. Experts have been made aware. If your {animalSingular} exhibits " +
-                $"{symptoms.RandomElement()}, {remedies.RandomElement()} immediately.");
-        }
-
-        private static void GenerateNewTrend(NewspaperMinorArticle article)
-        {
-            string activity = activitiesGerund.RandomElement();
-            string group = nounsPlural.RandomElement();
-            article.SetHeadline($"New Trend: {activity.CapitalizeEachWord()}");
-            article.SetBodyText(
-                $"The nation's {group} have embraced {activity} as the season's must-have pastime. " +
-                $"Critics call it {reasonAdjectives.RandomElement()}; enthusiasts insist it is the future. " +
-                $"{authorities.RandomElement().CapitalizeFirst()} remain divided.");
-        }
-
-        private static void GenerateQuoteOfYear(NewspaperMinorArticle article)
-        {
-            string a = colors.RandomElement();
-            string b = colors.Where(c => c != a).ToList().RandomElement();
-            article.SetHeadline("Quote of the Year");
-            article.SetBodyText(
-                $"\"{a.CapitalizeFirst()} is the new {b},\" declared a leading figure this year, " +
-                $"to widespread {(Random.value < 0.5f ? "acclaim" : "confusion")}. The remark has since been printed on mugs.");
-        }
-
-        private static void GenerateExpertClaim(NewspaperMinorArticle article)
-        {
-            string claim = concepts.RandomElement();
-            string who = authorities.RandomElement();
-            article.SetHeadline($"Experts Weigh In on {claim.CapitalizeEachWord()}");
-            article.SetBodyText(
-                $"{who.CapitalizeFirst()} claim that {claim} was, in fact, never gone. " +
-                $"\"We saw it coming,\" they noted, pointing to {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
-                $"Skeptics remain unconvinced.");
-        }
-
-        private static void GeneratePublicService(NewspaperMinorArticle article)
-        {
-            string petSingular = nounsSingular.RandomElement();
-            string petPlural = nounsPlural.RandomElement();
-            article.SetHeadline($"Interested in {petSingular.WithArticle().CapitalizeEachWord()}?");
-            article.SetBodyText(
-                $"Good news for animal lovers: mortality among {petPlural} has dropped below zero. " +
-                $"You can now adopt one via a website that matches you by temperament. " +
-                $"Demand is {adjectives.RandomElement()}, so act fast.");
-        }
-
-        private static void GenerateDangerWarning(NewspaperMinorArticle article)
-        {
-            string thing = nounsSingular.RandomElement();
-            article.SetHeadline($"{thing.CapitalizeEachWord()} Overconsumption: A Hidden Risk");
-            article.SetBodyText(
-                $"Health officials warn that {thing.WithArticle()} a day may no longer keep the doctor away. " +
-                $"Overconsumption has been linked to {symptoms.RandomElement()} and {reasonAdjectives.RandomElement()} {reasonNouns.RandomElement()}. " +
-                $"Moderation, they stress, is key.");
         }
 
         #endregion

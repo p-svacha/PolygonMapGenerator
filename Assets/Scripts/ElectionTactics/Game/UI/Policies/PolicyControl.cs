@@ -70,7 +70,7 @@ namespace ElectionTactics
                 if (i < Policy.Value)
                 {
                     ValueContainer.transform.GetChild(i).gameObject.SetActive(true);
-                    if (i < Policy.LockedValue) ValueContainer.transform.GetChild(i).GetComponent<Image>().color = ColorManager.Instance.UiMainLighter2;
+                    if (i < Policy.LockedValue) ValueContainer.transform.GetChild(i).GetComponent<Image>().color = new Color(0.55f, 0.55f, 0.55f);
                     else ValueContainer.transform.GetChild(i).GetComponent<Image>().color = ColorManager.Instance.UiText;
                 }
                 else

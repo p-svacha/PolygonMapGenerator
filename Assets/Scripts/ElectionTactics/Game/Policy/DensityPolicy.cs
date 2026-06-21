@@ -11,7 +11,7 @@ namespace ElectionTactics
         public DensityPolicy(int id, int localId, Party p, DensityDef density, int maxValue) : base(id, localId, p, maxValue)
         {
             Density = density;
-            Name = density.Label;
+            Name = $"{density.Label}-Density";
             Type = PolicyType.Density;
             SortingOrder = density.SortingOrder;
         }

@@ -26,7 +26,7 @@ namespace ElectionTactics
 
             Party = p;
             NameText.text = useAcronym ? p.Acronym : p.Name;
-            NameText.color = useAcronym ? p.Color : p.TextColor;
+            NameText.color = p.Color;
 
             // Value
             if (useSeatIcons)
@@ -86,7 +86,7 @@ namespace ElectionTactics
             }
             else if (ElectionTacticsGame.Instance.GameSettings.GameMode == GameModeDefOf.BattleRoyale)
             {
-                description = $"{ValueText.text} influence remaining.";
+                description = $"Legitimacy: {ValueText.text}.";
                 if (Party.IsEliminated) description += " Eliminated.";
             }
 

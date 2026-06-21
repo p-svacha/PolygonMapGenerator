@@ -29,12 +29,14 @@ namespace ElectionTactics
                 IconFrame.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
                 Headline.GetComponent<LayoutElement>().minHeight = 50;
                 Headline.fontSizeMax = 30;
+                Body.fontSizeMax = 22;
             }
             else
             {
                 IconFrame.transform.localScale = Vector3.one;
                 Headline.GetComponent<LayoutElement>().minHeight = 70;
-                Headline.fontSizeMax = 40;
+                Headline.fontSizeMax = 38;
+                Body.fontSizeMax = 26;
             }
         }
     }

@@ -22,7 +22,7 @@ namespace ElectionTactics
             {
                 DefName = "Boomers",
                 Label = "Baby Boomers",
-                Adjective = "very old",
+                Adjective = "ageing",
                 Description = "The population skews older. Slightly reduces the district's natural population growth rate.",
                 SortingOrder = 3,
                 Color = new Color(0.30f, 0.80f, 0.75f),
@@ -34,7 +34,7 @@ namespace ElectionTactics
             {
                 DefName = "GenerationX",
                 Label = "Generation X",
-                Adjective = "old",
+                Adjective = "middle-aged",
                 Description = "The population is middle-aged. Has a small negative effect on population growth rate.",
                 SortingOrder = 2,
                 Color = new Color(0.55f, 0.70f, 0.30f),

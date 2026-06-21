@@ -793,39 +793,56 @@ namespace ElectionTactics
         /// <summary>
         /// Returns a descriptive label based on the attributes and traits of this district.
         /// </summary>
-        public string GetDescripiveLabel()
+        public string GetDescripiveLabel(bool excludeLanguage = false, bool excludeReligion = false, bool excludeAgeGroup = false, bool excludeDensity = false, bool excludeGeography = false)
         {
             List<string> adjectiveCandidates = new List<string>();
             List<string> describerCandidates = new List<string>();
 
-            foreach (GeographyTrait trait in Geography)
+            if (!excludeGeography)
             {
-                if (trait.Category > 1)
+                foreach (GeographyTrait trait in Geography)
                 {
-                    if (Random.value < 0.5f) adjectiveCandidates.Add($"{trait.Def.Adjective}");
-                    else describerCandidates.Add($"{trait.Def.Describer}");
+                    if (trait.Def == GeographyTraitDefOf.New) continue;
+
+                    if (trait.Category > 1)
+                    {
+                        if (Random.value < 0.5f) adjectiveCandidates.Add($"{trait.Def.Adjective}");
+                        else describerCandidates.Add($"{trait.Def.Describer}");
+                    }
                 }
             }
 
-            if (Random.value < 0.5f) adjectiveCandidates.Add($"{Language.Label.ToLower()}-speaking");
-            else describerCandidates.Add($"with a {Language.Label.ToLower()}-speaking community");
-
-            if (HasReligion)
+            if (!excludeLanguage)
             {
-                if (Random.value < 0.5f) adjectiveCandidates.Add($"{Religion.Label.ToLower()}");
-                else describerCandidates.Add($"following {Religion.Noun}");
-            }
-            else
-            {
-                if (Random.value < 0.5f) adjectiveCandidates.Add($"atheistic");
-                else describerCandidates.Add($"following no religion");
+                if (Random.value < 0.5f) adjectiveCandidates.Add($"{Language.Label.ToLower()}-speaking");
+                else describerCandidates.Add($"with a {Language.Label.ToLower()}-speaking community");
             }
 
-            if (Random.value < 0.5f) adjectiveCandidates.Add($"{Density.Label.ToLower()}-density");
-            else describerCandidates.Add($"with a {Density.Label.ToLower()} density");
+            if (!excludeReligion)
+            {
+                if (HasReligion)
+                {
+                    if (Random.value < 0.5f) adjectiveCandidates.Add($"{Religion.Label.ToLower()}");
+                    else describerCandidates.Add($"following {Religion.Noun}");
+                }
+                else
+                {
+                    if (Random.value < 0.5f) adjectiveCandidates.Add($"atheistic");
+                    else describerCandidates.Add($"following no religion");
+                }
+            }
 
-            if (Random.value < 0.5f) adjectiveCandidates.Add($"{AgeGroup.Label} dominated");
-            else describerCandidates.Add($"with a {AgeGroup.Adjective} population");
+            if (!excludeDensity)
+            {
+                if (Random.value < 0.5f) adjectiveCandidates.Add($"{Density.Label.ToLower()}-density");
+                else describerCandidates.Add($"with a {Density.Label.ToLower()} density");
+            }
+
+            if (!excludeAgeGroup)
+            {
+                if (Random.value < 0.5f) adjectiveCandidates.Add($"{AgeGroup.Label} dominated");
+                else describerCandidates.Add($"with a {AgeGroup.Adjective} population");
+            }
 
             if (Random.value < 0.5f) adjectiveCandidates.Add($"{Economy1.Label}-focussed");
             else describerCandidates.Add($"with a big {Economy1.Label} industry");

@@ -57,11 +57,12 @@ namespace ElectionTactics
             // Right Stats
             int electionsWon = game.LocalPlayerParty.TotalElectionsWon;
             int totalSeatsWon = game.LocalPlayerParty.TotalSeatsWon;
+            float seatsWonPerc = totalSeatsWon / (float)totalSeats;
             int totalPopularity = game.ActiveDistricts.Sum(d => d.GetPartyPopularity(game.LocalPlayerParty));
             int avgPopularity = (int)(totalPopularity / numDistricts);
             int maxPopularity = game.ActiveDistricts.Max(d => d.GetPartyPopularity(game.LocalPlayerParty));
             int totalPPSpent = game.LocalPlayerParty.Policies.Sum(p => p.Value);
-            string rightStats = $"<b><color={BLUE}>Party Stats</color></b>\n\nElections Won: <color={BLUE}>{electionsWon}</color>\n\nTotal Seats Won: <color={BLUE}>{totalSeatsWon}</color>\n\nTotal Popularity: <color={BLUE}>{totalPopularity} (avg: {avgPopularity}, max: {maxPopularity})</color>\n\nPolicy Points Spent: <color={BLUE}>{totalPPSpent}</color>";
+            string rightStats = $"<b><color={BLUE}>Party Stats</color></b>\n\nElections Won: <color={BLUE}>{electionsWon}</color>\n\nTotal Seats Won: <color={BLUE}>{totalSeatsWon} ({(seatsWonPerc * 100f).ToString("0.0") + "%"})</color>\n\nTotal Popularity: <color={BLUE}>{totalPopularity} (avg: {avgPopularity}, max: {maxPopularity})</color>\n\nPolicy Points Spent: <color={BLUE}>{totalPPSpent}</color>";
             RightStatsText.text = rightStats;
         }
     }

@@ -103,6 +103,7 @@ public static class StringExtensions
     public static string Pluralize(this string str, int count)
     {
         if (count == 1) return str;
+        if (str == "legitimacy") return str;
         if (string.IsNullOrEmpty(str)) return str;
 
         if (str.EndsWith("s") || str.EndsWith("sh") || str.EndsWith("ch") || str.EndsWith("x") || str.EndsWith("z"))

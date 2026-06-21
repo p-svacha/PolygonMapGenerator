@@ -20,10 +20,12 @@ namespace ElectionTactics
         public TMP_Dropdown OverlayDropdown;
 
         [Header("Legend")]
+        public TextMeshProUGUI TitleLabel;
         public GameObject LegendContainer;
         public TextMeshProUGUI LegendTitleText;
 
-        public GameObject PopularityLegend;
+        public GameObject LinearScaleLegend;
+        public Image LinearScaleLegendImage;
         public TextMeshProUGUI PopularityLegendTopLimitText;
         public TextMeshProUGUI PopularityLegendBotLimitText;
 
@@ -88,6 +90,9 @@ namespace ElectionTactics
         {
             ClearLegend();
 
+            // Label
+            // TitleLabel.text = OverlayDropdown.options[OverlayDropdown.value].text;
+
             // Show region borders in active districts only
             foreach(Region r in Map.LandRegions) r.SetShowRegionBorders(Game.VisibleDistricts.ContainsKey(r));
 
@@ -115,7 +120,7 @@ namespace ElectionTactics
                     break;
 
                 case MapDisplayMode.LastElection:
-                    LegendTitleText.text = "Parties";
+                    LegendTitleText.text = "Current Winner";
                     Legend.Add(new LegendEntryData("none", ColorManager.Instance.NoImpactColor, "None", 1));
                     foreach (Party party in Game.Parties) Legend.Add(new LegendEntryData(party.Id.ToString(), party.Color, party.Acronym));
                     foreach (Region r in Map.LandRegions) 
@@ -131,7 +136,8 @@ namespace ElectionTactics
                     break;
 
                 case MapDisplayMode.Popularity:
-                    PopularityLegend.gameObject.SetActive(true);
+                    LinearScaleLegend.gameObject.SetActive(true);
+                    LinearScaleLegendImage.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/legendGradient");
                     LegendTitleText.text = "Popularity";
 
                     // Take current max popularity as max
@@ -149,6 +155,56 @@ namespace ElectionTactics
                             r.SetColor(new Color(1f - f, f, 0f));
                         }
                         else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
+                    }
+                    break;
+
+                case MapDisplayMode.SeatsWon:
+                    LinearScaleLegend.gameObject.SetActive(true);
+                    LinearScaleLegendImage.sprite = ResourceManager.LoadSprite("ElectionTactics/Icons/legendGradient_WhiteToGreen");
+                    LegendTitleText.text = "Seats Won";
+
+                    // Take current max popularity as max
+                    PopularityLegendBotLimitText.text = "- 0%";
+                    PopularityLegendTopLimitText.text = "- 100%";
+
+                    if (ElectionTacticsGame.Instance.ElectionCycle == 1) // Cannot show anything before first election
+                    {
+                        foreach (Region r in Map.LandRegions)
+                        {
+                            if (Game.VisibleDistricts.ContainsKey(r)) r.SetColor(Color.white);
+                            else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
+                        }
+                    }
+
+                    else
+                    {
+                        GeneralElectionResult result = Game.GetLatestElectionResult();
+                        foreach (Region r in Map.LandRegions)
+                        {
+                            if (Game.VisibleDistricts.ContainsKey(r))
+                            {
+                                District d = Game.GetDistrict(r);
+                                DistrictElectionResult districtResult = result.GetDistrictResult(d);
+
+                                if (districtResult == null)
+                                {
+                                    r.SetColor(new Color(0.9f, 0.9f, 0.9f));
+                                }
+                                else
+                                {
+                                    int seatsWon = districtResult.SeatsWon[Game.LocalPlayerParty];
+                                    int totalSeats = result.GetDistrictResult(d).Seats;
+
+                                    float f = seatsWon / (float)totalSeats;
+                                    if (f > 0f)
+                                    {
+                                        r.SetColor(new Color(0.7f - (0.7f * f), 0.9f - (0.45f * f), 0.7f - (0.7f * f)));
+                                    }
+                                    else r.SetColor(new Color(0.9f, 0.9f, 0.9f));
+                                }
+                            }
+                            else r.SetColor(ColorManager.Instance.InactiveDistrictColor);
+                        }
                     }
                     break;
 
@@ -220,7 +276,7 @@ namespace ElectionTactics
         /// </summary>
         private void ClearLegend()
         {
-            PopularityLegend.gameObject.SetActive(false);
+            LinearScaleLegend.gameObject.SetActive(false);
             for (int i = 3; i < LegendContainer.transform.childCount; i++) Destroy(LegendContainer.transform.GetChild(i).gameObject);
             Legend.Clear();
         }
@@ -321,10 +377,11 @@ namespace ElectionTactics
         [Description("No Overlay")] NoOverlay = 0,
         [Description("Last Election")] LastElection = 1,
         Popularity = 2,
-        Language = 3,
-        Religion = 4,
-        [Description("Age Group")] AgeGroup = 5,
-        Density = 6,
+        [Description("Seats Won")] SeatsWon = 3,
+        Language = 4,
+        Religion = 5,
+        [Description("Age Group")] AgeGroup = 6,
+        Density = 7,
     }
 
     public enum DistrictLabelMode
